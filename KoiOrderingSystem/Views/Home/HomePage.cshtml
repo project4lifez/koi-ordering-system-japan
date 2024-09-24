@@ -843,6 +843,115 @@
             .view-more-btn:hover {
                 background-color: #007acc;
             }
+
+        .feedback-section {
+            padding: 40px;
+            background-color: #ffffff; /* Retaining white background */
+            text-align: center; /* Center aligning everything */
+        }
+
+        .feedback-title {
+            font-size: 36px;
+            color: #333;
+            margin-bottom: 30px;
+            font-weight: 700;
+            text-align: center; /* Ensure the title is centered */
+        }
+
+        .feedback-carousel {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            overflow: hidden;
+            scroll-behavior: smooth;
+            padding: 20px 0;
+        }
+
+        .feedback-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            width: 300px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Centers the content */
+            justify-content: space-between; /* Spreads the elements evenly */
+        }
+
+            .feedback-card:hover {
+                transform: scale(1.05);
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            }
+
+        .feedback-avatar img {
+            border-radius: 50%;
+            margin-bottom: 15px;
+            width: 80px;
+            height: 80px;
+        }
+
+        .feedback-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Ensures even spacing */
+            align-items: center; /* Centers the content */
+            margin-bottom: 20px;
+        }
+
+        .feedback-text {
+            font-style: italic;
+            font-size: 16px;
+            color: #666;
+            text-align: center;
+            max-width: 250px; /* Limit text width to prevent overflow */
+        }
+
+        .feedback-name {
+            font-weight: bold;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .feedback-rating {
+            margin-top: 10px;
+        }
+
+            .feedback-rating i {
+                color: #f5c518;
+                font-size: 20px;
+            }
+
+        .feedback-navigation {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+            .feedback-navigation .nav-button {
+                background-color: #5BB2F1;
+                border: none;
+                padding: 10px 15px;
+                cursor: pointer;
+                font-size: 20px;
+                color: white;
+                border-radius: 50%;
+                transition: background-color 0.3s ease, transform 0.3s ease;
+            }
+
+                .feedback-navigation .nav-button:hover {
+                    background-color: #4A9ED4;
+                    transform: scale(1.1);
+                }
+
+                .feedback-navigation .nav-button:focus {
+                    outline: none;
+                }
     </style>
 </head>
 <body>
@@ -860,7 +969,7 @@
             <li><a href="#services">Services</a></li>
             <li><a href="#about">About</a></li>
             <li><a href="#blog">Blog</a></li>
-            <li><a href="login" class="auth-link">Login/Signup</a></li>
+            <li><a href="/Login" class="auth-link">Login/Signup</a></li>
         </ul>
         <div class="search-bar">
             <input type="text" id="searchInput" placeholder="Search...">
@@ -1206,6 +1315,7 @@
                 </div>
             </div>
         </div>
+
     </section>
 
     <!-- News Section -->
@@ -1244,8 +1354,77 @@
 
             <!-- View More Button -->
             <div class="text-center mt-4">
-                <a href="#" class="btn view-more-btn">VIEW MORE</a>
+                <button class="btn btn-primary view-more-btn">View More</button>
             </div>
+
+            <section class="feedback-section">
+                <h2 class="feedback-title">Client Feedback</h2>
+                <div class="feedback-carousel">
+                    <!-- Feedback 1 -->
+                    <div class="feedback-card">
+                        <div class="feedback-avatar">
+                            <img src="https://via.placeholder.com/80" alt="Avatar">
+                        </div>
+                        <div class="feedback-content">
+                            <p class="feedback-text">"du ma dep vai lon!"</p>
+                            <p class="feedback-name">Khoa Phang</p>
+                            <div class="feedback-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Feedback 2 -->
+                    <div class="feedback-card">
+                        <div class="feedback-avatar">
+                            <img src="https://via.placeholder.com/80" alt="Avatar">
+                        </div>
+                        <div class="feedback-content">
+                            <p class="feedback-text">"Dich vu 10 diem"</p>
+                            <p class="feedback-name">Le Van Viet</p>
+                            <div class="feedback-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Feedback 3 -->
+                    <div class="feedback-card">
+                        <div class="feedback-avatar">
+                            <img src="https://via.placeholder.com/80" alt="Avatar">
+                        </div>
+                        <div class="feedback-content">
+                            <p class="feedback-text">"Amazing quality and quick response!"</p>
+                            <p class="feedback-name">Tai Con</p>
+                            <div class="feedback-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="feedback-navigation">
+                    <button class="nav-button" id="prev-feedback"><i class="fas fa-chevron-left"></i></button>
+                    <button class="nav-button" id="next-feedback"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </section>
+
+
+
+
+
+
+
         </div>
     </section>
     <button class="back-to-top" onclick="scrollToTop()">↑</button>
@@ -1391,6 +1570,51 @@
         }
 
         setInterval(nextService, 15000); // Change service every 15 seconds
+
+        const feedbackCards = document.querySelectorAll('.feedback-card');
+        let currentFeedback = 0;
+
+        function showFeedback(index) {
+            feedbackCards.forEach((card, i) => {
+                card.classList.remove('active');
+                if (i === index) {
+                    card.classList.add('active');
+                }
+            });
+        }
+
+        document.getElementById('prev-feedback').addEventListener('click', () => {
+            currentFeedback = (currentFeedback - 1 + feedbackCards.length) % feedbackCards.length;
+            showFeedback(currentFeedback);
+        });
+
+        document.getElementById('next-feedback').addEventListener('click', () => {
+            currentFeedback = (currentFeedback + 1) % feedbackCards.length;
+            showFeedback(currentFeedback);
+        });
+
+        showFeedback(currentFeedback);
+
+        const feedbackCarousel = document.querySelector('.feedback-carousel');
+        const nextButton = document.getElementById('next-feedback');
+        const prevButton = document.getElementById('prev-feedback');
+
+        nextButton.addEventListener('click', () => {
+            feedbackCarousel.scrollBy({
+                left: 300, // Scroll khoảng cách tương đương với chiều rộng của feedback card
+                behavior: 'smooth'
+            });
+        });
+
+        prevButton.addEventListener('click', () => {
+            feedbackCarousel.scrollBy({
+                left: -300,
+                behavior: 'smooth'
+            });
+        });
+
+
+
 
     </script>
 
