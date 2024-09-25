@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Koi ordering system</title>
+    <title>@ViewData["Title"] - Koi Ordering System</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/testingmvc.styles.css" asp-append-version="true" />
@@ -19,14 +19,12 @@
                 color: #5BB2F1 !important; /* Change color on hover */
                 text-decoration: none;
             }
-
         /* Footer Heading Styles */
         .footer-heading {
             color: #5BB2F1;
             font-weight: bold;
             margin-bottom: 20px;
         }
-
         /* General Text Styling in Footer */
         footer p, footer a, footer {
             color: #ffffff;
@@ -38,7 +36,6 @@
             padding-top: 20px; /* Add some padding at the top for content spacing */
             padding-bottom: 20px; /* Add some padding at the bottom if needed */
         }
-
         /* Ensure the footer is positioned correctly and no white space is left */
         html, body {
             height: 100%; /* Ensure the body and HTML fill the entire height */
@@ -53,15 +50,22 @@
         footer {
             margin-top: auto; /* Push footer to the bottom */
         }
+
+        .greeting {
+            color: #5BB2F1; /* Greeting text color */
+            margin-left: auto;
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+        }
     </style>
-
-
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="HomePage">testingmvc</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="HomePage">Koi Ordering System</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -75,9 +79,19 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Login">Login</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Login">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Logout">Logout</a>
                         </li>
                     </ul>
+                    <div class="greeting">
+                        @if (Context.Session.GetString("Lastname") != null)
+
+                        {
+                            <span>Hi, @Context.Session.GetString("Lastname")!</span>
+                        }
+                    </div>
                 </div>
             </div>
         </nav>
@@ -139,7 +153,6 @@
             <p class="mb-0">© 2024 Your Company. All Rights Reserved.</p>
         </div>
     </footer>
-
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore; // Required for UseSqlServer
+using KoiOrderingSystem.Models; // Ensure this is the correct namespace for Koi88Context
+
 namespace KoiOrderingSystem
 {
     public class Program
@@ -5,6 +8,15 @@ namespace KoiOrderingSystem
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            // Register the database context (assuming SQL Server)
+            // Make sure "DefaultConnection" matches your connection string in appsettings.json
+            builder.Services.AddDbContext<Koi88Context>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            // Enable session state
+            builder.Services.AddDistributedMemoryCache(); // For session storage
+            builder.Services.AddSession();
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
@@ -15,8 +27,7 @@ namespace KoiOrderingSystem
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
+                app.UseHsts(); // HSTS configuration
             }
 
             app.UseHttpsRedirection();
@@ -24,12 +35,22 @@ namespace KoiOrderingSystem
 
             app.UseRouting();
 
+            // Enable session and add authentication if needed
+            app.UseSession();
+
             app.UseAuthorization();
 
+            // Map the default routes
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=HomePage1}/{id?}");
+                pattern: "{controller=Home}/{action=HomePage}/{id?}");
 
+            app.MapControllerRoute(
+                name: "login_default",
+                pattern: "{controller=Login}/{action=Login}/{id?}");
+            app.MapControllerRoute(
+                name: "register_default",
+                pattern: "{controller=Register}/{action=Register}/{id?}");
             app.Run();
         }
     }
