@@ -39,14 +39,24 @@ namespace KoiOrderingSystem.Controllers
 
                 if (user != null)
                 {
-                    // Store the username and full name in session
+                    // Check if the account is disabled
+                    if (user.Status == false) // If Status is false
+                    {
+                        ViewBag.Error = "Your account has been disabled. Please contact support.";
+                        return View(model);
+                    }
+
+                    // Store the username and last name in session
                     HttpContext.Session.SetString("Username", user.Username);
-                    HttpContext.Session.SetString("Lastname", user.Lastname); // Assuming FullName is a property in your Account model
+                    HttpContext.Session.SetString("Lastname", user.Lastname);
+
+                    // Store the Status as an integer (0 = false, 1 = true)
+                    HttpContext.Session.SetInt32("Status", user.Status == true ? 1 : 0);
 
                     // Set RoleId; use the null-coalescing operator to handle possible nulls
                     HttpContext.Session.SetInt32("RoleId", user.RoleId ?? 0); // Default to 0 if null
 
-                    // Redirect based on role_id
+                    // Redirect based on RoleId
                     if (user.RoleId == 1) // Customer
                     {
                         return RedirectToAction("", "Home"); // Redirect to HomePage
@@ -67,11 +77,12 @@ namespace KoiOrderingSystem.Controllers
             // If the model state is not valid, return the same view
             return View(model);
         }
+
         public IActionResult Logout()
         {
             // Clear the session to log the user out
             HttpContext.Session.Clear();
-            return RedirectToAction("", "Home"); // Redirect to login page after logout
+            return RedirectToAction("", "Home"); // Redirect to home page after logout
         }
     }
 }

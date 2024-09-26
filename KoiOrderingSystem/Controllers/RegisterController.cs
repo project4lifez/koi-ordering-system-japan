@@ -23,28 +23,49 @@ namespace KoiOrderingSystem.Controllers
 
         // POST: /Register
         [HttpPost]
-        public async Task<IActionResult> Register(Account model)
+        public async Task<IActionResult> Register(Account account)
         {
             if (ModelState.IsValid)
             {
-                // Check if the username already exists
-                var existingUser = await _db.Accounts.FirstOrDefaultAsync(u => u.Username == model.Username);
-                if (existingUser != null)
+                using (var transaction = await _db.Database.BeginTransactionAsync())
                 {
-                    ModelState.AddModelError("Username", "Username already exists.");
-                    return View(model);
+                    try
+                    {
+                        // Set default values for RoleId and Status
+                        account.RoleId = 1; // Default Role ID
+                        account.Status = true; // Set Status to active
+
+                        // Add the Account to the database
+                        _db.Accounts.Add(account);
+                        await _db.SaveChangesAsync();
+
+                        // Create associated Customer record
+                        var customer = new Customer
+                        {
+                            AccountId = account.AccountId
+                        };
+
+                        // Save the customer record
+                        _db.Customers.Add(customer);
+                        await _db.SaveChangesAsync(); // Save the customer to generate the CustomerId
+
+                        // Commit transaction
+                        await transaction.CommitAsync();
+
+                        // Redirect to the Login page after successful registration
+                        return RedirectToAction("", "Login");
+                    }
+                    catch (Exception ex)
+                    {
+                        // Rollback transaction if there's an error
+                        await transaction.RollbackAsync();
+                        return BadRequest(new { error = ex.Message });
+                    }
                 }
-
-                // Create new user
-                model.RoleId = 1; // Set RoleId to 1 for customer
-                _db.Accounts.Add(model);
-                await _db.SaveChangesAsync();
-
-                // Optionally, redirect to a login page or home page after successful registration
-                return RedirectToAction("", "Login");
             }
 
-            return View(model); // If model state is not valid, return the same view
+            // If validation fails, return the form with errors
+            return View(account);
         }
     }
 }

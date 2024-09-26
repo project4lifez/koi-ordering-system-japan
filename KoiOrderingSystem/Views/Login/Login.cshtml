@@ -11,7 +11,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -36,60 +35,74 @@
             animation: fadeIn 1s ease-in-out, moveUp 1s ease-in-out;
         }
 
-        .login-container h1 {
-            margin-bottom: 30px;
-            font-size: 24px;
-            font-weight: bold;
-            animation: slideInDown 0.5s ease-in-out;
-        }
+            .login-container h1 {
+                margin-bottom: 30px;
+                font-size: 24px;
+                font-weight: bold;
+                animation: slideInDown 0.5s ease-in-out;
+            }
+
+            .login-container img {
+                width: 100px;
+                margin-bottom: 20px;
+                cursor: pointer;
+                transition: transform 0.3s;
+            }
+
+                .login-container img:hover {
+                    transform: scale(1.1);
+                }
 
         .input-container {
             position: relative;
-            margin: 30px 0;
+            margin: 20px 0;
             text-align: left;
-        }
-
-        .input-container input[type="text"],
-        .input-container input[type="password"] {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #ccc;
-            border-radius: 6px;
-            background: #fafafa;
-            color: #333;
-            font-size: 16px;
-            box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease-in-out;
         }
 
-        .input-container input[type="text"]:focus,
-        .input-container input[type="password"]:focus {
-            border: 2px solid #00bcd4;
-            outline: none;
-            background: #fff;
-            box-shadow: 0 0 5px rgba(0, 188, 212, 0.5);
-        }
+            .input-container input[type="text"],
+            .input-container input[type="password"] {
+                width: 100%;
+                padding: 12px;
+                padding-right: 40px; /* Thêm khoảng cách cho icon */
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                background: #fafafa;
+                color: #333;
+                font-size: 16px;
+                transition: all 0.3s ease-in-out;
+                box-sizing: border-box;
+                display: block;
+                margin: 0 auto;
+            }
 
-        .input-container label {
-            position: absolute;
-            top: 50%;
-            left: 15px;
-            transform: translateY(-50%);
-            background: #fff;
-            padding: 0 5px;
-            transition: all 0.3s ease-in-out;
-            pointer-events: none;
-            color: #999;
-            font-size: 16px;
-        }
+                .input-container input[type="text"]:focus,
+                .input-container input[type="password"]:focus {
+                    border: 1px solid #00bcd4;
+                    outline: none;
+                    background: #fff;
+                }
 
-        .input-container input:focus + label,
-        .input-container input:not(:placeholder-shown) + label {
-            top: -10px;
-            left: 10px;
-            font-size: 12px;
-            color: #00bcd4;
-        }
+            .input-container label {
+                position: absolute;
+                top: 50%;
+                left: 15px;
+                transform: translateY(-50%);
+                background: #fff;
+                padding: 0 5px;
+                transition: all 0.3s ease-in-out;
+                pointer-events: none;
+                color: #999;
+                font-size: 16px;
+            }
+
+            .input-container input:focus + label,
+            .input-container input:not(:placeholder-shown) + label {
+                top: -10px;
+                left: 10px;
+                font-size: 12px;
+                color: #00bcd4;
+            }
 
         .login-container input[type="submit"] {
             width: 100%;
@@ -104,9 +117,9 @@
             margin-top: 20px;
         }
 
-        .login-container input[type="submit"]:hover {
-            background: #008c9e;
-        }
+            .login-container input[type="submit"]:hover {
+                background: #008c9e;
+            }
 
         .login-container a {
             color: #00bcd4;
@@ -117,44 +130,155 @@
             transition: color 0.3s ease-in-out;
         }
 
-        .login-container a:hover {
-            text-decoration: underline;
+            .login-container a:hover {
+                text-decoration: underline;
+            }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            justify-content: start;
+            margin-bottom: 20px;
         }
+
+            .remember-me input {
+                margin-right: 10px;
+            }
 
         .error-message {
             color: red;
         }
 
+        /* Back to Homepage Link Style */
+        .back-home-link {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: #00bcd4;
+            font-size: 14px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            transition: color 0.3s ease-in-out;
+            font-weight: bold;
+        }
+
+            .back-home-link:hover {
+                color: #008c9e;
+            }
+
+            .back-home-link i {
+                margin-right: 5px;
+                font-size: 16px;
+            }
+
+        /* Show Password Icon Styles */
+        .show-password {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 18px;
+            color: #999;
+            transition: color 0.3s;
+        }
+
+            .show-password:hover {
+                color: #333;
+            }
+
+        /* Google Button Styles */
+        .google-btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            background: #db4437;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .google-btn:hover {
+                background: #c33426;
+            }
+
+            .google-btn i {
+                margin-right: 8px;
+                font-size: 20px;
+            }
+
+        /* Adjust button margins */
+        .button-container {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
+    <!-- Back to Homepage Link -->
+    <a href="/" class="back-home-link">
+        <i class="fas fa-arrow-left"></i> Back to Homepage
+    </a>
     <div class="login-container">
-        <h1>Login</h1>
+        <a href="/"><img src="/path/to/logo.png" alt="Logo" title="Go to Homepage"></a>
+        <h1>Welcome</h1>
 
         @if (ViewBag.Error != null)
         {
-                <div class="error-message">@ViewBag.Error</div>
+            <div class="error-message">@ViewBag.Error</div>
         }
 
-        <!-- Use Html.BeginForm to handle form submission -->
         @using (Html.BeginForm("", "Login", FormMethod.Post))
         {
-                <div class="input-container">
-                    <!-- Username input styled like a formbox -->
+            <div class="input-container">
                 @Html.TextBoxFor(m => m.Username, new { @class = "form-control", placeholder = " " })
-                    <label for="username">Username</label>
-                </div>
-                <div class="input-container">
-                    <!-- Password input styled like a formbox -->
+                <label for="username">Username</label>
+            </div>
+            <div class="input-container">
                 @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = " " })
-                    <label for="password">Password</label>
-                </div>
-                <input type="submit" value="Login" />
+                <label for="password">Password</label>
+                <!-- Show Password Icon -->
+                <i class="far fa-eye show-password" onclick="togglePassword()"></i>
+            </div>
+            <div class="remember-me">
+                <input type="checkbox" id="remember" name="remember">
+                <label for="remember">Remember Password</label>
+            </div>
+            <input type="submit" value="Login" />
         }
+
+        <!-- Google Login Button -->
+        <div class="button-container">
+            <button class="google-btn" onclick="location.href='@Url.Action("GoogleLogin", "Login")'">
+                <i class="fab fa-google"></i> Login with Google
+            </button>
+        </div>
 
         <br />
         <a href="/Register">Create new account</a>
-        <a href="#">Forgot password?</a>
+        <a href="/ForgotPassword">Forgot password?</a>
     </div>
+
+    <script>
+        function togglePassword() {
+            var passwordInput = document.querySelector('input[name="Password"]');
+            var showIcon = document.querySelector('.show-password');
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                showIcon.classList.remove('fa-eye');
+                showIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = "password";
+                showIcon.classList.remove('fa-eye-slash');
+                showIcon.classList.add('fa-eye');
+            }
+        }
+    </script>
 </body>
 </html>

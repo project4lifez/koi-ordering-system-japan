@@ -91,10 +91,12 @@ public partial class Koi88Context : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("username");
 
-            entity.HasOne(d => d.Role).WithMany(p => p.Accounts)
-                .HasForeignKey(d => d.RoleId)
-                .HasConstraintName("FK_Account_Role");
+            entity.HasOne(d => d.Role)
+             .WithMany(p => p.Accounts)  // 1 Role có nhiều Account
+             .HasForeignKey(d => d.RoleId)  // Foreign key trong bảng Account trỏ tới RoleId
+             .HasConstraintName("FK_Account_Role");  // Tên constraint
         });
+
 
         modelBuilder.Entity<Booking>(entity =>
         {
@@ -637,3 +639,4 @@ public partial class Koi88Context : DbContext
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }
+    
