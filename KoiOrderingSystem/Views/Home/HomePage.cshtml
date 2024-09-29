@@ -1,0 +1,1464 @@
+﻿@{
+    ViewBag.Title = "KOI88 - Nishikigoi Ordering Service";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KOI88 - Nishikigoi Ordering Service</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f9f9f9;
+            line-height: 1.6;
+            padding-top: 10px; /* Tạo khoảng cách giữa header và nội dung */
+        }
+
+        .koi-farm-section {
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+        }
+
+            .koi-farm-section h2 {
+                text-align: center;
+                font-size: 36px;
+                margin-bottom: 20px;
+                color: #333;
+            }
+
+        .koi-farm-tabs {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
+        }
+
+        .koi-farm-tab-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex: 1;
+        }
+
+        .koi-farm-tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: color 0.3s, border-bottom 0.3s;
+            font-weight: bold;
+            color: #666;
+            border-bottom: 3px solid transparent;
+        }
+
+            .koi-farm-tab.active {
+                color: #5BB2F1;
+                border-bottom: 3px solid #5BB2F1;
+            }
+
+            .koi-farm-tab:hover {
+                color: #5BB2F1;
+            }
+
+        .nav-button {
+            background: #5BB2F1;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 18px;
+            color: white;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+            .nav-button:hover {
+                background-color: #4A9ED4;
+            }
+
+        .koi-farm-content {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        /* Image Wrapper to maintain aspect ratio and prevent image overflow */
+        .image-wrapper {
+            width: 400px; /* Fixed width for consistency */
+            height: 240px; /* Fixed height */
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+            .image-wrapper img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover; /* Ensures the image covers the container without stretching */
+                display: block;
+            }
+
+        .koi-farm-description {
+            flex: 1;
+            padding: 10px;
+            position: relative;
+        }
+
+            .koi-farm-description h3 {
+                margin-bottom: 15px;
+                font-size: 24px;
+                color: #333;
+            }
+
+            .koi-farm-description p {
+                font-size: 16px;
+                line-height: 1.6;
+                color: #666;
+            }
+
+            .koi-farm-description .detail-link {
+                position: absolute;
+                bottom: 10px;
+                right: 10px;
+                font-size: 14px;
+                color: #5BB2F1;
+                text-decoration: none;
+                transition: color 0.3s;
+            }
+
+                .koi-farm-description .detail-link:hover {
+                    color: #333;
+                }
+
+        /* Utility Class for Mobile Layout */
+        .mobile .koi-farm-content {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .mobile .image-wrapper {
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .mobile .koi-farm-description .detail-link {
+            position: static;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        /* Card Hover Effect */
+        .koi-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+            .koi-card:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .detail-link, .contact-link {
+            transition: color 0.3s ease, border-color 0.3s ease;
+        }
+
+            .detail-link:hover {
+                background-color: #5BB2F1;
+                border-color: #5BB2F1;
+                color: #fff;
+            }
+
+            .contact-link:hover {
+                background-color: #28a745;
+                border-color: #28a745;
+                color: #fff;
+            }
+        /* Image hover effect */
+        .img-container {
+            height: 430px; /* Set a fixed height for all images */
+            overflow: hidden;
+            border-radius: 10px;
+        }
+
+            .img-container img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover; /* Use 'contain' to ensure the entire image is visible */
+                transition: transform 0.4s ease;
+            }
+
+        .koi-card:hover img {
+            transform: scale(1.1);
+        }
+
+        /* Detail link hover effect */
+        .detail-link {
+            transition: color 0.3s ease, border-color 0.3s ease;
+        }
+
+            .detail-link:hover {
+                color: #fff;
+                background-color: #5BB2F1;
+                border-color: #5BB2F1;
+            }
+
+        /* View More Button Styling */
+        .view-more-btn {
+            font-size: 14px;
+            padding: 5px 20px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+            .view-more-btn:hover {
+                background-color: #5BB2F1;
+                color: #fff;
+            }
+
+        .hero-container {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .hero-slider {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .hero {
+            min-width: 100%;
+            background-size: cover;
+            background-position: center;
+            height: 700px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            position: relative;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+            .hero::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.1); /* Lớp phủ đen nhạt hơn */
+                transition: background 0.3s; /* Smooth transition */
+            }
+
+            .hero:hover::before {
+                background: rgba(0, 0, 0, 0.5); /* Lớp phủ đen nhạt hơn khi hover */
+            }
+
+            .hero h1,
+            .hero p,
+            .hero button {
+                opacity: 0;
+                transform: translateY(20px);
+                transition: opacity 0.6s ease, transform 0.6s ease;
+                z-index: 1;
+            }
+
+            .hero:hover h1,
+            .hero:hover p,
+            .hero:hover button {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            .hero h1 {
+                font-size: 60px;
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            }
+
+            .hero p {
+                font-size: 24px;
+                margin-top: 20px;
+                text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+            }
+
+            .hero button {
+                margin-top: 30px;
+                padding: 15px 40px;
+                background-color: #add8e6;
+                color: white;
+                border: none;
+                font-size: 18px;
+                font-weight: bold;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: background-color 0.3s, transform 0.3s;
+            }
+
+                .hero button:hover {
+                    background-color: #7ec0ee;
+                    transform: scale(1.05);
+                }
+
+        .features {
+            display: flex;
+            justify-content: space-around;
+            padding: 50px 20px;
+            background-color: #fff;
+            text-align: center;
+            flex-wrap: wrap;
+        }
+
+        .feature {
+            max-width: 300px;
+            margin: 10px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+            .feature:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            }
+
+            .feature i {
+                font-size: 50px;
+                color: #5BB2F1;
+                margin-bottom: 15px;
+            }
+
+            .feature h3 {
+                font-size: 24px;
+                margin-bottom: 10px;
+                color: #333;
+            }
+
+            .feature p {
+                color: #666;
+            }
+
+        .about {
+            padding: 50px;
+            background-color: white;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+            max-width: 800px;
+            border-radius: 10px;
+        }
+
+            .about h2 {
+                font-size: 36px;
+                margin-bottom: 20px;
+                color: #333;
+            }
+
+            .about p {
+                font-size: 18px;
+                line-height: 1.6;
+                color: #666;
+            }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #5BB2F1;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            display: none;
+            transition: background-color 0.3s;
+        }
+
+            .back-to-top:hover {
+                background: #4A9ED4;
+            }
+
+        .auth-link:hover {
+            color: #4A9ED4;
+        }
+
+        /* Navigation Buttons */
+        .nav-buttons {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            pointer-events: none;
+        }
+
+        .nav-button {
+            background-color: rgba(0, 0, 0, 0.5);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            cursor: pointer;
+            pointer-events: auto;
+            font-size: 18px;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+            .nav-button:hover {
+                background-color: rgba(0, 0, 0, 0.8);
+                transform: scale(1.1);
+            }
+
+            .nav-button:focus {
+                outline: none;
+            }
+
+        /* Featured Services Section */
+        .featured-service {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .service-slider {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .service {
+            min-width: 100%;
+            background-size: cover;
+            background-position: center;
+            height: 620px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-content {
+            text-align: center;
+            color: white;
+            opacity: 0; /* Ẩn nội dung ban đầu */
+            transition: opacity 0.3s ease; /* Hiệu ứng chuyển tiếp */
+        }
+
+        .service:hover .service-content {
+            opacity: 1; /* Hiện nội dung khi hover */
+        }
+
+        .service h1 {
+            font-size: 40px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }
+
+        .service p {
+            font-size: 18px;
+            margin-top: 20px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+        }
+
+        .service button {
+            margin-top: 30px;
+            padding: 10px 30px;
+            background-color: #add8e6;
+            color: white;
+            border: none;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+            .service button:hover {
+                background-color: #7ec0ee;
+                transform: scale(1.05);
+            }
+
+        /* Navigation Buttons for Featured Services */
+        .nav-buttons {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            pointer-events: none;
+        }
+
+        .nav-button {
+            background-color: rgba(0, 0, 0, 0.5);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            cursor: pointer;
+            pointer-events: auto;
+            font-size: 18px;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+            .nav-button:hover {
+                background-color: rgba(0, 0, 0, 0.8);
+                transform: scale(1.1);
+            }
+
+            .nav-button:focus {
+                outline: none;
+            }
+
+        .view-more-btn {
+            font-size: 14px;
+            padding: 10px 20px;
+            background-color: #5BB2F1;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+            .view-more-btn:hover {
+                background-color: #4A9ED4;
+                transform: scale(1.05);
+            }
+
+        .koi-service-process-section {
+            background-color: #f9f9f9;
+            padding: 40px 0;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+            .koi-service-process-section h2 {
+                font-size: 36px;
+                font-weight: normal;
+                color: #333;
+                margin-bottom: 20px;
+            }
+
+        .service-step {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease; /* Smooth transition for hover effect */
+        }
+
+            .service-step:hover {
+                background-color: #f1f9ff; /* Light blue background on hover */
+                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Elevate the shadow on hover */
+                transform: translateY(-5px); /* Slight lift effect */
+            }
+
+            .service-step .step-description {
+                flex: 1 1 45%; /* Takes 45% of the width, but flexible on smaller screens */
+                margin: 10px 0;
+            }
+
+            .service-step h4 {
+                font-size: 24px;
+                font-weight: bold;
+                color: #5BB2F1;
+                transition: color 0.3s ease; /* Smooth transition for color on hover */
+            }
+
+            .service-step p {
+                font-size: 16px;
+                color: #666;
+                margin: 0;
+                transition: color 0.3s ease; /* Smooth transition for text color on hover */
+            }
+
+            .service-step:hover h4 {
+                color: #007acc; /* Change heading color on hover */
+            }
+
+            .service-step:hover p {
+                color: #444; /* Darken the paragraph text on hover */
+            }
+
+            .service-step .step-icon {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 48px;
+                color: #5BB2F1;
+                width: 100px;
+                height: 100px;
+                background-color: #e6f2fc;
+                border-radius: 50%;
+                flex: 0 0 100px;
+                margin: 0 20px;
+                transition: background-color 0.3s ease, transform 0.3s ease;
+            }
+
+            .service-step:hover .step-icon {
+                background-color: #007acc; /* Change the icon background on hover */
+                transform: rotate(15deg); /* Add a slight rotation effect on hover */
+                color: white; /* Change icon color */
+            }
+
+            .service-step.reverse .step-icon {
+                order: 2; /* Changes the icon's order to appear first in the flexbox row */
+            }
+
+            .service-step.reverse .step-description {
+                order: 1;
+            }
+
+        .news-section {
+            background-color: #f9f9f9;
+            padding: 40px 0;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+            .news-section h2 {
+                font-size: 36px;
+                font-weight: normal;
+                color: #333;
+                margin-bottom: 30px;
+            }
+
+
+        .news-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+            .news-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            }
+
+        .news-image {
+            width: 100%;
+            height: 250px; /* Đặt chiều cao cố định cho khung ảnh */
+            overflow: hidden;
+        }
+
+            .news-image img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover; /* Đảm bảo hình ảnh lấp đầy khung mà không bị méo */
+            }
+
+        .news-content {
+            padding: 20px;
+        }
+
+            .news-content h4 {
+                font-size: 20px;
+                font-weight: bold;
+                color: #333;
+                margin-bottom: 10px;
+            }
+
+            .news-content p {
+                font-size: 16px;
+                color: #666;
+                line-height: 1.6;
+            }
+
+        .news-detail {
+            font-size: 14px;
+            color: #5BB2F1;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+            .news-detail:hover {
+                color: #007acc;
+            }
+
+        .view-more-btn {
+            font-size: 16px;
+            color: white;
+            background-color: #5BB2F1;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+            .view-more-btn:hover {
+                background-color: #007acc;
+            }
+
+        .feedback-section {
+            padding: 40px;
+            background-color: #ffffff; /* Retaining white background */
+            text-align: center; /* Center aligning everything */
+        }
+
+        .feedback-title {
+            font-size: 36px;
+            color: #333;
+            margin-bottom: 30px;
+            font-weight: 700;
+            text-align: center; /* Ensure the title is centered */
+        }
+
+        .feedback-carousel {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            overflow: hidden;
+            scroll-behavior: smooth;
+            padding: 20px 0;
+        }
+
+        .feedback-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            width: 300px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Centers the content */
+            justify-content: space-between; /* Spreads the elements evenly */
+        }
+
+            .feedback-card:hover {
+                transform: scale(1.05);
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            }
+
+        .feedback-avatar img {
+            border-radius: 50%;
+            margin-bottom: 15px;
+            width: 80px;
+            height: 80px;
+        }
+
+        .feedback-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Ensures even spacing */
+            align-items: center; /* Centers the content */
+            margin-bottom: 20px;
+        }
+
+        .feedback-text {
+            font-style: italic;
+            font-size: 16px;
+            color: #666;
+            text-align: center;
+            max-width: 250px; /* Limit text width to prevent overflow */
+        }
+
+        .feedback-name {
+            font-weight: bold;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .feedback-rating {
+            margin-top: 10px;
+        }
+
+            .feedback-rating i {
+                color: #f5c518;
+                font-size: 20px;
+            }
+
+        .feedback-navigation {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+            .feedback-navigation .nav-button {
+                background-color: #5BB2F1;
+                border: none;
+                padding: 10px 15px;
+                cursor: pointer;
+                font-size: 20px;
+                color: white;
+                border-radius: 50%;
+                transition: background-color 0.3s ease, transform 0.3s ease;
+            }
+
+                .feedback-navigation .nav-button:hover {
+                    background-color: #4A9ED4;
+                    transform: scale(1.1);
+                }
+
+                .feedback-navigation .nav-button:focus {
+                    outline: none;
+                }
+    </style>
+</head>
+<body>
+    <!-- Hero Slider Section -->
+    <div class="hero-container mt-2 pt-2">
+        <div class="hero-slider">
+            <!-- Hero Section 1 -->
+            <section class="hero" id="home1" style="background-image: url('https://i.ytimg.com/vi/pUADEpL3DNM/maxresdefault.jpg');">
+                <h1>錦鯉</h1>
+                <p>We guide you to the Japanese nishikigoi of your dreams</p>
+                <button onclick="location.href='/Home/FormOrder'">Start Your Journey</button>
+            </section>
+            <!-- Hero Section 2 -->
+            <section class="hero" id="home2" style="background-image: url('https://www.pondexperts.ca/wp-content/uploads/2023/01/Japanese-koi-garden.jpg');">
+                <h1>Find Your Koi</h1>
+                <p>Discover beautiful koi fish from top Japanese breeders</p>
+                <button>Explore Now</button>
+            </section>
+            <!-- Hero Section 3 -->
+            <section class="hero" id="home3" style="background-image: url('https://i.ytimg.com/vi/VJkvUujiTKA/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLDA2AAD44WbTz33JYXNSXDVttKGGg');">
+                <h1>Quality You Can Trust</h1>
+                <p>We ensure only the best quality and care for your koi fish</p>
+                <button>Learn More</button>
+            </section>
+        </div>
+        <!-- Navigation Buttons -->
+        <div class="nav-buttons">
+            <button class="nav-button" onclick="prevSlide()">&#10094; </button>
+            <button class="nav-button" onclick="nextSlide()"> &#10095;</button>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <section class="features" id="services">
+        <div class="feature">
+            <i class="fas fa-fish"></i>
+            <h3>Quality Koi</h3>
+            <p>We source the finest Koi from top farms in Japan.</p>
+        </div>
+        <div class="feature">
+            <i class="fas fa-map-marked-alt"></i>
+            <h3>Personalized Trips</h3>
+            <p>Experience custom trips to Koi farms with expert guides.</p>
+        </div>
+        <div class="feature">
+            <i class="fas fa-truck"></i>
+            <h3>Seamless Delivery</h3>
+            <p>We ensure safe and reliable delivery of your Koi.</p>
+        </div>
+    </section>
+
+    <!-- About Us Section -->
+    <section class="about" id="about">
+        <h2>About Us</h2>
+        <p>Welcome to our Nishikigoi Ordering Service in Japan – your trusted partner in finding your favorite Koi fish from Japan. We connect you with the finest Koi farms, offer personalized trips, and provide expert guidance throughout your journey. From selecting the perfect Koi to ensuring a seamless delivery, we handle every step with care and professionalism. Experience the best of Japan’s Koi culture with us!</p>
+    </section>
+
+    <!-- Koi Farms Section -->
+    <section class="koi-farm-section" id="koi-farms">
+        <h2>Koi Farms</h2>
+
+        <div class="koi-farm-tabs">
+            <!-- Previous Button -->
+            <button class="nav-button" id="prev-tabs-button"><i class="fas fa-chevron-left"></i></button>
+
+            <!-- Tabs Container -->
+            <div class="koi-farm-tab-container" id="tab-container">
+                <!-- Tabs will be dynamically added here -->
+            </div>
+
+            <!-- Next Button -->
+            <button class="nav-button" id="next-tabs-button"><i class="fas fa-chevron-right"></i></button>
+        </div>
+
+        <!-- Farm Content for Dainichi Koi Farm -->
+        <div class="koi-farm-content" id="dainichi" style="display: flex;">
+            <div class="image-wrapper">
+                <img src="https://www.kodamakoifarm.com/wp-content/uploads/2022/03/Dainichi-and-Isa-Auction-Banner.jpg" alt="Dainichi Koi Farm">
+            </div>
+            <div class="koi-farm-description">
+                <h3>Dainichi Koi Farm</h3>
+                <p>As one of the most famous Koi farms in Japan, Dainichi Koi Farm boasts an extensive system of pristine mud ponds and clean, well-maintained fish breeding pools that meet high standards. They provide a wide variety of Koi, from baby Koi for breeding to medium-sized and even Jumbo Koi. Dainichi Koi Farms' Koi are renowned worldwide for their beauty, superior care conditions, and excellent breeding techniques. Famous varieties include Showa, Kohaku, and more.</p>
+                <a href="#" class="detail-link">detail..</a>
+            </div>
+        </div>
+
+        <!-- Farm Content for Otsuka Koi Farm -->
+        <div class="koi-farm-content" id="otsuka" style="display: none;">
+            <div class="image-wrapper">
+                <img src="https://onkoi.vn/wp-content/uploads/2020/05/Otsuka-koi-farm.jpg" alt="Otsuka Koi Farm">
+            </div>
+            <div class="koi-farm-description">
+                <h3>Otsuka Koi Farm</h3>
+                <p>Otsuka Koi Farm is known for its exceptional bloodlines and exquisite Koi varieties. Established by a family passionate about Nishikigoi breeding, Otsuka Koi Farm focuses on quality over quantity, raising Koi that are healthy and aesthetically superior. They are particularly known for their beautiful Sanke and Showa Koi.</p>
+                <a href="#" class="detail-link">detail..</a>
+            </div>
+        </div>
+
+        <!-- Farm Content for Fukasawa Koi Farm -->
+        <div class="koi-farm-content" id="fukasawa" style="display: none;">
+            <div class="image-wrapper">
+                <img src="https://i.ytimg.com/vi/ej92zg2xYBM/maxresdefault.jpg" alt="Fukasawa Koi Farm">
+            </div>
+            <div class="koi-farm-description">
+                <h3>Fukasawa Koi Farm</h3>
+                <p>Fukasawa Koi Farm is a smaller, family-owned farm specializing in unique, high-quality Koi with excellent conformation and vibrant color patterns. They are known for their Kohaku and Sanke Koi, and they take pride in the careful hand-selection and breeding of their fish, ensuring that only the best Koi are available to enthusiasts.</p>
+                <a href="#" class="detail-link">detail..</a>
+            </div>
+        </div>
+
+        <!-- Farm Content for Hosokai Koi Farm -->
+        <div class="koi-farm-content" id="hosokai" style="display: none;">
+            <div class="image-wrapper">
+                <img src="https://i.ytimg.com/vi/VcsCDDoPsIA/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLAcd1I5PRDLSM-Gucjo-jVgKw8lNg" alt="Hosokai Koi Farm">
+            </div>
+            <div class="koi-farm-description">
+                <h3>Hosokai Koi Farm</h3>
+                <p>Hosokai Koi Farm is famous for its award-winning Koi, especially in the variety of Kohaku and Shiro Utsuri. With a focus on both tradition and innovation in breeding techniques, Hosokai Koi Farm has consistently produced top-tier Koi that have won numerous prizes in Japan and abroad.</p>
+                <a href="#" class="detail-link">detail..</a>
+            </div>
+        </div>
+
+        <!-- Shinoda Koi Farm -->
+        <div class="koi-farm-content" id="additional1" style="display: none;">
+            <div class="image-wrapper">
+                <img src="image_url_for_additional1" alt="Shinoda Koi Farm">
+            </div>
+            <div class="koi-farm-description">
+                <h3>Shinoda Koi Farm</h3>
+                <p>Shinoda Koi Farm is known for its beautiful Utsurimono and Showa Koi varieties. Established in the Niigata region, it has perfected its breeding techniques over generations to produce healthy, vibrant Koi with distinct patterns.</p>
+                <a href="#" class="detail-link">detail..</a>
+            </div>
+        </div>
+
+        <!-- Additional Farm 2 -->
+        <div class="koi-farm-content" id="additional2" style="display: none;">
+            <div class="image-wrapper">
+                <img src="image_url_for_additional2" alt="Additional Koi Farm 2">
+            </div>
+            <div class="koi-farm-description">
+                <h3>Additional Koi Farm 2</h3>
+                <p>Specializing in large, show-quality Koi, this farm has won several prestigious awards for their Kohaku and Showa varieties.</p>
+                <a href="#" class="detail-link">detail..</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Koi Fish Breeds Section -->
+    <section class="koi-fish-breeds-section my-5">
+        <h2 class="text-center mb-4">Koi Fish Breeds</h2>
+        <div class="container">
+            <div class="row g-4">
+                <!-- Asagi Koi -->
+                <div class="col-lg-3 col-md-6">
+                    <div class="card border-0 shadow-sm h-100 koi-card">
+                        <div class="img-container">
+                            <img src="https://i0.wp.com/koitalk.com/wp-content/uploads/2023/12/Asagi.jpg?resize=683%2C1024&ssl=1" class="card-img-top img-fluid" alt="Asagi Koi">
+                        </div>
+                        <div class="card-body text-center d-flex flex-column">
+                            <h5 class="card-title text-danger">Asagi Koi</h5>
+                            <p class="card-text">Gray-green scales, symmetrical pattern</p>
+                        </div>
+                        <div class="card-footer text-center border-0 bg-transparent d-flex justify-content-between">
+                            <a href="#" class="btn btn-sm btn-outline-primary detail-link">Detail</a>
+                            <a href="#" class="btn btn-sm btn-outline-success contact-link">Contact</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Goshiki Koi -->
+                <div class="col-lg-3 col-md-6">
+                    <div class="card border-0 shadow-sm h-100 koi-card">
+                        <div class="img-container">
+                            <img src="https://hanoverkoifarms.com/wp-content/uploads/2017/01/Goshiki-7.jpg" class="card-img-top img-fluid" alt="Goshiki Koi">
+                        </div>
+                        <div class="card-body text-center d-flex flex-column">
+                            <h5 class="card-title text-danger">Goshiki Koi</h5>
+                            <p class="card-text">White background combined with red, blue, black, gray</p>
+                        </div>
+                        <div class="card-footer text-center border-0 bg-transparent d-flex justify-content-between">
+                            <a href="#" class="btn btn-sm btn-outline-primary detail-link">Detail</a>
+                            <a href="#" class="btn btn-sm btn-outline-success contact-link">Contact</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Taisho Sanshoku Koi -->
+                <div class="col-lg-3 col-md-6">
+                    <div class="card border-0 shadow-sm h-100 koi-card">
+                        <div class="img-container">
+                            <img src="https://ran.com.vn/wp-content/uploads/2021/02/TAISHO-SANSHOKU-767x1024.jpeg" class="card-img-top img-fluid" alt="Taisho Sanshoku Koi">
+                        </div>
+                        <div class="card-body text-center d-flex flex-column">
+                            <h5 class="card-title text-danger">Taisho Sanshoku Koi</h5>
+                            <p class="card-text">White, red, black colors mixed evenly</p>
+                        </div>
+                        <div class="card-footer text-center border-0 bg-transparent d-flex justify-content-between">
+                            <a href="#" class="btn btn-sm btn-outline-primary detail-link">Detail</a>
+                            <a href="#" class="btn btn-sm btn-outline-success contact-link">Contact</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Shiro Utsuri Koi -->
+                <div class="col-lg-3 col-md-6">
+                    <div class="card border-0 shadow-sm h-100 koi-card">
+                        <div class="img-container">
+                            <img src="https://www.grandkoi.com/wp-content/uploads/2021/04/6647-2.png" class="card-img-top img-fluid" alt="Shiro Utsuri Koi">
+                        </div>
+                        <div class="card-body text-center d-flex flex-column">
+                            <h5 class="card-title text-danger">Shiro Utsuri Koi</h5>
+                            <p class="card-text">White background color, strong black pattern</p>
+                        </div>
+                        <div class="card-footer text-center border-0 bg-transparent d-flex justify-content-between">
+                            <a href="#" class="btn btn-sm btn-outline-primary detail-link">Detail</a>
+                            <a href="#" class="btn btn-sm btn-outline-success contact-link">Contact</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-4">
+                    <button class="btn btn-primary view-more-btn">View More</button>
+                </div>
+            </div>
+    </section>
+
+    <!-- Featured Services Section -->
+    <section class="featured-service my-5">
+        <h2 class="text-center mb-4">Featured Services</h2>
+        <div class="service-slider">
+            <section class="service" style="background-image: url('@Url.Content("~/images/banner01.jpg")');">
+                <div class="service-content">
+                    <h1>Service 1</h1>
+                    <p>Explore our top service offerings</p>
+                    <button>Contact now</button>
+                </div>
+            </section>
+            <section class="service" style="background-image: url('https://example.com/service2.jpg');">
+                <div class="service-content">
+                    <h1>Service 2</h1>
+                    <p>Personalized Koi Care Services</p>
+                    <button>Learn More</button>
+                </div>
+            </section>
+            <section class="service" style="background-image: url('https://example.com/service3.jpg');">
+                <div class="service-content">
+                    <h1>Service 3</h1>
+                    <p>Expert Koi Pond Design</p>
+                    <button>Learn More</button>
+                </div>
+            </section>
+        </div>
+
+        <!-- Navigation Buttons for Featured Services -->
+        <div class="nav-buttons">
+            <button class="nav-button" onclick="prevService()">&#10094; </button>
+            <button class="nav-button" onclick="nextService()"> &#10095;</button>
+        </div>
+        <div class="text-center mt-4">
+            <button class="btn btn-primary view-more-btn">View More</button>
+        </div>
+    </section>
+
+    <!-- Koi Service Process Section -->
+    <section class="koi-service-process-section my-5">
+        <h2 class="text-center mb-4">Koi Service Process</h2>
+        <div class="container">
+            <div class="row service-step">
+                <div class="col-md-6 step-description">
+                    <h4>1. Submit Your Request</h4>
+                    <p>Select the Koi fish breed you're interested in and send your request to us.</p>
+                </div>
+                <div class="col-md-6 step-icon">
+                    <i class="fas fa-paper-plane"></i>
+                </div>
+            </div>
+            <div class="row service-step">
+                <div class="col-md-6 step-icon">
+                    <i class="fas fa-map-marked-alt"></i>
+                </div>
+                <div class="col-md-6 step-description">
+                    <h4>2. Farm Selection Consultation</h4>
+                    <p>Our sales staff will recommend suitable farms based on your preferences.</p>
+                </div>
+            </div>
+            <div class="row service-step">
+                <div class="col-md-6 step-description">
+                    <h4>3. Itinerary Planning</h4>
+                    <p>Choose your preferred farm, and we will create a detailed trip itinerary (including consultation fees and transportation).</p>
+                </div>
+                <div class="col-md-6 step-icon">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+            </div>
+            <div class="row service-step">
+                <div class="col-md-6 step-icon">
+                    <i class="fas fa-file-invoice"></i>
+                </div>
+                <div class="col-md-6 step-description">
+                    <h4>4. Quotation Approval</h4>
+                    <p>We send a quotation for your approval and payment.</p>
+                </div>
+            </div>
+            <div class="row service-step">
+                <div class="col-md-6 step-description">
+                    <h4>5. Confirm Trip Details</h4>
+                    <p>Once payment is made, you will receive the detailed itinerary and support information for airport check-in, hotel, and farm visits.</p>
+                </div>
+                <div class="col-md-6 step-icon">
+                    <i class="fas fa-plane-departure"></i>
+                </div>
+            </div>
+            <div class="row service-step">
+                <div class="col-md-6 step-icon">
+                    <i class="fas fa-fish"></i>
+                </div>
+                <div class="col-md-6 step-description">
+                    <h4>6. Farm Visit and Fish Purchase</h4>
+                    <p>Our consulting staff will assist you in selecting and negotiating the price for the Koi fish at the farms.</p>
+                </div>
+            </div>
+            <div class="row service-step">
+                <div class="col-md-6 step-description">
+                    <h4>7. Payment and Delivery</h4>
+                    <p>After selecting your fish, our team will arrange delivery to your hotel or the address you specify.</p>
+                </div>
+                <div class="col-md-6 step-icon">
+                    <i class="fas fa-truck"></i>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- News Section -->
+    <section class="news-section my-5">
+        <h2 class="text-center mb-4">News</h2>
+        <div class="container">
+            <div class="row">
+                <!-- First News Article -->
+                <div class="col-md-6">
+                    <div class="news-card">
+                        <div class="news-image">
+                            <img src="https://fullserviceaquatics.com/wp-content/uploads/2014/08/koispawn.jpg" alt="Koi fish roam after heavy rain">
+                        </div>
+                        <div class="news-content">
+                            <h4>Koi fish come to the yard to roam after heavy rain</h4>
+                            <p>Heavy rains caused the pond water level to rise, so the Koi fish took advantage of the opportunity to go to the yard to play under close 'protection'. It is not unusual for fish to go to the yard or even spill out onto the street after heavy rains, but a Koi fish 'migrating' like this is truly rare.</p>
+                            <a href="#" class="news-detail">detail..</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Second News Article -->
+                <div class="col-md-6">
+                    <div class="news-card">
+                        <div class="news-image">
+                            <img src="https://d2uqfpnktc64mn.cloudfront.net/uploads/post_section/image/425/default_Photo-by-Hidenobu-Suzuki-Monets-Pond-Nemichi-Shrine-Seki-City-Gifu-Japan_w.jpg" alt="Lake famous for its picturesque appearance">
+                        </div>
+                        <div class="news-content">
+                            <h4>The lake is famous for its picturesque appearance</h4>
+                            <p>The lake is renowned for its stunning beauty, attracting many visitors each year. Initially, few believed that the photo of Lake Namonaki was genuine, with doubts about its serene clarity and vibrant colors. However, after watching a video showing Koi fish gracefully swimming, people were convinced of its authenticity.</p>
+                            <a href="#" class="news-detail">detail..</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- View More Button -->
+            <div class="text-center mt-4">
+                <button class="btn btn-primary view-more-btn">View More</button>
+            </div>
+
+            <section class="feedback-section">
+                <h2 class="feedback-title">Client Feedback</h2>
+                <div class="feedback-carousel">
+                    <!-- Feedback 1 -->
+                    <div class="feedback-card">
+                        <div class="feedback-avatar">
+                            <img src="https://via.placeholder.com/80" alt="Avatar">
+                        </div>
+                        <div class="feedback-content">
+                            <p class="feedback-text">"du ma dep vai lon!"</p>
+                            <p class="feedback-name">Khoa Phang</p>
+                            <div class="feedback-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Feedback 2 -->
+                    <div class="feedback-card">
+                        <div class="feedback-avatar">
+                            <img src="https://via.placeholder.com/80" alt="Avatar">
+                        </div>
+                        <div class="feedback-content">
+                            <p class="feedback-text">"Dich vu 10 diem"</p>
+                            <p class="feedback-name">Le Van Viet</p>
+                            <div class="feedback-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Feedback 3 -->
+                    <div class="feedback-card">
+                        <div class="feedback-avatar">
+                            <img src="https://via.placeholder.com/80" alt="Avatar">
+                        </div>
+                        <div class="feedback-content">
+                            <p class="feedback-text">"Amazing quality and quick response!"</p>
+                            <p class="feedback-name">Tai Con</p>
+                            <div class="feedback-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="feedback-navigation">
+                    <button class="nav-button" id="prev-feedback"><i class="fas fa-chevron-left"></i></button>
+                    <button class="nav-button" id="next-feedback"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </section>
+
+
+
+
+
+
+
+        </div>
+    </section>
+    <button class="back-to-top" onclick="scrollToTop()">↑</button>
+
+
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.hero');
+        const totalSlides = slides.length;
+
+        function showSlide(index) {
+            const slider = document.querySelector('.hero-slider');
+            slider.style.transform = `translateX(-${index * 100}%)`;
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            showSlide(currentSlide);
+        }
+
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            showSlide(currentSlide);
+        }
+
+        setInterval(nextSlide, 5000); // Change slide every 5 seconds
+
+        function searchFunction() {
+            var input = document.getElementById('searchInput').value.toLowerCase();
+            if (input === 'koi' || input === 'nishikigoi') {
+                alert('Koi information found!');
+            } else if (input === '') {
+                alert('Please enter a search term.');
+            } else {
+                alert('No results found for: ' + input);
+            }
+        }
+
+        function toggleMenu() {
+            const menu = document.querySelector('.mobile-menu');
+            menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function scrollToTop() {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+        }
+
+        window.onscroll = function () {
+            document.querySelector('.back-to-top').style.display = document.body.scrollTop > 20 || document.documentElement.scrollTop > 20 ? 'block' : 'none';
+        };
+
+        const tabsData = [
+            { name: 'Dainichi', id: 'dainichi' },
+            { name: 'Otsuka', id: 'otsuka' },
+            { name: 'Fukasawa', id: 'fukasawa' },
+            { name: 'Hosokai', id: 'hosokai' },
+            { name: 'Shinoda', id: 'additional1' },
+            { name: 'Farm 2', id: 'additional2' }
+        ];
+
+        const tabsContainer = document.getElementById('tab-container');
+        const farmSections = document.querySelectorAll('.koi-farm-content');
+        let currentFarm = 0;  // Currently visible farm
+        let startTabIndex = 0;  // Start index of visible tabs
+        const maxVisibleTabs = 4;  // Maximum number of visible tabs
+
+        // Function to display the current farm and hide others
+        function showFarm(index) {
+            document.querySelectorAll('.koi-farm-tab').forEach((tab, i) => {
+                tab.classList.toggle('active', i === index - startTabIndex);  // Adjusted for the visible tabs
+            });
+            farmSections.forEach((section, i) => {
+                section.style.display = i === index ? 'flex' : 'none';
+            });
+        }
+
+        // Function to render tabs based on the visible range
+        function renderTabs() {
+            tabsContainer.innerHTML = '';  // Clear current tabs
+            const visibleTabs = tabsData.slice(startTabIndex, startTabIndex + maxVisibleTabs);
+            visibleTabs.forEach((tabData, index) => {
+                const tabElement = document.createElement('div');
+                tabElement.classList.add('koi-farm-tab');
+                if (startTabIndex + index === currentFarm) {
+                    tabElement.classList.add('active');
+                }
+                tabElement.innerText = tabData.name;
+                tabElement.addEventListener('click', () => {
+                    currentFarm = startTabIndex + index;
+                    showFarm(currentFarm);
+                    renderTabs();
+                });
+                tabsContainer.appendChild(tabElement);
+            });
+        }
+
+        // Event listeners for Previous and Next tab buttons
+        document.getElementById('prev-tabs-button').addEventListener('click', () => {
+            if (currentFarm > 0) {
+                currentFarm--;
+                if (currentFarm < startTabIndex) {
+                    startTabIndex--;
+                }
+                showFarm(currentFarm);
+                renderTabs();
+            }
+        });
+
+        document.getElementById('next-tabs-button').addEventListener('click', () => {
+            if (currentFarm < tabsData.length - 1) {
+                currentFarm++;
+                if (currentFarm >= startTabIndex + maxVisibleTabs) {
+                    startTabIndex++; // Shift visible tabs to the right
+                }
+                showFarm(currentFarm);
+                renderTabs();
+            }
+        });
+
+        // Initial render of tabs and farms
+        renderTabs();
+        showFarm(currentFarm);
+
+        let currentService = 0;
+        const services = document.querySelectorAll('.service');
+        const totalServices = services.length;
+
+        function showService(index) {
+            const serviceSlider = document.querySelector('.service-slider');
+            serviceSlider.style.transform = `translateX(-${index * 100}%)`;
+        }
+
+        function nextService() {
+            currentService = (currentService + 1) % totalServices;
+            showService(currentService);
+        }
+
+        function prevService() {
+            currentService = (currentService - 1 + totalServices) % totalServices;
+            showService(currentService);
+        }
+
+        setInterval(nextService, 15000); // Change service every 15 seconds
+
+        const feedbackCards = document.querySelectorAll('.feedback-card');
+        let currentFeedback = 0;
+
+        function showFeedback(index) {
+            feedbackCards.forEach((card, i) => {
+                card.classList.remove('active');
+                if (i === index) {
+                    card.classList.add('active');
+                }
+            });
+        }
+
+        document.getElementById('prev-feedback').addEventListener('click', () => {
+            currentFeedback = (currentFeedback - 1 + feedbackCards.length) % feedbackCards.length;
+            showFeedback(currentFeedback);
+        });
+
+        document.getElementById('next-feedback').addEventListener('click', () => {
+            currentFeedback = (currentFeedback + 1) % feedbackCards.length;
+            showFeedback(currentFeedback);
+        });
+
+        showFeedback(currentFeedback);
+
+        const feedbackCarousel = document.querySelector('.feedback-carousel');
+        const nextButton = document.getElementById('next-feedback');
+        const prevButton = document.getElementById('prev-feedback');
+
+        nextButton.addEventListener('click', () => {
+            feedbackCarousel.scrollBy({
+                left: 300, // Scroll khoảng cách tương đương với chiều rộng của feedback card
+                behavior: 'smooth'
+            });
+        });
+
+        prevButton.addEventListener('click', () => {
+            feedbackCarousel.scrollBy({
+                left: -300,
+                behavior: 'smooth'
+            });
+        });
+
+
+
+
+    </script>
+
+</body>
+</html>
