@@ -35,13 +35,16 @@ namespace KoiOrderingSystem.Controllers
 
         // POST: /Login
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Login(Account model)
         {
+            
             if (ModelState.IsValid)
             {
                 // Check if the user exists in the database
                 var user = _db.Accounts
-                              .FirstOrDefault(u => u.Username == model.Username && u.Password == model.Password);
+              .FirstOrDefault(u => u.Username == model.Username && u.Password == model.Password);
+
 
                 if (user != null)
                 {

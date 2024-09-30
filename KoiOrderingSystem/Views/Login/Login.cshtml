@@ -236,6 +236,8 @@
 
         @using (Html.BeginForm("", "Login", FormMethod.Post))
         {
+            @Html.AntiForgeryToken()
+
             <div class="input-container">
                 @Html.TextBoxFor(m => m.Username, new { @class = "form-control", placeholder = " " })
                 <label for="username">Username</label>
