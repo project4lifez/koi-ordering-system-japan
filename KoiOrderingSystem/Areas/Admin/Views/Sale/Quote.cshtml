@@ -1,0 +1,185 @@
+﻿@{
+    ViewData["Title"] = "Quote";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quote (Detail Trip)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1 class="text-center">Quote (Detail Trip)</h1>
+
+        <div class="row mb-3">
+            <div class="col-md-3">
+                <label for="date">Date:</label>
+                <input type="date" class="form-control" id="date">
+            </div>
+            <div class="col-md-3">
+                <label for="customerId">Customer ID:</label>
+                <input type="text" class="form-control" id="customerId">
+            </div>
+            <div class="col-md-3">
+                <label for="customerName">Name Customer:</label>
+                <input type="text" class="form-control" id="customerName">
+            </div>
+            <div class="col-md-3">
+                <label for="orderId">Order ID:</label>
+                <input type="text" class="form-control" id="orderId">
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-3">
+                <label for="totalPrice">Total Price:</label>
+                <input type="text" class="form-control" id="totalPrice">
+            </div>
+            <div class="col-md-3">
+                <label for="startDate">Start Date:</label>
+                <input type="date" class="form-control" id="startDate">
+                <small id="startDateError" class="text-danger"></small>
+            </div>
+            <div class="col-md-3">
+                <label for="endDate">End Date:</label>
+                <input type="date" class="form-control" id="endDate">
+                <small id="endDateError" class="text-danger"></small>
+            </div>
+            <div class="col-md-3 d-flex align-items-end">
+                <button class="btn btn-primary w-100" id="nextButton">Next</button>
+            </div>
+        </div>
+
+        <div id="daysContainer"></div> <!-- Container sẽ chứa các Day -->
+
+        <div class="row mt-4">
+            <div class="col-md-12 text-end">
+                <button class="btn btn-success">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Hàm để tính toán số ngày giữa start date và end date
+        function calculateDaysDifference(startDate, endDate) {
+            const start = new Date(startDate);
+            const end = new Date(endDate);
+            const timeDiff = end - start;
+            const dayDiff = timeDiff / (1000 * 60 * 60 * 24) + 1; // Cộng thêm 1 vì bao gồm cả ngày bắt đầu
+            return dayDiff;
+        }
+
+        function addDay(dayNumber) {
+            let localTopicCount = 0;
+            const daysContainer = document.getElementById('daysContainer');
+            const newDayContent = document.createElement('div');
+            newDayContent.className = 'day-content';
+            newDayContent.innerHTML =
+                `<h2 class="text-center mb-3">Day ${dayNumber}</h2>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>The Main Topic:</label>
+                                <div id="mainTopicsContainer">
+                                    <input type="text" class="form-control mb-2" placeholder="The main topic ${++localTopicCount}">
+                                    <input type="text" class="form-control mb-2" placeholder="The main topic ${++localTopicCount}">
+                                    <input type="text" class="form-control mb-2" placeholder="The main topic ${++localTopicCount}">
+                                </div>
+                                <button class="btn btn-primary btn-sm addMainTopicButton">+</button>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="content">Content:</label>
+                                <select id="content" class="form-select mb-2">
+                                    <option>The main topic 1</option>
+                                    <option>The main topic 2</option>
+                                    <option>The main topic 3</option>
+                                    <option>The main topic 4</option>
+                                </select>
+                                <label for="additionalContent">Additional Content:</label>
+                                <textarea id="additionalContent" class="form-control" rows="4"></textarea>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <label for="notePrice">Note Price:</label>
+                                <textarea id="notePrice" class="form-control" rows="4"></textarea>
+                            </div>
+                        </div>`;
+
+            daysContainer.appendChild(newDayContent);
+
+            // Thêm sự kiện cho nút "+" để thêm chủ đề vào từng ngày
+            newDayContent.querySelector('.addMainTopicButton').addEventListener('click', function () {
+                const mainTopicsContainer = newDayContent.querySelector('#mainTopicsContainer');
+                const contentSelect = newDayContent.querySelector('#content');
+                addMainTopic(mainTopicsContainer, contentSelect, ++localTopicCount);
+            });
+        }
+
+        // Kiểm tra hợp lệ cho ngày
+        function validateDates() {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            const startDateError = document.getElementById('startDateError');
+            const endDateError = document.getElementById('endDateError');
+            startDateError.textContent = '';
+            endDateError.textContent = '';
+
+            const today = new Date().toISOString().split('T')[0];
+            let isValid = true;
+
+            if (startDate && startDate < today) {
+                startDateError.textContent = 'Start date cannot be in the past.';
+                isValid = false;
+            }
+
+            if (endDate && endDate < today) {
+                endDateError.textContent = 'End date cannot be in the past.';
+                isValid = false;
+            }
+
+            if (startDate && endDate && endDate < startDate) {
+                endDateError.textContent = 'End date cannot be before the start date.';
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        // Kiểm tra ngay lập tức khi nhập vào trường ngày
+        document.getElementById('startDate').addEventListener('input', validateDates);
+        document.getElementById('endDate').addEventListener('input', validateDates);
+
+        // Khi nhấn nút "Next", tạo bảng tương ứng với số ngày giữa Start Date và End Date
+        document.getElementById('nextButton').addEventListener('click', function () {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+
+            if (validateDates()) {
+                const totalDays = calculateDaysDifference(startDate, endDate);
+                document.getElementById('daysContainer').innerHTML = ''; // Xóa nội dung cũ trước khi thêm mới
+
+                for (let i = 1; i <= totalDays; i++) {
+                    addDay(i);
+                }
+            } else {
+                alert('Please ensure that the dates are valid.');
+            }
+        });
+
+        // Hàm để thêm chủ đề mới (được dùng ở trên)
+        function addMainTopic(mainTopicsContainer, contentSelect, localTopicCount) {
+            const newInput = document.createElement('input');
+            newInput.type = 'text';
+            newInput.className = 'form-control mb-2';
+            newInput.placeholder = `The main topic ${localTopicCount}`;
+            mainTopicsContainer.appendChild(newInput);
+
+            const newOption = document.createElement('option');
+            newOption.text = `The main topic ${localTopicCount}`;
+            contentSelect.add(newOption);
+        }
+    </script>
+</body>
