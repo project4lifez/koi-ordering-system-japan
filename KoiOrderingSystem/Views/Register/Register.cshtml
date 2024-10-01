@@ -1,0 +1,333 @@
+﻿@{
+    Layout = null;
+}
+@model KoiOrderingSystem.Models.Account
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Koi88</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #333;
+        }
+
+        .register-container {
+            background: #fff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 400px;
+            overflow: visible; /* Đảm bảo không che các phần tử con */
+            z-index: 1; /* Giữ thứ tự cho các phần tử bên trong */
+        }
+
+            .register-container h1 {
+                margin-bottom: 30px;
+                font-size: 24px;
+                font-weight: bold;
+            }
+
+        .input-container {
+            position: relative; /* Đảm bảo vị trí tương đối cho các phần tử con */
+            margin: 30px 0;
+            text-align: left;
+            overflow: visible; /* Đảm bảo thông báo lỗi không bị che */
+            z-index: 1; /* Giữ thứ tự cho các phần tử bên trong */
+        }
+
+            .input-container input[type="text"],
+            .input-container input[type="password"],
+            .input-container input[type="email"],
+            .input-container input[type="date"],
+            .input-container select {
+                width: 100%;
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                background: #fafafa;
+                color: #333;
+                font-size: 16px;
+                transition: all 0.3s ease-in-out;
+                box-sizing: border-box;
+            }
+
+                .input-container input:focus,
+                .input-container select:focus {
+                    border: 1px solid #00bcd4;
+                    outline: none;
+                    background: #fff;
+                }
+
+            .input-container label {
+                position: absolute;
+                top: 50%;
+                left: 15px;
+                transform: translateY(-50%);
+                background: #fff;
+                padding: 0 5px;
+                transition: all 0.3s ease-in-out;
+                pointer-events: none;
+                color: #999;
+                font-size: 16px;
+            }
+
+            .input-container input:focus + label,
+            .input-container input:not(:placeholder-shown) + label,
+            .input-container select:focus + label,
+            .input-container select:not(:placeholder-shown) + label {
+                top: -10px;
+                left: 10px;
+                font-size: 12px;
+                color: #00bcd4;
+            }
+
+        .register-container input[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            background: #00bcd4;
+            color: #fff;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+            margin-top: 20px;
+        }
+
+            .register-container input[type="submit"]:hover {
+                background: #008c9e;
+            }
+
+        .register-container a {
+            color: #00bcd4;
+            text-decoration: none;
+            font-size: 14px;
+            margin: 10px;
+            display: inline-block;
+            transition: color 0.3s ease-in-out;
+        }
+
+            .register-container a:hover {
+                text-decoration: underline;
+            }
+
+        .error-message {
+            color: red;
+            font-size: 14px; /* Kích thước chữ dễ đọc */
+            display: block; /* Đảm bảo nó hiển thị dưới dạng khối */
+            margin-top: 5px; /* Khoảng cách giữa input và thông báo lỗi */
+            visibility: visible; /* Đảm bảo thông báo lỗi luôn hiển thị */
+            position: relative; /* Không bị che bởi các phần tử khác */
+            z-index: 10; /* Đảm bảo nó luôn nằm trên các phần tử khác */
+        }
+
+        .success-message {
+            color: green;
+            margin-top: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <h1>Create New Account</h1>
+        <form asp-action="Register" method="post">
+            @Html.AntiForgeryToken()
+            <div class="input-container">
+                <input asp-for="Username" required placeholder=" " />
+                <label asp-for="Username">Username</label>
+                <span asp-validation-for="Username" class="error-message"></span>
+            </div>
+            <div class="input-container">
+                <input asp-for="Password" type="password" required placeholder=" " id="Password" />
+                <label asp-for="Password">Password</label>
+                <span asp-validation-for="Password" class="error-message"></span>
+            </div>
+            <div class="input-container">
+                <input type="password" id="ConfirmPassword" required placeholder=" " />
+                <label for="ConfirmPassword">Confirm Password</label>
+                <span class="error-message" id="confirmPasswordError"></span>
+            </div>
+            <div class="input-container">
+                <input asp-for="Email" required placeholder=" " />
+                <label asp-for="Email">Email</label>
+                <span asp-validation-for="Email" class="error-message"></span>
+            </div>
+            <div class="input-container">
+                <input asp-for="Firstname" required placeholder=" " />
+                <label asp-for="Firstname">First Name</label>
+                <span asp-validation-for="Firstname" class="error-message"></span>
+            </div>
+            <div class="input-container">
+                <input asp-for="Lastname" required placeholder=" " />
+                <label asp-for="Lastname">Last Name</label>
+                <span asp-validation-for="Lastname" class="error-message"></span>
+            </div>
+            <div class="input-container">
+                <input asp-for="Phone" required placeholder=" " />
+                <label asp-for="Phone">Phone</label>
+                <span asp-validation-for="Phone" class="error-message"></span>
+            </div>
+            <input type="submit" value="Register" />
+        </form>
+        <div class="success-message" id="successMessage">Registration successful!</div>
+        <br />
+        <a href="/Login">Back to Login</a>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Hàm xác thực định dạng email
+            function validateEmail(email) {
+                // Đảm bảo email phải kết thúc bằng @@gmail.com
+                const gmailPattern = /^[a-zA-Z0-9._%+-]+@@gmail\.com$/;
+                return gmailPattern.test(email);
+            }
+
+            // Hàm xác thực số điện thoại (Chỉ chấp nhận số và phải có từ 10 đến 11 chữ số)
+            function validatePhone(phone) {
+                const phonePattern = /^\d{10,11}$/; // Chỉ cho phép nhập số và độ dài từ 10 đến 11 ký tự
+                return phonePattern.test(phone);
+            }
+
+            // Kiểm tra email trong thời gian thực
+            $('input[name="Email"]').on('input', function () {
+                const emailInput = $(this);
+                const emailValue = emailInput.val().trim();
+                if (!validateEmail(emailValue)) {
+                    emailInput.css('border', '2px solid red');
+                    emailInput.siblings('.error-message').text('Email must be a valid @@gmail.com address.').css('color', 'red');
+                } else {
+                    emailInput.css('border', '2px solid green');
+                    emailInput.siblings('.error-message').text('');
+                }
+            });
+
+            // Real-time phone validation
+            $('input[name="Phone"]').on('input', function () {
+                const phoneInput = $(this);
+                const phoneValue = phoneInput.val().trim();
+                if (!validatePhone(phoneValue)) {
+                    phoneInput.css('border', '2px solid red');
+                    phoneInput.siblings('.error-message').text('Phone must be a valid 10-11 digit number.').css('color', 'red');
+                } else {
+                    phoneInput.css('border', '2px solid green');
+                    phoneInput.siblings('.error-message').text('');
+                }
+            });
+
+            // Real-time password validation
+            $('#Password').on('input', function () {
+                const passwordInput = $(this);
+                const password = passwordInput.val().trim();
+                const minLength = 8;
+                if (password.length < minLength) {
+                    passwordInput.css('border', '2px solid red');
+                    passwordInput.siblings('.error-message').text('Password must be at least 8 characters long.').css('color', 'red');
+                } else {
+                    passwordInput.css('border', '2px solid green');
+                    passwordInput.siblings('.error-message').text('');
+                }
+            });
+
+            // Confirm password validation
+            $('#ConfirmPassword').on('input', function () {
+                const confirmPasswordInput = $(this);
+                const password = $('#Password').val().trim();
+                if (confirmPasswordInput.val().trim() !== password) {
+                    confirmPasswordInput.css('border', '2px solid red');
+                    confirmPasswordInput.siblings('.error-message').text('Passwords do not match.').css('color', 'red');
+                } else {
+                    confirmPasswordInput.css('border', '2px solid green');
+                    confirmPasswordInput.siblings('.error-message').text('');
+                }
+            });
+
+            // Highlight input fields on form submit
+            $('form').on('submit', function (e) {
+                let isValid = true;
+                $('.input-container input').css('border', '');
+                $('.error-message').text('');
+
+                // Kiểm tra các trường bắt buộc
+                $('input[required]').each(function () {
+                    if ($(this).val().trim() === '') {
+                        $(this).css('border', '2px solid red');
+                        isValid = false;
+                    }
+                });
+
+                // Validate email format
+                const emailInput = $('input[name="Email"]');
+                const emailValue = emailInput.val().trim();
+                if (!validateEmail(emailValue)) {
+                    emailInput.css('border', '2px solid red');
+                    emailInput.siblings('.error-message').text('Email must be a valid @@gmail.com address.').css('color', 'red');
+                    isValid = false;
+                }
+
+                // Validate phone format
+                const phoneInput = $('input[name="Phone"]');
+                const phoneValue = phoneInput.val().trim();
+                if (!validatePhone(phoneValue)) {
+                    phoneInput.css('border', '2px solid red');
+                    phoneInput.siblings('.error-message').text('Phone must be a valid 10-11 digit number.').css('color', 'red');
+                    isValid = false;
+                }
+
+                // Validate password strength
+                const passwordInput = $('#Password');
+                const passwordValue = passwordInput.val().trim();
+                if (passwordValue.length < 8) {
+                    passwordInput.css('border', '2px solid red');
+                    passwordInput.siblings('.error-message').text('Password must be at least 8 characters long.').css('color', 'red');
+                    isValid = false;
+                }
+
+                // Validate password confirmation
+                const confirmPasswordInput = $('#ConfirmPassword');
+                if (passwordValue !== confirmPasswordInput.val().trim()) {
+                    confirmPasswordInput.css('border', '2px solid red');
+                    confirmPasswordInput.siblings('.error-message').text('Passwords do not match.').css('color', 'red');
+                    isValid = false;
+                }
+
+                if (!isValid) {
+                    e.preventDefault();
+                    alert("Please correct the errors in the form.");
+                } else {
+                    // Show success message
+                    $('#successMessage').show();
+                    alert("Register Successfully!");
+                }
+            });
+
+            // Clear error messages on focus
+            $('.input-container input').on('focus', function () {
+                $(this).css('border', '');
+                $(this).siblings('.error-message').text('');
+            });
+        });
+    </script>
+
+
+
+
+
+</body>
+</html>

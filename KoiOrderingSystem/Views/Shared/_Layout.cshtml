@@ -1,0 +1,470 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Koi Ordering System</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/testingmvc.styles.css" asp-append-version="true" />
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        /* Header and Footer Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f9f9f9;
+            line-height: 1.6;
+        }
+
+        nav {
+            background-color: #fff;
+            padding: 0 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            z-index: 1000; /* Đảm bảo header có z-index cao */
+            width: 100%;
+            height: 70px;
+        }
+            /* Đảm bảo các phần tử bên trong không làm thay đổi kích thước header */
+            nav ul, .search-bar, .language-selector {
+                margin: 0;
+                padding: 0;
+            }
+
+        .menu-toggle {
+            display: flex;
+            cursor: pointer;
+        }
+
+        nav .logo img {
+            height: 50px;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            align-items: center;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+            nav ul li {
+                margin-left: 30px;
+            }
+
+                nav ul li a {
+                    text-decoration: none;
+                    color: #000;
+                    font-weight: bold;
+                    padding: 10px 20px;
+                    transition: color 0.3s ease, transform 0.3s;
+                    display: flex;
+                    align-items: center;
+                    height: 100%;
+                }
+
+                    nav ul li a:hover {
+                        color: #7ec0ee;
+                        transform: scale(1.05);
+                    }
+
+        nav .language-selector {
+            display: flex;
+            align-items: center;
+            height: 100%;
+        }
+
+        .language-selector select {
+            padding: 10px;
+            font-size: 16px;
+            color: #000;
+            font-weight: bold;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            outline: none;
+            transition: border-color 0.3s;
+            height: 40px;
+        }
+
+            .language-selector select:focus {
+                border-color: #5BB2F1;
+            }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            height: 100%;
+        }
+
+            .search-bar input[type="text"] {
+                padding: 10px;
+                font-size: 16px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                outline: none;
+                transition: border-color 0.3s;
+            }
+
+                .search-bar input[type="text"]:focus {
+                    border-color: #add8e6;
+                }
+
+            .search-bar button {
+                margin-left: 10px;
+                padding: 10px 15px;
+                background-color: #5BB2F1;
+                color: white;
+                border: none;
+                cursor: pointer;
+                border-radius: 5px;
+                transition: background-color 0.3s, transform 0.3s;
+            }
+
+                .search-bar button:hover {
+                    background-color: #4A9ED4;
+                    transform: scale(1.05);
+                }
+
+        .mobile-menu {
+            display: none;
+            flex-direction: column;
+            align-items: flex-start;
+            background: white;
+            position: absolute;
+            top: 60px;
+            left: 0;
+            width: 100%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        /* Footer Styles */
+        .footer-link {
+            color: #ffffff !important;
+            text-decoration: none;
+        }
+
+            .footer-link:hover {
+                color: #5BB2F1 !important;
+                text-decoration: none;
+            }
+
+        .footer-heading {
+            color: #5BB2F1;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        footer p, footer a, footer {
+            color: #ffffff;
+        }
+
+        footer {
+            margin: 0;
+            padding: 0;
+            padding-top: 20px;
+            padding-bottom: 20px;
+            background-color: #343a40;
+        }
+
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            margin-top: 70px; /* Đảm bảo phần nội dung không bị che khuất bởi header */
+        }
+
+        footer {
+            margin-top: auto;
+        }
+
+        .greeting {
+            color: #5BB2F1;
+            margin-left: auto;
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+        }
+
+        /* Styles for user dropdown menu */
+        .dropdown {
+            display: inline-block;
+            position: relative;
+        }
+
+        .dropdown-toggle {
+            background-color: #fff;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            font-weight: bold;
+            color: #000;
+        }
+
+        .dropdown-menu {
+            display: none; /* Ẩn dropdown khi không được kích hoạt */
+            position: absolute;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 1050; /* Đảm bảo dropdown có z-index cao hơn cả header */
+            padding: 10px 0;
+            border-radius: 5px;
+            right: 0; /* Căn phải với phần header */
+            top: 100%; /* Đảm bảo vị trí dropdown dưới header */
+        }
+
+            .dropdown-menu.show {
+                display: block; /* Hiển thị dropdown khi kích hoạt */
+            }
+
+            .dropdown-menu a {
+                display: block;
+                padding: 10px 20px;
+                color: #333;
+                text-decoration: none;
+                transition: background-color 0.3s ease;
+            }
+
+                .dropdown-menu a:hover {
+                    background-color: #f0f0f0;
+                }
+
+        .dropdown-toggle::after {
+            margin-left: 5px;
+            content: "\25BC"; /* Mũi tên chỉ xuống */
+            /* CSS cho phần dropdown của user */
+            .nav-item.dropdown
+
+        {
+            position: relative;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            color: #000;
+            font-weight: bold;
+            padding: 10px 20px;
+            text-decoration: none;
+            transition: color 0.3s ease, transform 0.3s;
+        }
+
+            .user-profile:hover {
+                color: #7ec0ee;
+                transform: scale(1.05);
+            }
+
+        .user-icon {
+            margin-right: 8px;
+            font-size: 1.5rem;
+            color: #5BB2F1;
+        }
+
+        .dropdown-menu {
+            min-width: 200px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border: none;
+            padding: 0;
+            overflow: hidden;
+        }
+
+            .dropdown-menu a.dropdown-item {
+                display: flex;
+                align-items: center;
+                padding: 12px 16px;
+                color: #333;
+                text-decoration: none;
+                transition: background-color 0.2s ease, color 0.2s ease;
+            }
+
+                .dropdown-menu a.dropdown-item i {
+                    margin-right: 10px;
+                    font-size: 1.2rem;
+                    color: #5BB2F1;
+                }
+
+                .dropdown-menu a.dropdown-item:hover {
+                    background-color: #f1f1f1;
+                    color: #333;
+                }
+
+                    .dropdown-menu a.dropdown-item:hover i {
+                        color: #7ec0ee;
+                    }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <nav>
+        <div class="logo">
+            <img src="https://via.placeholder.com/150x50" alt="KOI88 Logo">
+        </div>
+        <div class="menu-toggle" onclick="toggleMenu()">
+            <i class="fas fa-bars"></i>
+        </div>
+        <ul>
+            <li><a href="/home">Home</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#blog">Blog</a></li>
+
+            @if (Context.Session.GetString("Username") != null && Context.Session.GetInt32("RoleId") == 1)
+            {
+
+                var lastname = Context.Session.GetString("Lastname");
+
+                var username = Context.Session.GetString("Username");
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle user-profile" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user-circle user-icon"></i> Hi, @(string.IsNullOrEmpty(lastname) ? username : lastname)
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <li><a class="dropdown-item" href="/Profile/ViewProfile"><i class="fas fa-user"></i> View Profile</a></li>
+                        <li><a class="dropdown-item" href="/Login/Logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                    </ul>
+                </li>
+            }
+            else
+            {
+                <!-- Hiển thị Login/Signup nếu chưa đăng nhập -->
+                <li><a href="/Login" class="auth-link">Login/Signup</a></li>
+            }
+        </ul>
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Search...">
+            <button onclick="searchFunction()"><i class="fas fa-search"></i></button>
+        </div>
+        <div class="language-selector">
+            <select id="language">
+                <option value="en">English</option>
+                <option value="jp">Japanese</option>
+            </select>
+        </div>
+    </nav>
+    <div class="mobile-menu">
+        <a href="#home">Home</a>
+        <a href="#services">Services</a>
+        <a href="#about">About</a>
+        <a href="#gallery">Blog</a>
+        <a href="#contact">Contact</a>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light py-5 mt-5">
+        <div class="container">
+            <div class="row">
+                <!-- Company Info -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 class="footer-heading">Company</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="footer-link">About Us</a></li>
+                        <li><a href="#" class="footer-link">Our Services</a></li>
+                        <li><a href="#" class="footer-link">Privacy Policy</a></li>
+                        <li><a href="#" class="footer-link">Affiliate Program</a></li>
+                    </ul>
+                </div>
+                <!-- Get Help -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 class="footer-heading">Get Help</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="footer-link">FAQ</a></li>
+                        <li><a href="#" class="footer-link">Shipping Info</a></li>
+                        <li><a href="#" class="footer-link">Returns & Exchanges</a></li>
+                        <li><a href="#" class="footer-link">Order Tracking</a></li>
+                        <li><a href="#" class="footer-link">Payment Methods</a></li>
+                    </ul>
+                </div>
+                <!-- Our Services -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 class="footer-heading">Our Services</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="footer-link">Consulting</a></li>
+                        <li><a href="#" class="footer-link">Training Programs</a></li>
+                        <li><a href="#" class="footer-link">Project Management</a></li>
+                        <li><a href="#" class="footer-link">Custom Solutions</a></li>
+                    </ul>
+                </div>
+                <!-- Follow Us -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 class="footer-heading">Connect With Us</h5>
+                    <p>Stay updated by following us on social media:</p>
+                    <div class="d-flex">
+                        <a href="#" class="text-light me-3"><i class="fab fa-facebook fa-lg"></i></a>
+                        <a href="#" class="text-light me-3"><i class="fab fa-instagram fa-lg"></i></a>
+                        <a href="#" class="text-light me-3"><i class="fab fa-linkedin fa-lg"></i></a>
+                        <a href="#" class="text-light"><i class="fab fa-youtube fa-lg"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-4 text-white">
+            <p class="mb-0">© 2024 Your Company. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        function toggleMenu() {
+            const menu = document.querySelector('.mobile-menu');
+            menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function searchFunction() {
+            var input = document.getElementById('searchInput').value.toLowerCase();
+            if (input === 'koi' || input === 'nishikigoi') {
+                alert('Koi information found!');
+            } else if (input === '') {
+                alert('Please enter a search term.');
+            } else {
+                alert('No results found for: ' + input);
+            }
+        }
+
+        // Toggle dropdown menu
+        document.addEventListener('DOMContentLoaded', function () {
+            var dropdownToggle = document.querySelector('.dropdown-toggle');
+            var dropdownMenu = document.querySelector('.dropdown-menu');
+
+            if (dropdownToggle) {
+                dropdownToggle.addEventListener('click', function () {
+                    dropdownMenu.classList.toggle('show');
+                });
+
+                // Hide menu if click outside
+                window.addEventListener('click', function (e) {
+                    if (!dropdownToggle.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                        dropdownMenu.classList.remove('show');
+                    }
+                });
+            }
+        });
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
