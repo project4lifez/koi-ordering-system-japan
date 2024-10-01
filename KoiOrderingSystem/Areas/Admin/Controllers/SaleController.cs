@@ -2,7 +2,7 @@
 
 namespace KoiOrderingSystem.Areas.Admin.Controllers
 {
-    [Area("admin")]
+    [Area("Admin")]
 
     public class SaleController : Controller
     {

@@ -2,7 +2,7 @@
 
 namespace KoiAdmin.Areas.Admin.Controllers
 {
-    [Area("admin")]
+    [Area("Admin")]
     public class ManagerController : Controller
     {
         public IActionResult Manager()

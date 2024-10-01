@@ -11,7 +11,7 @@ public partial class Customer
 
     public virtual Account? Account { get; set; }
 
-    public virtual ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
+    public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
-    public virtual ICollection<FormBooking> FormBookings { get; set; } = new List<FormBooking>();
+    public virtual ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
 }

@@ -11,9 +11,7 @@ public partial class Trip
 
     public string? TripName { get; set; }
 
-    public string? Status { get; set; }
-
-    public decimal? Price { get; set; }
+    public decimal? PriceTotal { get; set; }
 
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 

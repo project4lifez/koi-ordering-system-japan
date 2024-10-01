@@ -11,11 +11,9 @@ public partial class TripDetail
 
     public string? SubTopic { get; set; }
 
-    public string? NotePrice { get; set; }
+    public decimal? NotePrice { get; set; }
 
     public DateOnly? Day { get; set; }
-
-    public string? Status { get; set; }
 
     public virtual ICollection<KoiFarm> KoiFarms { get; set; } = new List<KoiFarm>();
 

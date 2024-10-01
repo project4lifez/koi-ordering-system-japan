@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using KoiOrderingSystem.Controllers.Admin;
+using Microsoft.AspNetCore.Mvc;
 
 namespace KoiAdmin.Areas.Admin.Controllers
 {
-    [Area("admin")]
-    public class ConsultingController : Controller
+    [Area("Admin")]
+    public class ConsultingController : BaseController
     {
         public IActionResult Index()
         {

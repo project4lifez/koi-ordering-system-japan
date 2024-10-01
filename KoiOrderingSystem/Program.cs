@@ -38,7 +38,7 @@ namespace KoiOrderingSystem
         {
              googleOptions.ClientId = "#"; // Replace with your ClientId
              googleOptions.ClientSecret = "#"; // Replace with your ClientSecret
-             googleOptions.CallbackPath = "#"; // This is the path Google will redirect to after authentication
+             googleOptions.CallbackPath = "/signin-google"; // This is the path Google will redirect to after authentication
             });
             var app = builder.Build();
 
@@ -89,7 +89,7 @@ namespace KoiOrderingSystem
                pattern: "{area:exists}/{controller=Delivering}/{action=Index}/{id?}");
             app.MapControllerRoute(
                name: "areas",
-               pattern: "{area:exists}/{controller=Home}/{action=IOrderManagement}/{id?}");
+               pattern: "{area:exists}/{controller=Home}/{action=OrderManagement}/{id?}");
 
 
             app.Run();

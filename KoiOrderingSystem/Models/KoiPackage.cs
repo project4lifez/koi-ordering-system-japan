@@ -15,7 +15,7 @@ public partial class KoiPackage
 
     public string? Description { get; set; }
 
-    public decimal? Price { get; set; }
+    public decimal? PackagePrice { get; set; }
 
     public string? ImageUrl { get; set; }
 

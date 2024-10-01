@@ -18,9 +18,9 @@ namespace KoiOrderingSystem.Controllers
             return View();
         }
 
-        public ActionResult FormOrder()
+        public ActionResult BookingForm()
         {
-            ViewBag.Title = "FormOrder";
+            ViewBag.Title = "BookingForm";
             return View();
         }
         public ActionResult Create()

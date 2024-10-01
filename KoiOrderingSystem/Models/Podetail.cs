@@ -17,9 +17,13 @@ public partial class Podetail
 
     public decimal? TotalKoiPrice { get; set; }
 
+    public decimal? RemainingPrice { get; set; }
+
     public int? Quantity { get; set; }
 
     public string? ImageUrl { get; set; }
+
+    public DateOnly? Day { get; set; }
 
     public virtual KoiFarm? Farm { get; set; }
 

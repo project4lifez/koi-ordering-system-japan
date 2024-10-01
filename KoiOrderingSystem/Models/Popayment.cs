@@ -9,11 +9,7 @@ public partial class Popayment
 
     public int? PoId { get; set; }
 
-    public decimal? Amount { get; set; }
-
     public DateOnly? PaymentDate { get; set; }
-
-    public string? Status { get; set; }
 
     public virtual ICollection<PaymentMethod> PaymentMethods { get; set; } = new List<PaymentMethod>();
 

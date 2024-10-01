@@ -11,6 +11,12 @@ public partial class Po
 
     public decimal? TotalAmount { get; set; }
 
+    public DateOnly? KoiDeliveryDate { get; set; }
+
+    public TimeOnly? KoiDeliveryTime { get; set; }
+
+    public string? Status { get; set; }
+
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
     public virtual KoiFarm? Farm { get; set; }
