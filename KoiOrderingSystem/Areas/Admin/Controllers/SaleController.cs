@@ -10,5 +10,9 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
         {
             return View();
         }
+        public IActionResult Quote()
+        {
+            return View();
+        }
     }
 }

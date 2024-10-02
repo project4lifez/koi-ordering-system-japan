@@ -74,6 +74,8 @@ namespace KoiOrderingSystem.Controllers
             // Trả về view nếu ModelState không hợp lệ
             return View(booking);
         }
+       
+
 
     }
 }

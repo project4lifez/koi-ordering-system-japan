@@ -1,212 +1,264 @@
-﻿@{
+﻿@model IEnumerable<KoiOrderingSystem.Models.Booking>
+
+@{
     ViewData["Title"] = "Order Management";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order Management</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        /* Table Adjustments */
         .table td, .table th {
             vertical-align: middle;
         }
 
-        .btn-link {
-            text-decoration: underline;
+        .table-responsive {
+            overflow-x: auto;
         }
 
-        .form-container {
-            display: none; /* Ẩn form ban đầu */
+        .table td, .table th {
+            text-align: center;
+        }
+
+        /* Modal Form Styling */
+        .modal-content {
             padding: 20px;
-            border: 1px solid #ddd;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            max-width: 600px; /* Độ rộng tối đa của form */
-            margin: 20px auto; /* Căn giữa form */
-            position: relative;
+            border-radius: 8px;
         }
 
-            .form-container h5 {
-                font-size: 1.5rem;
-                text-align: center;
-                margin-bottom: 20px;
+        .modal-header h5 {
+            font-size: 1.5rem;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Action Buttons */
+        .action-btn {
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 4px;
+        }
+
+            .action-btn:hover {
+                background-color: #f0f0f0;
             }
 
-        .table td {
-            height: 50px;
-        }
-
-        .content-cell {
-            width: 70%; /* Độ rộng cho cột bên phải (Content) */
-        }
-
-        .table td:nth-child(1) {
-            width: 30%; /* Độ rộng cho cột bên trái (Topic) */
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 10px;
-            right: 20px;
-            font-size: 1.5rem;
+        /* Tooltip */
+        [data-bs-toggle="tooltip"] {
             cursor: pointer;
         }
-        /* Additional styles for the table */
-        .table th, .table td {
-            text-align: center; /* Center align text in all cells */
+
+        /* Improve table hover */
+        .table-hover tbody tr:hover {
+            background-color: #f5f5f5;
         }
 
-            /* Specific width for the No column */
-            .table th:nth-child(1), .table td:nth-child(1) {
-                width: 50px; /* Set fixed width for "No" column */
-                max-width: 50px; /* Ensure it doesn't expand */
-                overflow: hidden; /* Prevent overflow */
-            }
+        /* Custom styles for different statuses */
+        .badge-pending {
+            background-color: #808080; /* Gray for Pending */
+        }
+
+        .badge-cancel {
+            background-color: #dc3545; /* Red for Cancel */
+        }
+
+        .badge-confirm {
+            background-color: #28a745; /* Green for Confirm */
+        }
+
+        .badge-other {
+            background-color: #ffc107; /* Yellow for other statuses */
+        }
+
+        /* Center buttons in modal footer */
+        .modal-footer {
+            justify-content: center;
+        }
     </style>
 </head>
+
 <body>
     <main class="container-fluid px-4">
         <h1 class="mt-4">Order Management</h1>
 
-        <div class="row mb-4">
-            <div class="col-md-12">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th style="width: 50px">No</th>
-                            <th>OrderID</th>
-                            <th>Date</th>
-                            <th>Customer</th>
-                            <th>Price</th>
-                            <th>Status</th>
-                            <th>Form</th>
-                            <th>Edit</th>
-                            <th>Detail</th>
-                        </tr>
-                    </thead>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>BookingID</th>
+                        <th>Date</th>
+                        <th>Customer</th>
+                        <th>Price</th>
+                        <th>Status</th>
+                        <th>Booking Form</th>
+                        <th>Edit</th>
+                        <th>Detail</th>
+                    </tr>
+                </thead>
+                @if (Model != null && Model.Any())
+                {
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>#AKT001</td>
-                            <td>2024-09-13</td>
-                            <td>Nguyen Thanh Tai</td>
-                            <td class="text-success">2000$</td>
-                            <td><span class="badge bg-warning">Pending</span></td>
-                            <td><a href="#" onclick="showForm()">View</a></td>
-                            <td><i class="om-edit-icon">✏️</i></td>
-                            <td><i class="om-detail-icon">👁️</i></td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>#GKT002</td>
-                            <td>2024-09-13</td>
-                            <td>Le Minh Thuan</td>
-                            <td class="text-success">2500$</td>
-                            <td><span class="badge bg-warning">Pending</span></td>
-                            <td><a href="#" onclick="showForm()">View</a></td>
-                            <td><i class="om-edit-icon">✏️</i></td>
-                            <td><i class="om-detail-icon">👁️</i></td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>#TKT003</td>
-                            <td>2024-09-13</td>
-                            <td>Le Van Viet</td>
-                            <td class="text-success">2300$</td>
-                            <td><span class="badge bg-warning">Pending</span></td>
-                            <td><a href="#" onclick="showForm()">View</a></td>
-                            <td><i class="om-edit-icon">✏️</i></td>
-                            <td><i class="om-detail-icon">👁️</i></td>
-                        </tr>
+                        @foreach (var booking in Model)
+                        {
+                            <tr>
+                                <td>@booking.BookingId</td>
+                                <td>@booking.BookingId</td>
+                                <td>@booking.BookingDate</td>
+                                <td class="text-success">@booking.Fullname</td>
+                                <td>@booking.QuotedAmount</td>
+
+                                <td>
+                                    @* Conditional logic for status badge color *@
+                                    @{
+                                        string statusClass = booking.Status.ToLower() switch
+                                        {
+                                            "pending" => "badge-pending",
+                                            "cancel" => "badge-cancel",
+                                            "confirm" => "badge-confirm",
+                                            _ => "badge-other" // Other statuses
+                                        };
+                                    }
+                                    <span class="badge @statusClass">@booking.Status</span>
+                                </td>
+
+                                <td>
+                                    <a href="javascript:void(0);" class="btn btn-primary btn-sm" onclick="openFormModal('@booking.Fullname', '@booking.Phone', '@booking.Email', '@booking.Gender', '@booking.Favoritefarm', '@booking.StartDate', '@booking.EndDate', '@booking.EstimatedCost', '@booking.HotelAccommodation', '@booking.Note')">View Form</a>
+                                </td>
+                                <td>
+                                    <span class="action-btn bi bi-pencil-square" data-bs-toggle="tooltip" title="Edit Booking"></span>
+                                </td>
+                                <td>
+                                    <span class="action-btn bi bi-info-circle" data-bs-toggle="tooltip" title="View Details"></span>
+                                </td>
+                            </tr>
+                        }
                     </tbody>
-                </table>
-            </div>
+                }
+                else
+                {
+                    <p>No bookings available.</p>
+                }
+            </table>
         </div>
 
-        <!-- Form Section -->
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card form-container" id="tripForm">
-                    <span class="close-btn" onclick="closeForm()">×</span> <!-- Nút tắt -->
-                    <div class="om-form-header text-center">
-                        <img src="koi88.png" alt="Koi88" class="mb-2">
-                        <h2>FORM</h2>
+        <!-- Modal for Form -->
+        <div class="modal fade" id="formModal" tabindex="-1" aria-labelledby="formModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="formModalLabel">Customer Booking Form</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-
-                    <h5>Trip Design of Customer</h5>
-                    <table class="table table-bordered">
-                        <tbody>
-                            <tr>
-                                <td>Full Name</td>
-                                <td class="content-cell"></td> <!-- Empty cell for Full Name -->
-                            </tr>
-                            <tr>
-                                <td>Phone Number</td>
-                                <td class="content-cell"></td> <!-- Empty cell for Phone Number -->
-                            </tr>
-                            <tr>
-                                <td>Email</td>
-                                <td class="content-cell"></td> <!-- Empty cell for Email -->
-                            </tr>
-                            <tr>
-                                <td>Gender</td>
-                                <td class="content-cell"></td> <!-- Empty cell for Gender -->
-                            </tr>
-                            <tr>
-                                <td>The farm which want to come</td>
-                                <td class="content-cell"></td> <!-- Empty cell for farm -->
-                            </tr>
-                            <tr>
-                                <td>Estimated departure date</td>
-                                <td class="content-cell"></td> <!-- Empty cell for departure date -->
-                            </tr>
-                            <tr>
-                                <td>Return date</td>
-                                <td class="content-cell"></td> <!-- Empty cell for return date -->
-                            </tr>
-                            <tr>
-                                <td>Number of participants</td>
-                                <td class="content-cell"></td> <!-- Empty cell for number of participants -->
-                            </tr>
-                            <tr>
-                                <td>Estimate cost</td>
-                                <td class="content-cell"></td> <!-- Empty cell for estimate cost -->
-                            </tr>
-                            <tr>
-                                <td>Hotel accommodation</td>
-                                <td class="content-cell"></td> <!-- Empty cell for hotel -->
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <div class="form-group">
-                        <label for="additional">Additional Information</label>
-                        <textarea id="additional" class="form-control" rows="4" readonly></textarea> <!-- Empty textarea -->
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="formFullName" class="form-label">Full Name</label>
+                                    <input type="text" class="form-control" id="formFullName" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="formPhone" class="form-label">Phone</label>
+                                    <input type="text" class="form-control" id="formPhone" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="formEmail" class="form-label">Email</label>
+                                    <input type="text" class="form-control" id="formEmail" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="formGender" class="form-label">Gender</label>
+                                    <input type="text" class="form-control" id="formGender" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="formFarm" class="form-label">The farm which want to come</label>
+                                    <input type="text" class="form-control" id="formFarm" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="formStartDate" class="form-label">Estimated departure date</label>
+                                    <input type="text" class="form-control" id="formStartDate" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="formEndDate" class="form-label">Return date</label>
+                                    <input type="text" class="form-control" id="formEndDate" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="formCost" class="form-label">Estimated cost</label>
+                                    <input type="text" class="form-control" id="formCost" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="formHotel" class="form-label">Hotel accommodation</label>
+                                    <input type="text" class="form-control" id="formHotel" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="formNote" class="form-label">Additional Information</label>
+                            <textarea id="formNote" class="form-control" rows="4" readonly></textarea>
+                        </div>
                     </div>
-
-                    <button class="btn btn-primary mt-3" onclick="printForm()">Print Form</button>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" onclick="printForm()">Print Form</button>
+                    </div>
                 </div>
             </div>
         </div>
-
-        <script>
-            function printForm() {
-                const printContent = document.getElementById('tripForm');
-                const win = window.open('', '', 'width=800,height=600');
-                win.document.write(printContent.outerHTML);
-                win.document.close();
-                win.print();
-                win.close();
-            }
-
-            function showForm() {
-                document.getElementById('tripForm').style.display = 'block'; // Hiển thị form khi nhấn vào "View"
-            }
-
-            function closeForm() {
-                document.getElementById('tripForm').style.display = 'none'; // Ẩn form khi nhấn nút tắt
-            }
-        </script>
     </main>
 
+    <script>
+        function openFormModal(fullName, phone, email, gender, farm, startDate, endDate, cost, hotel, note) {
+            document.getElementById('formFullName').value = fullName || 'N/A';
+            document.getElementById('formPhone').value = phone || 'N/A';
+                    document.getElementById('formEmail').value = email || 'N/A';
+            document.getElementById('formGender').value = gender || 'N/A';
+            document.getElementById('formFarm').value = farm || 'N/A';
+            document.getElementById('formStartDate').value = startDate || 'N/A';
+                document.getElementById('formEndDate').value = endDate || 'N/A';
+                    document.getElementById('formCost').value = cost || 'N/A';
+                    document.getElementById('formHotel').value = hotel || 'N/A';
+                    document.getElementById('formNote').value = note || 'N/A';
+
+                    const formModal = new bootstrap.Modal(document.getElementById('formModal'));
+                    formModal.show();
+                }
+
+                function printForm() {
+                    const printContent = document.getElementById('formModal').innerHTML;
+                    const win = window.open('', '', 'width=800,height=600');
+                    win.document.write(printContent);
+                    win.document.close();
+                    win.print();
+                    win.close();
+                }
+
+                // Initialize Bootstrap tooltips
+                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+                var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                    return new bootstrap.Tooltip(tooltipTriggerEl)
+                })
+    </script>
+
+    <!-- Bootstrap JS for modal and tooltip functionality -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
