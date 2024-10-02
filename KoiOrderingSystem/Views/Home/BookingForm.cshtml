@@ -242,147 +242,166 @@
     <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.5.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const form = document.getElementById('orderForm');
-            const progressBar = document.getElementById('progressBar');
-            const formElements = form.querySelectorAll('input, select, textarea');
-            const totalFields = formElements.length;
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('orderForm');
+        const progressBar = document.getElementById('progressBar');
+        const formElements = form.querySelectorAll('input, select, textarea');
+        const totalFields = formElements.length;
 
-            // Set the progress bar to 0% on page load
-            progressBar.style.width = '0%';
+        // Attach event listener to the form's submit event
+        form.addEventListener('submit', function (e) {
+            let valid = true;
 
-            formElements.forEach(element => {
-                element.addEventListener('input', () => {
-                    validateField(element);
-                    updateProgress();
-                });
-            });
+            // Get form fields
+            const fullname = document.getElementById('Fullname');
+            const phone = document.getElementById('Phone');
+            const email = document.getElementById('Email');
+            const favoriteKoi = document.getElementById('FavoriteKoi');
+            const startDate = document.getElementById('StartDate');
+            const endDate = document.getElementById('EndDate');
 
-            function updateProgress() {
-                let filledElements = 0;
-                formElements.forEach(element => {
-                    if (element.value.trim() !== "") {
-                        if (element.id === 'Email' && !validateEmail(element.value)) return;
-                        if (element.id === 'Phone' && !validatePhone(element.value)) return;
-                        if (element.id === 'StartDate' && !validateStartDate(element)) return;
-                        if (element.id === 'EndDate' && !validateEndDate(element)) return;
-
-                        filledElements += 1;
-                    }
-                });
-
-                const progressPercentage = (filledElements / totalFields) * 100;
-                progressBar.style.width = progressPercentage + '%';
+            // Validate Fullname
+            if (fullname.value.trim() === "") {
+                showError(fullname, 'Full name is required.');
+                valid = false;
+            } else {
+                hideError(fullname);
             }
 
-            function validateField(field) {
-                let valid = true;
-                switch (field.id) {
-                    case 'Email':
-                        if (!validateEmail(field.value)) {
-                            showError(field, 'Please enter a valid email address.');
-                            valid = false;
-                        } else {
-                            hideError(field);
-                        }
-                        break;
-                    case 'Phone':
-                        if (!validatePhone(field.value)) {
-                            showError(field, 'Please enter a valid phone number (10-11 digits).');
-                            valid = false;
-                        } else {
-                            hideError(field);
-                        }
-                        break;
-                    case 'StartDate':
-                        valid = validateStartDate(field);
-                        break;
-                    case 'EndDate':
-                        valid = validateEndDate(field);
-                        break;
-                    default:
-                        hideError(field);
-                }
-                return valid;
+            // Validate Phone
+            if (!validatePhone(phone.value)) {
+                showError(phone, 'Please enter a valid phone number (10-11 digits).');
+                valid = false;
+            } else {
+                hideError(phone);
             }
 
-            function validateEmail(email) {
-                const emailPattern = /^[a-zA-Z0-9._-]+@@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-                return emailPattern.test(email);
+            // Validate Email
+            if (!validateEmail(email.value)) {
+                showError(email, 'Please enter a valid email address.');
+                valid = false;
+            } else {
+                hideError(email);
             }
 
-            function validatePhone(phone) {
-                const phonePattern = /^\d{10,11}$/;
-                return phonePattern.test(phone);
+            // Validate Favorite Koi
+            if (favoriteKoi.value.trim() === "") {
+                showError(favoriteKoi, 'Please specify the Koi breed you want to buy.');
+                valid = false;
+            } else {
+                hideError(favoriteKoi);
             }
 
-            function validateStartDate(field) {
-                const today = new Date();
-                const selectedDate = new Date(field.value);
-                let valid = true;
-
-                if (!field.value) {
-                    showError(field, 'Start date cannot be empty.');
-                    valid = false;
-                } else if (selectedDate < today) {
-                    showError(field, 'Start date must not be earlier than today.');
-                    valid = false;
-                } else {
-                    hideError(field);
-                }
-
-                return valid;
+            // Validate Start Date
+            if (startDate.value.trim() === "") {
+                showError(startDate, 'Start date is required.');
+                valid = false;
+            } else {
+                hideError(startDate);
             }
 
-            function validateEndDate(field) {
-                const today = new Date();
-                const selectedDate = new Date(field.value);
-                let valid = true;
-
-                if (!field.value) {
-                    showError(field, 'End date cannot be empty.');
-                    valid = false;
-                } else if (selectedDate <= today) {
-                    showError(field, 'The end date must be later than today.');
-                    valid = false;
-                } else {
-                    const startDate = document.getElementById('StartDate').value;
-                    if (startDate) {
-                        const start = new Date(startDate);
-                        if (selectedDate <= start) {
-                            showError(field, 'End date must be after start date.');
-                            valid = false;
-                        } else {
-                            hideError(field);
-                        }
-                    } else {
-                        hideError(field); // If start date is not set, don't show an error for end date
-                    }
-                }
-
-                return valid;
+            // Validate End Date
+            if (endDate.value.trim() === "") {
+                showError(endDate, 'End date is required.');
+                valid = false;
+            } else if (new Date(endDate.value) <= new Date(startDate.value)) {
+                showError(endDate, 'End date must be after the start date.');
+                valid = false;
+            } else {
+                hideError(endDate);
             }
 
-            function showError(field, message) {
-                let errorElement = field.parentNode.querySelector('.error-message');
-                if (!errorElement) {
-                    errorElement = document.createElement('div');
-                    errorElement.classList.add('error-message');
-                    field.parentNode.appendChild(errorElement);
-                }
-                errorElement.innerText = message;
-                field.classList.add('is-invalid');
-            }
-
-            function hideError(field) {
-                let errorElement = field.parentNode.querySelector('.error-message');
-                if (errorElement) {
-                    errorElement.remove();
-                }
-                field.classList.remove('is-invalid');
+            // If the form is invalid, prevent submission
+            if (!valid) {
+                e.preventDefault(); // Stop form from submitting
             }
         });
-    </script>
+
+        // Show error message
+        function showError(field, message) {
+            let errorElement = field.parentNode.querySelector('.error-message');
+            if (!errorElement) {
+                errorElement = document.createElement('div');
+                errorElement.classList.add('error-message');
+                field.parentNode.appendChild(errorElement);
+            }
+            errorElement.innerText = message;
+            field.classList.add('is-invalid');
+        }
+
+        // Hide error message
+        function hideError(field) {
+            let errorElement = field.parentNode.querySelector('.error-message');
+            if (errorElement) {
+                errorElement.remove();
+            }
+            field.classList.remove('is-invalid');
+        }
+
+        // Email validation function
+        function validateEmail(email) {
+            const emailPattern = /^[a-zA-Z0-9._-]+@@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+            return emailPattern.test(email);
+        }
+
+        // Phone number validation function
+        function validatePhone(phone) {
+            const phonePattern = /^\d{10,11}$/;
+            return phonePattern.test(phone);
+        }
+
+        // Progress bar update logic (optional based on initial request)
+        formElements.forEach(element => {
+            element.addEventListener('input', () => {
+                validateField(element);
+                updateProgress();
+            });
+        });
+
+        function updateProgress() {
+            let filledElements = 0;
+            formElements.forEach(element => {
+                if (element.value.trim() !== "") {
+                    if (element.id === 'Email' && !validateEmail(element.value)) return;
+                    if (element.id === 'Phone' && !validatePhone(element.value)) return;
+
+                    filledElements += 1;
+                }
+            });
+
+            const progressPercentage = (filledElements / totalFields) * 100;
+            progressBar.style.width = progressPercentage + '%';
+        }
+
+        function validateField(field) {
+            let valid = true;
+            switch (field.id) {
+                case 'Email':
+                    if (!validateEmail(field.value)) {
+                        showError(field, 'Please enter a valid email address.');
+                        valid = false;
+                    } else {
+                        hideError(field);
+                    }
+                    break;
+                case 'Phone':
+                    if (!validatePhone(field.value)) {
+                        showError(field, 'Please enter a valid phone number (10-11 digits).');
+                        valid = false;
+                    } else {
+                        hideError(field);
+                    }
+                    break;
+                default:
+                    hideError(field);
+            }
+            return valid;
+        }
+
+    });
+</script>
+
+
 </body>
 </html>

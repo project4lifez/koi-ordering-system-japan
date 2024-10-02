@@ -18,7 +18,7 @@ namespace KoiAdmin.Areas.Admin.Controllers
             _db = db;
         }
 
-        public IActionResult Index()
+        public IActionResult Home()
         {
             return View();
         }
@@ -26,11 +26,14 @@ namespace KoiAdmin.Areas.Admin.Controllers
         // Updated OrderManagement action
         public async Task<IActionResult> OrderManagement()
         {
-            // Fetch the list of bookings from the database
-            var bookings = await _db.Bookings.ToListAsync();
+            // Fetch the list of bookings from the database, including the related Trip entity
+            var bookings = await _db.Bookings
+                .Include(b => b.Trip) // Include the related Trip entity so you can access TripName
+                .ToListAsync();
 
             // Pass the list of bookings to the view
             return View(bookings);
         }
+
     }
 }

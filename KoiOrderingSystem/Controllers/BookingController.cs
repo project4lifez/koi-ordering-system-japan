@@ -74,7 +74,29 @@ namespace KoiOrderingSystem.Controllers
             // Trả về view nếu ModelState không hợp lệ
             return View(booking);
         }
-       
+        public async Task<IActionResult> ViewBooking()
+        {
+            // Kiểm tra người dùng đã đăng nhập chưa
+            if (HttpContext.Session.GetString("Username") == null)
+            {
+                return RedirectToAction("", "Login");
+            }
+
+            // Lấy CustomerId từ session
+            var customerId = HttpContext.Session.GetInt32("CustomerId");
+
+            if (customerId == null)
+            {
+                return RedirectToAction("", "Login");
+            }
+
+            // Lấy danh sách booking của người dùng hiện tại
+            var bookings = await _db.Bookings
+                                    .Where(b => b.CustomerId == customerId.Value)
+                                    .ToListAsync();
+
+            return View(bookings); // Truyền danh sách booking vào view
+        }
 
 
     }

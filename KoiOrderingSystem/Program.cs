@@ -74,19 +74,19 @@ namespace KoiOrderingSystem
 
             app.MapControllerRoute(
                 name: "areas",
-                pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+                pattern: "{area:exists}/{controller=Home}/{action=Home}/{id?}");
             app.MapControllerRoute(
                 name: "areas",
                 pattern: "{area:exists}/{controller=Manager}/{action=Manager}/{id?}");
             app.MapControllerRoute(
                 name: "areas",
-                pattern: "{area:exists}/{controller=Consulting}/{action=Index}/{id?}");
+                pattern: "{area:exists}/{controller=Consulting}/{action=Consulting}/{id?}");
             app.MapControllerRoute(
                 name: "areas",
-                pattern: "{area:exists}/{controller=Sale}/{action=Index}/{id?}");
+                pattern: "{area:exists}/{controller=Sale}/{action=Sale}/{id?}");
             app.MapControllerRoute(
                name: "areas",
-               pattern: "{area:exists}/{controller=Delivering}/{action=Index}/{id?}");
+               pattern: "{area:exists}/{controller=Delivering}/{action=Delivering}/{id?}");
             app.MapControllerRoute(
                name: "areas",
                pattern: "{area:exists}/{controller=Home}/{action=OrderManagement}/{id?}");

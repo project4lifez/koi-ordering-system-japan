@@ -7,7 +7,7 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
     {
         [Area("Admin")]
 
-        public IActionResult Index()
+        public IActionResult Delivering()
         {
             return View();
         }

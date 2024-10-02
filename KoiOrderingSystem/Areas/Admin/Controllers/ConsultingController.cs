@@ -6,7 +6,7 @@ namespace KoiAdmin.Areas.Admin.Controllers
     [Area("Admin")]
     public class ConsultingController : BaseController
     {
-        public IActionResult Index()
+        public IActionResult Consulting()
         {
             return View();
         }

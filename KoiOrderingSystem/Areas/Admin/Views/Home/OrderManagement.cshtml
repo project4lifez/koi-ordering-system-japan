@@ -3,6 +3,8 @@
 @{
     ViewData["Title"] = "Order Management";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    var roleId = Context.Session.GetInt32("RoleId"); // Lấy RoleId từ Session
+
 }
 
 <head>
@@ -92,15 +94,27 @@
                     <tr>
                         <th>No</th>
                         <th>BookingID</th>
-                        <th>Date</th>
+                        <th>Booking Date</th>
                         <th>Customer</th>
+                        <th>Trip Name</th>
                         <th>Price</th>
-                        <th>Status</th>
-                        <th>Booking Form</th>
-                        <th>Edit</th>
-                        <th>Detail</th>
+                        @if (roleId == 2 || roleId == 3)
+                        {
+                            <!-- Only add these headers for roleId 2 and 3 -->
+                            <th>Status</th>
+                            <th>Booking Form</th>
+                        }
+                        @if (roleId >= 2 && roleId <= 5)
+                        {
+                            <th>Edit</th> <!-- Edit column for all roles -->
+                            @if (roleId == 2 || roleId == 3)
+                            {
+                                <th>Detail</th> <!-- Detail column only for role 2 and 3 -->
+                            }
+                        }
                     </tr>
                 </thead>
+
                 @if (Model != null && Model.Any())
                 {
                     <tbody>
@@ -111,31 +125,62 @@
                                 <td>@booking.BookingId</td>
                                 <td>@booking.BookingDate</td>
                                 <td class="text-success">@booking.Fullname</td>
+                                <td>Null</td>
                                 <td>@booking.QuotedAmount</td>
 
+                                @if (roleId == 2 || roleId == 3)
+                                {
+                                    <!-- Only render these columns for roleId 2 and 3 -->
+                                    <td>
+                                        @* Conditional logic for status badge color *@
+                                        @{
+                                            string statusClass = booking.Status.ToLower() switch
+                                            {
+                                                "pending" => "badge-pending",
+                                                "cancel" => "badge-cancel",
+                                                "confirm" => "badge-confirm",
+                                                _ => "badge-other"
+                                            };
+                                        }
+                                        <span class="badge @statusClass">@booking.Status</span>
+                                    </td>
+                                    <td>
+                                        <a href="javascript:void(0);" class="btn btn-primary btn-sm"
+                                           onclick="openFormModal('@booking.Fullname', '@booking.Phone', '@booking.Email',
+                                                         '@booking.Gender', '@booking.Favoritefarm',
+                                                         '@booking.StartDate', '@booking.EndDate',
+                                                         '@booking.EstimatedCost', '@booking.HotelAccommodation',
+                                                         '@booking.Note')">View Form</a>
+                                    </td>
+                                }
+
+                                <!-- Edit logic for all roles (2, 3, 4, 5) -->
                                 <td>
-                                    @* Conditional logic for status badge color *@
-                                    @{
-                                        string statusClass = booking.Status.ToLower() switch
-                                        {
-                                            "pending" => "badge-pending",
-                                            "cancel" => "badge-cancel",
-                                            "confirm" => "badge-confirm",
-                                            _ => "badge-other" // Other statuses
-                                        };
+                                    @if (roleId == 2)
+                                    {
+                                        <a href="@Url.Action("Manager", "Admin")" class="btn btn-warning btn-sm">Edit</a>
                                     }
-                                    <span class="badge @statusClass">@booking.Status</span>
+                                    @if (roleId == 3)
+                                    {
+                                        <a href="@Url.Action("Sale", "Admin")" class="btn btn-warning btn-sm">Edit</a>
+                                    }
+                                    @if (roleId == 4)
+                                    {
+                                        <a href="@Url.Action("Consulting", "Admin")" class="btn btn-warning btn-sm">Edit</a>
+                                    }
+                                    @if (roleId == 5)
+                                    {
+                                        <a href="@Url.Action("Delivering", "Admin")" class="btn btn-warning btn-sm">Edit</a>
+                                    }
                                 </td>
 
-                                <td>
-                                    <a href="javascript:void(0);" class="btn btn-primary btn-sm" onclick="openFormModal('@booking.Fullname', '@booking.Phone', '@booking.Email', '@booking.Gender', '@booking.Favoritefarm', '@booking.StartDate', '@booking.EndDate', '@booking.EstimatedCost', '@booking.HotelAccommodation', '@booking.Note')">View Form</a>
-                                </td>
-                                <td>
-                                    <span class="action-btn bi bi-pencil-square" data-bs-toggle="tooltip" title="Edit Booking"></span>
-                                </td>
-                                <td>
-                                    <span class="action-btn bi bi-info-circle" data-bs-toggle="tooltip" title="View Details"></span>
-                                </td>
+                                @if (roleId == 2 || roleId == 3)
+                                {
+                                    <!-- Detail logic for only roles 2 and 3 -->
+                                    <td>
+                                        <a href="@Url.Action("Quote", "Sale")" class="btn btn-info btn-sm">Detail</a>
+                                    </td>
+                                }
                             </tr>
                         }
                     </tbody>
@@ -147,12 +192,14 @@
             </table>
         </div>
 
+
+
         <!-- Modal for Form -->
         <div class="modal fade" id="formModal" tabindex="-1" aria-labelledby="formModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="formModalLabel">Customer Booking Form</h5>
+                        <h5 class="modal-title" id="formModalLabel">Customer Booking </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -260,5 +307,4 @@
     </script>
 
     <!-- Bootstrap JS for modal and tooltip functionality -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
