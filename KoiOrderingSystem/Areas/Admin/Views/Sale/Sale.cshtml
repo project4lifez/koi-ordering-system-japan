@@ -1,83 +1,103 @@
-﻿@{
-    ViewData["Title"] = "Manager";
+﻿@model KoiOrderingSystem.Models.Booking
+@{
+    ViewData["Title"] = "Sales Staff";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard (Manager)</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-    <main class="container-fluid px-4">
-        <h1 class="mt-4">Dashboard (Sales Staff)</h1>
 
-        <div class="row" style="display: flex;">
-            <!-- Customer Information Section -->
-            <div class="col-md-6" style="display: flex;">
-                <div class="card mb-4" style="flex: 1;">
-                    <div class="card-header">
-                        Customer Information
-                    </div>
-                    <div class="card-body">
-                        <p><strong>Name:</strong> Nguyen Thanh Tai</p>
-                        <p><strong>Email:</strong> taintse183488@fpt.edu.vn</p>
-                        <p><strong>Phone Number:</strong> 0328888888</p>
-                        <a href="#" class="btn btn-link">User detail</a>
-                    </div>
+<main class="container-fluid px-4">
+    <h1 class="mt-4">Sales Staff Dashboard</h1>
+
+    <div class="row">
+        <!-- Customer Information Section -->
+        <div class="col-md-6">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    Customer Information
                 </div>
-            </div>
-
-            <!-- Order Detail Section -->
-            <div class="col-md-6" style="display: flex;">
-                <div class="card mb-4" style="flex: 1;">
-                    <div class="card-header">
-                        Order Detail
-                    </div>
-                    <div class="card-body">
-                        <p><strong>Status:</strong> Review quotation</p>
-                        <p><strong>Note:</strong> </p>
-                        <button class="btn btn-success mt-2" style="width: calc(100px * 2);">Price Quote</button>
-
-                        <div class="d-flex align-items-end">
-                            <select class="form-select" name="status" id="status" style="width: 150px; margin-top: 8px">
-                                <option value="pending">Send quotation to Manager</option>
-                                <option value="confirmed">Send detailed schedule</option>
-                            </select>
-                            <button class="btn btn-success ml-2 mt-2">Update</button>
-                        </div>
-                    </div>
+                <div class="card-body">
+                    <p><strong>Name:</strong> @(string.IsNullOrWhiteSpace(Model.Fullname) ? "N/A" : Model.Fullname)</p>
+                    <p><strong>Email:</strong> @(string.IsNullOrWhiteSpace(Model.Email) ? "N/A" : Model.Email)</p>
+                    <p><strong>Phone Number:</strong> @(string.IsNullOrWhiteSpace(Model.Phone) ? "N/A" : Model.Phone)</p>
                 </div>
             </div>
         </div>
 
+        <!-- Booking Detail Section -->
+        <div class="col-md-6">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-info text-white">
+                    Booking Details
+                </div>
+                <div class="card-body">
+                    <p><strong>Status:</strong> @(string.IsNullOrWhiteSpace(Model.Status) ? "N/A" : Model.Status)</p>
+                    <p><strong>Booking Date:</strong> @(Model.BookingDate?.ToString("dd/MM/yyyy") ?? "N/A")</p>
+                    <p><strong>Quote Sent Date:</strong> @(Model.QuoteSentDate?.ToString("dd/MM/yyyy") ?? "N/A")</p>
+                    <p><strong>Quote Approved Date:</strong> @(Model.QuoteApprovedDate?.ToString("dd/MM/yyyy") ?? "N/A")</p>
 
-        <!-- Trip Information Section -->
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card mb-4">
-                    <div class="card-header">
-                        Trip Name
+                    <!-- Status update form for setting status to 'processing' -->
+                    <form id="formUpdate" action="/Admin/Sale/UpdateStatusSalesStaff" method="post">
+                        <input type="hidden" name="id" value="@Model.BookingId" />
+
+                        <!-- Update Button -->
+                        <button type="submit" class="btn btn-success mt-2"
+                        @(Model.Status != null &&
+                            (string.Equals(Model.Status, "Processing", StringComparison.OrdinalIgnoreCase) ||
+                            string.Equals(Model.Status, "Accepted", StringComparison.OrdinalIgnoreCase) ||
+                            string.Equals(Model.Status, "Canceled", StringComparison.OrdinalIgnoreCase) ||
+                            string.Equals(Model.Status, "Checked in", StringComparison.OrdinalIgnoreCase) ||
+                            string.Equals(Model.Status, "Checked out", StringComparison.OrdinalIgnoreCase) ||
+                            string.Equals(Model.Status, "Delivering", StringComparison.OrdinalIgnoreCase) ||
+                            string.Equals(Model.Status, "Delivered", StringComparison.OrdinalIgnoreCase) ||
+                            string.Equals(Model.Status, "Payment Completed", StringComparison.OrdinalIgnoreCase)) ? "disabled" : "")>
+                            Set to Processing
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Trip Information Section -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-secondary text-white">
+                    Trip Details
+                </div>
+                <div class="card-body">
+                    <h5>@(Model.Trip?.TripName ?? "No Trip Name Available")</h5>
+                    <div class="d-flex justify-content-between">
+                        <p><strong>Quoted Amount:</strong> @(Model.QuotedAmount.HasValue ? Model.QuotedAmount.Value + "$" : "N/A")</p>
                     </div>
-                    <div class="card-body">
-                        <h5>Asagi Koi Trip (#AKT001)</h5>
-                        <div class="d-flex flex-column">
-                            <p style="text-align: right;"><strong>Koi Price:</strong> 3000$</p>
-                            <p style="text-align: right;"><strong>Deposit:</strong> 800$</p>
-                        </div>
-                        <div class="d-flex flex-column">
-                            <p style="text-align: right;"><strong>Remaining Payment:</strong> 2200$</p>
-                            <p class="text-danger" style="text-align: right;"><strong>Status:</strong> Pending</p>
-                        </div>
-
+                    <div class="d-flex justify-content-between">
+                        <p class="text-danger"><strong>Status:</strong> @(string.IsNullOrWhiteSpace(Model.Status) ? "N/A" : Model.Status)</p>
                     </div>
                 </div>
             </div>
         </div>
-    </main>
+    </div>
+</main>
 
+<style>
+    .card {
+        border-radius: 10px;
+        transition: box-shadow 0.2s ease-in-out;
+    }
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
-</body>
+        .card:hover {
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
 
+    .card-header {
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
 
+    .card-body p {
+        font-size: 1rem;
+    }
+
+    .btn {
+        width: 200px;
+    }
+</style>

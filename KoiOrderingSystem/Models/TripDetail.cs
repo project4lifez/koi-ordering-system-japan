@@ -11,11 +11,15 @@ public partial class TripDetail
 
     public string? SubTopic { get; set; }
 
-    public decimal? NotePrice { get; set; }
+    public string? NotePrice { get; set; }
 
     public DateOnly? Day { get; set; }
 
+    public int? TripId { get; set; }
+
     public virtual ICollection<KoiFarm> KoiFarms { get; set; } = new List<KoiFarm>();
+
+    public virtual Trip? Trip { get; set; }
 
     public virtual ICollection<Trip> Trips { get; set; } = new List<Trip>();
 }

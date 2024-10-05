@@ -2,7 +2,9 @@
     ViewData["Title"] = "Index";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
+@using System.Linq
 
+@model KoiOrderingSystem.Models.Booking
 
 <head>
     <meta charset="UTF-8">
@@ -39,7 +41,6 @@
             border-radius: 8px; /* Rounded corners */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect */
         }
-
 
         .close {
             color: red;
@@ -87,15 +88,29 @@
         <h1 class="mt-4">Dashboard (Consulting Staff)</h1>
 
         <!-- Form Inline (Same Row) -->
-        <div class="form-inline mb-4">
-            <button class="btn btn-primary mb-2" id="updateKoiBtn" style="margin-top: 8px">Update Koi Order</button>
-            <select class="form-select mb-2" name="status" id="status" style="width: 150px; margin-top: 8px">
-                <option value="pending">Pending</option>
-                <option value="confirmed">Confirmed</option>
-                <option value="shipped">Shipped</option>
-            </select>
-            <button class="btn btn-success">Update</button>
-        </div>
+        <form action="/Admin/Consulting/UpdateStatus" method="post">
+            <input type="hidden" name="bookingId" value="@Model.BookingId" />
+
+            <div class="form-inline mb-4">
+                <button class="btn btn-primary mb-2" id="updateKoiBtn" style="margin-top: 8px">Update Koi Order</button>
+                <select class="form-select mb-2" name="status" id="status" style="width: 150px; margin-top: 8px">
+                    <option value="checkin" @(Model.Status == "Checked in" ? "selected" : "")>Check in</option>
+                    <option value="checkout" @(Model.Status == "Checked out" ? "selected" : "")>Check out</option>
+                </select>
+                <button class="btn btn-success"
+                @(Model?.Status != null &&
+                    (string.Equals(Model.Status, "Delivered", StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(Model.Status, "Delivering", StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(Model.Status, "Checked out", StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(Model.Status, "Accepted", StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(Model.Status, "Rejected", StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(Model.Status, "Canceled", StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(Model.Status, "Processing", StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(Model.Status, "Requested", StringComparison.OrdinalIgnoreCase)) ? "disabled" : "")>
+                    Update
+                </button>
+            </div>
+        </form>
 
         <!-- Modal for Update Koi Order -->
         <div id="updateModal" class="modal">
@@ -149,7 +164,6 @@
             </div>
         </div>
 
-
         <div class="row">
             <!-- Left Column: Customer Information and Updated Information -->
             <div class="col-md-6">
@@ -159,24 +173,30 @@
                         Customer Information
                     </div>
                     <div class="card-body">
-                        <p><strong>Name:</strong> Nguyen Thanh Tai</p>
-                        <p><strong>Email:</strong> tai18138488@ptit.edu.vn</p>
-                        <p><strong>Phone Number:</strong> 0326888888</p>
-                        <a href="#" class="btn btn-link">User detail</a>
+                        <p><strong>Customer Name:</strong> @Model.Fullname</p>
+                        <p><strong>Email:</strong> @Model.Email</p>
+                        <p><strong>Phone Number:</strong> @Model.Phone</p>
                     </div>
                 </div>
 
                 <!-- Updated Information Section -->
                 <div class="card mb-4">
                     <div class="card-header">
-                        Updated Information
+                        Updated Delivering Information
                     </div>
                     <div class="card-body" id="updated-info">
-                        <p><strong>Delivery Time:</strong> <span id="updated-time">N/A</span></p>
-                        <p><strong>Delivery Date:</strong> <span id="updated-date">N/A</span></p>
-                        <p><strong>Koi Price:</strong> <span id="updated-price">N/A</span></p>
-                        <p><strong>Deposit:</strong> <span id="updated-deposit">N/A</span></p>
-                        <p><strong>Delivery Location:</strong> <span id="updated-location">N/A</span></p>
+                        <p><strong>Delivery Time:</strong> <span id="updated-time">@Model.Po?.KoiDeliveryTime</span></p>
+                        <p><strong>Delivery Date:</strong> <span id="updated-date">@Model.Po?.KoiDeliveryDate</span></p>
+                        <p><strong>Delivery Location:</strong> <span id="updated-location">@Model.Po?.DeliveryLocation</span></p>
+                        <p><strong>Koi Price:</strong> <span id="updated-price">@Model.Po?.TotalAmount?.ToString()</span></p>
+                        <p>
+                            <strong>Deposit:</strong>
+                            <span id="updated-deposit">
+                                @(Model.Po?.Podetails?.FirstOrDefault()?.Deposit.HasValue == true
+                                    ? Model.Po.Podetails.FirstOrDefault().Deposit.Value.ToString("N0") + "$"
+                                    : "")
+                            </span>
+                        </p>
                     </div>
                 </div>
             </div>
@@ -188,54 +208,82 @@
                         Order Detail
                     </div>
                     <div class="card-body">
-                        <label for="delivery-time"><strong>Koi Delivery Time:</strong></label>
-                        <input type="time" id="delivery-time" class="form-control mb-2" name="delivery-time">
+                        <form action="/Admin/Consulting/UpdateDelivering" method="post">
+                            <input type="hidden" name="bookingId" value="@Model.BookingId" />
+                            <div class="form-group">
+                                <label>Delivery Date</label>
+                                <input type="date" name="deliveryDate" class="form-control"
+                                       value="@(Model.Po?.KoiDeliveryDate != null
+                ? Model.Po.KoiDeliveryDate.Value.ToString("yyyy-MM-dd")
+                : "")" />
+                            </div>
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <label>Delivery Time</label>
+                                    <input type="time" name="deliveryTime" class="form-control"
+                                           value="@(Model.Po?.KoiDeliveryTime != null
+                    ? Model.Po.KoiDeliveryTime.Value.ToString(@"hh\:mm")
+                    : "")" />
+                                </div>
+                          
+                            <div class="form-group">
+                                <label>Delivery Location</label>
+                                <input type="text" name="deliveryLocation" class="form-control" value="@Model.Po?.DeliveryLocation" />                          
+                            </div>
+                            <div class="form-group">
+                                <label>Koi Price</label>
+                                <input type="number" name="koiPrice" class="form-control" value="@Model.Po?.TotalAmount" />
+                            </div>
 
-                        <label for="delivery-date"><strong>Koi Delivery Date:</strong></label>
-                        <input type="date" id="delivery-date" class="form-control mb-2" name="delivery-date">
+                                @if (Model.Po?.Podetails != null && Model.Po.Podetails.Any())
+                                {
+                                    var detail = Model.Po.Podetails.First(); // Lấy phần tử đầu tiên
+                                    <div class="form-group">
+                                        <label>Deposit</label>
+                                        <input type="number" name="deposit" class="form-control"
+                                               value="@detail.Deposit" step="0.01" />
+                                    </div>
+                                }
 
-                        <label for="koi-price"><strong>Koi Price:</strong></label>
-                        <input type="text" id="koi-price" class="form-control mb-2" name="koi-price" placeholder="$$$">
-
-                        <label for="deposit"><strong>Deposit:</strong></label>
-                        <input type="text" id="deposit" class="form-control mb-2" name="deposit" placeholder="$$$">
-
-                        <label for="delivery-location"><strong>Delivery Location:</strong></label>
-                        <input type="text" id="delivery-location" class="form-control mb-2" name="delivery-location" placeholder="ABC Hotel">
-                        <button class="btn btn-primary mt-3" style="position: absolute; bottom: 20px; left: 20px;">Update</button>
-
-
+                                <button type="submit" class="btn btn-primary mt-3"
+                                @(Model.Status != "Checked in" && Model.Status != "Checked out" ? "disabled" : "")>
+                                    Update Delivery
+                                </button>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
-
-
-      
-
+       
 
         <!-- Trip Information Section -->
         <div class="row">
             <div class="col-md-12">
                 <div class="card mb-4">
                     <div class="card-header">
-                        Trip Name
                     </div>
                     <div class="card-body">
-                        <h5>Asagi Koi Trip (#AKT001)</h5>
+                        <h5> @Model.Trip?.TripName</h5>
                         <div class="d-flex flex-column">
-                            <p style="text-align: right;"><strong>Koi Price:</strong> 3000$</p>
-                            <p style="text-align: right;"><strong>Deposit:</strong> 800$</p>
+                            <p style="text-align: right;"><strong>Koi Price:</strong>@Model.Po?.TotalAmount$</p>
+                            <p style="text-align: right;">
+                                <strong>Deposit:</strong>
+                                @Model.Po?.Podetails?.FirstOrDefault()?.Deposit$
+                            </p>
                         </div>
                         <div class="d-flex flex-column">
-                            <p style="text-align: right;"><strong>Remaining Payment:</strong> 2200$</p>
-                            <p class="text-danger" style="text-align: right;"><strong>Status:</strong> Pending</p>
+                            <p style="text-align: right;">
+                                <strong>Remaining Payment:</strong>
+                                @((Model.Po?.TotalAmount ?? 0) - (Model.Po?.Podetails?.FirstOrDefault()?.Deposit ?? 0))$
+                            </p>                            
+                            <p class="text-danger" style="text-align: right;"><strong>Status:</strong> @Model?.Status</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </main>
+
     <script>
         // Get modal element
         var modal = document.getElementById("updateModal");
@@ -262,24 +310,5 @@
                 modal.style.display = "none";
             }
         }
-
-                // Get the fields from the Order Detail Section
-            var deliveryTime = document.getElementById("delivery-time");
-            var deliveryDate = document.getElementById("delivery-date");
-            var koiPrice = document.getElementById("koi-price");
-            var deposit = document.getElementById("deposit");
-            var deliveryLocation = document.getElementById("delivery-location");
-
-            // Get the fields from the Updated Information Section
-            var updatedTime = document.getElementById("updated-time");
-            var updatedDate = document.getElementById("updated-date");
-            var updatedPrice = document.getElementById("updated-price");
-            var updatedDeposit = document.getElementById("updated-deposit");
-            var updatedLocation = document.getElementById("updated-location");
     </script>
-
-
 </body>
-
-
-

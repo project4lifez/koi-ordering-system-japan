@@ -1,185 +1,300 @@
-﻿@{
-    ViewData["Title"] = "Quote";
+﻿@model KoiOrderingSystem.Models.Booking
+@{
+    ViewData["Title"] = "Quote (Detail Trip)";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+
+    bool isTripExisting = Model?.Trip != null;
 }
+<style>
+    .card {
+        border-radius: 10px;
+        border: none;
+    }
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quote (Detail Trip)</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-    <div class="container mt-4">
-        <h1 class="text-center">Quote (Detail Trip)</h1>
+    .card-header {
+        font-size: 1.25rem;
+        font-weight: bold;
+        padding: 15px;
+    }
 
-        <div class="row mb-3">
-            <div class="col-md-3">
-                <label for="date">Date:</label>
-                <input type="date" class="form-control" id="date">
-            </div>
-            <div class="col-md-3">
-                <label for="customerId">Customer ID:</label>
-                <input type="text" class="form-control" id="customerId">
-            </div>
-            <div class="col-md-3">
-                <label for="customerName">Name Customer:</label>
-                <input type="text" class="form-control" id="customerName">
-            </div>
-            <div class="col-md-3">
-                <label for="orderId">Order ID:</label>
-                <input type="text" class="form-control" id="orderId">
-            </div>
-        </div>
+    .card-body {
+        font-size: 1rem;
+        padding: 20px;
+    }
 
-        <div class="row mb-3">
-            <div class="col-md-3">
-                <label for="totalPrice">Total Price:</label>
-                <input type="text" class="form-control" id="totalPrice">
-            </div>
-            <div class="col-md-3">
-                <label for="startDate">Start Date:</label>
-                <input type="date" class="form-control" id="startDate">
-                <small id="startDateError" class="text-danger"></small>
-            </div>
-            <div class="col-md-3">
-                <label for="endDate">End Date:</label>
-                <input type="date" class="form-control" id="endDate">
-                <small id="endDateError" class="text-danger"></small>
-            </div>
-            <div class="col-md-3 d-flex align-items-end">
-                <button class="btn btn-primary w-100" id="nextButton">Next</button>
-            </div>
-        </div>
+    .card p {
+        margin-bottom: 10px;
+        font-size: 1rem;
+    }
 
-        <div id="daysContainer"></div> <!-- Container sẽ chứa các Day -->
+    /* Center the text in the title */
+    h1 {
+        font-size: 1.75rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
 
-        <div class="row mt-4">
-            <div class="col-md-12 text-end">
-                <button class="btn btn-success">Confirm</button>
+    /* Add some padding to the card and center it */
+    .col-md-6 {
+        padding: 10px;
+    }
+
+    /* Add a nice shadow and round the corners */
+    .card {
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease-in-out;
+    }
+
+    /* Slight hover effect for visual feedback */
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+</style>
+<style>
+    .card {
+        border-radius: 10px;
+        border: none;
+    }
+
+    .card-header {
+        font-size: 1.25rem;
+        font-weight: bold;
+        padding: 15px;
+    }
+
+    .card-body {
+        font-size: 1rem;
+        padding: 20px;
+    }
+
+    .card p {
+        margin-bottom: 10px;
+        font-size: 1rem;
+    }
+
+    /* Center the text in the title */
+    h1 {
+        font-size: 1.75rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    /* Add some padding to the card and center it */
+    .col-md-6 {
+        padding: 10px;
+    }
+
+    /* Add a nice shadow and round the corners */
+    .card {
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease-in-out;
+    }
+
+       
+
+</style>
+
+<main class="container-fluid px-4">
+    <h1 class="mt-4 text-center">Dashboard (Quote Detail Trip)</h1>
+
+    <!-- Center the customer info card and improve its appearance -->
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card mb-4 shadow-lg">
+                <div class="card-header bg-primary text-white text-center rounded-top">
+                    Customer Information
+                </div>
+                <div class="card-body">
+                    <p><strong>Booking ID:</strong> @Model.BookingId</p>
+                    <p><strong>Customer ID:</strong> @Model.CustomerId</p>
+                    <p><strong>Customer Name:</strong> @Model.Fullname</p>
+                    <p><strong>Phone Number:</strong> @Model.Phone</p>
+                    <p><strong>Email:</strong> @Model.Email</p>
+                    <p><strong>Booking Date:</strong> @Model.BookingDate?.ToString("dd/MM/yyyy")</p>
+                </div>
             </div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Hàm để tính toán số ngày giữa start date và end date
-        function calculateDaysDifference(startDate, endDate) {
-            const start = new Date(startDate);
-            const end = new Date(endDate);
-            const timeDiff = end - start;
-            const dayDiff = timeDiff / (1000 * 60 * 60 * 24) + 1; // Cộng thêm 1 vì bao gồm cả ngày bắt đầu
-            return dayDiff;
-        }
 
-        function addDay(dayNumber) {
-            let localTopicCount = 0;
-            const daysContainer = document.getElementById('daysContainer');
-            const newDayContent = document.createElement('div');
-            newDayContent.className = 'day-content';
-            newDayContent.innerHTML =
-                `<h2 class="text-center mb-3">Day ${dayNumber}</h2>
-                        <div class="row">
+    <!-- Form to Create or Update the Trip -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-secondary text-white">
+                    @if (!isTripExisting)
+                    {
+                        <span>Create Trip and Trip Details</span>
+                    }
+                    else
+                    {
+                        <span>Update Trip and Trip Details</span>
+                    }
+                </div>
+
+                <div class="card-body">
+                    <form id="formCreateOrUpdate" action="/Admin/Sale/@(isTripExisting ? "UpdateQuote" : "CreateQuote")" method="post">
+                        <!-- Hidden Booking ID -->
+                        <input type="hidden" name="bookingId" value="@Model.BookingId" />
+
+                        <!-- Trip Name -->
+                        <div class="form-group mb-3">
+                            <label for="tripName" class="form-label">Trip Name</label>
+                            <input type="text" class="form-control" id="tripName" name="tripName" value="@Model.Trip?.TripName" placeholder="Enter trip name" required />
+                        </div>
+
+                        <!-- Quoted Amount -->
+                        <div class="form-group mb-3">
+                            <label for="quotedAmount" class="form-label">Quoted Amount</label>
+                            <input type="number" class="form-control" id="quotedAmount" name="quotedAmount" value="@Model.QuotedAmount" step="0.01" placeholder="Enter quoted amount" />
+                        </div>
+
+                        <!-- Start Date and End Date -->
+                        <div class="row mb-3">
                             <div class="col-md-6">
-                                <label>The Main Topic:</label>
-                                <div id="mainTopicsContainer">
-                                    <input type="text" class="form-control mb-2" placeholder="The main topic ${++localTopicCount}">
-                                    <input type="text" class="form-control mb-2" placeholder="The main topic ${++localTopicCount}">
-                                    <input type="text" class="form-control mb-2" placeholder="The main topic ${++localTopicCount}">
-                                </div>
-                                <button class="btn btn-primary btn-sm addMainTopicButton">+</button>
+                                <label for="startDate" class="form-label">Start Date</label>
+                                <input type="date" class="form-control" id="startDate" name="startDate" value="@Model.StartDate?.ToString("yyyy-MM-dd")" />
                             </div>
                             <div class="col-md-6">
-                                <label for="content">Content:</label>
-                                <select id="content" class="form-select mb-2">
-                                    <option>The main topic 1</option>
-                                    <option>The main topic 2</option>
-                                    <option>The main topic 3</option>
-                                    <option>The main topic 4</option>
-                                </select>
-                                <label for="additionalContent">Additional Content:</label>
-                                <textarea id="additionalContent" class="form-control" rows="4"></textarea>
+                                <label for="endDate" class="form-label">End Date</label>
+                                <input type="date" class="form-control" id="endDate" name="endDate" value="@Model.EndDate?.ToString("yyyy-MM-dd")" />
                             </div>
                         </div>
-                        <div class="row mt-3">
-                            <div class="col-md-6">
-                                <label for="notePrice">Note Price:</label>
-                                <textarea id="notePrice" class="form-control" rows="4"></textarea>
+
+                        <!-- Trip Details Section -->
+                        <div class="card mb-4 shadow-sm">
+                            <div class="card-header bg-info text-white">
+                                Trip Details
                             </div>
-                        </div>`;
+                            <div class="card-body">
+                                <div id="tripDetailsContainer">
+                                    <!-- Dynamically generated trip details will be inserted here -->
+                                    @if (isTripExisting && Model.Trip.TripDetails != null && Model.Trip.TripDetails.Count > 0)
+                                    {
+                                        foreach (var tripDetail in Model.Trip.TripDetails)
+                                        {
+                                            <div class="mb-3 trip-detail p-3 border rounded shadow-sm">
+                                                <!-- Date -->
+                                                <div class="form-group mb-3">
+                                                    <label for="days" class="form-label">Date</label>
+                                                    <input type="date" class="form-control" name="days[]" value="@tripDetail.Day?.ToString("yyyy-MM-dd")" required />
+                                                </div>
 
-            daysContainer.appendChild(newDayContent);
+                                                <!-- Main Topic -->
+                                                <div class="form-group mb-3">
+                                                    <label for="mainTopics" class="form-label">Main Topic</label>
+                                                    <input type="text" class="form-control" name="mainTopics[]" value="@tripDetail.MainTopic" required placeholder="Enter main topic" />
+                                                </div>
 
-            // Thêm sự kiện cho nút "+" để thêm chủ đề vào từng ngày
-            newDayContent.querySelector('.addMainTopicButton').addEventListener('click', function () {
-                const mainTopicsContainer = newDayContent.querySelector('#mainTopicsContainer');
-                const contentSelect = newDayContent.querySelector('#content');
-                addMainTopic(mainTopicsContainer, contentSelect, ++localTopicCount);
-            });
+                                                <!-- Sub Topic (with large text area) -->
+                                                <div class="form-group mb-3">
+                                                    <label for="subTopics" class="form-label">Sub Topic</label>
+                                                    <textarea class="form-control" name="subTopics[]" rows="5" placeholder="Enter sub topic" required>@tripDetail.SubTopic</textarea>
+                                                </div>
+
+                                                <!-- Note Price -->
+                                                <div class="form-group mb-3">
+                                                    <label for="notePrices" class="form-label">Note Price</label>
+                                                    <input type="text" class="form-control" name="notePrices[]" value="@tripDetail.NotePrice" placeholder="Enter note price" />
+                                                </div>
+
+                                                <!-- Remove Button -->
+                                                <button type="button" class="btn btn-danger removeDetailBtn">Remove</button>
+                                            </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <!-- If no existing details, show one default trip detail -->
+                                        <div class="mb-3 trip-detail p-3 border rounded shadow-sm">
+                                            <!-- Date -->
+                                            <div class="form-group mb-3">
+                                                <label for="days" class="form-label">Date</label>
+                                                <input type="date" class="form-control" name="days[]" required />
+                                            </div>
+
+                                            <!-- Main Topic -->
+                                            <div class="form-group mb-3">
+                                                <label for="mainTopics" class="form-label">Main Topic</label>
+                                                <input type="text" class="form-control" name="mainTopics[]" required placeholder="Enter main topic" />
+                                            </div>
+
+                                            <!-- Sub Topic (with large text area) -->
+                                            <div class="form-group mb-3">
+                                                <label for="subTopics" class="form-label">Sub Topic</label>
+                                                <textarea class="form-control" name="subTopics[]" rows="5" placeholder="Enter sub topic" required></textarea>
+                                            </div>
+
+                                            <!-- Note Price -->
+                                            <div class="form-group mb-3">
+                                                <label for="notePrices" class="form-label">Note Price</label>
+                                                <input type="text" class="form-control" name="notePrices[]" placeholder="Enter note price" />
+                                            </div>
+
+                                            <!-- Remove Button -->
+                                            <button type="button" class="btn btn-danger removeDetailBtn">Remove</button>
+                                        </div>
+                                    }
+                                </div>
+
+                                <!-- Button to add new trip details -->
+                                <button type="button" id="addDetailBtn" class="btn btn-secondary mt-3">Add Trip Detail</button>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="d-grid gap-2 d-md-block">
+                            @if (!isTripExisting)
+                            {
+                                <button type="submit" class="btn btn-success">Create Trip</button>
+                            }
+                            else
+                            {
+                                <button type="submit" class="btn btn-primary">Update Trip</button>
+                            }
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- JavaScript for handling dynamic trip details -->
+<script>
+    document.getElementById('addDetailBtn').addEventListener('click', function () {
+        var newDetail = document.createElement('div');
+        newDetail.classList.add('mb-3', 'trip-detail', 'p-3', 'border', 'rounded', 'shadow-sm');
+        newDetail.innerHTML = `
+                <div class="form-group mb-3">
+                    <label for="days" class="form-label">Date</label>
+                    <input type="date" class="form-control" name="days[]" required />
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="mainTopics" class="form-label">Main Topic</label>
+                    <input type="text" class="form-control" name="mainTopics[]" required placeholder="Enter main topic" />
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="subTopics" class="form-label">Sub Topic</label>
+                    <textarea class="form-control" name="subTopics[]" rows="5" placeholder="Enter sub topic" required></textarea>
+                </div>
+
+                 <div class="form-group mb-3">
+                     <label for="notePrices" class="form-label">Note Price</label>
+                     <input type="text" class="form-control" name="notePrices[]" placeholder="Enter note price" />
+             </div>
+
+                <button type="button" class="btn btn-danger removeDetailBtn">Remove</button>
+            `;
+        document.getElementById('tripDetailsContainer').appendChild(newDetail);
+    });
+
+    document.getElementById('tripDetailsContainer').addEventListener('click', function (event) {
+        if (event.target.classList.contains('removeDetailBtn')) {
+            event.target.closest('.trip-detail').remove();
         }
-
-        // Kiểm tra hợp lệ cho ngày
-        function validateDates() {
-            const startDate = document.getElementById('startDate').value;
-            const endDate = document.getElementById('endDate').value;
-            const startDateError = document.getElementById('startDateError');
-            const endDateError = document.getElementById('endDateError');
-            startDateError.textContent = '';
-            endDateError.textContent = '';
-
-            const today = new Date().toISOString().split('T')[0];
-            let isValid = true;
-
-            if (startDate && startDate < today) {
-                startDateError.textContent = 'Start date cannot be in the past.';
-                isValid = false;
-            }
-
-            if (endDate && endDate < today) {
-                endDateError.textContent = 'End date cannot be in the past.';
-                isValid = false;
-            }
-
-            if (startDate && endDate && endDate < startDate) {
-                endDateError.textContent = 'End date cannot be before the start date.';
-                isValid = false;
-            }
-
-            return isValid;
-        }
-
-        // Kiểm tra ngay lập tức khi nhập vào trường ngày
-        document.getElementById('startDate').addEventListener('input', validateDates);
-        document.getElementById('endDate').addEventListener('input', validateDates);
-
-        // Khi nhấn nút "Next", tạo bảng tương ứng với số ngày giữa Start Date và End Date
-        document.getElementById('nextButton').addEventListener('click', function () {
-            const startDate = document.getElementById('startDate').value;
-            const endDate = document.getElementById('endDate').value;
-
-            if (validateDates()) {
-                const totalDays = calculateDaysDifference(startDate, endDate);
-                document.getElementById('daysContainer').innerHTML = ''; // Xóa nội dung cũ trước khi thêm mới
-
-                for (let i = 1; i <= totalDays; i++) {
-                    addDay(i);
-                }
-            } else {
-                alert('Please ensure that the dates are valid.');
-            }
-        });
-
-        // Hàm để thêm chủ đề mới (được dùng ở trên)
-        function addMainTopic(mainTopicsContainer, contentSelect, localTopicCount) {
-            const newInput = document.createElement('input');
-            newInput.type = 'text';
-            newInput.className = 'form-control mb-2';
-            newInput.placeholder = `The main topic ${localTopicCount}`;
-            mainTopicsContainer.appendChild(newInput);
-
-            const newOption = document.createElement('option');
-            newOption.text = `The main topic ${localTopicCount}`;
-            contentSelect.add(newOption);
-        }
-    </script>
-</body>
+    });
+</script>

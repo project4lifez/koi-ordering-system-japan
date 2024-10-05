@@ -25,7 +25,7 @@ namespace KoiOrderingSystem
             });
 
             // Add Google authentication
-           
+
 
             builder.Services.AddControllersWithViews();
             builder.Services.AddAuthentication(options =>
@@ -35,10 +35,10 @@ namespace KoiOrderingSystem
             })
             .AddCookie()
             .AddGoogle(googleOptions =>
-        {
-             googleOptions.ClientId = "#"; // Replace with your ClientId
-             googleOptions.ClientSecret = "#"; // Replace with your ClientSecret
-             googleOptions.CallbackPath = "/signin-google"; // This is the path Google will redirect to after authentication
+            {
+                googleOptions.ClientId = "#"; // Replace with your ClientId
+                googleOptions.ClientSecret = "#"; // Replace with your ClientSecret
+                googleOptions.CallbackPath = "/signin-google"; // This is the path Google will redirect to after authentication
             });
             var app = builder.Build();
 
@@ -71,6 +71,11 @@ namespace KoiOrderingSystem
             app.MapControllerRoute(
                 name: "register_default",
                 pattern: "{controller=Register}/{action=Register}/{id?}");
+            app.MapControllerRoute(
+               name: "YourBooking_default",
+               pattern: "{controller=YourBooking}/{action=YourBooking}/{id?}");
+           
+
 
             app.MapControllerRoute(
                 name: "areas",
@@ -84,6 +89,9 @@ namespace KoiOrderingSystem
             app.MapControllerRoute(
                 name: "areas",
                 pattern: "{area:exists}/{controller=Sale}/{action=Sale}/{id?}");
+            app.MapControllerRoute(
+                name: "areas",
+                pattern: "{area:exists}/{controller=Sale}/{action=UpdateQuote}/{id?}");
             app.MapControllerRoute(
                name: "areas",
                pattern: "{area:exists}/{controller=Delivering}/{action=Delivering}/{id?}");

@@ -1,5 +1,6 @@
 using KoiOrderingSystem.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Diagnostics;
 namespace KoiOrderingSystem.Controllers
 {
@@ -28,7 +29,6 @@ namespace KoiOrderingSystem.Controllers
 
             return View();
         }
-
 
 
         public IActionResult Privacy()

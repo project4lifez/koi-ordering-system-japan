@@ -1,13 +1,24 @@
-﻿
+﻿@model KoiOrderingSystem.Models.Booking
+
 @{
     ViewData["Title"] = "Manager";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard (Manager)</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .error-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 10; /* Ensure it's above the card */
+        }
+    </style>
 </head>
 <body>
     <main class="container-fluid px-4">
@@ -21,35 +32,55 @@
                         Customer Information
                     </div>
                     <div class="card-body">
-                        <p><strong>Name:</strong> Nguyen Thanh Tai</p>
-                        <p><strong>Email:</strong> taintse183488@fpt.edu.vn</p>
-                        <p><strong>Phone Number:</strong> 0328888888</p>
+                        <p><strong>Name:</strong> @Model.Fullname</p>
+                        <p><strong>Email:</strong> @Model.Email</p>
+                        <p><strong>Phone Number:</strong> @Model.Phone</p>
                         <a href="#" class="btn btn-link">User detail</a>
                     </div>
                 </div>
             </div>
 
             <!-- Order Detail Section -->
-            <div class="col-md-6">
+            <div class="col-md-6 position-relative">
+                <!-- Add position-relative for error overlay -->
                 <div class="card mb-4">
                     <div class="card-header">
                         Order Detail
                     </div>
                     <div class="card-body">
-                        <p><strong>Status:</strong> Review quotation</p>
-                        <p><strong>Fish Delivery Date:</strong> </p>
-                        <p><strong>Koi Price:</strong> </p>
-                        <p><strong>Deposit:</strong> </p>
-                        <p><strong>Delivery Location:</strong> </p>
-                        <p><strong>Note:</strong> </p>
-                        <div class="d-flex align-items-end">
-                            <select class="form-select" name="status" id="status" style="width: 150px; margin-top: 8px">
-                                <option value="pending">Review quotaion</option>
-                                <option value="confirmed">Quotation approved </option>
-                                <option value="shipped">Request quotation revision</option>
+                        <p><strong>Status:</strong> @Model.Status</p>
+
+                        <!-- Display model errors here -->
+                        @if (!ViewData.ModelState.IsValid)
+                        {
+                            <div class="alert alert-danger" role="alert">
+                                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                                {
+                                    <div>@error.ErrorMessage</div>
+                                }
+                            </div>
+                        }
+
+                        <form action="/Admin/Manager/UpdateStatusManager" method="post">
+                            <input type="hidden" name="bookingId" value="@Model.BookingId" />
+                            <select class="form-select" name="status" id="status" style="width: 150px; margin-top: 8px"
+                            @(Model.Status == "Canceled" ? "disabled" : "")>
+                                <option value="Rejected" @(Model.Status == "Rejected" ? "selected" : "")>Rejected</option>
+                                <option value="Canceled" @(Model.Status == "Canceled" ? "selected" : "")>Canceled</option>
+                                <option value="Accepted" @(Model.Status == "Accepted" ? "selected" : "")>Accepted</option>
                             </select>
-                            <button class="btn btn-success ml-2 mt-2">Update</button>
-                        </div>
+                            <button class="btn btn-success ml-2 mt-2" type="submit"
+                            @(Model.Status != null &&
+                                (string.Equals(Model.Status, "Payment Completed", StringComparison.OrdinalIgnoreCase) ||
+                                string.Equals(Model.Status, "Canceled", StringComparison.OrdinalIgnoreCase) ||
+                                string.Equals(Model.Status, "Checked in", StringComparison.OrdinalIgnoreCase) ||
+                                string.Equals(Model.Status, "Checked out", StringComparison.OrdinalIgnoreCase) ||
+                                string.Equals(Model.Status, "Delivering", StringComparison.OrdinalIgnoreCase) ||
+                                string.Equals(Model.Status, "Delivered", StringComparison.OrdinalIgnoreCase)) ? "disabled" : "")>
+                                Update
+                            </button>
+
+                        </form>
                     </div>
                 </div>
             </div>
@@ -63,24 +94,18 @@
                         Trip Name
                     </div>
                     <div class="card-body">
-                        <h5>Asagi Koi Trip (#AKT001)</h5>
+                        <h5>@(Model.Trip?.TripName ?? "No Trip Name available")</h5>
                         <div class="d-flex flex-column">
-                            <p style="text-align: right;"><strong>Koi Price:</strong> 3000$</p>
-                            <p style="text-align: right;"><strong>Deposit:</strong> 800$</p>
+                            <p style="text-align: right;"><strong>Koi Price:</strong> #$</p>
+                            <p style="text-align: right;"><strong>Deposit:</strong> #$</p>
                         </div>
                         <div class="d-flex flex-column">
-                            <p style="text-align: right;"><strong>Remaining Payment:</strong> 2200$</p>
-                            <p class="text-danger" style="text-align: right;"><strong>Status:</strong> Pending</p>
+                            <p style="text-align: right;"><strong>Remaining Payment:</strong> $</p>
+                            <p class="text-danger" style="text-align: right;"><strong>Status:</strong> #</p>
                         </div>
-
                     </div>
                 </div>
             </div>
         </div>
     </main>
-
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
 </body>
-
-

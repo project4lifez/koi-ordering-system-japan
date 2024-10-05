@@ -16,4 +16,6 @@ public partial class Trip
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
     public virtual TripDetail? TripDetail { get; set; }
+
+    public virtual ICollection<TripDetail> TripDetails { get; set; } = new List<TripDetail>();
 }

@@ -8,8 +8,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KoiOrderingSystem.Controllers
 {
+    
+
     public class BookingController : Controller
     {
+
         private readonly Koi88Context _db;
 
         public BookingController(Koi88Context db)
@@ -20,10 +23,10 @@ namespace KoiOrderingSystem.Controllers
         // GET: Booking/Create
         public IActionResult Create()
         {
-            // Chỉ cho phép người dùng đã đăng nhập tạo form booking
+            // Only logged-in users can access the booking form
             if (HttpContext.Session.GetString("Username") == null)
             {
-                // Chuyển hướng tới trang đăng nhập nếu chưa đăng nhập
+                // Redirect to login page if the user is not logged in
                 return RedirectToAction("", "Login");
             }
 
@@ -35,69 +38,60 @@ namespace KoiOrderingSystem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Fullname,Phone,Email,Gender,Favoritefarm,FavoriteKoi,StartDate,EndDate,EstimatedCost,HotelAccommodation,Note")] Booking booking)
         {
-            // Kiểm tra lại nếu người dùng đã đăng nhập chưa
             if (HttpContext.Session.GetString("Username") == null)
             {
                 return RedirectToAction("", "Login");
             }
 
-            // Lấy CustomerId từ session
             var customerId = HttpContext.Session.GetInt32("CustomerId");
 
             if (customerId == null)
             {
-                // Nếu không tìm thấy CustomerId, yêu cầu đăng nhập lại
                 return RedirectToAction("", "Login");
             }
 
             if (ModelState.IsValid)
             {
-                
-                
-                    // Gán customerId lấy từ session vào booking
-                    booking.CustomerId = customerId.Value;
-                    booking.BookingDate = DateOnly.FromDateTime(DateTime.Now);
-                    booking.Status = "Pending";
-                    booking.IsActive = true;
+                booking.CustomerId = customerId.Value;
+                booking.BookingDate = DateOnly.FromDateTime(DateTime.Now);
+                booking.Status = "Requested";
+                booking.IsActive = true;
 
-                    // Thêm booking vào database
-                    _db.Add(booking);
-                    await _db.SaveChangesAsync();
+                _db.Add(booking);
+                await _db.SaveChangesAsync();
 
-                    // Chuyển hướng đến trang homepage sau khi thành công
-                    return RedirectToAction("HomePage", "Home"); // Chuyển hướng về trang homepage (action Index của controller Home)
-                
-
-
+                // Redirect to ViewBooking to show the list of bookings
+                return RedirectToAction("","YourBooking");
             }
 
-            // Trả về view nếu ModelState không hợp lệ
             return View(booking);
         }
+        
+        
+
+        // GET: Booking/ViewBooking (Your Order page)
         public async Task<IActionResult> ViewBooking()
         {
-            // Kiểm tra người dùng đã đăng nhập chưa
+            // Check if the user is logged in
             if (HttpContext.Session.GetString("Username") == null)
             {
                 return RedirectToAction("", "Login");
             }
 
-            // Lấy CustomerId từ session
+            // Get CustomerId from session
             var customerId = HttpContext.Session.GetInt32("CustomerId");
 
             if (customerId == null)
             {
-                return RedirectToAction("", "Login");
+                return RedirectToAction("Home", "YourOrder");
             }
 
-            // Lấy danh sách booking của người dùng hiện tại
+            // Get the list of bookings for the current user
             var bookings = await _db.Bookings
                                     .Where(b => b.CustomerId == customerId.Value)
                                     .ToListAsync();
 
-            return View(bookings); // Truyền danh sách booking vào view
+            return View(bookings); // Pass the booking list to the view
         }
-
-
     }
 }

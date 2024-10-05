@@ -12,7 +12,6 @@ namespace KoiOrderingSystem.Controllers.Admin
             // Lấy RoleId từ Session
             var roleId = HttpContext.Session.GetInt32("RoleId");
             var lastName = HttpContext.Session.GetString("Lastname");
-
             // Kiểm tra nếu RoleId không tồn tại, chuyển hướng về trang đăng nhập
             if (roleId == null)
             {

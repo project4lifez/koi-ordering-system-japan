@@ -331,9 +331,13 @@ public partial class Koi88Context : DbContext
             entity.ToTable("PO");
 
             entity.Property(e => e.PoId).HasColumnName("po_id");
+            entity.Property(e => e.DeliveryLocation)
+                .HasMaxLength(200)
+                .HasColumnName("Delivery_Location");
             entity.Property(e => e.FarmId).HasColumnName("farm_id");
             entity.Property(e => e.KoiDeliveryDate).HasColumnName("koi_delivery_date");
             entity.Property(e => e.KoiDeliveryTime).HasColumnName("koi_delivery_time");
+            entity.Property(e => e.PoDetailId).HasColumnName("po_detail_id");
             entity.Property(e => e.Status)
                 .HasMaxLength(100)
                 .HasColumnName("status");
@@ -344,6 +348,10 @@ public partial class Koi88Context : DbContext
             entity.HasOne(d => d.Farm).WithMany(p => p.Pos)
                 .HasForeignKey(d => d.FarmId)
                 .HasConstraintName("FK__PO__farm_id__72C60C4A");
+
+            entity.HasOne(d => d.PoDetail).WithMany(p => p.Pos)
+                .HasForeignKey(d => d.PoDetailId)
+                .HasConstraintName("FK_PO_PODetail");
         });
 
         modelBuilder.Entity<Podetail>(entity =>
@@ -468,11 +476,16 @@ public partial class Koi88Context : DbContext
                 .HasMaxLength(200)
                 .HasColumnName("main_topic");
             entity.Property(e => e.NotePrice)
-                .HasColumnType("decimal(10, 2)")
+                .HasMaxLength(300)
                 .HasColumnName("note_price");
             entity.Property(e => e.SubTopic)
                 .HasMaxLength(1000)
                 .HasColumnName("sub_topic");
+            entity.Property(e => e.TripId).HasColumnName("trip_id");
+
+            entity.HasOne(d => d.Trip).WithMany(p => p.TripDetails)
+                .HasForeignKey(d => d.TripId)
+                .HasConstraintName("FK_TripDetail_Trip");
         });
 
         modelBuilder.Entity<Variety>(entity =>

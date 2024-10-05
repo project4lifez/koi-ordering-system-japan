@@ -32,4 +32,6 @@ public partial class Podetail
     public virtual ICollection<KoiPackage> KoiPackages { get; set; } = new List<KoiPackage>();
 
     public virtual Po? Po { get; set; }
+
+    public virtual ICollection<Po> Pos { get; set; } = new List<Po>();
 }
