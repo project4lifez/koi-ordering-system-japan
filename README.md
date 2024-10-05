@@ -72,7 +72,7 @@ For state management, we implement **JavaScript** to maintain a smooth and respo
 
 ## 🤝 Contributing
 
-We welcome contributions! If you’d like to help improve this project, please fork the repository, create a feature branch, and submit a pull request.
+We welcome contributions! If you’d like to help improve this project, please fork the repository, create a feature branch, and submit a pull reques@@
 
 
 
