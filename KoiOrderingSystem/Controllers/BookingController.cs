@@ -41,7 +41,7 @@ namespace KoiOrderingSystem.Controllers
                 return RedirectToAction("", "Login");
             }
 
-            // Lấy CustomerId từ session
+      
             var customerId = HttpContext.Session.GetInt32("CustomerId");
 
             if (customerId == null)
@@ -52,21 +52,21 @@ namespace KoiOrderingSystem.Controllers
 
             if (ModelState.IsValid)
             {
-                
-                
-                    // Gán customerId lấy từ session vào booking
-                    booking.CustomerId = customerId.Value;
-                    booking.BookingDate = DateOnly.FromDateTime(DateTime.Now);
-                    booking.Status = "Pending";
-                    booking.IsActive = true;
 
-                    // Thêm booking vào database
-                    _db.Add(booking);
-                    await _db.SaveChangesAsync();
 
-                    // Chuyển hướng đến trang homepage sau khi thành công
-                    return RedirectToAction("HomePage", "Home"); // Chuyển hướng về trang homepage (action Index của controller Home)
-                
+             
+                booking.CustomerId = customerId.Value;
+                booking.BookingDate = DateOnly.FromDateTime(DateTime.Now);
+                booking.Status = "Pending";
+                booking.IsActive = true;
+
+                // Thêm booking vào database
+                _db.Add(booking);
+                await _db.SaveChangesAsync();
+
+                // Chuyển hướng đến trang homepage sau khi thành công
+                return RedirectToAction("YourOrder", "Customer", new { id = customerId.Value });
+
 
 
             }
@@ -74,30 +74,38 @@ namespace KoiOrderingSystem.Controllers
             // Trả về view nếu ModelState không hợp lệ
             return View(booking);
         }
-        public async Task<IActionResult> ViewBooking()
+
+        [HttpGet]
+        public async Task<IActionResult> YourOrder()
         {
-            // Kiểm tra người dùng đã đăng nhập chưa
+            
             if (HttpContext.Session.GetString("Username") == null)
             {
                 return RedirectToAction("", "Login");
             }
 
-            // Lấy CustomerId từ session
-            var customerId = HttpContext.Session.GetInt32("CustomerId");
+            // Lấy UserId từ session
+            var customerId = HttpContext.Session.GetInt32("UserId");
 
             if (customerId == null)
             {
-                return RedirectToAction("", "Login");
+                return Unauthorized(); 
             }
 
-            // Lấy danh sách booking của người dùng hiện tại
+       
             var bookings = await _db.Bookings
-                                    .Where(b => b.CustomerId == customerId.Value)
+                                    .Where(b => b.CustomerId == customerId)
                                     .ToListAsync();
 
-            return View(bookings); // Truyền danh sách booking vào view
+            if (bookings == null || bookings.Count == 0)
+            {
+                return View(new List<Booking>()); 
+            }
+
+            return View(bookings); 
+
+
+
         }
-
-
     }
 }

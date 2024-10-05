@@ -157,21 +157,24 @@
                                 <!-- Edit logic for all roles (2, 3, 4, 5) -->
                                 <td>
                                     @if (roleId == 2)
-                                    {
-                                        <a href="@Url.Action("Manager", "Admin")" class="btn btn-warning btn-sm">Edit</a>
-                                    }
+                                        @if (roleId == 2)
+                                        {
+                                            <a href="@Url.Action("Manager", "Admin", new { id = booking.BookingId })" class="btn btn-warning btn-sm">Edit</a>
+                                        }
                                     @if (roleId == 3)
                                     {
-                                        <a href="@Url.Action("Sale", "Admin")" class="btn btn-warning btn-sm">Edit</a>
+                                        <a href="@Url.Action("Sale", "Admin", new { id = booking.BookingId })" class="btn btn-warning btn-sm">Edit</a>
                                     }
                                     @if (roleId == 4)
                                     {
-                                        <a href="@Url.Action("Consulting", "Admin")" class="btn btn-warning btn-sm">Edit</a>
+                                        <a href="@Url.Action("Consulting", "Admin", new { id = booking.BookingId })" class="btn btn-warning btn-sm">Edit</a>
                                     }
                                     @if (roleId == 5)
                                     {
-                                        <a href="@Url.Action("Delivering", "Admin")" class="btn btn-warning btn-sm">Edit</a>
+                                        <a href="/Admin/Delivering/Delivering?id=@booking.BookingId" class="btn btn-warning btn-sm">Edit</a>
                                     }
+
+
                                 </td>
 
                                 @if (roleId == 2 || roleId == 3)
