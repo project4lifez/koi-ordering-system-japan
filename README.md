@@ -34,7 +34,7 @@ These instructions will help you set up the project on your local machine for de
 
 Make sure you have the following software installed:
 
-- [Visual Studio](https://visualstudio.microsoft.com/) or [Visual Studio Code](https://code.visualstudio.com/)
+- [Visual Studio](https://visualstudio.microsoft.com/)
 - [.NET SDK](https://dotnet.microsoft.com/download) (version 8.0)
 
 ### Installation
