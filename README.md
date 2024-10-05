@@ -44,7 +44,7 @@ Make sure you have the following software installed:
    git clone https://github.com/project4lifez/koi-ordering-system-japan.git
 
 
-## ⚡ Powered by ASP.NET MVC & Razor Pages
+##⚡ Powered by ASP.NET MVC & Razor Pages
 
 The **Koi Ordering System** is built using **ASP.NET MVC** and **Razor Pages**, providing a robust and scalable framework for web development. This structure allows us to efficiently manage server-side logic while delivering dynamic and responsive pages.
 
