@@ -1,0 +1,234 @@
+﻿@{
+    ViewData["Title"] = "Payment";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <h2>Payment Form - Nishikigoi Ordering Service</h2>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --indigo-600: #5c6ac4;
+            --indigo-500: #6574cd;
+            --white: #ffffff;
+            --gray-200: #e2e8f0;
+            --gray-400: #cbd5e0;
+            --gray-500: #a0aec0;
+            --gray-900: #1a202c;
+            --blue-500: #4299e1;
+            --blue-600: #3182ce;
+            --red-500: #f56565;
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+
+        h1, h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 20px; /* Adds space above the headings */
+            padding-left: 20px; /* Adds indentation to the left */
+        }
+
+        .payment-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .payment-header-title, .payment-header-description {
+            background-color: var(--indigo-600);
+            color: var(--white);
+            text-align: center;
+            padding: 12px;
+            border-radius: 8px;
+        }
+        .payment-content {
+            padding: 24px;
+            background-color: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, .05);
+        }
+        .koi-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px;
+        }
+        .koi-header {
+            font-size: 24px;
+            font-weight: 700;
+            text-align: center;
+        }
+        .koi-subheader {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        .koi-input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 16px;
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+        }
+        .koi-payment-container, .koi-order-summary-container {
+            padding: 24px;
+            background-color: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, .05);
+        }
+        .koi-order-summary {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .koi-order-details {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        .koi-order-description {
+            display: flex;
+            flex-direction: column;
+        }
+        .koi-order-price {
+            font-weight: 600;
+            color: #4299e1;
+        }
+        .koi-total {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+            color: var(--gray-900);
+            padding-top: 16px;
+            border-top: 1px dashed var(--gray-200);
+        }
+        .koi-checkout-button {
+            width: 100%;
+            padding: 12px;
+            background-color: #4299e1;
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+        .koi-checkout-button:hover {
+            background-color: var(--indigo-600);
+        }
+        /* PayPal button */
+        .koi-paypal-button-container {
+            margin-top: 16px;
+        }
+
+        .koi-radio-group {
+            display: flex;
+            align-items: center; /* Thay đổi thành center để căn giữa */
+            justify-content: flex-start; /* Thay đổi để không có khoảng cách giữa các phần tử */
+            background-color: #fff; /* Màu nền của khung */
+        }
+
+        .koi-payment-info {
+            flex: 1;
+            padding-right: 20px;
+            padding-top: 33px;
+        }
+
+        .koi-payment-image img {
+            width: 96px; /* Điều chỉnh kích thước hình ảnh tùy ý */
+            height: auto;
+            border-radius: 8px;
+            margin-left: 13px; /* Thêm khoảng cách giữa hình ảnh và phương thức thanh toán */
+            margin-top: -52px; /* Điều chỉnh vị trí hình ảnh */
+        }
+
+
+
+    </style>
+</head>
+<body>
+    <div class="koi-container">
+        <div class="payment-wrapper">
+            <!-- Payment Container -->
+            <div class="koi-payment-container">
+                <h1 class="koi-header">PAYMENT</h1>
+                <div class="koi-account-info">
+                    <h2 class="koi-subheader">Account Information</h2>
+                    <input type="email" class="koi-input" placeholder="Email Address*" required>
+                    <input type="text" class="koi-input" placeholder="Username*" required>
+                    <input type="password" class="koi-input" placeholder="Password*" required>
+                    <input type="text" class="koi-input" placeholder="First Name*" required>
+                    <input type="text" class="koi-input" placeholder="Last Name">
+                </div>
+                <div class="koi-payment-section">
+                    <div class="koi-payment-info">
+                        <h2 class="koi-subheader">Payment Information</h2>
+                        <div class="koi-radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="payment-method" value="paypal" checked>
+                                <div class="koi-payment-image">
+                                    <img src="~/images/paypal.jpg" alt="Koi Fish" />
+                                </div>
+                            </label>
+                            <div class="koi-paypal-button-container">
+                                <div id="paypal-button-container"></div>
+                            </div>
+                            
+                        </div>
+                        
+                    </div>
+
+                    
+                </div>
+
+            </div>
+
+            <!-- Order Summary Container -->
+            <div class="koi-order-summary-container">
+                <h2 class="koi-subheader">Order Summary</h2>
+                <div class="koi-order-summary">
+                    <div class="koi-order-details">
+                        <img src="https://via.placeholder.com/100" alt="Order Image">
+                        <div class="koi-order-description">
+                            <span>Asagi Koi trip (#AKT001)</span>
+                            <span class="koi-order-price">$2000</span>
+                        </div>
+                    </div>
+                    <div class="koi-total">
+                        <span>Total</span>
+                        <span>$2000</span>
+                    </div>
+                </div>
+                <button class="koi-checkout-button">Checkout</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PayPal SDK -->
+    <script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID"></script>
+    <script>
+        paypal.Buttons({
+            createOrder: function (data, actions) {
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: '2000.00' // Set your amount here
+                        }
+                    }]
+                });
+            },
+            onApprove: function (data, actions) {
+                return actions.order.capture().then(function (details) {
+                    alert('Transaction completed by ' + details.payer.name.given_name);
+                });
+            }
+        }).render('#paypal-button-container');
+    </script>
+</body>
+</html>
