@@ -24,7 +24,7 @@ C# is widely used in various fields, including:
 
 # 📚 C# Project 
 
-Welcome to the **C# Project Name**! This project is designed to [briefly describe what your project does, e.g., "manage Koi fish orders in Japan"]. gdgdgfdfg
+Welcome to the **C# Project Name**! This project is designed to [briefly describe what your project does, e.g., "manage Koi fish orders in Japan"]. 
 
 ## 🚀 Getting Started
 
