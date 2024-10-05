@@ -31,7 +31,7 @@ namespace KoiOrderingSystem.Controllers
 
         // POST: /Login
         [HttpPost]
-        [ValidateAntiForgeryToken]
+         [ValidateAntiForgeryToken]
         public IActionResult Login(Account model)
         {
             if (ModelState.IsValid)

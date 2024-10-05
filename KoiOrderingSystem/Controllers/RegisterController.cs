@@ -40,7 +40,7 @@ namespace KoiOrderingSystem.Controllers
                         await _db.SaveChangesAsync();
 
                         // Create associated Customer record
-                        var customer = new Customer
+                        var customer = new Models.Customer
                         {
                             AccountId = account.AccountId
                         };
@@ -88,7 +88,7 @@ namespace KoiOrderingSystem.Controllers
             _db.Accounts.Add(account);
             await _db.SaveChangesAsync();
 
-            var customer = new Customer { AccountId = account.AccountId };
+            var customer = new Models.Customer { AccountId = account.AccountId };
             _db.Customers.Add(customer);
             await _db.SaveChangesAsync();
 

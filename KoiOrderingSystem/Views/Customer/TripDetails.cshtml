@@ -1,0 +1,327 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trip Details</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            padding-top: 3rem;
+        }
+
+        .custom-container {
+            display: flex;
+            min-height: calc(100vh - 100px);
+            padding: 20px;
+        }
+
+        /* Sidebar Styles */
+        .custom-sidebar {
+            width: 25%;
+            background-color: #fff;
+            color: #333;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+            .custom-sidebar h4 {
+                font-size: 18px;
+                margin-bottom: 10px;
+                border-bottom: 1px solid #ddd;
+                padding-bottom: 5px;
+            }
+
+            .custom-sidebar p {
+                margin: 10px 0;
+                font-size: 16px;
+            }
+
+            .custom-sidebar .badge {
+                background-color: #3498db;
+                color: white;
+                padding: 4px 8px;
+                border-radius: 5px;
+            }
+
+            .custom-sidebar a {
+                color: #3498db;
+                text-decoration: none;
+            }
+
+        .custom-active {
+            background-color: #28a745; /* Active background color */
+            color: white;
+        }
+
+        .custom-icon {
+            margin-right: 10px;
+        }
+
+        .custom-order-count {
+            background-color: green;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-left: auto; /* Aligns the order count to the right */
+        }
+
+        /* Main Content Section */
+        .custom-content {
+            width: 75%;
+            padding: 20px;
+            margin-left: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+            .custom-content h2 {
+                font-size: 24px;
+                color: #333;
+                margin-bottom: 20px;
+            }
+
+        .trip-details-header {
+            display: flex;
+            justify-content: space-between;
+            background-color: #ddd;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+            .trip-details-header h1 {
+                font-size: 24px;
+                margin: 0;
+            }
+
+        .trip-status {
+            background-color: #ffcc00;
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .trip-progress {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+            .trip-progress div {
+                text-align: center;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                position: relative;
+            }
+
+        .status-circle {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: gray;
+            margin-bottom: 10px;
+        }
+
+            .status-circle.active {
+                background-color: #28a745; /* Màu xanh lá cho trạng thái hiện tại */
+            }
+
+        .trip-progress img {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 10px;
+        }
+
+        .trip-info {
+            display: flex;
+            justify-content: space-between;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .trip-info-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+            .trip-info-item h3 {
+                font-size: 18px;
+                margin-bottom: 10px;
+            }
+
+        .trip-amount {
+            display: flex;
+            justify-content: space-between;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .note-section,
+        .amount-section {
+            width: 48%;
+        }
+
+            .note-section h3 {
+                font-size: 16px;
+                margin-bottom: 10px;
+            }
+
+            .note-section textarea {
+                width: 100%;
+                height: 80px;
+                padding: 10px;
+                border-radius: 5px;
+                border: 1px solid #ccc;
+            }
+
+            .amount-section table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+
+                .amount-section table td {
+                    padding: 10px 0;
+                    text-align: right;
+                }
+
+                .amount-section table tr td:first-child {
+                    text-align: left;
+                }
+
+    </style>
+</head>
+<body>
+    <div class="custom-container">
+        <div class="custom-sidebar">
+            <h4><strong>Information</strong></h4>
+            <p>Your order <span class="badge">3</span></p>
+            <h4><strong>Account</strong></h4>
+            <p><a href="#account">Profile</a></p>
+        </div>
+
+        <div class="custom-content">
+            <div class="trip-details-header">
+                <h1>🛒 Trip details</h1>
+                <span class="trip-status">Pending</span>
+            </div>
+
+            <div class="trip-progress">
+                <div data-step="package">
+                    <div class="status-circle"></div>
+                    <img src="~/images/boxbox.png" alt="box">
+                    <p>Package</p>
+                </div>
+                <div data-step="farm">
+                    <div class="status-circle"></div>
+                    <img src="~/images/koifarm.png" alt="Farm">
+                    <p>Farm</p>
+                </div>
+                <div data-step="payment">
+                    <div class="status-circle"></div>
+                    <img src="~/images/payments.png" alt="$">
+                    <p>Payment</p>
+                </div>
+            </div>
+
+            <div class="trip-info">
+                <div class="trip-image" style="flex: 1; display: flex; justify-content: center; align-items: center;">
+                    <img src="" alt="Trip Image" style="max-width: 90%; max-height: 200px; border-radius: 10px;">
+                </div>
+
+                <div style="flex: 1.5; padding-left: 20px;">
+                    <div class="trip-info-item" style="display: table; width: 100%;">
+                        <div style="display: table-row;">
+                            <div style="display: table-cell; padding: 10px; font-weight: bold; text-align: right; width: 40%;">Order ID:</div>
+                            <div style="display: table-cell; padding: 10px; text-align: left;">#AKT001</div>
+                        </div>
+                        <div style="display: table-row;">
+                            <div style="display: table-cell; padding: 10px; font-weight: bold; text-align: right; width: 40%;">Order date:</div>
+                            <div style="display: table-cell; padding: 10px; text-align: left;">2024-09-13</div>
+                        </div>
+                        <div style="display: table-row;">
+                            <div style="display: table-cell; padding: 10px; font-weight: bold; text-align: right; width: 40%;">Trip detail:</div>
+                            <div style="display: table-cell; padding: 10px; text-align: left;">
+                                <a href="#details">Detail</a>
+                            </div>
+                        </div>
+                        <div style="display: table-row;">
+                            <div style="display: table-cell; padding: 10px; font-weight: bold; text-align: right; width: 40%;">Description:</div>
+                            <div style="display: table-cell; padding: 10px; text-align: left;">Asagi Koi Trip AKT001</div>
+                        </div>
+                        <div style="display: table-row;">
+                            <div style="display: table-cell; padding: 10px; font-weight: bold; text-align: right; width: 40%;">Cost:</div>
+                            <div style="display: table-cell; padding: 10px; text-align: left;">2000$</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="trip-amount">
+                <div class="note-section">
+                    <h3>Note:</h3>
+                    <textarea placeholder="Enter any note..."></textarea>
+                </div>
+
+                <div class="amount-section">
+                    <table>
+                        <tr>
+                            <td>Estimated cost:</td>
+                            <td>2000$</td>
+                        </tr>
+                        <tr>
+                            <td>Discount:</td>
+                            <td>0$</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Total:</strong></td>
+                            <td><strong>2000$</strong></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateTripStatus(step) {
+            // Lấy tất cả các phần tử có status-circle
+            const circles = document.querySelectorAll('.status-circle');
+
+            // Xóa class 'active' khỏi tất cả các status-circle
+            circles.forEach(circle => {
+                circle.classList.remove('active');
+            });
+
+            // Chỉ thêm class 'active' vào phần tử có bước được chọn
+            const currentStepElement = document.querySelector(`.trip-progress div[data-step="${step}"] .status-circle`);
+            if (currentStepElement) {
+                currentStepElement.classList.add('active');
+            }
+        }
+
+        // Ví dụ: Đặt trạng thái hiện tại là "farm"
+        updateTripStatus('package');
+    </script>
+</body>
+</html>

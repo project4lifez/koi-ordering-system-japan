@@ -1,85 +1,93 @@
-﻿@{
-    ViewData["Title"] = "Manager";
+﻿@model KoiOrderingSystem.Models.Booking
+@{
+    ViewData["Title"] = "Delivering";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard (Manager)</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-    <main class="container-fluid px-4">
-        <h1 class="mt-4">Dashboard (Delivering)</h1>
 
-        <div class="row">
-            <!-- Customer Information Section -->
-            <div class="col-md-6">
-                <div class="card mb-4">
-                    <div class="card-header">
-                        Customer Information
-                    </div>
-                    <div class="card-body">
-                        <p><strong>Name:</strong> Nguyen Thanh Tai</p>
-                        <p><strong>Email:</strong> taintse183488@fpt.edu.vn</p>
-                        <p><strong>Phone Number:</strong> 0328888888</p>
-                        <a href="#" class="btn btn-link">User detail</a>
-                    </div>
+<main class="container-fluid px-4">
+    <h1 class="mt-4">Dashboard (Delivering)</h1>
+
+    <div class="row">
+        <!-- Customer Information Section -->
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    Customer Information
                 </div>
-            </div>
-
-            <!-- Order Detail Section -->
-            <div class="col-md-6">
-                <div class="card mb-4">
-                    <div class="card-header">
-                        Order Detail
-                    </div>
-                    <div class="card-body">
-                        <p><strong>Status:</strong> Receive information</p>
-                        <p><strong>Fish Delivery Date:</strong> 13h05 | 17-09-2024</p>
-                        <p><strong>Koi Price:</strong> 3000$</p>
-                        <p><strong>Deposit:</strong> 800$</p>
-                        <p><strong>Delivery Location:</strong> ABC Hotel</p>
-                        <p><strong>Note:</strong> </p>
-                        <div class="d-flex align-items-end">
-                            <select class="form-select" name="status" id="status" style="width: 150px; margin-top: 8px">
-                                <option value="pending">Receive information</option>
-                                <option value="confirmed">Delivering</option>
-                                <option value="shipped">Delivered</option>
-                            </select>
-                            <button class="btn btn-success ml-2 mt-2">Update</button>
-                        </div>
-
-                    </div>
+                <div class="card-body">
+                    <p><strong>Name:</strong> @Model?.Fullname</p>
+                    <p><strong>Email:</strong> @Model?.Email</p>
+                    <p><strong>Phone Number:</strong> @Model?.Phone</p>
                 </div>
             </div>
         </div>
 
-        <!-- Trip Information Section -->
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card mb-4">
-                    <div class="card-header">
-                        Trip Name
-                    </div>
-                    <div class="card-body">
-                        <h5>Asagi Koi Trip (#AKT001)</h5>
-                        <div class="d-flex flex-column">
-                            <p style="text-align: right;"><strong>Koi Price:</strong> 3000$</p>
-                            <p style="text-align: right;"><strong>Deposit:</strong> 800$</p>
-                        </div>
-                        <div class="d-flex flex-column">
-                            <p style="text-align: right;"><strong>Remaining Payment:</strong> 2200$</p>
-                            <p class="text-danger" style="text-align: right;"><strong>Status:</strong> Pending</p>
-                        </div>
+        <!-- Order Detail Section -->
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    Order Details
+                </div>
+                <div class="card-body">
+                    <p><strong>Status:</strong> @Model?.Status</p>
+                    <p><strong>Fish Delivery Date:</strong> @Model?.Po?.KoiDeliveryDate?.ToString("dd/MM/yyyy")</p>
+                    <p><strong>Delivery Time:</strong> @Model?.Po?.KoiDeliveryTime</p>
+                    <p><strong>Koi Price:</strong> @Model?.Po?.Podetails?.FirstOrDefault()?.TotalKoiPrice $</p>
+                    <p><strong>Deposit:</strong> @Model?.Po?.Podetails?.FirstOrDefault()?.Deposit $</p>
+                    <p><strong>Remaining Payment:</strong> @Model?.Po?.Podetails?.FirstOrDefault()?.RemainingPrice $</p>
+                    <p><strong>Delivery Location:</strong> @Model?.HotelAccommodation</p>
 
+                    @if (Model?.Po != null)
+                    {
+                        <h5>PO Details</h5>
+                        <p><strong>PO Number:</strong> @Model?.Po?.Podetails</p>
+
+                        <ul>
+                            @foreach (var detail in Model?.Po?.Podetails ?? Enumerable.Empty<KoiOrderingSystem.Models.Podetail>())
+                            {
+                                <li>
+                                    <strong>Product:</strong> @detail?.Koi,
+                                    <strong>Price:</strong> @detail?.TotalKoiPrice $,
+                                    <strong>Quantity:</strong> @detail?.Quantity
+                                </li>
+                            }
+                        </ul>
+                    }
+
+                    <!-- Status update form -->
+                    <form id="formUpdate" action="/Admin/Delivering/UpdateStatusDelivering" method="post">
+                        <input type="hidden" name="id" value="@Model?.BookingId" />
+                        <select class="form-select" name="status" id="status" style="width: 150px; margin-top: 8px"
+                        @(string.Equals(Model?.Status, "delivered", StringComparison.OrdinalIgnoreCase) ? "disabled" : "")>
+                            <option value="delivering" @(string.Equals(Model?.Status, "delivering", StringComparison.OrdinalIgnoreCase) ? "selected" : "")>Delivering</option>
+                            <option value="delivered" @(string.Equals(Model?.Status, "delivered", StringComparison.OrdinalIgnoreCase) ? "selected" : "")>Delivered</option>
+                        </select>
+                        <button type="submit" class="btn btn-success ml-2 mt-2" @(string.Equals(Model?.Status, "delivered", StringComparison.OrdinalIgnoreCase) ? "disabled" : "")>Update</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Trip Information Section -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card mb-4">
+                <div class="card-header">
+                    Trip Details
+                </div>
+                <div class="card-body">
+                    <h5>@Model?.FavoriteKoi</h5>
+                    <div class="d-flex flex-column">
+                        <p style="text-align: right;"><strong>Koi Price:</strong> @Model?.Po?.Podetails?.FirstOrDefault()?.TotalKoiPrice $</p>
+                        <p style="text-align: right;"><strong>Deposit:</strong> @Model?.Po?.Podetails?.FirstOrDefault()?.Deposit $</p>
+                    </div>
+                    <div class="d-flex flex-column">
+                        <p style="text-align: right;"><strong>Remaining Payment:</strong> @Model?.Po?.Podetails?.FirstOrDefault()?.RemainingPrice $</p>
+                        <p class="text-danger" style="text-align: right;"><strong>Status:</strong> @Model?.Status</p>
                     </div>
                 </div>
             </div>
         </div>
-    </main>
-
-
-</body>
-
-
+    </div>
+</main>
