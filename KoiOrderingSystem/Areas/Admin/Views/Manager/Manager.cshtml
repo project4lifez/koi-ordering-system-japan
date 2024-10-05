@@ -1,0 +1,86 @@
+﻿
+@{
+    ViewData["Title"] = "Manager";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard (Manager)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <main class="container-fluid px-4">
+        <h1 class="mt-4">Dashboard (Manager)</h1>
+
+        <div class="row">
+            <!-- Customer Information Section -->
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        Customer Information
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Name:</strong> Nguyen Thanh Tai</p>
+                        <p><strong>Email:</strong> taintse183488@fpt.edu.vn</p>
+                        <p><strong>Phone Number:</strong> 0328888888</p>
+                        <a href="#" class="btn btn-link">User detail</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Detail Section -->
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        Order Detail
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Status:</strong> Review quotation</p>
+                        <p><strong>Fish Delivery Date:</strong> </p>
+                        <p><strong>Koi Price:</strong> </p>
+                        <p><strong>Deposit:</strong> </p>
+                        <p><strong>Delivery Location:</strong> </p>
+                        <p><strong>Note:</strong> </p>
+                        <div class="d-flex align-items-end">
+                            <select class="form-select" name="status" id="status" style="width: 150px; margin-top: 8px">
+                                <option value="pending">Review quotaion</option>
+                                <option value="confirmed">Quotation approved </option>
+                                <option value="shipped">Request quotation revision</option>
+                            </select>
+                            <button class="btn btn-success ml-2 mt-2">Update</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trip Information Section -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        Trip Name
+                    </div>
+                    <div class="card-body">
+                        <h5>Asagi Koi Trip (#AKT001)</h5>
+                        <div class="d-flex flex-column">
+                            <p style="text-align: right;"><strong>Koi Price:</strong> 3000$</p>
+                            <p style="text-align: right;"><strong>Deposit:</strong> 800$</p>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <p style="text-align: right;"><strong>Remaining Payment:</strong> 2200$</p>
+                            <p class="text-danger" style="text-align: right;"><strong>Status:</strong> Pending</p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+</body>
+
+

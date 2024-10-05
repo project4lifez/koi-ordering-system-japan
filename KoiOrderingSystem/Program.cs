@@ -51,6 +51,30 @@ namespace KoiOrderingSystem
             app.MapControllerRoute(
                 name: "register_default",
                 pattern: "{controller=Register}/{action=Register}/{id?}");
+            app.MapControllerRoute(
+                name: "areas",
+                pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+            app.MapControllerRoute(
+                name: "areas",
+                pattern: "{area:exists}/{controller=Manager}/{action=Manager}/{id?}");
+            app.MapControllerRoute(
+                name: "areas",
+                pattern: "{area:exists}/{controller=Consulting}/{action=Index}/{id?}");
+            app.MapControllerRoute(
+                name: "areas",
+                pattern: "{area:exists}/{controller=Sale}/{action=Index}/{id?}");
+            app.MapControllerRoute(
+               name: "areas",
+               pattern: "{area:exists}/{controller=Delivering}/{action=Index}/{id?}");
+            app.MapControllerRoute(
+               name: "areas",
+               pattern: "{area:exists}/{controller=Sale}/{action=Quote}/{id?}");
+            app.MapControllerRoute(
+                name: "default",
+                pattern: "{controller=Customer}/{action=YourOrder}/{id?}");
+            app.MapControllerRoute(
+                name: "default",
+                pattern: "{controller=Customer}/{action=TripDetails}/{id?}");
             app.Run();
         }
     }

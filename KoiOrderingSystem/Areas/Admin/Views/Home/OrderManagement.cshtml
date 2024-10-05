@@ -1,0 +1,141 @@
+﻿@{
+    ViewData["Title"] = "Order Management";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .table td, .table th {
+            vertical-align: middle;
+        }
+        .btn-link {
+            text-decoration: underline;
+        }
+        .form-container {
+            padding: 15px;
+        }
+        .form-container h5 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <main class="container-fluid px-4">
+        <h1 class="mt-4">Order Management</h1>
+
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>OrderID</th>
+                            <th>Date</th>
+                            <th>Customer</th>
+                            <th>Price</th>
+                            <th>Status</th>
+                            <th>Form</th>
+                            <th>Edit</th>
+                            <th>Detail</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>#AKT001</td>
+                            <td>2024-09-13</td>
+                            <td>Nguyen Thanh Tai</td>
+                            <td class="text-success">2000$</td>
+                            <td><span class="badge bg-warning">Pending</span></td>
+                            <td><a href="#">View</a></td>
+                            <td><i class="om-edit-icon">✏️</i></td>
+                            <td><i class="om-detail-icon">👁️</i></td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>#GKT002</td>
+                            <td>2024-09-13</td>
+                            <td>Le Minh Thuan</td>
+                            <td class="text-success">2500$</td>
+                            <td><span class="badge bg-warning">Pending</span></td>
+                            <td><a href="#">View</a></td>
+                            <td><i class="om-edit-icon">✏️</i></td>
+                            <td><i class="om-detail-icon">👁️</i></td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>#TKT003</td>
+                            <td>2024-09-13</td>
+                            <td>Le Van Viet</td>
+                            <td class="text-success">2300$</td>
+                            <td><span class="badge bg-warning">Pending</span></td>
+                            <td><a href="#">View</a></td>
+                            <td><i class="om-edit-icon">✏️</i></td>
+                            <td><i class="om-detail-icon">👁️</i></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Form Section -->
+        <div class="row justify-content-end">
+            <div class="col-md-7 offset-md-5">
+                <div class="card form-container">
+                    <div class="om-form-header text-center">
+                        <img src="koi88.png" alt="Koi88" class="mb-2">
+                        <h2>FORM</h2>
+                    </div>
+
+                    <h5>Trip Design of Customer</h5>
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <td>The farm which want to come</td>
+                                <td>Content</td>
+                            </tr>
+                            <tr>
+                                <td>Estimated departure date</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Return date</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Number of participants</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Estimate cost</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Hotel accommodation</td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="form-group">
+                        <label for="additional">Additional Information</label>
+                        <textarea id="additional" class="form-control" rows="4"></textarea>
+                    </div>
+
+                    <button class="btn btn-primary mt-3" onclick="printForm()">Print Form</button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function printForm() {
+                window.print();
+            }
+        </script>
+    </main>
+
+</body>

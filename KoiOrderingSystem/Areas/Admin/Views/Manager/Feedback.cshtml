@@ -1,0 +1,232 @@
+﻿@{
+    ViewData["Title"] = "Manager";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review List with Pagination</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 20px;
+        }
+
+        .review-list {
+            width: 80%;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f0f0f0;
+        }
+
+        .btn-detail {
+            background-color: #009688;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+            .btn-detail:hover {
+                background-color: #00796b;
+            }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            width: 50%;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+            .close:hover {
+                color: #000;
+            }
+
+        /* Pagination styles */
+        .pagination {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+            .pagination a {
+                color: #009688;
+                padding: 10px 15px;
+                text-decoration: none;
+                border: 1px solid #ddd;
+                margin: 0 5px;
+                border-radius: 5px;
+            }
+
+                .pagination a.active {
+                    background-color: #009688;
+                    color: white;
+                    border: 1px solid #009688;
+                }
+
+                .pagination a:hover {
+                    background-color: #00796b;
+                    color: white;
+                }
+    </style>
+</head>
+<body>
+    <div class="review-list">
+        <h2>Review List</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Trip</th>
+                    <th>Customer</th>
+                    <th>Rating</th>
+                    <th>Date</th>
+                    <th>Comment</th>
+                </tr>
+            </thead>
+            <tbody id="reviewTable"></tbody>
+        </table>
+
+        <div class="pagination">
+            <a href="#" onclick="loadPage(1)" class="active" id="page1">1</a>
+            <a href="#" onclick="loadPage(2)" id="page2">2</a>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()" style="">&times;</span>
+            <h3 style="text-align:center">Chi tiết đánh giá</h3>
+            <p id="modalContent">Nội dung chi tiết sẽ hiển thị ở đây.</p>
+        </div>
+    </div>
+
+    <script>
+        // Dữ liệu đánh giá mẫu
+        const reviews = [
+            { id: 1, customer: "Nguyen Van A", rating: 5, comment: "Chuyến đi rất tuyệt vời! Mình rất thích trải nghiệm này.", date: "2024-09-02" },
+            { id: 2, customer: "Nguyen Thi B", rating: 4, comment: "Dịch vụ ổn, nhưng có thể cải thiện thêm.", date: "2024-09-30" },
+            { id: 3, customer: "John", rating: 3, comment: "Tạm ổn, nhưng có nhiều điều chưa hài lòng.", date: "2024-10-10" },
+            { id: 4, customer: "Sam", rating: 5, comment: "Rất thích! Tôi sẽ quay lại.", date: "2024-10-12" },
+            { id: 5, customer: "Khoa Phang", rating: 4, comment: "Trải nghiệm rất tốt.", date: "2024-10-15" },
+            { id: 6, customer: "Zun Doan", rating: 5, comment: "Dịch vụ tuyệt vời!", date: "2024-10-18" },
+            { id: 7, customer: "Elon Musk", rating: 5, comment: "Chuyến đi đỉnh cao, rất đáng tiền!", date: "2024-10-30" },
+            { id: 8, customer: "Tai Nguyen", rating: 5, comment: "Rất tuyệt vời, không có gì phàn nàn.", date: "2024-11-20" },
+            { id: 9, customer: "Linda", rating: 4, comment: "Dịch vụ tốt, nhưng có thể cải thiện thêm.", date: "2024-11-25" },
+            { id: 10, customer: "Mike", rating: 3, comment: "Ổn nhưng không nổi bật.", date: "2024-11-30" }
+        ];
+
+        let currentPage = 1;
+        const reviewsPerPage = 8;
+
+        function loadPage(page) {
+            currentPage = page;
+
+            // Cập nhật nút phân trang
+            document.querySelectorAll('.pagination a').forEach(a => a.classList.remove('active'));
+            document.getElementById(`page${page}`).classList.add('active');
+
+            // Lấy danh sách đánh giá theo trang
+            const startIndex = (page - 1) * reviewsPerPage;
+            const endIndex = page * reviewsPerPage;
+            const pageReviews = reviews.slice(startIndex, endIndex);
+
+            // Hiển thị đánh giá trong bảng
+            const tableBody = document.getElementById('reviewTable');
+            tableBody.innerHTML = '';
+            pageReviews.forEach(review => {
+                const row = `<tr>
+                            <td>${review.id}</td>
+                            <td>Asagi Koi Trip AKT001</td>
+                            <td>${review.customer}</td>
+                            <td>${'⭐'.repeat(review.rating)}</td>
+                            <td>${review.date}</td>
+                            <td><button class="btn-detail" onclick="openModal(${review.id})">Detail</button></td>
+                        </tr>`;
+                tableBody.innerHTML += row;
+            });
+        }
+
+        // Hàm mở modal và hiển thị thông tin chi tiết
+        function openModal(id) {
+            const review = reviews.find(r => r.id === id);
+            if (review) {
+                document.getElementById('modalContent').innerHTML = `
+                            <strong>Customer:</strong> ${review.customer}<br>
+                            <strong>Rating:</strong> ${'⭐'.repeat(review.rating)}<br>
+                            <strong>Date:</strong> ${review.date}<br>
+                            <strong>Comment:</strong> ${review.comment}
+                        `;
+                document.getElementById('myModal').style.display = 'flex';
+            }
+        }
+
+        // Hàm đóng modal
+        function closeModal() {
+            document.getElementById('myModal').style.display = 'none';
+        }
+
+        // Đóng modal khi người dùng bấm bên ngoài nó
+        window.onclick = function (event) {
+            const modal = document.getElementById('myModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+
+        // Load trang đầu tiên khi tải trang
+        loadPage(1);
+    </script>
+</body>
+</html>
+
+
+
