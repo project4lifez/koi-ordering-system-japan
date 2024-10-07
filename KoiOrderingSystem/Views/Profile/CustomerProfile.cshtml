@@ -1,0 +1,266 @@
+﻿@model KoiOrderingSystem.Models.Customer
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .custom-container {
+            display: flex;
+            min-height: calc(100vh - 100px);
+            background-color: #ffffff;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .custom-sidebar {
+            background-color: #ffffff;
+            width: 20%;
+            padding: 20px;
+            border-right: 2px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 20px; /* Added top margin for breathing space */
+        }
+
+            .custom-sidebar h2 {
+                margin-bottom: 20px;
+                font-weight: 700;
+                font-size: 1.2rem;
+                color: #1565c0;
+            }
+
+            .custom-sidebar ul {
+                list-style: none;
+                padding: 0;
+            }
+
+            .custom-sidebar li {
+                margin-bottom: 15px;
+                font-size: 1rem;
+                padding: 10px;
+                border-radius: 5px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                transition: background-color 0.3s ease;
+                color: #333;
+            }
+
+                .custom-sidebar li a {
+                    color: #1565c0;
+                    text-decoration: none;
+                }
+
+        .custom-active {
+            background-color: #90caf9;
+            color: white;
+        }
+
+        .custom-content {
+            flex-grow: 1;
+            padding: 40px;
+            background-color: #f8f9fa;
+        }
+
+        .profile-container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .profile-form {
+            flex: 2;
+            margin-right: 40px;
+        }
+
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+            .profile-header h2 {
+                margin: 0;
+                font-weight: 600;
+                font-size: 1.5rem;
+                color: #1565c0;
+            }
+
+            .profile-header a {
+                color: #007bff;
+                text-decoration: none;
+            }
+
+                .profile-header a:hover {
+                    text-decoration: underline;
+                }
+
+        .profile-form label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .profile-form input,
+        .profile-form select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .profile-form button {
+            background-color: #a3d9d6;
+            color: white;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .profile-form button {
+            background-color: #90caf9;
+            padding: 10px 20px;
+        }
+
+            .profile-form button:hover {
+                background-color: #64b5f6;
+            }
+
+        .profile-avatar {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            text-align: center;
+        }
+
+            .profile-avatar img {
+                width: 150px;
+                height: 150px;
+                border-radius: 50%;
+                margin-bottom: 20px;
+                border: 1px solid #ccc;
+            }
+
+            .profile-avatar input {
+                margin-bottom: 10px;
+            }
+
+            .profile-avatar button {
+                background-color: #a3d9d6;
+                color: white;
+                border: none;
+                font-size: 1.2rem;
+                cursor: pointer;
+                padding: 10px;
+                border-radius: 5px;
+                transition: background-color 0.3s ease;
+            }
+
+            .profile-avatar button {
+                background-color: #90caf9;
+                padding: 10px 20px;
+            }
+
+                .profile-avatar button:hover {
+                    background-color: #64b5f6;
+                }
+    </style>
+</head>
+<body>
+
+    <div class="custom-container">
+        <div class="custom-sidebar">
+            <h2>Information</h2>
+            <ul>
+                <li>
+                    <a href="#Your Order">Your Order</a>
+                </li>
+                <li class="custom-active">
+                    <a href="#account">Account</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="custom-content">
+            <div class="profile-container">
+                <div class="profile-form">
+                    <div class="profile-header">
+                        <h2>My Profile</h2>
+                        <a href="#change-password">Change Password</a>
+                    </div>
+                    <form id="customerUpdate" method="post" action="/Profile/UpdateProfile">
+                        <input type="hidden" name="CustomerId" value="@Model.CustomerId" /> <!-- Hidden field for CustomerId -->
+                        <!-- Update action -->
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" value="@Model.Account?.Email" disabled>
+
+                        <label for="first-name">First Name</label>
+                        <input type="text" id="first-name" name="firstname" value="@Model.Account?.Firstname" required>
+
+                        <label for="last-name">Last Name</label>
+                        <input type="text" id="last-name" name="lastname" value="@Model.Account?.Lastname" required>
+                        
+
+                        <label for="gender">Gender</label>
+                        <select id="gender" name="gender" class="form-control">
+                            <option value="male" selected="@Model.Account?.Gender == " male"">Male</option>
+                            <option value="female" selected="@Model.Account?.Gender == " female"">Female</option>
+                            <option value="other" selected="@Model.Account?.Gender == " other"">Other</option>
+                        </select>
+
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" value="@Model.Account?.Phone" required>
+
+                        <button type="submit">Update</button>
+                    </form>
+                </div>
+
+                <form method="post" enctype="multipart/form-data" action="/Profile/SaveAvatar">
+                    <input type="hidden" name="customerId" value="@Model.CustomerId" />
+                    <div class="profile-avatar">
+                        <img id="avatar-preview" src="@Url.Content(Model.Account?.ImageUrl ?? "avatar-placeholder.png")" alt="Avatar">
+                        <input type="file" id="avatar" name="avatar" accept="image/*">
+                        <button type="submit">Save Avatar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function saveAvatar() {
+            const avatarInput = document.getElementById('avatar');
+            const avatarPreview = document.getElementById('avatar-preview');
+
+            if (avatarInput.files && avatarInput.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    avatarPreview.src = e.target.result;
+                };
+
+                reader.readAsDataURL(avatarInput.files[0]);
+            }
+        }
+    </script>
+
+</body>
+</html>

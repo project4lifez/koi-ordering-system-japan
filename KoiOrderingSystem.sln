@@ -5,6 +5,8 @@ VisualStudioVersion = 17.11.35222.181
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KoiOrderingSystem", "KoiOrderingSystem\KoiOrderingSystem.csproj", "{C1893CB3-7D44-44D2-93B8-E557088DC0A0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestingForSWP391", "TestingForSWP391\TestingForSWP391.csproj", "{CC049EEC-4282-4B7A-941A-73D546185DD3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{C1893CB3-7D44-44D2-93B8-E557088DC0A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C1893CB3-7D44-44D2-93B8-E557088DC0A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C1893CB3-7D44-44D2-93B8-E557088DC0A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC049EEC-4282-4B7A-941A-73D546185DD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC049EEC-4282-4B7A-941A-73D546185DD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC049EEC-4282-4B7A-941A-73D546185DD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC049EEC-4282-4B7A-941A-73D546185DD3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
