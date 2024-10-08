@@ -2,6 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.Extensions.Options;
+using System.Globalization;
 
 namespace KoiOrderingSystem
 {
@@ -25,9 +28,6 @@ namespace KoiOrderingSystem
             });
 
             // Add Google authentication
-
-
-            builder.Services.AddControllersWithViews();
             builder.Services.AddAuthentication(options =>
             {
                 options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -40,6 +40,25 @@ namespace KoiOrderingSystem
                 googleOptions.ClientSecret = "#"; // Replace with your ClientSecret
                 googleOptions.CallbackPath = "/signin-google"; // This is the path Google will redirect to after authentication
             });
+
+            // Add localization support
+            builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+            // Configure supported cultures (English and Japanese)
+            builder.Services.Configure<RequestLocalizationOptions>(options =>
+            {
+                var supportedCultures = new[]
+                {
+                    new CultureInfo("en"), // English
+                    new CultureInfo("ja")  // Japanese
+                };
+                options.DefaultRequestCulture = new RequestCulture("en"); // Default is English
+                options.SupportedCultures = supportedCultures;
+                options.SupportedUICultures = supportedCultures;
+            });
+
+            builder.Services.AddControllersWithViews();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline
@@ -59,6 +78,10 @@ namespace KoiOrderingSystem
             app.UseAuthentication();
             app.UseAuthorization();
 
+            // Add localization middleware
+            var localizationOptions = app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value;
+            app.UseRequestLocalization(localizationOptions);
+
             // Map the default routes
             app.MapControllerRoute(
                 name: "default",
@@ -71,34 +94,38 @@ namespace KoiOrderingSystem
             app.MapControllerRoute(
                 name: "register_default",
                 pattern: "{controller=Register}/{action=Register}/{id?}");
+
             app.MapControllerRoute(
                name: "YourBooking_default",
                pattern: "{controller=YourBooking}/{action=YourBooking}/{id?}");
-           
-
 
             app.MapControllerRoute(
                 name: "areas",
                 pattern: "{area:exists}/{controller=Home}/{action=Home}/{id?}");
+
             app.MapControllerRoute(
                 name: "areas",
                 pattern: "{area:exists}/{controller=Manager}/{action=Manager}/{id?}");
+
             app.MapControllerRoute(
                 name: "areas",
                 pattern: "{area:exists}/{controller=Consulting}/{action=Consulting}/{id?}");
+
             app.MapControllerRoute(
                 name: "areas",
                 pattern: "{area:exists}/{controller=Sale}/{action=Sale}/{id?}");
+
             app.MapControllerRoute(
                 name: "areas",
                 pattern: "{area:exists}/{controller=Sale}/{action=UpdateQuote}/{id?}");
+
             app.MapControllerRoute(
                name: "areas",
                pattern: "{area:exists}/{controller=Delivering}/{action=Delivering}/{id?}");
+
             app.MapControllerRoute(
                name: "areas",
                pattern: "{area:exists}/{controller=Home}/{action=OrderManagement}/{id?}");
-
 
             app.Run();
         }

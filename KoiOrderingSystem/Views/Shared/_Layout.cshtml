@@ -1,5 +1,4 @@
-﻿
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -32,59 +31,57 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             position: fixed;
             top: 0;
-            z-index: 1000; /* Đảm bảo header có z-index cao */
+            z-index: 1000;
             width: 100%;
             height: 70px;
         }
-            /* Đảm bảo các phần tử bên trong không làm thay đổi kích thước header */
+
+            nav .logo img {
+                height: 50px; /* Change this to a smaller value to resize the logo */
+                max-width: 150px; /* Optional: You can also limit the width */
+                object-fit: contain; /* Ensures the image keeps its aspect ratio */
+            }
+
+
             nav ul, .search-bar, .language-selector {
                 margin: 0;
                 padding: 0;
             }
 
-        .menu-toggle {
-            display: flex;
-            cursor: pointer;
-        }
-
-        nav .logo img {
-            height: 50px;
-        }
-
-        nav ul {
-            list-style: none;
-            display: flex;
-            align-items: center;
-            height: 100%;
-            margin: 0;
-            padding: 0;
-        }
-
-            nav ul li {
-                margin-left: 30px;
+            nav ul {
+                list-style: none;
+                display: flex;
+                align-items: center;
+                height: 100%;
+                margin: 0;
+                padding: 0;
             }
 
-                nav ul li a {
-                    text-decoration: none;
-                    color: #000;
-                    font-weight: bold;
-                    padding: 10px 20px;
-                    transition: color 0.3s ease, transform 0.3s;
-                    display: flex;
-                    align-items: center;
-                    height: 100%;
+                nav ul li {
+                    margin-left: 30px;
                 }
 
-                    nav ul li a:hover {
-                        color: #7ec0ee;
-                        transform: scale(1.05);
+                    nav ul li a {
+                        text-decoration: none;
+                        color: #000;
+                        font-weight: bold;
+                        padding: 10px 20px;
+                        transition: color 0.3s ease, transform 0.3s;
+                        display: flex;
+                        align-items: center;
+                        height: 100%;
                     }
 
-        nav .language-selector {
-            display: flex;
-            align-items: center;
-            height: 100%;
-        }
+                        nav ul li a:hover {
+                            color: #7ec0ee;
+                            transform: scale(1.05);
+                        }
+
+            nav .language-selector {
+                display: flex;
+                align-items: center;
+                height: 100%;
+            }
 
         .language-selector select {
             padding: 10px;
@@ -186,7 +183,7 @@
         }
 
         body {
-            margin-top: 70px; /* Đảm bảo phần nội dung không bị che khuất bởi header */
+            margin-top: 70px;
         }
 
         footer {
@@ -202,9 +199,8 @@
             font-weight: bold;
         }
 
-        /* Styles for user dropdown menu */
+        /* Dropdown Styles */
         .dropdown {
-            display: inline-block;
             position: relative;
         }
 
@@ -218,19 +214,21 @@
         }
 
         .dropdown-menu {
-            display: none; /* Ẩn dropdown khi không được kích hoạt */
+            display: none;
             position: absolute;
             background-color: #fff;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            z-index: 1050; /* Đảm bảo dropdown có z-index cao hơn cả header */
+            z-index: 1050;
             padding: 10px 0;
             border-radius: 5px;
-            right: 0; /* Căn phải với phần header */
-            top: 100%; /* Đảm bảo vị trí dropdown dưới header */
+            right: 0;
+            top: calc(100% + 5px);
         }
 
             .dropdown-menu.show {
-                display: block; /* Hiển thị dropdown khi kích hoạt */
+                display: block;
+                min-height: 150px;
+                max-width: 100px;
             }
 
             .dropdown-menu a {
@@ -241,19 +239,14 @@
                 transition: background-color 0.3s ease;
             }
 
+            .dropdown-menu li,
+            .dropdown-menu a {
+                margin-left: 0 !important;
+            }
+
                 .dropdown-menu a:hover {
                     background-color: #f0f0f0;
                 }
-
-        .dropdown-toggle::after {
-            margin-left: 5px;
-            content: "\25BC"; /* Mũi tên chỉ xuống */
-            /* CSS cho phần dropdown của user */
-            .nav-item.dropdown
-
-        {
-            position: relative;
-        }
 
         .user-profile {
             display: flex;
@@ -273,42 +266,9 @@
         .user-icon {
             margin-right: 8px;
             font-size: 1.5rem;
-            color: #5BB2F1;
+            color: #000000;
         }
 
-        .dropdown-menu {
-            min-width: 200px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border: none;
-            padding: 0;
-            overflow: hidden;
-        }
-
-            .dropdown-menu a.dropdown-item {
-                display: flex;
-                align-items: center;
-                padding: 12px 16px;
-                color: #333;
-                text-decoration: none;
-                transition: background-color 0.2s ease, color 0.2s ease;
-            }
-
-                .dropdown-menu a.dropdown-item i {
-                    margin-right: 10px;
-                    font-size: 1.2rem;
-                    color: #5BB2F1;
-                }
-
-                .dropdown-menu a.dropdown-item:hover {
-                    background-color: #f1f1f1;
-                    color: #333;
-                }
-
-                    .dropdown-menu a.dropdown-item:hover i {
-                        color: #7ec0ee;
-                    }
-        }
     </style>
 </head>
 <body>
@@ -321,45 +281,53 @@
             <i class="fas fa-bars"></i>
         </div>
         <ul>
-            <li><a href="/home">Home</a></li>
-            <li><a href="#services">Services</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#blog">Blog</a></li>
+            <li><a href="/home">@Model.Home</a></li>
+            <li><a href="#services">@Model.Services</a></li>
+            <li><a href="#about">@Model.About</a></li>
+            <li><a href="#blog">@Model.Blog</a></li>
 
-            @if (Context.Session.GetString("Username") != null && Context.Session.GetInt32("RoleId") == 1 && Context.Session.GetString("CustomerId") != null)
+            @if (Context.Session.GetString("Username") != null && Context.Session.GetInt32("RoleId") == 1)
             {
-
                 var lastname = Context.Session.GetString("Lastname");
-                var customerId = Context.Session.GetInt32("CustomerId").Value; // Get CustomerId from session
                 var username = Context.Session.GetString("Username");
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle user-profile" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <li class="dropdown">
+                    <a class="nav-link dropdown-toggle user-profile" href="#" id="userDropdown" role="button">
                         <i class="fas fa-user-circle user-icon"></i> Hi, @(string.IsNullOrEmpty(lastname) ? username : lastname)
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                    <ul class="dropdown-menu" aria-labelledby="userDropdown">
                         <li><a class="dropdown-item" href="/Profile/ViewProfile"><i class="fas fa-user"></i> View Profile</a></li>
-                        <li><a class="dropdown-item" href="/YourBooking"><i class="fas fa-user"></i> Your Order</a></li>
+                        <li><a class="dropdown-item" href="/YourBooking"><i class="fas fa-book"></i> Your Order</a></li>
                         <li><a class="dropdown-item" href="/Login/Logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
                     </ul>
                 </li>
             }
             else
             {
-                <!-- Hiển thị Login/Signup nếu chưa đăng nhập -->
                 <li><a href="/Login" class="auth-link">Login/Signup</a></li>
             }
         </ul>
+
         <div class="search-bar">
             <input type="text" id="searchInput" placeholder="Search...">
             <button onclick="searchFunction()"><i class="fas fa-search"></i></button>
         </div>
+
         <div class="language-selector">
-            <select id="language">
-                <option value="en">English</option>
-                <option value="jp">Japanese</option>
+            <select id="language" onchange="setLanguage(this.value)">
+                @if (Model.LanguageSelected == "en")
+                {
+                    <option value="en" selected="selected">English</option>
+                    <option value="ja">Japanese</option>
+                }
+                else
+                {
+                    <option value="en">English</option>
+                    <option value="ja" selected="selected">Japanese</option>
+                }
             </select>
         </div>
     </nav>
+
     <div class="mobile-menu">
         <a href="#home">Home</a>
         <a href="#services">Services</a>
@@ -446,6 +414,21 @@
             } else {
                 alert('No results found for: ' + input);
             }
+        }
+
+        function setLanguage(culture) {
+            const form = document.createElement("form");
+            form.method = "POST";
+            form.action = "/Home/SetLanguage";
+
+            const hiddenField = document.createElement("input");
+            hiddenField.type = "hidden";
+            hiddenField.name = "culture";
+            hiddenField.value = culture;
+
+            form.appendChild(hiddenField);
+            document.body.appendChild(form);
+            form.submit();
         }
 
         // Toggle dropdown menu
