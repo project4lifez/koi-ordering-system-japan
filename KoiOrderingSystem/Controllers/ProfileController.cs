@@ -17,9 +17,21 @@ namespace KoiOrderingSystem.Controllers
             return View();
         }
 
-        public IActionResult CustomerProfile(int customerId)
+        public async Task<IActionResult> CustomerProfile()
         {
-            
+            if (HttpContext.Session.GetString("Username") == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            // Get CustomerId from session
+            var customerId = HttpContext.Session.GetInt32("CustomerId");
+
+            if (customerId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
             var customer = _db.Customers
                               .Include(c => c.Account) 
                               .FirstOrDefault(c => c.CustomerId == customerId);
@@ -32,17 +44,25 @@ namespace KoiOrderingSystem.Controllers
             return View(customer);
         }
 
-       
+
         [HttpPost]
-        public IActionResult UpdateProfile(int customerId, string firstname, string lastname, string gender, string phone)
+        public IActionResult UpdateProfile(string firstname, string lastname, string gender, string phone)
         {
+            // Retrieve CustomerId from the session (instead of from the form)
+            var customerId = HttpContext.Session.GetInt32("CustomerId");
+
+            if (customerId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
             // Fetch the existing customer data based on the customerId
             var customer = _db.Customers.Include(c => c.Account)
-                                         .FirstOrDefault(c => c.CustomerId == customerId);
+                                        .FirstOrDefault(c => c.CustomerId == customerId);
 
             if (customer != null)
             {
-                // Check if the provided fields are not empty or null before updating
+                // Update fields only if they are provided
                 if (!string.IsNullOrWhiteSpace(firstname))
                 {
                     customer.Account.Firstname = firstname;
@@ -63,30 +83,44 @@ namespace KoiOrderingSystem.Controllers
                     customer.Account.Phone = phone;
                 }
 
-                // Save changes to the database
+                // Save the changes to the database
                 _db.SaveChanges();
             }
 
-            // Redirect back to the profile page using customerId
-            return RedirectToAction("CustomerProfile", "Profile", new { customerId = customerId });
+            // Redirect back to the profile page
+            return RedirectToAction("CustomerProfile", "Profile");
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveAvatar(int customerId, IFormFile avatar)
+        public async Task<IActionResult> SaveAvatar(IFormFile avatar)
         {
-            
+            // Retrieve CustomerId from the session
+            var customerId = HttpContext.Session.GetInt32("CustomerId");
+
+            if (customerId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            // Fetch the existing customer based on customerId
             var customer = await _db.Customers.Include(c => c.Account)
-                                               .FirstOrDefaultAsync(c => c.CustomerId == customerId);
+                                              .FirstOrDefaultAsync(c => c.CustomerId == customerId);
 
             if (customer == null)
             {
-                return NotFound();
+                return NotFound(); // Return a 404 if the customer is not found
             }
 
             if (avatar != null && avatar.Length > 0)
             {
                 // Define the path to save the image
-                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/avatars"); 
+                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/avatars");
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder); // Ensure the directory exists
+                }
+
+                // Generate a unique filename for the uploaded image
                 var uniqueFileName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(avatar.FileName);
                 var filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
@@ -96,13 +130,15 @@ namespace KoiOrderingSystem.Controllers
                     await avatar.CopyToAsync(fileStream);
                 }
 
-                // Update the Account's AvatarPath property
-                customer.Account.ImageUrl = "/images/avatars/" + uniqueFileName; 
+                // Update the Account's ImageUrl property with the relative path
+                customer.Account.ImageUrl = "/images/avatars/" + uniqueFileName;
                 await _db.SaveChangesAsync();
             }
 
-           
-            return RedirectToAction("CustomerProfile", new { customerId });
+            // Redirect to the profile page with the updated avatar
+            return RedirectToAction("CustomerProfile");
         }
+
+
     }
 }

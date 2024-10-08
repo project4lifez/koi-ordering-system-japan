@@ -209,7 +209,7 @@
                     <form id="customerUpdate" method="post" action="/Profile/UpdateProfile">
                         <input type="hidden" name="CustomerId" value="@Model.CustomerId" /> <!-- Hidden field for CustomerId -->
                         <!-- Update action -->
-                        <label for="email">Email</label>
+                        <label for="bjl">Email</label>
                         <input type="email" id="email" name="email" value="@Model.Account?.Email" disabled>
 
                         <label for="first-name">First Name</label>
@@ -221,9 +221,9 @@
 
                         <label for="gender">Gender</label>
                         <select id="gender" name="gender" class="form-control">
-                            <option value="male" selected="@Model.Account?.Gender == " male"">Male</option>
-                            <option value="female" selected="@Model.Account?.Gender == " female"">Female</option>
-                            <option value="other" selected="@Model.Account?.Gender == " other"">Other</option>
+                            <option value="male" selected="@Model.Account?.Gender.ToString() == " male"">Male</option>
+                            <option value="female" selected="@Model.Account?.Gender.ToString() == " female"">Female</option>
+                            <option value="other" selected="@Model.Account?.Gender.ToString() == " other"">Other</option>
                         </select>
 
                         <label for="phone">Phone Number</label>
@@ -234,19 +234,24 @@
                 </div>
 
                 <form method="post" enctype="multipart/form-data" action="/Profile/SaveAvatar">
-                    <input type="hidden" name="customerId" value="@Model.CustomerId" />
                     <div class="profile-avatar">
-                        <img id="avatar-preview" src="@Url.Content(Model.Account?.ImageUrl ?? "avatar-placeholder.png")" alt="Avatar">
-                        <input type="file" id="avatar" name="avatar" accept="image/*">
+                        <!-- The avatar preview -->
+                        <img id="avatar-preview" src="@Url.Content(Model.Account?.ImageUrl ?? "/images/avatars/avatar-placeholder.png")" alt="Avatar" style="width: 150px; height: 150px; border-radius: 50%; border: 1px solid #ccc; object-fit: cover;">
+
+                        <!-- File input for avatar upload -->
+                        <input type="file" id="avatar" name="avatar" accept="image/*" onchange="previewAvatar()">
+
+                        <!-- Save button -->
                         <button type="submit">Save Avatar</button>
                     </div>
                 </form>
+
             </div>
         </div>
     </div>
 
     <script>
-        function saveAvatar() {
+        function previewAvatar() {
             const avatarInput = document.getElementById('avatar');
             const avatarPreview = document.getElementById('avatar-preview');
 
