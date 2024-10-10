@@ -11,7 +11,5 @@ public partial class Popayment
 
     public DateOnly? PaymentDate { get; set; }
 
-    public virtual ICollection<PaymentMethod> PaymentMethods { get; set; } = new List<PaymentMethod>();
-
     public virtual Po? Po { get; set; }
 }

@@ -174,9 +174,20 @@ public partial class Koi88Context : DbContext
             entity.ToTable("BookingPayment");
 
             entity.Property(e => e.BookingPaymentId).HasColumnName("booking_payment_id");
+            entity.Property(e => e.BookingId).HasColumnName("booking_id");
+            entity.Property(e => e.PaymentDate).HasColumnType("datetime");
+            entity.Property(e => e.PaymentMethodId).HasColumnName("payment_method_id");
             entity.Property(e => e.Status)
                 .HasMaxLength(100)
                 .HasColumnName("status");
+
+            entity.HasOne(d => d.Booking).WithMany(p => p.BookingPayments)
+                .HasForeignKey(d => d.BookingId)
+                .HasConstraintName("FK_BookingPayment_Booking");
+
+            entity.HasOne(d => d.PaymentMethod).WithMany(p => p.BookingPayments)
+                .HasForeignKey(d => d.PaymentMethodId)
+                .HasConstraintName("fk_bookingpayment_paymentmethod");
         });
 
         modelBuilder.Entity<Customer>(entity =>
@@ -306,22 +317,12 @@ public partial class Koi88Context : DbContext
             entity.ToTable("PaymentMethod");
 
             entity.Property(e => e.PaymentMethodId).HasColumnName("payment_method_id");
-            entity.Property(e => e.BookingPaymentId).HasColumnName("booking_payment_id");
             entity.Property(e => e.Description)
                 .HasMaxLength(200)
                 .HasColumnName("description");
             entity.Property(e => e.MethodName)
                 .HasMaxLength(50)
                 .HasColumnName("method_name");
-            entity.Property(e => e.PoPaymentId).HasColumnName("po_payment_id");
-
-            entity.HasOne(d => d.BookingPayment).WithMany(p => p.PaymentMethods)
-                .HasForeignKey(d => d.BookingPaymentId)
-                .HasConstraintName("FK__PaymentMe__booki__70DDC3D8");
-
-            entity.HasOne(d => d.PoPayment).WithMany(p => p.PaymentMethods)
-                .HasForeignKey(d => d.PoPaymentId)
-                .HasConstraintName("FK__PaymentMe__po_pa__71D1E811");
         });
 
         modelBuilder.Entity<Po>(entity =>
@@ -413,14 +414,9 @@ public partial class Koi88Context : DbContext
             entity.ToTable("Role");
 
             entity.Property(e => e.RoleId).HasColumnName("role_id");
-            entity.Property(e => e.BookingId).HasColumnName("booking_id");
             entity.Property(e => e.Name)
                 .HasMaxLength(100)
                 .HasColumnName("name");
-
-            entity.HasOne(d => d.Booking).WithMany(p => p.Roles)
-                .HasForeignKey(d => d.BookingId)
-                .HasConstraintName("FK__Role__booking_id__6FE99F9F");
         });
 
         modelBuilder.Entity<SpecialVariety>(entity =>

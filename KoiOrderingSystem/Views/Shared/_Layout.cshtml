@@ -1,5 +1,4 @@
-﻿
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -203,8 +202,8 @@
         }
 
         /* Styles for user dropdown menu */
+        /* Dropdown Styles */
         .dropdown {
-            display: inline-block;
             position: relative;
         }
 
@@ -226,12 +225,15 @@
             padding: 10px 0;
             border-radius: 5px;
             right: 0; /* Căn phải với phần header */
-            top: 100%; /* Đảm bảo vị trí dropdown dưới header */
+            top: calc(100% + 5px); /* Đảm bảo dropdown xuất hiện dưới phần tử được click */
         }
 
             .dropdown-menu.show {
                 display: block; /* Hiển thị dropdown khi kích hoạt */
+                min-height: 150px;
+                max-width: 100px;
             }
+
 
             .dropdown-menu a {
                 display: block;
@@ -241,19 +243,14 @@
                 transition: background-color 0.3s ease;
             }
 
+            .dropdown-menu li,
+            .dropdown-menu a {
+                margin-left: 0 !important; /* Ensure no margin-left is applied */
+            }
+
                 .dropdown-menu a:hover {
                     background-color: #f0f0f0;
                 }
-
-        .dropdown-toggle::after {
-            margin-left: 5px;
-            content: "\25BC"; /* Mũi tên chỉ xuống */
-            /* CSS cho phần dropdown của user */
-            .nav-item.dropdown
-
-        {
-            position: relative;
-        }
 
         .user-profile {
             display: flex;
@@ -273,42 +270,9 @@
         .user-icon {
             margin-right: 8px;
             font-size: 1.5rem;
-            color: #5BB2F1;
+            color: #000000;
         }
 
-        .dropdown-menu {
-            min-width: 200px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border: none;
-            padding: 0;
-            overflow: hidden;
-        }
-
-            .dropdown-menu a.dropdown-item {
-                display: flex;
-                align-items: center;
-                padding: 12px 16px;
-                color: #333;
-                text-decoration: none;
-                transition: background-color 0.2s ease, color 0.2s ease;
-            }
-
-                .dropdown-menu a.dropdown-item i {
-                    margin-right: 10px;
-                    font-size: 1.2rem;
-                    color: #5BB2F1;
-                }
-
-                .dropdown-menu a.dropdown-item:hover {
-                    background-color: #f1f1f1;
-                    color: #333;
-                }
-
-                    .dropdown-menu a.dropdown-item:hover i {
-                        color: #7ec0ee;
-                    }
-        }
     </style>
 </head>
 <body>
@@ -326,18 +290,19 @@
             <li><a href="#about">About</a></li>
             <li><a href="#blog">Blog</a></li>
 
-            @if (Context.Session.GetString("Username") != null && Context.Session.GetInt32("RoleId") == 1 && Context.Session.GetString("CustomerId") != null)
+            @if (Context.Session.GetString("Username") != null && Context.Session.GetInt32("RoleId") == 1)
             {
 
                 var lastname = Context.Session.GetString("Lastname");
-                var customerId = Context.Session.GetInt32("CustomerId").Value; // Get CustomerId from session
                 var username = Context.Session.GetString("Username");
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle user-profile" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                var customerid = Context.Session.GetInt32("CustomerId");
+
+                <li class="dropdown">
+                    <a class="nav-link dropdown-toggle user-profile" href="#" id="userDropdown" role="button">
                         <i class="fas fa-user-circle user-icon"></i> Hi, @(string.IsNullOrEmpty(lastname) ? username : lastname)
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                        <li><a class="dropdown-item" href="/Profile/ViewProfile"><i class="fas fa-user"></i> View Profile</a></li>
+                    <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                        <li><a class="dropdown-item" href="/Profile/CustomerProfile"><i class="fas fa-user"></i> View Profile</a></li>
                         <li><a class="dropdown-item" href="/YourBooking"><i class="fas fa-user"></i> Your Order</a></li>
                         <li><a class="dropdown-item" href="/Login/Logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
                     </ul>

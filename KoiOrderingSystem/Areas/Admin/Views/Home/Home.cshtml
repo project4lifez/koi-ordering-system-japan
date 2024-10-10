@@ -1,18 +1,195 @@
 ﻿@{
-    ViewData["Title"] = "Index";
+    var currentYear = DateTime.Now.Year;
+    var years = Enumerable.Range(currentYear - 4, 5).ToList(); // Last 5 years including current year
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<style>
+    body {
+        background-color: #f8f9fa; /* Light gray background for the body */
+        font-family: 'Arial', sans-serif;
+    }
+
+    .container-fluid {
+        padding-top: 20px;
+    }
+
+    .card {
+        border-radius: 12px;
+        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow for cards */
+        transition: transform 0.2s;
+    }
+
+        .card:hover {
+            transform: translateY(-5px); /* Slight lift on hover for interaction */
+        }
+
+    .card-body {
+        font-size: 1.2rem;
+        font-weight: 600;
+    }
+
+    .card-footer {
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+
+    .bg-primary {
+        background-color: #007bff !important; /* Soft blue */
+    }
+
+    .bg-warning {
+        background-color: #ffc107 !important; /* Yellow */
+    }
+
+    .bg-success {
+        background-color: #28a745 !important; /* Green */
+    }
+
+    .bg-danger {
+        background-color: #dc3545 !important; /* Red */
+    }
+
+    /* Styling for the chart containers */
+    .card-header {
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .chart-container {
+        min-height: 450px; /* Ensure both have the same minimum height */
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between; /* Evenly space the content */
+        padding: 20px;
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+        margin-top: 20px;
+    }
+
+    /* Subtle borders for sections */
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 15px;
+        color: #333;
+    }
+
+    /* Recent Orders Table */
+    .recent-orders-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+        .recent-orders-table th, .recent-orders-table td {
+            padding: 13.5px;
+            text-align: left;
+        }
+
+        .recent-orders-table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+
+    .badge {
+        padding: 5px 10px;
+        border-radius: 12px;
+        color: white;
+    }
+
+    .badge-gray {
+        background-color: #6c757d;
+    }
+
+    .badge-red {
+        background-color: #dc3545;
+    }
+
+    .badge-yellow {
+        background-color: #ffc107;
+    }
+
+    .badge-green {
+        background-color: #28a745;
+    }
+
+    /* Dashboard Title Styling */
+    .dashboard-title {
+        font-size: 2.5rem; /* Increase font size for Dashboard title */
+        font-weight: 700; /* Make it bold */
+        color: #333; /* Text color */
+        font-family: 'Arial', sans-serif; /* Change the font if needed */
+    }
+
+    /* Select Year Label Styling */
+    .select-year-label {
+        font-size: 1rem; /* Decrease font size for Select Year label */
+        font-weight: 500; /* Lighter weight for the label */
+        color: #333; /* Text color */
+        font-family: 'Arial', sans-serif; /* Change the font if needed */
+    }
+
+    /* Chart and Recent Orders Container Styling */
+    .recent-orders-container {
+        min-height: 450px; /* Same height as the chart-container */
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 20px;
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+        margin-top: 20px;
+    }
+
+    .row {
+        display: flex;
+        align-items: flex-start; /* Align both sections at the top */
+    }
+    .mt-4 {
+        margin-top: -0.5rem !important;
+    }
+
+</style>
+@{
+    // Định dạng tiền tệ với dấu phẩy hàng ngàn và xử lý trường hợp 0 thành "0.0 USD"
+    Func<decimal, string> FormatCurrency = amount =>
+    {
+        return amount == 0 ? "0.0 USD" : $"{amount:0,0} USD"; // Định dạng với dấu phẩy và xử lý trường hợp 0
+    };
 }
 
 <main>
-    <div class="container-fluid px-4">
-        <h1 class="mt-4">Dashboard</h1>
-       
+    <div class="container-fluid">
+        <!-- Dashboard Title -->
+        <h1 class="dashboard-title mt-4 text-dark">
+            <i class="fas fa-chart-line icon"></i>Dashboard
+        </h1>
+
+        <!-- Year Selection Dropdown -->
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <form method="get" id="yearForm">
+                    <label for="yearSelect" class="form-label select-year-label text-dark">Select Year:</label>
+                    <select class="form-select" id="yearSelect" name="selectedYear" onchange="document.getElementById('yearForm').submit();">
+                        @foreach (var year in years)
+                        {
+                            <option value="@year" @(year == ViewBag.SelectedYear ? "selected" : "")>@year</option>
+                        }
+                    </select>
+                </form>
+            </div>
+        </div>
+
+        <!-- Metrics Cards Row -->
         <div class="row">
             <div class="col-xl-3 col-md-6">
                 <div class="card bg-primary text-white mb-4">
-                    <div class="card-body">Total Order</div>
+                    <div class="card-body">Total Orders</div>
                     <div class="card-footer d-flex align-items-center justify-content-between">
-                        <div>0</div>
+                        <div>@ViewBag.TotalOrders</div>
                     </div>
                 </div>
             </div>
@@ -20,15 +197,15 @@
                 <div class="card bg-warning text-white mb-4">
                     <div class="card-body">Monthly Revenue</div>
                     <div class="card-footer d-flex align-items-center justify-content-between">
-                        <div>0</div>
+                        <div>@FormatCurrency(ViewBag.TotalMonthlyRevenue)</div>
                     </div>
                 </div>
             </div>
             <div class="col-xl-3 col-md-6">
                 <div class="card bg-success text-white mb-4">
-                    <div class="card-body">Total Accounts</div>
+                    <div class="card-body">Total Revenue</div>
                     <div class="card-footer d-flex align-items-center justify-content-between">
-                        <div>0</div>
+                        <div>@FormatCurrency(ViewBag.TotalMonthlyRevenue)</div> <!-- Custom format -->
                     </div>
                 </div>
             </div>
@@ -36,33 +213,172 @@
                 <div class="card bg-danger text-white mb-4">
                     <div class="card-body">Total Trips Success</div>
                     <div class="card-footer d-flex align-items-center justify-content-between">
-                        <div>0</div>
+                        <div>@ViewBag.TotalTripsSuccess</div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Charts Row (Revenue Chart and Recent Orders Table) -->
         <div class="row">
+            <!-- Revenue Chart -->
             <div class="col-xl-6">
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <i class="fas fa-chart-area me-1"></i>
-                        Last Month Sales
-                    </div>
-                    <div class="card-body"><canvas id="myAreaChart" width="100%" height="40"></canvas></div>
+                <div class="chart-container">
+                    <div class="section-title"><i class="fas fa-chart-bar icon"></i>Revenue For @ViewBag.SelectedYear</div>
+                    <canvas id="revenueChart" width="100%" height="40"></canvas>
                 </div>
             </div>
+
+            <!-- Recent Orders Table -->
             <div class="col-xl-6">
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <i class="fas fa-chart-bar me-1"></i>
-                        Total Customers
-                    </div>
-                    <div class="card-body"><canvas id="myBarChart" width="100%" height="40"></canvas></div>
+                <div class="chart-container recent-orders-container">
+                    <div class="section-title"><i class="fas fa-receipt icon"></i> Recent Bookings</div>
+                    <table class="recent-orders-table">
+                        <thead>
+                            <tr>
+                                <th>BookingID</th>
+                                <th>Customer Name</th>
+                                <th>Booking Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var order in ViewBag.RecentOrders)
+                            {
+                                <tr>
+                                    <td>@order.BookingId</td>
+                                    <td>@order.FullName</td> <!-- FullName from Booking -->
+                                    <td>@order.BookingDate.ToString("dd-MM-yyyy")</td>
+                                    <td>
+                                        <span class="badge @GetStatusBadge(order.Status)">
+                                            @order.Status
+                                        </span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
-        
-                 
-            </div>
-      
+    </div>
 </main>
+
+<!-- Include necessary scripts -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> <!-- Font Awesome for icons -->
+<!-- Chart.js script for monthly revenue -->
+<script>
+    var monthlyRevenue = @Html.Raw(Json.Serialize(ViewBag.MonthlyRevenue));
+
+    var ctx = document.getElementById('revenueChart').getContext('2d');
+    var revenueChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'], // Number labels for months
+            datasets: [{
+                label: 'Revenue',
+                data: monthlyRevenue,
+                fill: true,
+                borderColor: 'rgba(54, 162, 235, 1)', // Custom blue color
+                backgroundColor: 'rgba(54, 162, 235, 0.2)', // Slightly transparent fill
+                pointBackgroundColor: 'rgba(54, 162, 235, 1)', // Points color
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 2, // Thicker line for better appearance
+                tension: 0.4 // Smooth curves for the line chart
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top', // Position the legend at the top
+                    labels: {
+                        usePointStyle: true, // Use circles instead of rectangles in the legend
+                        font: {
+                            size: 14 // Adjust font size for the legend
+                        }
+                    }
+                },
+                tooltip: {
+                    enabled: true,
+                    backgroundColor: 'rgba(0, 0, 0, 0.7)', // Dark background for tooltips
+                    titleFont: {
+                        size: 16,
+                        weight: 'bold'
+                    },
+                    bodyFont: {
+                        size: 14
+                    },
+                    borderColor: 'rgba(54, 162, 235, 1)', // Tooltip border color
+                    borderWidth: 1,
+                    callbacks: {
+                        label: function (context) {
+                            var label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            label += '$' + context.raw.toLocaleString(); // Format the tooltip with a dollar sign and commas
+                            return label;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: {
+                        display: false // Remove the vertical grid lines
+                    },
+                    ticks: {
+                        font: {
+                            size: 14 // Font size for x-axis labels
+                        }
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        borderDash: [5, 5], // Dashed lines for y-axis grid
+                        color: 'rgba(200, 200, 200, 0.3)' // Lighter grid lines
+                    },
+                    ticks: {
+                        callback: function (value) {
+                            return '$' + value.toLocaleString(); // Format y-axis values with a dollar sign and commas
+                        },
+                        font: {
+                            size: 14 // Font size for y-axis labels
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>
+
+<!-- Helper function to assign badge color based on status -->
+@functions {
+    public string GetStatusBadge(string status)
+    {
+        switch (status)
+        {
+            case "Requested":
+                return "badge-gray";
+            case "Rejected":
+            case "Canceled":
+                return "badge-red";
+            case "Processing":
+            case "Checked in":
+            case "Checked out":
+            case "Delivering":
+                return "badge-yellow";
+            case "Accepted":
+            case "Payment Completed":
+            case "Delivered":
+                return "badge-green";
+            default:
+                return "badge-gray";
+        }
+    }
+}

@@ -19,6 +19,15 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
         // Display Quote information for a given booking
         public IActionResult Quote(int bookingId)
         {
+            // Retrieve the RoleId from the session
+            var roleId = HttpContext.Session.GetInt32("RoleId");
+
+            // Check if the RoleId is null or not equal to 2 or 3
+            if (roleId == null || (roleId != 2 && roleId != 3))
+            {
+                return NotFound("You do not have permission to access this page.");
+            }
+
             // Retrieve booking information from the database, including related Trip and TripDetails
             var booking = _db.Bookings
                 .Include(b => b.Trip)
@@ -34,6 +43,7 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
             // Pass booking information to the view for display and editing
             return View(booking);
         }
+
 
         // Handle the POST request to create quote information with multiple trip details
         [HttpPost]
@@ -157,18 +167,29 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
         // Display the Sales Staff page for managing booking
         public IActionResult Sale(int id)
         {
-            // Fetch the booking by ID
-            var booking = _db.Bookings
-               .Include(b => b.Trip) // Assuming Trip is a navigation property in Booking
-               .FirstOrDefault(b => b.BookingId == id);
-            
-            if (booking == null)
+            // Retrieve the RoleId from the session
+            var roleId = HttpContext.Session.GetInt32("RoleId");
+
+            // Check if the RoleId is null or not equal to 3
+            if (roleId == null || roleId != 3)
             {
-                return NotFound(); // Return 404 if booking not found
+                return NotFound("You do not have permission to access this page.");
             }
 
-            return View(booking); // Pass the booking data to the view
+            // Fetch the booking by ID
+            var booking = _db.Bookings
+                .Include(b => b.Trip) // Assuming Trip is a navigation property in Booking
+                .FirstOrDefault(b => b.BookingId == id);
+
+            if (booking == null)
+            {
+                return NotFound($"Booking with ID {id} not found.");
+            }
+
+            // Pass the booking data to the view
+            return View(booking);
         }
+
 
         // Handle the post request to update the booking status for Sales Staff
         [HttpPost]

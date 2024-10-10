@@ -86,6 +86,17 @@
 <body>
     <main class="container-fluid px-4">
         <h1 class="mt-4">Dashboard (Consulting Staff)</h1>
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <li>@error.ErrorMessage</li>
+                    }
+                </ul>
+            </div>
+        }
 
         <!-- Form Inline (Same Row) -->
         <form action="/Admin/Consulting/UpdateStatus" method="post">

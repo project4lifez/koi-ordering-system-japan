@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 using KoiOrderingSystem.Models;
 using Microsoft.AspNetCore.Http; // For session management
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace KoiOrderingSystem.Controllers
 {
@@ -19,6 +22,17 @@ namespace KoiOrderingSystem.Controllers
         {
             _db = db;
         }
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            // Check if the user is logged in by checking the session
+            if (HttpContext.Session.GetString("Username") == null)
+            {
+                // Redirect to login page if the user is not logged in
+                context.Result = RedirectToAction("", "Login");
+            }
+
+            base.OnActionExecuting(context); // Call the base method
+        }
 
         // GET: Booking/Create
         public IActionResult Create()
@@ -32,6 +46,8 @@ namespace KoiOrderingSystem.Controllers
 
             return View();
         }
+
+       
 
         // POST: Booking/Create
         [HttpPost]

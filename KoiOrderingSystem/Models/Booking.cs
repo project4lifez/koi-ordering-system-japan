@@ -53,13 +53,13 @@ public partial class Booking
 
     public virtual BookingPayment? BookingPayment { get; set; }
 
+    public virtual ICollection<BookingPayment> BookingPayments { get; set; } = new List<BookingPayment>();
+
     public virtual Customer? Customer { get; set; }
 
     public virtual Feedback? Feedback { get; set; }
 
     public virtual Po? Po { get; set; }
-
-    public virtual ICollection<Role> Roles { get; set; } = new List<Role>();
 
     public virtual Trip? Trip { get; set; }
 }

@@ -1,4 +1,5 @@
-﻿using KoiOrderingSystem.Models;
+﻿using KoiOrderingSystem.Controllers.Admin;
+using KoiOrderingSystem.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -7,7 +8,7 @@ using System.Linq;
 namespace KoiOrderingSystem.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class ConsultingController : Controller
+    public class ConsultingController : BaseController
     {
         private readonly Koi88Context _db;
 
@@ -19,12 +20,21 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
         // Display the Consulting Staff Dashboard
         public IActionResult Consulting(int bookingId)
         {
+            // Retrieve the RoleId from the session
+            var roleId = HttpContext.Session.GetInt32("RoleId");
+
+            // Check if the RoleId is null or not equal to 4
+            if (roleId == null || roleId != 4)
+            {
+                return NotFound("You do not have permission to access this page.");
+            }
+
             // Retrieve the booking information from the database, including PO, PODetails, and Trip
             var booking = _db.Bookings
-                              .Include(b => b.Po)
-                              .ThenInclude(po => po.Podetails)
-                              .Include(b => b.Trip)
-                              .FirstOrDefault(b => b.BookingId == bookingId);
+                             .Include(b => b.Po)
+                             .ThenInclude(po => po.Podetails)
+                             .Include(b => b.Trip)
+                             .FirstOrDefault(b => b.BookingId == bookingId);
 
             if (booking == null)
             {
@@ -44,16 +54,15 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
 
             if (booking == null)
             {
-                return NotFound($"Booking with ID {bookingId} not found.");
+                ModelState.AddModelError(string.Empty, "Booking not found.");
+                return View("Consulting", booking);
             }
 
-            // Define restricted statuses where Check-in and Check-out cannot be updated
-            var restrictedStatuses = new[] { "Requested", "Rejected", "Processing", "Canceled", "Accepted" };
-
-            // Prevent status update to "Checked In" or "Checked Out" if current status is in the restricted statuses
-            if (restrictedStatuses.Contains(booking.Status) && (status == "checkin" || status == "checkout"))
+            // Ensure that "Checked out" can only happen if the booking is already "Checked in"
+            if (status == "checkout" && booking.Status != "Checked in")
             {
-                return BadRequest("Cannot update to 'Check In' or 'Check Out' while the status is in a restricted state.");
+                ModelState.AddModelError("StatusError", "Cannot check out without checking in first.");
+                return View("Consulting", booking); // Return view with error
             }
 
             // Update the booking status (only if allowed)
@@ -70,6 +79,7 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
 
             return Redirect("Consulting?Bookingid=" + bookingId);
         }
+
         [HttpPost]
         public IActionResult UpdateDelivering(int bookingId, DateOnly deliveryDate, TimeOnly deliveryTime, string deliveryLocation, decimal koiPrice, decimal deposit)
         {
@@ -81,13 +91,15 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
 
             if (booking == null)
             {
-                return NotFound($"Booking with ID {bookingId} not found.");
+                ModelState.AddModelError(string.Empty, "Booking not found.");
+                return View("Consulting", booking);
             }
 
-            // Kiểm tra trạng thái trước khi cập nhật
+            // Ensure the status is "Checked in" or "Checked out" before updating delivery details
             if (booking.Status != "Checked in" && booking.Status != "Checked out")
             {
-                return BadRequest("UpdateDelivering can only be performed when the status is 'Checked in' or 'Checked out'.");
+                ModelState.AddModelError("DeliveryError", "UpdateDelivering can only be performed when the status is 'Checked in' or 'Checked out'.");
+                return View("Consulting", booking);
             }
 
             if (booking.Po == null)

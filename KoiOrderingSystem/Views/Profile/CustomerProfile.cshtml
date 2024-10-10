@@ -1,0 +1,314 @@
+﻿@model KoiOrderingSystem.Models.Customer
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <h2>My Profile</h2>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        .unique-body {
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .unique-custom-containers {
+            display: flex;
+            min-height: calc(100vh - 100px);
+            background-color: #ffffff;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .unique-custom-sidebars {
+            background-color: #ffffff;
+            width: 20%;
+            padding: 20px;
+            border-right: 2px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 20px; /* Added top margin for breathing space */
+        }
+
+            .unique-custom-sidebars h2 {
+                margin-bottom: 20px;
+                font-weight: 700;
+                font-size: 1.2rem;
+                color: #1565c0;
+            }
+
+            .unique-custom-sidebars ul {
+                list-style: none;
+                padding: 0;
+            }
+
+            .unique-custom-sidebars li {
+                margin-bottom: 15px;
+                font-size: 1rem;
+                padding: 10px;
+                border-radius: 5px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                transition: background-color 0.3s ease;
+                color: #333;
+            }
+
+                .unique-custom-sidebars li a {
+                    color: #1565c0;
+                    text-decoration: none;
+                }
+
+        .unique-custom-activess {
+            background-color: #90caf9;
+            color: white;
+        }
+
+        .unique-custom-contents {
+            flex-grow: 1;
+            padding: 40px;
+            background-color: #f8f9fa;
+        }
+
+        .unique-profile-containers {
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .unique-profile-forms {
+            flex: 2;
+            margin-right: 40px;
+        }
+
+        .unique-profile-headers {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+            .unique-profile-headers h2 {
+                margin: 0;
+                font-weight: 600;
+                font-size: 1.5rem;
+                color: #1565c0;
+            }
+
+            .unique-profile-headers a {
+                color: #007bff;
+                text-decoration: none;
+            }
+
+                .unique-profile-headers a:hover {
+                    text-decoration: underline;
+                }
+
+        .unique-profile-forms label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .unique-profile-forms input,
+        .unique-profile-forms select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .unique-profile-forms .unique-update-buttons {
+            background-color: #90caf9;
+            color: white;
+            border: none;
+            font-size: 1rem; /* Reduced font size */
+            cursor: pointer;
+            padding: 8px 16px; /* Adjusted padding for smaller button */
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+            .unique-profile-forms .unique-update-buttons:hover {
+                background-color: #64b5f6;
+            }
+
+        .unique-profile-avatars {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            text-align: center;
+        }
+
+            .unique-profile-avatars img {
+                width: 150px;
+                height: 150px;
+                border-radius: 50%;
+                margin-bottom: 20px;
+                border: 1px solid #ccc;
+            }
+
+            .unique-profile-avatars input {
+                margin-bottom: 10px;
+            }
+
+            .unique-profile-avatars .unique-avatar-buttons {
+                background-color: #90caf9;
+                color: white;
+                border: none;
+                font-size: 1rem; /* Reduced font size */
+                cursor: pointer;
+                padding: 8px 16px; /* Adjusted padding for smaller button */
+                border-radius: 5px;
+                transition: background-color 0.3s ease;
+            }
+
+                .unique-profile-avatars .unique-avatar-buttons:hover {
+                    background-color: #64b5f6;
+                }
+
+        .select-container {
+            position: relative;
+            display: inline-block;
+            width: 100%; /* Thay đổi kích thước theo nhu cầu */
+        }
+
+            .select-container select {
+                width: 100%;
+                padding: 10px;
+                padding-right: 30px; /* Thêm không gian bên phải cho biểu tượng */
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                appearance: none; /* Ẩn biểu tượng mặc định của trình duyệt */
+                font-size: 1rem; /* Kích thước chữ */
+            }
+
+        .select-icon {
+            position: absolute;
+            top: 37%;
+            right: 10px;
+            transform: translateY(-50%);
+            pointer-events: none; /* Không cho phép nhấp vào biểu tượng */
+            color: #aaa; /* Màu cho biểu tượng */
+        }
+    </style>
+</head>
+<body class="unique-body">
+
+    <div class="unique-custom-containers">
+        <div class="unique-custom-sidebars">
+            <h2>Information</h2>
+            <ul>
+                <li>
+                    <a href="/YourBooking">Your Booking</a>
+                </li>
+                <li class="unique-custom-activess">
+                    <a href="#account">Account</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="unique-custom-contents">
+            <div class="unique-profile-containers">
+                <div class="unique-profile-forms">
+                    <div class="unique-profile-headers">
+                        <h2>My Profile</h2>
+                        <a href="#change-password">Change Password</a>
+                    </div>
+                    <form id="customerUpdate" method="post" action="/Profile/UpdateProfile">
+                        <input type="hidden" name="CustomerId" value="@Model.CustomerId" /> <!-- Hidden field for CustomerId -->
+                        <!-- Update action -->
+                        <label for="bjl">Email</label>
+                        <input type="email" id="email" name="email" value="@Model.Account?.Email" disabled>
+
+                        <label for="first-name">First Name</label>
+                        <input type="text" id="first-name" name="firstname" value="@Model.Account?.Firstname" required>
+
+                        <label for="last-name">Last Name</label>
+                        <input type="text" id="last-name" name="lastname" value="@Model.Account?.Lastname" required>
+
+                        <label for="gender">Gender</label>
+                        <div class="select-container">
+                            <select id="gender" name="gender" class="form-control">
+                                @if (Model.Account?.Gender == "male")
+                                {
+                                    <option value="male" selected>Male</option>
+                                }
+                                else
+                                {
+                                    <option value="male">Male</option>
+                                }
+
+                                @if (Model.Account?.Gender == "female")
+                                {
+                                    <option value="female" selected>Female</option>
+                                }
+                                else
+                                {
+                                    <option value="female">Female</option>
+                                }
+
+                                @if (Model.Account?.Gender == "other")
+                                {
+                                    <option value="other" selected>Other</option>
+                                }
+                                else
+                                {
+                                    <option value="other">Other</option>
+                                }
+                            </select>
+                            <span class="select-icon"><i class="fas fa-chevron-down"></i></span>
+                        </div>
+
+
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" value="@Model.Account?.Phone" required>
+
+                        <button type="submit" class="unique-update-buttons">Update</button>
+                    </form>
+                </div>
+
+                <form method="post" enctype="multipart/form-data" action="/Profile/SaveAvatar">
+                    <div class="unique-profile-avatars">
+                        <!-- The avatar preview -->
+                        <img id="avatar-preview" src="@Url.Content(Model.Account?.ImageUrl ?? "/images/avatars/avatar-placeholder.png")" alt="Avatar" style="object-fit: cover;">
+
+                        <!-- File input for avatar upload -->
+                        <input type="file" id="avatar" name="avatar" accept="image/*" onchange="previewAvatar()">
+
+                        <!-- Save button -->
+                        <button type="submit" class="unique-avatar-buttons">Save Avatar</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function previewAvatar() {
+            const avatarInput = document.getElementById('avatar');
+            const avatarPreview = document.getElementById('avatar-preview');
+
+            if (avatarInput.files && avatarInput.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    avatarPreview.src = e.target.result;
+                };
+
+                reader.readAsDataURL(avatarInput.files[0]);
+            }
+        }
+    </script>
+
+</body>
+</html>

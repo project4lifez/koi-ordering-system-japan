@@ -1,0 +1,335 @@
+﻿@model IEnumerable<KoiOrderingSystem.Models.Booking>
+
+@{
+    ViewData["Title"] = "Order Management";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    var roleId = Context.Session.GetInt32("RoleId"); // Get RoleId from Session
+}
+
+@if (roleId == 2)
+{
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Order Management</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+        <style>
+            /* Table Adjustments */
+            .table td, .table th {
+                vertical-align: middle;
+                text-align: center;
+            }
+
+            .table-responsive {
+                overflow-x: auto;
+            }
+
+            /* Modal Form Styling */
+            .modal-content {
+                padding: 20px;
+                border-radius: 8px;
+            }
+
+            .modal-header h5 {
+                font-size: 1.5rem;
+                text-align: center;
+                margin-bottom: 20px;
+            }
+
+            /* Action Buttons */
+            .action-btn {
+                font-size: 1.2rem;
+                cursor: pointer;
+                padding: 5px;
+                border-radius: 4px;
+            }
+
+                .action-btn:hover {
+                    background-color: #f0f0f0;
+                }
+
+            /* Tooltip */
+            [data-bs-toggle="tooltip"] {
+                cursor: pointer;
+            }
+
+            /* Improve table hover */
+            .table-hover tbody tr:hover {
+                background-color: #f5f5f5;
+            }
+
+            /* Custom styles for different statuses */
+            .badge-pending {
+                background-color: #808080; /* Gray for Pending */
+            }
+
+            .badge-cancel {
+                background-color: #dc3545; /* Red for Cancel */
+            }
+
+            .badge-confirm {
+                background-color: #28a745; /* Green for Confirm */
+            }
+
+            .badge-other {
+                background-color: #ffc107; /* Yellow for other statuses */
+            }
+
+            /* Center buttons in modal footer */
+            .modal-footer {
+                justify-content: center;
+            }
+        </style>
+    </head>
+
+    <body>
+        <main class="container-fluid px-4">
+            <h1 class="mt-4">Order List</h1>
+
+            <!-- Search and Filter Section -->
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <input type="text" id="searchInput" class="form-control" placeholder="Search by Booking ID or Trip Name">
+                </div>
+                <div class="col-md-4">
+                    <select id="statusFilter" class="form-select">
+                        <option value="">Filter by Status</option>
+                        <option value="Requested">Requested</option>
+                        <option value="Processing">Processing</option>
+                        <option value="Rejected">Rejected</option>
+                        <option value="Canceled">Canceled</option>
+                        <option value="Payment Completed">Payment Completed</option>
+                        <option value="Checked in">Checked in</option>
+                        <option value="Checked out">Checked out</option>
+                        <option value="Delivering">Delivering</option>
+                        <option value="Delivered">Delivered</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover" id="orderTable">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>BookingID</th>
+                            <th>Booking Date</th>
+                            <th>Customer</th>
+                            <th>Trip Name</th>
+                            <th>Price</th>
+                            <th>Status</th>
+                            <th>Booking Form</th>
+                            <th>Edit</th>
+                            <th>Quote</th>
+                        </tr>
+                    </thead>
+
+                    @if (Model != null && Model.Any())
+                    {
+                        int index = 1;
+
+                        <tbody>
+                            @foreach (var booking in Model)
+                            {
+                                <tr>
+                                    <td>@index</td>
+                                    <td class="booking-id">@booking.BookingId</td>
+                                    <td>@booking.BookingDate</td>
+                                    <td class="text-success">@booking.Fullname</td>
+                                    <td class="trip-name">@(booking.Trip?.TripName ?? "No Trip Name")</td>
+                                    <td>@booking.QuotedAmount</td>
+
+                                    <!-- Render Status Column -->
+                                    <td class="booking-status">
+                                        @{
+                                            string statusClass = booking.Status.ToLower() switch
+                                            {
+                                                "requested" => "badge-pending",
+                                                "canceled" => "badge-cancel",
+                                                "rejected" => "badge-cancel",
+                                                "accepted" => "badge-confirm",
+                                                "delivered" => "badge-confirm",
+                                                "payment completed" => "badge-confirm",
+                                                _ => "badge-other"
+                                            };
+                                        }
+                                        <span class="badge @statusClass">@booking.Status</span>
+                                    </td>
+
+                                    <td>
+                                        <a href="javascript:void(0);" class="btn btn-primary btn-sm"
+                                           onclick="openFormModal('@booking.Fullname', '@booking.Phone', '@booking.Email',
+                                         '@booking.Gender', '@booking.Favoritefarm',
+                                         '@booking.StartDate', '@booking.EndDate',
+                                         '@booking.EstimatedCost', '@booking.HotelAccommodation',
+                                         '@booking.Note')">View Form</a>
+                                    </td>
+
+                                    <td>
+                                        <a href="/Admin/Manager/Manager?id=@booking.BookingId" class="btn btn-warning btn-sm">Edit</a>
+                                    </td>
+
+                                    <td>
+                                        <a href="/Admin/Sale/Quote?bookingId=@booking.BookingId" class="btn btn-info btn-sm">Quote</a>
+                                    </td>
+                                </tr>
+                                index++; // Increment counter
+                            }
+                        </tbody>
+                    }
+                    else
+                    {
+                        <p>No bookings available.</p>
+                    }
+                </table>
+            </div>
+
+            <!-- Modal for Form -->
+            <div class="modal fade" id="formModal" tabindex="-1" aria-labelledby="formModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="formModalLabel">Customer Booking</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="formFullName" class="form-label">Full Name</label>
+                                        <input type="text" class="form-control" id="formFullName" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="formPhone" class="form-label">Phone</label>
+                                        <input type="text" class="form-control" id="formPhone" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="formEmail" class="form-label">Email</label>
+                                        <input type="text" class="form-control" id="formEmail" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="formGender" class="form-label">Gender</label>
+                                        <input type="text" class="form-control" id="formGender" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="formFarm" class="form-label">The farm which want to come</label>
+                                        <input type="text" class="form-control" id="formFarm" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="formStartDate" class="form-label">Estimated departure date</label>
+                                        <input type="text" class="form-control" id="formStartDate" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="formEndDate" class="form-label">Return date</label>
+                                        <input type="text" class="form-control" id="formEndDate" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="formCost" class="form-label">Estimated cost</label>
+                                        <input type="text" class="form-control" id="formCost" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="formHotel" class="form-label">Hotel accommodation</label>
+                                        <input type="text" class="form-control" id="formHotel" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="formNote" class="form-label">Additional Information</label>
+                                <textarea id="formNote" class="form-control" rows="4" readonly></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" onclick="printForm()">Print Form</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <script>
+            function openFormModal(fullName, phone, email, gender, farm, startDate, endDate, cost, hotel, note) {
+                document.getElementById('formFullName').value = fullName || 'N/A';
+                document.getElementById('formPhone').value = phone || 'N/A';
+                document.getElementById('formEmail').value = email || 'N/A';
+                document.getElementById('formGender').value = gender || 'N/A';
+                document.getElementById('formFarm').value = farm || 'N/A';
+                document.getElementById('formStartDate').value = startDate || 'N/A';
+                document.getElementById('formEndDate').value = endDate || 'N/A';
+                document.getElementById('formCost').value = cost || 'N/A';
+                document.getElementById('formHotel').value = hotel || 'N/A';
+                document.getElementById('formNote').value = note || 'N/A';
+
+                const formModal = new bootstrap.Modal(document.getElementById('formModal'));
+                formModal.show();
+            }
+
+            function printForm() {
+                const printContent = document.getElementById('formModal').innerHTML;
+                const win = window.open('', '', 'width=800,height=600');
+                win.document.write(printContent);
+                win.document.close();
+                win.print();
+                win.close();
+            }
+
+            // Search and filter functionality
+            document.getElementById('searchInput').addEventListener('keyup', function () {
+                var filter = this.value.toLowerCase();
+                var rows = document.querySelectorAll('#orderTable tbody tr');
+
+                rows.forEach(function (row) {
+                    var bookingId = row.querySelector('.booking-id').textContent.toLowerCase();
+                    var tripName = row.querySelector('.trip-name').textContent.toLowerCase();
+
+                    if (bookingId.includes(filter) || tripName.includes(filter)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+
+            document.getElementById('statusFilter').addEventListener('change', function () {
+                var filter = this.value.toLowerCase();
+                var rows = document.querySelectorAll('#orderTable tbody tr');
+
+                rows.forEach(function (row) {
+                    var status = row.querySelector('.booking-status .badge').textContent.toLowerCase();
+
+                    if (filter === '' || status === filter) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+
+            // Initialize Bootstrap tooltips
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        </script>
+    </body>
+}
+else
+{
+    <p>Access Denied: You do not have permission to view this page.</p>
+}

@@ -3,15 +3,13 @@
 @{
     ViewData["Title"] = "Order Management";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
-    var roleId = Context.Session.GetInt32("RoleId"); // Lấy RoleId từ Session
-
+    var roleId = Context.Session.GetInt32("RoleId"); // Get RoleId from Session
 }
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order Management</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         /* Table Adjustments */
         .table td, .table th {
@@ -88,8 +86,39 @@
     <main class="container-fluid px-4">
         <h1 class="mt-4">Order Management</h1>
 
+        <!-- Search and Filter Section -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <input type="text" id="searchInput" class="form-control" placeholder="Search by Booking ID or Trip Name">
+            </div>
+            <div class="col-md-4">
+                <select id="statusFilter" class="form-select">
+                    <option value="">Filter by Status</option>
+                    @if (roleId == 2 || roleId == 3)
+                    {
+                        <option value="Requested">Requested</option>
+                        <option value="Processing">Processing</option>
+                        <option value="Rejected">Rejected</option>
+                        <option value="Accepted">Accepted</option>
+                    }
+                    else if (roleId == 4)
+                    {
+                        <option value="Payment Completed">Payment Completed</option>
+                        <option value="Checked in">Checked in</option>
+                        <option value="Checked out">Checked out</option>
+                    }
+                    else if (roleId == 5)
+                    {
+                        <option value="Checked out">Checked out</option>
+                        <option value="Delivering">Delivering</option>
+                        <option value="Delivered">Delivered</option>
+                    }
+                </select>
+            </div>
+        </div>
+
         <div class="table-responsive">
-            <table class="table table-bordered table-hover">
+            <table class="table table-bordered table-hover" id="orderTable">
                 <thead>
                     <tr>
                         <th>No</th>
@@ -98,12 +127,8 @@
                         <th>Customer</th>
                         <th>Trip Name</th>
                         <th>Price</th>
-                        @if (roleId >=2 & roleId <=5)
-                        {
-                            <!-- Only add these headers for roleId 2 and 3 -->
-                            <th>Status</th>
-                        }
-                        @if (roleId == 2 || roleId == 3)
+                        <th>Status</th>
+                        @if (roleId == 3 || roleId == 2)
                         {
                             <th>Booking Form</th>
                         }
@@ -120,21 +145,50 @@
 
                 @if (Model != null && Model.Any())
                 {
+                    int index = 1;
+
                     <tbody>
                         @foreach (var booking in Model)
                         {
-                            <tr>
-                                <td>@booking.BookingId</td>
-                                <td>@booking.BookingId</td>
-                                <td>@booking.BookingDate</td>
-                                <td class="text-success">@booking.Fullname</td>
-                                <td>@(booking.Trip?.TripName ?? "No Trip Name")</td>
-                                <td>@booking.QuotedAmount</td>
+                            bool renderRow = false;
 
-                                @if (roleId >= 2 && roleId <= 5)
-                                {
-                                    <!-- Only render these columns for roleId 2 and 3 -->
-                                    <td>
+                            // Role 2: "Requested", "Processing", "Rejected", "Accepted"
+                            if (roleId == 2 && (booking.Status == "Requested" || booking.Status == "Processing" || booking.Status == "Rejected" || booking.Status == "Accepted"))
+                            {
+                                renderRow = true;
+                            }
+
+                            // Role 3: "Requested", "Processing", "Rejected", "Accepted"
+                            if (roleId == 3 && (booking.Status == "Requested" || booking.Status == "Processing" || booking.Status == "Rejected" || booking.Status == "Accepted"))
+                            {
+                                renderRow = true;
+                            }
+
+                            // Role 4: "Payment Completed", "Checked in", "Checked out"
+                            if (roleId == 4 && (booking.Status == "Payment Completed" || booking.Status == "Checked in" || booking.Status == "Checked out"))
+                            {
+                                renderRow = true;
+                            }
+
+                            // Role 5: "Checked out", "Delivering", "Delivered"
+                            if (roleId == 5 && (booking.Status == "Checked out" || booking.Status == "Delivering" || booking.Status == "Delivered"))
+                            {
+                                renderRow = true;
+                            }
+
+                            // Conditionally render the row based on the role and booking status
+                            if (renderRow)
+                            {
+                                <tr>
+                                    <td>@index</td>
+                                    <td class="booking-id">@booking.BookingId</td>
+                                    <td>@booking.BookingDate</td>
+                                    <td class="text-success">@booking.Fullname</td>
+                                    <td class="trip-name">@(booking.Trip?.TripName ?? "No Trip Name")</td>
+                                    <td>@booking.QuotedAmount</td>
+
+                                    <!-- Render Status Column for All Roles -->
+                                    <td class="booking-status">
                                         @* Conditional logic for status badge color *@
                                         @{
                                             string statusClass = booking.Status.ToLower() switch
@@ -150,48 +204,50 @@
                                         }
                                         <span class="badge @statusClass">@booking.Status</span>
                                     </td>
-                                }
 
-                                @if (roleId == 2 || roleId == 3)
-                                {
+                                    @if (roleId == 3 || roleId == 2)
+                                    {
+                                        <td>
+                                            <a href="javascript:void(0);" class="btn btn-primary btn-sm"
+                                               onclick="openFormModal('@booking.Fullname', '@booking.Phone', '@booking.Email',
+                                             '@booking.Gender', '@booking.Favoritefarm',
+                                             '@booking.StartDate', '@booking.EndDate',
+                                             '@booking.EstimatedCost', '@booking.HotelAccommodation',
+                                             '@booking.Note')">View Form</a>
+                                        </td>
+                                    }
+
+                                    <!-- Edit logic for all roles (2, 3, 4, 5) -->
                                     <td>
-                                        <a href="javascript:void(0);" class="btn btn-primary btn-sm"
-                                           onclick="openFormModal('@booking.Fullname', '@booking.Phone', '@booking.Email',
-                                         '@booking.Gender', '@booking.Favoritefarm',
-                                         '@booking.StartDate', '@booking.EndDate',
-                                         '@booking.EstimatedCost', '@booking.HotelAccommodation',
-                                         '@booking.Note')">View Form</a>
+                                        @if (roleId == 2)
+                                        {
+                                            <a href="/Admin/Manager/Manager?id=@booking.BookingId" class="btn btn-warning btn-sm">Edit</a>
+                                        }
+                                        @if (roleId == 3)
+                                        {
+                                            <a href="/Admin/Sale/Sale?id=@booking.BookingId" class="btn btn-warning btn-sm">Edit</a>
+                                        }
+                                        @if (roleId == 4)
+                                        {
+                                            <a href="/Admin/Consulting/Consulting?Bookingid=@booking.BookingId" class="btn btn-warning btn-sm">Edit</a>
+                                        }
+                                        @if (roleId == 5)
+                                        {
+                                            <a href="/Admin/Delivering/Delivering?id=@booking.BookingId" class="btn btn-warning btn-sm">Edit</a>
+                                        }
                                     </td>
-                                }
 
-                                <!-- Edit logic for all roles (2, 3, 4, 5) -->
-                                <td>
-                                    @if (roleId == 2)
+                                    @if (roleId == 2 || roleId == 3)
                                     {
-                                        <a href="/Admin/Manager/Manager?id=@booking.BookingId" class="btn btn-warning btn-sm">Edit</a>
+                                        <!-- Quote logic for only role 2 and 3 -->
+                                        <td>
+                                            <a href="/Admin/Sale/Quote?bookingId=@booking.BookingId" class="btn btn-info btn-sm">Quote</a>
+                                        </td>
                                     }
-                                    @if (roleId == 3)
-                                    {
-                                        <a href="/Admin/Sale/Sale?id=@booking.BookingId" class="btn btn-warning btn-sm">Edit</a>
-                                    }
-                                    @if (roleId == 4)
-                                    {
-                                        <a href="/Admin/Consulting/Consulting?Bookingid=@booking.BookingId" class="btn btn-warning btn-sm">Edit</a>
-                                    }
-                                    @if (roleId == 5)
-                                    {
-                                        <a href="/Admin/Delivering/Delivering?id=@booking.BookingId" class="btn btn-warning btn-sm">Edit</a>
-                                    }
-                                </td>
 
-                                @if (roleId == 2 || roleId == 3)
-                                {
-                                    <!-- Detail logic for only roles 2 and 3 -->
-                                    <td>
-                                        <a href="/Admin/Sale/Quote?bookingId=@booking.BookingId" class="btn btn-info btn-sm">Quote</a>
-                                    </td>
-                                }
-                            </tr>
+                                </tr>
+                                index++; // Increment counter
+                            }
                         }
                     </tbody>
                 }
@@ -200,10 +256,7 @@
                     <p>No bookings available.</p>
                 }
             </table>
-         </div>
-
-
-
+        </div>
 
         <!-- Modal for Form -->
         <div class="modal fade" id="formModal" tabindex="-1" aria-labelledby="formModalLabel" aria-hidden="true">
@@ -310,12 +363,42 @@
             win.close();
         }
 
+        // Search and filter functionality
+        document.getElementById('searchInput').addEventListener('keyup', function () {
+            var filter = this.value.toLowerCase();
+            var rows = document.querySelectorAll('#orderTable tbody tr');
+
+            rows.forEach(function (row) {
+                var bookingId = row.querySelector('.booking-id').textContent.toLowerCase();
+                var tripName = row.querySelector('.trip-name').textContent.toLowerCase();
+
+                if (bookingId.includes(filter) || tripName.includes(filter)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+
+        document.getElementById('statusFilter').addEventListener('change', function () {
+            var filter = this.value.toLowerCase();
+            var rows = document.querySelectorAll('#orderTable tbody tr');
+
+            rows.forEach(function (row) {
+                var status = row.querySelector('.booking-status .badge').textContent.toLowerCase();
+
+                if (filter === '' || status === filter) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+
         // Initialize Bootstrap tooltips
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
         var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl)
         })
     </script>
-
-    <!-- Bootstrap JS for modal and tooltip functionality -->
 </body>

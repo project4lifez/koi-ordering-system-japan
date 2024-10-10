@@ -9,7 +9,15 @@ public partial class BookingPayment
 
     public string? Status { get; set; }
 
+    public int? PaymentMethodId { get; set; }
+
+    public DateTime? PaymentDate { get; set; }
+
+    public int? BookingId { get; set; }
+
+    public virtual Booking? Booking { get; set; }
+
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
-    public virtual ICollection<PaymentMethod> PaymentMethods { get; set; } = new List<PaymentMethod>();
+    public virtual PaymentMethod? PaymentMethod { get; set; }
 }
