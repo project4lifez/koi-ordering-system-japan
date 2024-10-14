@@ -1,0 +1,110 @@
+﻿@model IEnumerable<KoiOrderingSystem.Models.Variety>
+@{
+    ViewData["Title"] = "List of Varieties";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml"; // Use the shared layout
+}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .btn-create {
+            margin-bottom: 20px;
+        }
+
+        .variety-table {
+            width: 100%;
+            border-collapse: collapse; /* Ensure no lines between cells */
+        }
+
+            .variety-table th,
+            .variety-table td {
+                text-align: left;
+                padding: 10px;
+                border-bottom: 1px solid #dee2e6; /* Only horizontal lines */
+            }
+
+                /* Căn chỉnh cột actions về phía phải */
+                .variety-table td.actions {
+                    text-align: right; /* Align actions to the right */
+                    width: 150px; /* Set width for actions column */
+                }
+
+            /* Remove vertical lines */
+            .variety-table td,
+            .variety-table th {
+                border-right: none !important;
+            }
+
+                .variety-table td img {
+                    width: 60px;
+                    height: 60px;
+                    object-fit: cover;
+                    border-radius: 8px;
+                }
+
+        .btn {
+            padding: 8px 12px;
+        }
+    </style>
+</head>
+
+<body>
+    <main class="container-fluid px-4">
+        <h1 class="mt-4">List of Varieties</h1>
+
+        <!-- Create button on the right -->
+        <div class="row mb-3">
+            <div class="col-md-12 text-end">
+                <a href="/Admin/Manager/CreateVariety" class="btn btn-success btn-create">Create New Variety</a>
+            </div>
+        </div>
+
+        <!-- Varieties List -->
+        <div class="card mb-4">
+            <div class="card-header">
+                List of Varieties
+            </div>
+            <div class="card-body">
+                <table class="variety-table table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Image</th> <!-- Image column -->
+                            <th>Name</th>
+                            <th class="actions">Actions</th> <!-- Actions column on the right -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Example Rows with Images -->
+                        @foreach (var variety in Model)
+                        {
+                            <tr>
+                                <td>@variety.VarietyId</td>
+                                <td><img src="@variety.ImageUrl" alt="Variety Image"></td>
+                                <td>@variety.VarietyName</td>
+                                <td class="actions">
+                                    <button class="btn btn-outline-success">Edit</button>
+                                    <button class="btn btn-outline-danger">Delete</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>

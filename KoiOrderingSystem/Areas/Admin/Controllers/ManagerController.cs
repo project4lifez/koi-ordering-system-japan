@@ -108,6 +108,69 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
             return Redirect("Manager?id=" + bookingId);
         }
 
+        public IActionResult ListOfVariety()
+        {
+            // Fetch specific fields but still create full Variety objects
+            var varieties = _db.Varieties
+                .Select(v => new Variety
+                {
+                    VarietyId = v.VarietyId,
+                    VarietyName = v.VarietyName,
+                    ImageUrl = v.ImageUrl
+                })
+                .ToList();
+
+            return View(varieties);
+        }
+
+
+        public IActionResult CreateVariety()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult AddVariety(Variety model, IFormFile ImageUrl)
+        {
+            if (ModelState.IsValid)
+            {
+                // Handle the image upload
+                if (ImageUrl != null && ImageUrl.Length > 0)
+                {
+                    // Create a unique file name to avoid overwriting files with the same name
+                    var fileName = Path.GetFileNameWithoutExtension(ImageUrl.FileName) + "_" + Guid.NewGuid() + Path.GetExtension(ImageUrl.FileName);
+                    var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/KoiVarieties");
+                    var filePath = Path.Combine(directoryPath, fileName);
+
+                    // Ensure the directory exists
+                    if (!Directory.Exists(directoryPath))
+                    {
+                        Directory.CreateDirectory(directoryPath);
+                    }
+
+                    // Save the image file to the specified path
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        ImageUrl.CopyTo(stream);
+                    }
+
+                    // Set the image URL in the model (relative path)
+                    model.ImageUrl = "/images/KoiVarieties/" + fileName;
+                }
+
+                // Add the new variety to the database
+                _db.Varieties.Add(model);
+                _db.SaveChanges();
+
+                // Redirect to the list of varieties after successful creation
+                return Redirect("/Admin/Manager/ListOfVariety");
+            }
+
+            // If model state is not valid, return the view with the current model
+            return View(model);
+        }
+
+
     }
 }
 

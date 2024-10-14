@@ -3,6 +3,7 @@
     var roleId = Context.Session.GetInt32("RoleId"); // Lấy RoleId từ Session
 }
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,9 +21,9 @@
 </head>
 <body class="sb-nav-fixed">
     <!-- Top Navigation Bar -->
-    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+    <nav class="sb-topnav navbar navbar-expand navbar-dark" style="background-color: #343a40 !important;">
         <!-- Navbar Brand -->
-        <a class="navbar-brand ps-3" href="@Url.Action("Index", "Dashboard")">Koi88 Staff Dashboard</a>
+        <a class="navbar-brand ps-3" href="@Url.Action("Index", "Dashboard")" style="background-color: #343a40 !important;">Koi88 Staff Dashboard</a>
         <!-- Sidebar Toggle Button -->
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle"><i class="fas fa-bars"></i></button>
 
@@ -58,9 +59,9 @@
     <!-- Sidebar and Content -->
     <div id="layoutSidenav">
         <!-- Sidebar -->
-        <div id="layoutSidenav_nav">
+        <div id="layoutSidenav_nav" style="background-color: #000000 !important;">
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-                <div class="sb-sidenav-menu">
+                <div class="sb-sidenav-menu" style="background-color: #343a40 !important;">
                     <div class="nav">
                         <!-- Core Menu Heading -->
                         <div class="sb-sidenav-menu-heading">Core</div>
@@ -88,10 +89,27 @@
                                 </nav>
                             </div>
                         }
-
-                        <!-- Hiển thị tất cả mục cho RoleId 2 (Admin) -->
                         @if (roleId == 2)
                         {
+                            <!-- Product Link with Submenus (Product Management) -->
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseProduct" aria-expanded="false" aria-controls="collapseProduct">
+                                <div class="sb-nav-link-icon"><i class="fas fa-box"></i></div>
+                                Product
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+
+
+                            <div class="collapse" id="collapseProduct" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="/Admin/Manager/ListOfFarm">List Of Farm</a>
+                                    <a class="nav-link" href="/Admin/Manager/ListOfVariety">List Of Variety</a>
+                                    <a class="nav-link" href="/Admin/Manager/ListOfKoiFish">List Of Koi Fish</a>
+                                </nav>
+                            </div>
+
+
+
+                            <!-- Hiển thị tất cả mục cho RoleId 2 (Admin) -->
                             <!-- Account Information Link -->
                             <a class="nav-link" href="@Url.Action("Index", "Account")">
                                 <div class="sb-nav-link-icon"><i class="fas fa-user"></i></div>
@@ -136,12 +154,12 @@
     <script src="/Assets/admin/js/scripts.js"></script>
     <!-- Chart.js -->
     @*
-           <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-           <script src="/Assets/admin/assets/demo/chart-area-demo.js"></script>
-           <script src="/Assets/admin/assets/demo/chart-bar-demo.js"></script>
-           <!-- Simple Datatables -->
-           <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
-           <script src="/Assets/admin/js/datatables-simple-demo.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+    <script src="/Assets/admin/assets/demo/chart-area-demo.js"></script>
+    <script src="/Assets/admin/assets/demo/chart-bar-demo.js"></script>
+    <!-- Simple Datatables -->
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
+    <script src="/Assets/admin/js/datatables-simple-demo.js"></script>
     *@
 </body>
 </html>
