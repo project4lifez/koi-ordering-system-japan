@@ -19,6 +19,8 @@ public partial class KoiFish
 
     public string? KoiName { get; set; }
 
+    public string? Description { get; set; }
+
     public virtual ICollection<KoiFarm> KoiFarms { get; set; } = new List<KoiFarm>();
 
     public virtual ICollection<Podetail> Podetails { get; set; } = new List<Podetail>();

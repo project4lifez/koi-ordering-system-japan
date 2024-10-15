@@ -1,6 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Variety";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+
 }
 <head>
     <meta charset="UTF-8">
@@ -102,8 +103,11 @@
             <!-- Right Form Section -->
             <div class="form-content">
                 <form method="post" id="formUpdate" action="/Admin/Manager/UpdateVariety/@Model.VarietyId" enctype="multipart/form-data">
-
                     <input type="hidden" name="VarietyId" value="@Model.VarietyId" /> <!-- Lưu VarietyId -->
+                    <div class="form-group">
+                        <label for="varietyId" class="form-label">Variety ID</label>
+                        <input type="text" class="form-control" id="varietyId" name="VarietyId" value="@Model.VarietyId" readonly>
+                    </div>
                     <div class="form-group">
                         <label for="varietyName" class="form-label">Name</label>
                         <input type="text" class="form-control" id="varietyName" name="VarietyName" value="@Model.VarietyName" placeholder="Enter variety name" required>

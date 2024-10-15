@@ -260,6 +260,7 @@ public partial class Koi88Context : DbContext
             entity.ToTable("KoiFish");
 
             entity.Property(e => e.KoiId).HasColumnName("koi_id");
+            entity.Property(e => e.Description).HasColumnName("description");
             entity.Property(e => e.ImageUrl)
                 .HasMaxLength(100)
                 .HasColumnName("imageUrl");

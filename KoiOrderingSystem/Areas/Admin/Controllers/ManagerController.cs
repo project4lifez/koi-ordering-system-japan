@@ -164,7 +164,7 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
                 _db.SaveChanges();
 
                 // Redirect to the list of varieties after successful creation
-                return Redirect("/Admin/Manager/ListOfVariety");
+                return Redirect("/Admin/Manager/KoiVarietyList");
             }
 
             // If model state is not valid, return the view with the current model
@@ -182,7 +182,7 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
             }
 
             // Redirect to the list of varieties
-            return Redirect("/Admin/Manager/ListOfVariety");
+            return Redirect("/Admin/Manager/KoiVarietyList");
         }
 
 
