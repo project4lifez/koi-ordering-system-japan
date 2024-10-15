@@ -170,7 +170,81 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
             return View(model);
         }
 
+        [HttpPost]
+        public IActionResult DeleteVariety(int id)
+        {
+            var variety = _db.Varieties.Find(id);
+            if (variety != null)
+            {
+                _db.Varieties.Remove(variety);
+                _db.SaveChanges();
+            }
+
+            // Redirect to the list of varieties
+            return Redirect("/Admin/Manager/ListOfVariety");
+        }
+
+
+
+        [HttpGet]
+        public IActionResult Edits(int id)
+        {
+            var variety = _db.Varieties.Find(id); 
+            if (variety == null)
+            {
+                return NotFound();
+            }
+            return View(variety); 
+        }
+
+        [HttpPost]
+        public IActionResult UpdateVariety(int id, Variety model, IFormFile ImageUrl)
+        {
+            // Tìm variety hiện tại theo ID
+            var existingVariety = _db.Varieties.FirstOrDefault(v => v.VarietyId == id);
+
+            if (existingVariety == null)
+            {
+                return NotFound(); 
+            }
+
+           
+            if (!string.IsNullOrWhiteSpace(model.VarietyName))
+            {
+                existingVariety.VarietyName = model.VarietyName;
+            }
+
+           
+            if (!string.IsNullOrWhiteSpace(model.Description))
+            {
+                existingVariety.Description = model.Description;
+            }
+
+            // Xử lý upload ảnh nếu có ảnh mới được cung cấp
+            if (ImageUrl != null && ImageUrl.Length > 0)
+            {
+                var fileName = Path.GetFileNameWithoutExtension(ImageUrl.FileName) + "_" + Guid.NewGuid() + Path.GetExtension(ImageUrl.FileName);
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/KoiVarieties", fileName);
+
+                // Lưu ảnh mới vào server
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    ImageUrl.CopyTo(stream);
+                }
+
+                // Cập nhật URL ảnh trong cơ sở dữ liệu với ảnh mới
+                existingVariety.ImageUrl = "/images/KoiVarieties/" + fileName;
+            }
+           
+
+            // Lưu thay đổi vào cơ sở dữ liệu
+            _db.SaveChanges();
+
+            // Chuyển hướng đến trang Edits sau khi cập nhật thành công
+            return Redirect($"/Admin/Manager/Edits?id={id}");
+        }
 
     }
 }
+
 

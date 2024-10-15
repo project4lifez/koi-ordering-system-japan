@@ -94,8 +94,13 @@
                                 <td><img src="@variety.ImageUrl" alt="Variety Image"></td>
                                 <td>@variety.VarietyName</td>
                                 <td class="actions">
-                                    <button class="btn btn-outline-success">Edit</button>
-                                    <button class="btn btn-outline-danger">Delete</button>
+                                    <button class="btn btn-variety btn-outline-success-variety" onclick="location.href='/Admin/Manager/Edits?id=@variety.VarietyId'">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </button>
+                                    <form method="post" action="/Admin/Manager/DeleteVariety" style="display:inline;">
+                                        <input type="hidden" name="id" value="@variety.VarietyId" />
+                                        <button type="submit" class="btn btn-outline-danger">Delete</button>
+                                    </form>
                                 </td>
                             </tr>
                         }
