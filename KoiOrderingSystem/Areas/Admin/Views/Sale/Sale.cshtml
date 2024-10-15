@@ -6,6 +6,12 @@
 
 <main class="container-fluid px-4">
     <h1 class="mt-4">Sales Staff Dashboard</h1>
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success" role="alert">
+            @TempData["SuccessMessage"]
+        </div>
+    }
 
     <div class="row">
         <!-- Customer Information Section -->

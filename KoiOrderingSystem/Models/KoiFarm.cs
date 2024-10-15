@@ -19,6 +19,8 @@ public partial class KoiFarm
 
     public string? ImageUrl { get; set; }
 
+    public int? SpecialVarietyId { get; set; }
+
     public virtual KoiFish? Koi { get; set; }
 
     public virtual ICollection<KoiPackage> KoiPackages { get; set; } = new List<KoiPackage>();
@@ -28,6 +30,8 @@ public partial class KoiFarm
     public virtual ICollection<Po> Pos { get; set; } = new List<Po>();
 
     public virtual ICollection<SpecialVariety> SpecialVarieties { get; set; } = new List<SpecialVariety>();
+
+    public virtual SpecialVariety? SpecialVariety { get; set; }
 
     public virtual TripDetail? TripDetail { get; set; }
 }

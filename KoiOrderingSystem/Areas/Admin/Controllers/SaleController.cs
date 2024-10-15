@@ -168,7 +168,7 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
         public IActionResult Sale(int id)
         {
             // Retrieve the RoleId from the session
-            var roleId = HttpContext.Session.GetInt32("RoleId");
+            var roleId = HttpContext.Session.GetInt32("AdminRoleId");
 
             // Check if the RoleId is null or not equal to 3
             if (roleId == null || roleId != 3)
@@ -200,16 +200,20 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
 
             if (booking != null)
             {
-                // Set the status to 'processing' since that's the only allowed status for sales staff
+                // Set the status to 'Processing' since that's the only allowed status for sales staff
                 booking.Status = "Processing";
                 booking.QuoteSentDate = DateOnly.FromDateTime(DateTime.Now);
 
                 // Save the changes
                 _db.SaveChanges();
+
+                // Set a success message
+                TempData["SuccessMessage"] = "Status updated to 'Processing' successfully.";
             }
 
             // Redirect back to the Sales Staff page with updated status
             return Redirect("Sale?id=" + id);
         }
+
     }
 }

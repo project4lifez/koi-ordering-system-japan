@@ -47,12 +47,12 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult UpdateStatusDelivering(int id, string status)
         {
-            // Tìm kiếm booking theo ID
+            // Find the booking by ID
             var booking = _context.Bookings.FirstOrDefault(b => b.BookingId == id);
 
             if (booking != null)
             {
-                // Ngăn việc thay đổi trạng thái nếu trạng thái chưa phải là 'Delivering' và người dùng cố gắng thay đổi thành 'Delivered'
+                // Prevent changing status if it is not 'Delivering' when trying to set it to 'Delivered'
                 if (status.Equals("Delivered", StringComparison.OrdinalIgnoreCase) &&
                     !booking.Status.Equals("Delivering", StringComparison.OrdinalIgnoreCase))
                 {
@@ -63,19 +63,23 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
                     return View("Delivering", booking);
                 }
 
-                // Ngăn việc thay đổi trạng thái nếu trạng thái đã là 'Delivered'
+                // Prevent changing status if it is already 'Delivered'
                 if (!booking.Status.Equals("Delivered", StringComparison.OrdinalIgnoreCase))
                 {
-                    // Cập nhật trạng thái mới
+                    // Update the new status
                     booking.Status = status;
 
-                    // Lưu thay đổi vào database
+                    // Save changes to the database
                     _context.SaveChanges();
+
+                    // Set success message
+                    TempData["SuccessMessage"] = $"Booking status updated to '{status}' successfully.";
                 }
             }
 
-            // Chuyển hướng về trang 'Delivering' sau khi cập nhật thành công
+            // Redirect back to the 'Delivering' page after successful update
             return Redirect("Delivering?id=" + id);
         }
     }
+
 }

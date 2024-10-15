@@ -15,5 +15,7 @@ public partial class SpecialVariety
 
     public virtual KoiFarm? Farm { get; set; }
 
+    public virtual ICollection<KoiFarm> KoiFarms { get; set; } = new List<KoiFarm>();
+
     public virtual Variety? Variety { get; set; }
 }

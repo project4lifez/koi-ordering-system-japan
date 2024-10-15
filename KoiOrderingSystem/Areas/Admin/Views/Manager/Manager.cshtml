@@ -51,6 +51,13 @@
                         <p><strong>Status:</strong> @Model.Status</p>
 
                         <!-- Display model errors here -->
+                        @if (TempData["SuccessMessage"] != null)
+                        {
+                            <div class="alert alert-success" role="alert">
+                                @TempData["SuccessMessage"]
+                            </div>
+                        }
+
                         @if (!ViewData.ModelState.IsValid)
                         {
                             <div class="alert alert-danger" role="alert">

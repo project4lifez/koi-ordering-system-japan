@@ -229,9 +229,7 @@ public partial class Koi88Context : DbContext
             entity.ToTable("KoiFarm");
 
             entity.Property(e => e.FarmId).HasColumnName("farm_id");
-            entity.Property(e => e.ContactInfo)
-                .HasMaxLength(200)
-                .HasColumnName("contact_info");
+            entity.Property(e => e.ContactInfo).HasColumnName("contact_info");
             entity.Property(e => e.FarmName)
                 .HasMaxLength(100)
                 .HasColumnName("farm_name");
@@ -242,11 +240,16 @@ public partial class Koi88Context : DbContext
             entity.Property(e => e.Location)
                 .HasMaxLength(200)
                 .HasColumnName("location");
+            entity.Property(e => e.SpecialVarietyId).HasColumnName("special_variety_id");
             entity.Property(e => e.TripDetailId).HasColumnName("trip_detail_id");
 
             entity.HasOne(d => d.Koi).WithMany(p => p.KoiFarms)
                 .HasForeignKey(d => d.KoiId)
                 .HasConstraintName("FK__KoiFarm__koi_id__797309D9");
+
+            entity.HasOne(d => d.SpecialVariety).WithMany(p => p.KoiFarms)
+                .HasForeignKey(d => d.SpecialVarietyId)
+                .HasConstraintName("FK_Farm_SpecialVariety");
 
             entity.HasOne(d => d.TripDetail).WithMany(p => p.KoiFarms)
                 .HasForeignKey(d => d.TripDetailId)
@@ -267,15 +270,6 @@ public partial class Koi88Context : DbContext
             entity.Property(e => e.KoiName)
                 .HasMaxLength(100)
                 .HasColumnName("koi_name");
-            entity.Property(e => e.KoiPrice)
-                .HasColumnType("decimal(10, 2)")
-                .HasColumnName("koi_price");
-            entity.Property(e => e.Size)
-                .HasMaxLength(50)
-                .HasColumnName("size");
-            entity.Property(e => e.Type)
-                .HasMaxLength(50)
-                .HasColumnName("type");
             entity.Property(e => e.VarietyId).HasColumnName("variety_id");
 
             entity.HasOne(d => d.Variety).WithMany(p => p.KoiFishes)
@@ -493,9 +487,7 @@ public partial class Koi88Context : DbContext
             entity.ToTable("Variety");
 
             entity.Property(e => e.VarietyId).HasColumnName("variety_id");
-            entity.Property(e => e.Description)
-                .HasMaxLength(200)
-                .HasColumnName("description");
+            entity.Property(e => e.Description).HasColumnName("description");
             entity.Property(e => e.ImageUrl)
                 .HasMaxLength(100)
                 .HasColumnName("imageUrl");

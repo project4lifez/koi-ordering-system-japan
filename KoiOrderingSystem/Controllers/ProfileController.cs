@@ -71,6 +71,8 @@ namespace KoiOrderingSystem.Controllers
                 if (!string.IsNullOrWhiteSpace(lastname))
                 {
                     customer.Account.Lastname = lastname;
+                    HttpContext.Session.SetString("CustomerLastName", lastname); // Update session with new lastname
+
                 }
 
                 if (!string.IsNullOrWhiteSpace(gender))
@@ -88,6 +90,7 @@ namespace KoiOrderingSystem.Controllers
             }
 
             // Redirect back to the profile page
+
             return RedirectToAction("CustomerProfile", "Profile");
         }
 
@@ -137,6 +140,7 @@ namespace KoiOrderingSystem.Controllers
 
             // Redirect to the profile page with the updated avatar
             return RedirectToAction("CustomerProfile");
+
         }
 
 

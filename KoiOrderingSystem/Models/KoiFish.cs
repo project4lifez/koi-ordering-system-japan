@@ -7,12 +7,6 @@ public partial class KoiFish
 {
     public int KoiId { get; set; }
 
-    public string? Type { get; set; }
-
-    public decimal? KoiPrice { get; set; }
-
-    public string? Size { get; set; }
-
     public int? VarietyId { get; set; }
 
     public string? ImageUrl { get; set; }

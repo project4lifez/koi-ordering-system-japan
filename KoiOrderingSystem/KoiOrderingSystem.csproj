@@ -11,6 +11,7 @@
     <Folder Include="Areas\Admin\Models\" />
     <Folder Include="EF\" />
     <Folder Include="wwwroot\images\avatars\" />
+    <Folder Include="wwwroot\images\KoiFish\" />
   </ItemGroup>
 
   <ItemGroup>

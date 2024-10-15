@@ -77,8 +77,11 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
 
             _db.SaveChanges();
 
+            TempData["SuccessMessage"] = $"Booking status updated to '{booking.Status}' successfully.";
+
             return Redirect("Consulting?Bookingid=" + bookingId);
         }
+
 
         [HttpPost]
         public IActionResult UpdateDelivering(int bookingId, DateOnly deliveryDate, TimeOnly deliveryTime, string deliveryLocation, decimal koiPrice, decimal deposit)
