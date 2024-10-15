@@ -1,0 +1,107 @@
+﻿@model KoiOrderingSystem.Models.Booking
+@{
+    ViewData["Title"] = "Delivering";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<main class="container-fluid px-4">
+    <h1 class="mt-4">Dashboard (Delivering)</h1>
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    <!-- Display Error Messages -->
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger">
+            <ul>
+                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    <li>@error.ErrorMessage</li>
+                }
+            </ul>
+        </div>
+    }
+
+    <div class="row">
+        <!-- Customer Information Section -->
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    Customer Information
+                </div>
+                <div class="card-body">
+                    <p><strong>Name:</strong> @Model?.Fullname</p>
+                    <p><strong>Email:</strong> @Model?.Email</p>
+                    <p><strong>Phone Number:</strong> @Model?.Phone</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Order Detail Section -->
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    Order Details
+                </div>
+                <div class="card-body">
+                    <p><strong>Delivery Date:</strong> @Model?.Po?.KoiDeliveryDate?.ToString("dd/MM/yyyy")</p>
+                    <p><strong>Delivery Time:</strong> @Model?.Po?.KoiDeliveryTime</p>
+                    <p><strong>Koi Fish:</strong></p>
+                    <p><strong>Koi Package:</strong></p>
+                    <p><strong>Delivery Location:</strong> @Model?.Po?.DeliveryLocation</p>
+
+
+
+
+                    <!-- Status update form -->
+                    <form id="formUpdate" action="/Admin/Delivering/UpdateStatusDelivering" method="post">
+                        <input type="hidden" name="id" value="@Model?.BookingId" />
+                        <select class="form-select" name="status" id="status" style="width: 150px; margin-top: 8px"
+                        @(string.Equals(Model?.Status, "Delivered", StringComparison.OrdinalIgnoreCase) ? "disabled" : "")>
+                            <option value="Delivering" @(Model?.Status == "Delivering" ? "selected" : "")>Delivering</option>
+                            <option value="Delivered" @(Model?.Status == "Delivered" ? "selected" : "")>Delivered</option>
+                        </select>
+                        <button type="submit" class="btn btn-success ml-2 mt-2"
+                        @(Model?.Status != null &&
+                            (string.Equals(Model.Status, "Delivered", StringComparison.OrdinalIgnoreCase) ||
+                            string.Equals(Model.Status, "Checked in", StringComparison.OrdinalIgnoreCase) ||
+                            string.Equals(Model.Status, "Confirmed", StringComparison.OrdinalIgnoreCase) ||
+                            string.Equals(Model.Status, "Accepted", StringComparison.OrdinalIgnoreCase) ||
+                            string.Equals(Model.Status, "Rejected", StringComparison.OrdinalIgnoreCase) ||
+                            string.Equals(Model.Status, "Canceled", StringComparison.OrdinalIgnoreCase) ||
+                            string.Equals(Model.Status, "Processing", StringComparison.OrdinalIgnoreCase) ||
+                            string.Equals(Model.Status, "Requested", StringComparison.OrdinalIgnoreCase)) ? "disabled" : "")>
+                            Update
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Trip Information Section -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card mb-4">
+                <div class="card-header">
+                    Trip Details
+                </div>
+                <div class="card-body">
+                    <h5>@Model?.FavoriteKoi</h5>
+                    <div class="d-flex flex-column">
+                        <p style="text-align: right;"><strong>Koi Price:</strong> @Model.Po?.TotalAmount?.ToString() $</p>
+                        <p style="text-align: right;"><strong>Deposit:</strong> @Model?.Po?.Podetails?.FirstOrDefault()?.Deposit $</p>
+                    </div>
+                    <div class="d-flex flex-column">
+                        <p style="text-align: right;"><strong>Remaining Payment:</strong> @((Model.Po?.TotalAmount ?? 0) - (Model.Po?.Podetails?.FirstOrDefault()?.Deposit ?? 0)) $</p>
+                        <p class="text-danger" style="text-align: right;"><strong>Status:</strong> @Model?.Status</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

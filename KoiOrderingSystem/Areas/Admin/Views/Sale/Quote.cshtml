@@ -1,0 +1,314 @@
+﻿@model KoiOrderingSystem.Models.Booking
+@{
+    ViewData["Title"] = "Quote (Detail Trip)";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+
+    bool isTripExisting = Model?.Trip != null;
+}
+<html>
+<head>
+    <!-- Include TinyMCE CDN -->
+    <script src="https://cdn.tiny.cloud/1/as08codcfmfm7iyms5ub7ozusoy1f9vkq3xm4a5e7fmyuoyr/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+</head>
+<body>
+    <style>
+        /* Styles as before */
+    </style>
+
+    <main class="container-fluid px-4">
+        <h1 class="mt-4 text-center">Dashboard (Quote Detail Trip)</h1>
+
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card mb-4 shadow-lg">
+                    <div class="card-header bg-primary text-white text-center rounded-top">
+                        Customer Information
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Booking ID:</strong> @Model.BookingId</p>
+                        <p><strong>Customer ID:</strong> @Model.CustomerId</p>
+                        <p><strong>Customer Name:</strong> @Model.Fullname</p>
+                        <p><strong>Phone Number:</strong> @Model.Phone</p>
+                        <p><strong>Email:</strong> @Model.Email</p>
+                        <p><strong>Booking Date:</strong> @Model.BookingDate?.ToString("dd/MM/yyyy")</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form to Create or Update the Trip -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-secondary text-white">
+                        @if (!isTripExisting)
+                        {
+                            <span>Create Trip and Trip Details</span>
+                        }
+                        else
+                        {
+                            <span>Update Trip and Trip Details</span>
+                        }
+                    </div>
+
+                    <div class="card-body">
+                        <form id="formCreateOrUpdate" action="/Admin/Sale/@(isTripExisting ? "UpdateQuote" : "CreateQuote")" method="post">
+                            <input type="hidden" name="bookingId" value="@Model.BookingId" />
+
+                            <div class="form-group mb-3">
+                                <label for="tripName" class="form-label">Trip Name</label>
+                                <input type="text" class="form-control" id="tripName" name="tripName" value="@Model.Trip?.TripName" placeholder="Enter trip name" required />
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="quotedAmount" class="form-label">Quoted Amount</label>
+                                <input type="number" class="form-control" id="quotedAmount" name="quotedAmount" value="@Model.QuotedAmount" step="0.01" placeholder="Enter quoted amount" />
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="startDate" class="form-label">Start Date</label>
+                                    <input type="date" class="form-control" id="startDate" name="startDate" value="@Model.StartDate?.ToString("yyyy-MM-dd")" required />
+                                    <div id="startDateError" class="text-danger"></div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="endDate" class="form-label">End Date</label>
+                                    <input type="date" class="form-control" id="endDate" name="endDate" value="@Model.EndDate?.ToString("yyyy-MM-dd")" required />
+                                    <div id="endDateError" class="text-danger"></div>
+                                </div>
+                            </div>
+
+                            <div class="card mb-4 shadow-sm">
+                                <div class="card-header bg-info text-white">Trip Details</div>
+                                <div class="card-body">
+                                    <div id="tripDetailsContainer">
+                                        @if (isTripExisting && Model.Trip.TripDetails != null && Model.Trip.TripDetails.Count > 0)
+                                        {
+                                            foreach (var tripDetail in Model.Trip.TripDetails)
+                                            {
+                                                <div class="mb-3 trip-detail p-3 border rounded shadow-sm">
+                                                    <div class="form-group mb-3">
+                                                        <label for="days" class="form-label">Date</label>
+                                                        <input type="date" class="form-control tripDetailDate" name="days[]" value="@tripDetail.Day?.ToString("yyyy-MM-dd")" required />
+                                                        <div class="tripDetailError text-danger"></div>
+                                                    </div>
+
+                                                    <div class="form-group mb-3">
+                                                        <label for="mainTopics" class="form-label">Main Topic</label>
+                                                        <input type="text" class="form-control" name="mainTopics[]" value="@tripDetail.MainTopic" required placeholder="Enter main topic" />
+                                                    </div>
+
+                                                    <div class="form-group mb-3">
+                                                        <label for="subTopics" class="form-label">Sub Topic</label>
+                                                        <textarea class="form-control" name="subTopics[]" rows="5" required>@tripDetail.SubTopic</textarea>
+                                                    </div>
+
+                                                    <div class="form-group mb-3">
+                                                        <label for="notePrices" class="form-label">Note Price</label>
+                                                        <input type="text" class="form-control" name="notePrices[]" value="@tripDetail.NotePrice" placeholder="Enter note price" />
+                                                    </div>
+
+                                                    <button type="button" class="btn btn-danger removeDetailBtn">Remove</button>
+                                                </div>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <div class="mb-3 trip-detail p-3 border rounded shadow-sm">
+                                                <div class="form-group mb-3">
+                                                    <label for="days" class="form-label">Date</label>
+                                                    <input type="date" class="form-control tripDetailDate" name="days[]" required />
+                                                    <div class="tripDetailError text-danger"></div>
+                                                </div>
+
+                                                <div class="form-group mb-3">
+                                                    <label for="mainTopics" class="form-label">Main Topic</label>
+                                                    <input type="text" class="form-control" name="mainTopics[]" required placeholder="Enter main topic" />
+                                                </div>
+
+                                                <div class="form-group mb-3">
+                                                    <label for="subTopics" class="form-label">Sub Topic</label>
+                                                    <textarea class="form-control" name="subTopics[]" rows="5" required></textarea>
+                                                </div>
+
+                                                <div class="form-group mb-3">
+                                                    <label for="notePrices" class="form-label">Note Price</label>
+                                                    <input type="text" class="form-control" name="notePrices[]" placeholder="Enter note price" />
+                                                </div>
+
+                                                <button type="button" class="btn btn-danger removeDetailBtn">Remove</button>
+                                            </div>
+                                        }
+                                    </div>
+
+                                    <button type="button" id="addDetailBtn" class="btn btn-secondary mt-3">Add Trip Detail</button>
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2 d-md-block">
+                                @if (!isTripExisting)
+                                {
+                                    <button type="submit" class="btn btn-success" id="createTripBtn">Create Trip</button>
+                                }
+                                else if (@Model.Status == "Requested" || Model.Status == "Rejected" || Model.Status == "Processing")
+                                {
+                                    <button type="submit" class="btn btn-primary" id="updateTripBtn">Update Trip</button>
+                                }
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Function to initialize TinyMCE
+        function initializeTinyMCE(selector) {
+            tinymce.init({
+                selector: selector,
+                height: 300,
+                menubar: true,
+                plugins: 'lists link image charmap preview code table',
+                toolbar: 'undo redo | formatselect | bold italic underline | alignleft aligncenter alignright | bullist numlist outdent indent | link image | charmap | preview | code | table',
+                menubar: 'file edit view insert format table',
+                setup: function (editor) {
+                    editor.on('change', function () {
+                        editor.save();
+                    });
+                }
+            });
+        }
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initialize TinyMCE for existing subtopic textareas
+            initializeTinyMCE('textarea[name="subTopics[]"]');
+
+            var startDateInput = document.getElementById('startDate');
+            var endDateInput = document.getElementById('endDate');
+            var addDetailBtn = document.getElementById('addDetailBtn');
+            var tripDetailsContainer = document.getElementById('tripDetailsContainer');
+
+            // Add detail button click event
+            addDetailBtn.addEventListener('click', function () {
+                var tripDetailHtml = `
+                    <div class="mb-3 trip-detail p-3 border rounded shadow-sm">
+                        <div class="form-group mb-3">
+                            <label for="days" class="form-label">Date</label>
+                            <input type="date" class="form-control tripDetailDate" name="days[]" required />
+                            <div class="tripDetailError text-danger"></div>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="mainTopics" class="form-label">Main Topic</label>
+                            <input type="text" class="form-control" name="mainTopics[]" required placeholder="Enter main topic" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="subTopics" class="form-label">Sub Topic</label>
+                            <textarea class="form-control" name="subTopics[]" rows="5" required></textarea>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="notePrices" class="form-label">Note Price</label>
+                            <input type="text" class="form-control" name="notePrices[]" placeholder="Enter note price" />
+                        </div>
+                        <button type="button" class="btn btn-danger removeDetailBtn">Remove</button>
+                    </div>
+                `;
+                tripDetailsContainer.insertAdjacentHTML('beforeend', tripDetailHtml);
+                initializeTinyMCE('textarea[name="subTopics[]"]');
+
+                // Add event listeners for the new trip detail date input
+                const newTripDetailDateInput = tripDetailsContainer.querySelector('.tripDetailDate:last-of-type');
+                newTripDetailDateInput.addEventListener('input', validateTripDetails);
+                newTripDetailDateInput.addEventListener('change', validateTripDetails);
+            });
+
+            // Event delegation for removing trip details
+            tripDetailsContainer.addEventListener('click', function (e) {
+                if (e.target.classList.contains('removeDetailBtn')) {
+                    e.target.closest('.trip-detail').remove();
+                }
+            });
+
+            // Date validation logic (existing)
+            function validateDates() {
+                const startDate = new Date(startDateInput.value);
+                const endDate = new Date(endDateInput.value);
+                const today = new Date();
+                today.setHours(0, 0, 0, 0); // Set time to 00:00:00 to avoid time-related issues
+                const maxDaysRange = 14 * 24 * 60 * 60 * 1000; // 14 days in milliseconds
+                let isValid = true;
+
+                // Validate Start Date
+                if (startDate < today) {
+                    document.getElementById('startDateError').textContent = 'Start date must be today or later.';
+                    isValid = false;
+                } else {
+                    document.getElementById('startDateError').textContent = '';
+                }
+
+                // Validate End Date (should be after start date)
+                if (endDate <= startDate) {
+                    document.getElementById('endDateError').textContent = 'End date must be after the start date.';
+                    isValid = false;
+                } else {
+                    document.getElementById('endDateError').textContent = '';
+                }
+
+                // Validate if the date range exceeds 14 days
+                if (endDate - startDate > maxDaysRange) {
+                    document.getElementById('endDateError').textContent = 'The trip duration cannot exceed 14 days.';
+                    isValid = false;
+                }
+
+                return isValid;
+            }
+
+            // Trip Detail Date Validation Logic
+            function validateTripDetails() {
+                const startDate = new Date(startDateInput.value);
+                const endDate = new Date(endDateInput.value);
+                let isValid = true;
+
+                document.querySelectorAll('.tripDetailDate').forEach(function (tripDetailDateInput) {
+                    const tripDetailDate = new Date(tripDetailDateInput.value);
+
+                    // Clear previous error message
+                    tripDetailDateInput.nextElementSibling.textContent = '';
+                    tripDetailDateInput.classList.remove('is-invalid');
+
+                    if (isNaN(tripDetailDate.getTime())) { // Invalid date
+                        tripDetailDateInput.nextElementSibling.textContent = 'Please select a valid date.';
+                        tripDetailDateInput.classList.add('is-invalid');
+                        isValid = false;
+                    } else if (tripDetailDate < startDate || tripDetailDate > endDate) {
+                        tripDetailDateInput.nextElementSibling.textContent = 'Trip detail date must be within the start and end dates.';
+                        tripDetailDateInput.classList.add('is-invalid');
+                        isValid = false;
+                    }
+                });
+
+                return isValid;
+            }
+
+            // Listen for date changes to validate on input
+            startDateInput.addEventListener('input', validateDates);
+            endDateInput.addEventListener('input', validateDates);
+
+            // Validate dates and trip details on form submission
+            document.getElementById('formCreateOrUpdate').addEventListener('submit', function (e) {
+                const isValidDates = validateDates();
+                const isValidTripDetails = validateTripDetails();
+
+                if (!isValidDates || !isValidTripDetails) {
+                    e.preventDefault(); // Prevent form submission if validation fails
+                }
+            });
+        });
+
+
+
+
+
+    </script>
+
+</body>
+</html>

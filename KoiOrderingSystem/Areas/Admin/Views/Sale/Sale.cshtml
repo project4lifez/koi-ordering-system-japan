@@ -1,0 +1,109 @@
+﻿@model KoiOrderingSystem.Models.Booking
+@{
+    ViewData["Title"] = "Sales Staff";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<main class="container-fluid px-4">
+    <h1 class="mt-4">Sales Staff Dashboard</h1>
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success" role="alert">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    <div class="row">
+        <!-- Customer Information Section -->
+        <div class="col-md-6">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    Customer Information
+                </div>
+                <div class="card-body">
+                    <p><strong>Name:</strong> @(string.IsNullOrWhiteSpace(Model.Fullname) ? "N/A" : Model.Fullname)</p>
+                    <p><strong>Email:</strong> @(string.IsNullOrWhiteSpace(Model.Email) ? "N/A" : Model.Email)</p>
+                    <p><strong>Phone Number:</strong> @(string.IsNullOrWhiteSpace(Model.Phone) ? "N/A" : Model.Phone)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Booking Detail Section -->
+        <div class="col-md-6">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-info text-white">
+                    Booking Details
+                </div>
+                <div class="card-body">
+                    <p><strong>Status:</strong> @(string.IsNullOrWhiteSpace(Model.Status) ? "N/A" : Model.Status)</p>
+                    <p><strong>Booking Date:</strong> @(Model.BookingDate?.ToString("dd/MM/yyyy") ?? "N/A")</p>
+                    <p><strong>Quote Sent Date:</strong> @(Model.QuoteSentDate?.ToString("dd/MM/yyyy") ?? "N/A")</p>
+                    <p><strong>Quote Approved Date:</strong> @(Model.QuoteApprovedDate?.ToString("dd/MM/yyyy") ?? "N/A")</p>
+
+                    <!-- Status update form for setting status to 'processing' -->
+                    <form id="formUpdate" action="/Admin/Sale/UpdateStatusSalesStaff" method="post">
+                        <input type="hidden" name="id" value="@Model.BookingId" />
+
+                        <!-- Update Button -->
+                        <button type="submit" class="btn btn-success mt-2"
+                        @(Model.Status != null &&
+                            (string.Equals(Model.Status, "Processing", StringComparison.OrdinalIgnoreCase) ||
+                            string.Equals(Model.Status, "Accepted", StringComparison.OrdinalIgnoreCase) ||
+                            string.Equals(Model.Status, "Canceled", StringComparison.OrdinalIgnoreCase) ||
+                            string.Equals(Model.Status, "Checked in", StringComparison.OrdinalIgnoreCase) ||
+                            string.Equals(Model.Status, "Checked out", StringComparison.OrdinalIgnoreCase) ||
+                            string.Equals(Model.Status, "Delivering", StringComparison.OrdinalIgnoreCase) ||
+                            string.Equals(Model.Status, "Delivered", StringComparison.OrdinalIgnoreCase) ||
+                            string.Equals(Model.Status, "Confirmed", StringComparison.OrdinalIgnoreCase)) ? "disabled" : "")>
+                            Set to Processing
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Trip Information Section -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-secondary text-white">
+                    Trip Details
+                </div>
+                <div class="card-body">
+                    <h5>@(Model.Trip?.TripName ?? "No Trip Name Available")</h5>
+                    <div class="d-flex justify-content-between">
+                        <p><strong>Quoted Amount:</strong> @(Model.QuotedAmount.HasValue ? Model.QuotedAmount.Value + "$" : "N/A")</p>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <p class="text-danger"><strong>Status:</strong> @(string.IsNullOrWhiteSpace(Model.Status) ? "N/A" : Model.Status)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<style>
+    .card {
+        border-radius: 10px;
+        transition: box-shadow 0.2s ease-in-out;
+    }
+
+        .card:hover {
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+    .card-header {
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
+
+    .card-body p {
+        font-size: 1rem;
+    }
+
+    .btn {
+        width: 200px;
+    }
+</style>
