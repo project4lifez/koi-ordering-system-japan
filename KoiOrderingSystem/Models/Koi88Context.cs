@@ -263,6 +263,9 @@ public partial class Koi88Context : DbContext
             entity.Property(e => e.ImageUrl)
                 .HasMaxLength(100)
                 .HasColumnName("imageUrl");
+            entity.Property(e => e.KoiName)
+                .HasMaxLength(100)
+                .HasColumnName("koi_name");
             entity.Property(e => e.KoiPrice)
                 .HasColumnType("decimal(10, 2)")
                 .HasColumnName("koi_price");
@@ -474,9 +477,7 @@ public partial class Koi88Context : DbContext
             entity.Property(e => e.NotePrice)
                 .HasMaxLength(300)
                 .HasColumnName("note_price");
-            entity.Property(e => e.SubTopic)
-                .HasMaxLength(1000)
-                .HasColumnName("sub_topic");
+            entity.Property(e => e.SubTopic).HasColumnName("sub_topic");
             entity.Property(e => e.TripId).HasColumnName("trip_id");
 
             entity.HasOne(d => d.Trip).WithMany(p => p.TripDetails)

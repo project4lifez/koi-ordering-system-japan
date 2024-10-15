@@ -267,7 +267,7 @@ namespace KoiOrderingSystem.Controllers
                     }
 
                     // Update the booking status
-                    booking.Status = "Payment Completed";
+                    booking.Status = "Confirmed";
 
                     // Save all changes to the Booking entity
                     await _db.SaveChangesAsync();
@@ -482,10 +482,10 @@ namespace KoiOrderingSystem.Controllers
             }
 
             // Kiểm tra trạng thái booking
-            //if (booking.Status != "Payment Completed")
-            //{
-            //    return NotFound("You do not have access to this page because the booking is not Payment Completed.");
-            //}
+            if (booking.Status != "Confirmed")
+            {
+                return NotFound("You do not have access to this page because the booking is not Payment Completed.");
+            }
 
             // Trả về view với thông tin của Trip
             return View(booking);

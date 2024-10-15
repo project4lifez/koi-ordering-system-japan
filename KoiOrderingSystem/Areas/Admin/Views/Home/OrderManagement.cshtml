@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "Order Management";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
-    var roleId = Context.Session.GetInt32("RoleId"); // Get RoleId from Session
+    var adminRoleId = Context.Session.GetInt32("AdminRoleId");
 }
 
 <head>
@@ -94,20 +94,20 @@
             <div class="col-md-4">
                 <select id="statusFilter" class="form-select">
                     <option value="">Filter by Status</option>
-                    @if (roleId == 2 || roleId == 3)
+                    @if (adminRoleId == 2 || adminRoleId == 3)
                     {
                         <option value="Requested">Requested</option>
                         <option value="Processing">Processing</option>
                         <option value="Rejected">Rejected</option>
                         <option value="Accepted">Accepted</option>
                     }
-                    else if (roleId == 4)
+                    else if (adminRoleId == 4)
                     {
-                        <option value="Payment Completed">Payment Completed</option>
+                        <option value="Confirmed">Confirmed</option>
                         <option value="Checked in">Checked in</option>
                         <option value="Checked out">Checked out</option>
                     }
-                    else if (roleId == 5)
+                    else if (adminRoleId == 5)
                     {
                         <option value="Checked out">Checked out</option>
                         <option value="Delivering">Delivering</option>
@@ -128,14 +128,14 @@
                         <th>Trip Name</th>
                         <th>Price</th>
                         <th>Status</th>
-                        @if (roleId == 3 || roleId == 2)
+                        @if (adminRoleId == 3 || adminRoleId == 2)
                         {
                             <th>Booking Form</th>
                         }
-                        @if (roleId >= 2 && roleId <= 5)
+                        @if (adminRoleId >= 2 && adminRoleId <= 5)
                         {
                             <th>Edit</th> <!-- Edit column for all roles -->
-                            @if (roleId == 2 || roleId == 3)
+                            @if (adminRoleId == 2 || adminRoleId == 3)
                             {
                                 <th>Quote</th> <!-- Detail column only for role 2 and 3 -->
                             }
@@ -153,25 +153,25 @@
                             bool renderRow = false;
 
                             // Role 2: "Requested", "Processing", "Rejected", "Accepted"
-                            if (roleId == 2 && (booking.Status == "Requested" || booking.Status == "Processing" || booking.Status == "Rejected" || booking.Status == "Accepted"))
+                            if (adminRoleId == 2 && (booking.Status == "Requested" || booking.Status == "Processing" || booking.Status == "Rejected" || booking.Status == "Accepted"))
                             {
                                 renderRow = true;
                             }
 
                             // Role 3: "Requested", "Processing", "Rejected", "Accepted"
-                            if (roleId == 3 && (booking.Status == "Requested" || booking.Status == "Processing" || booking.Status == "Rejected" || booking.Status == "Accepted"))
+                            if (adminRoleId == 3 && (booking.Status == "Requested" || booking.Status == "Processing" || booking.Status == "Rejected" || booking.Status == "Accepted"))
                             {
                                 renderRow = true;
                             }
 
-                            // Role 4: "Payment Completed", "Checked in", "Checked out"
-                            if (roleId == 4 && (booking.Status == "Payment Completed" || booking.Status == "Checked in" || booking.Status == "Checked out"))
+                            // Role 4: "Confirmed", "Checked in", "Checked out"
+                            if (adminRoleId == 4 && (booking.Status == "Confirmed" || booking.Status == "Checked in" || booking.Status == "Checked out"))
                             {
                                 renderRow = true;
                             }
 
                             // Role 5: "Checked out", "Delivering", "Delivered"
-                            if (roleId == 5 && (booking.Status == "Checked out" || booking.Status == "Delivering" || booking.Status == "Delivered"))
+                            if (adminRoleId == 5 && (booking.Status == "Checked out" || booking.Status == "Delivering" || booking.Status == "Delivered"))
                             {
                                 renderRow = true;
                             }
@@ -198,19 +198,19 @@
                                                 "rejected" => "badge-cancel",
                                                 "accepted" => "badge-confirm",
                                                 "delivered" => "badge-confirm",
-                                                "payment completed" => "badge-confirm",
+                                                "confirmed" => "badge-confirm",
                                                 _ => "badge-other"
                                             };
                                         }
                                         <span class="badge @statusClass">@booking.Status</span>
                                     </td>
 
-                                    @if (roleId == 3 || roleId == 2)
+                                    @if (adminRoleId == 3 || adminRoleId == 2)
                                     {
                                         <td>
                                             <a href="javascript:void(0);" class="btn btn-primary btn-sm"
                                                onclick="openFormModal('@booking.Fullname', '@booking.Phone', '@booking.Email',
-                                             '@booking.Gender', '@booking.Favoritefarm',
+                                             '@booking.Gender', '@booking.Favoritefarm', '@booking.FavoriteKoi',
                                              '@booking.StartDate', '@booking.EndDate',
                                              '@booking.EstimatedCost', '@booking.HotelAccommodation',
                                              '@booking.Note')">View Form</a>
@@ -219,25 +219,25 @@
 
                                     <!-- Edit logic for all roles (2, 3, 4, 5) -->
                                     <td>
-                                        @if (roleId == 2)
+                                        @if (adminRoleId == 2)
                                         {
                                             <a href="/Admin/Manager/Manager?id=@booking.BookingId" class="btn btn-warning btn-sm">Edit</a>
                                         }
-                                        @if (roleId == 3)
+                                        @if (adminRoleId == 3)
                                         {
                                             <a href="/Admin/Sale/Sale?id=@booking.BookingId" class="btn btn-warning btn-sm">Edit</a>
                                         }
-                                        @if (roleId == 4)
+                                        @if (adminRoleId == 4)
                                         {
                                             <a href="/Admin/Consulting/Consulting?Bookingid=@booking.BookingId" class="btn btn-warning btn-sm">Edit</a>
                                         }
-                                        @if (roleId == 5)
+                                        @if (adminRoleId == 5)
                                         {
                                             <a href="/Admin/Delivering/Delivering?id=@booking.BookingId" class="btn btn-warning btn-sm">Edit</a>
                                         }
                                     </td>
 
-                                    @if (roleId == 2 || roleId == 3)
+                                    @if (adminRoleId == 2 || adminRoleId == 3)
                                     {
                                         <!-- Quote logic for only role 2 and 3 -->
                                         <td>
@@ -300,6 +300,12 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
+                                    <label for="formBreed" class="form-label">Koi breed which want to buy</label>
+                                    <input type="text" class="form-control" id="formBreed" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
                                     <label for="formStartDate" class="form-label">Estimated departure date</label>
                                     <input type="text" class="form-control" id="formStartDate" readonly>
                                 </div>
@@ -338,12 +344,13 @@
     </main>
 
     <script>
-        function openFormModal(fullName, phone, email, gender, farm, startDate, endDate, cost, hotel, note) {
+        function openFormModal(fullName, phone, email, gender, farm, breed, startDate, endDate, cost, hotel, note) {
             document.getElementById('formFullName').value = fullName || 'N/A';
             document.getElementById('formPhone').value = phone || 'N/A';
             document.getElementById('formEmail').value = email || 'N/A';
             document.getElementById('formGender').value = gender || 'N/A';
             document.getElementById('formFarm').value = farm || 'N/A';
+            document.getElementById('formBreed').value = breed || 'N/A';
             document.getElementById('formStartDate').value = startDate || 'N/A';
             document.getElementById('formEndDate').value = endDate || 'N/A';
             document.getElementById('formCost').value = cost || 'N/A';

@@ -71,7 +71,7 @@
                             </select>
                             <button class="btn btn-success ml-2 mt-2" type="submit"
                             @(Model.Status != null &&
-                                (string.Equals(Model.Status, "Payment Completed", StringComparison.OrdinalIgnoreCase) ||
+                                (string.Equals(Model.Status, "Confirmed", StringComparison.OrdinalIgnoreCase) ||
                                 string.Equals(Model.Status, "Canceled", StringComparison.OrdinalIgnoreCase) ||
                                 string.Equals(Model.Status, "Checked in", StringComparison.OrdinalIgnoreCase) ||
                                 string.Equals(Model.Status, "Checked out", StringComparison.OrdinalIgnoreCase) ||

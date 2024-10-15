@@ -19,10 +19,10 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
         public IActionResult Delivering(int id)
         {
             // Retrieve the RoleId from the session
-            var roleId = HttpContext.Session.GetInt32("RoleId");
+            var adminRoleId = HttpContext.Session.GetInt32("AdminRoleId");
 
             // Check if the RoleId is null or not equal to 5
-            if (roleId == null || roleId != 5)
+            if (adminRoleId == null || adminRoleId != 5)
             {
                 return NotFound("You do not have permission to access this page.");
             }

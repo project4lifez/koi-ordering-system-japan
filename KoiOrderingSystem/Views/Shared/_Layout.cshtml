@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@{
+
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -290,12 +293,12 @@
             <li><a href="#about">About</a></li>
             <li><a href="#blog">Blog</a></li>
 
-            @if (Context.Session.GetString("Username") != null && Context.Session.GetInt32("RoleId") == 1)
-            {
+            @if (Context.Session.GetString("CustomerSession") != null && Context.Session.GetInt32("CustomerRoleId") == 1)
 
-                var lastname = Context.Session.GetString("Lastname");
-                var username = Context.Session.GetString("Username");
-                var customerid = Context.Session.GetInt32("CustomerId");
+            {
+                var lastname = Context.Session.GetString("CustomerLastName");
+                var username = Context.Session.GetString("CustomerSession");
+                var customerId = Context.Session.GetInt32("CustomerId");
 
                 <li class="dropdown">
                     <a class="nav-link dropdown-toggle user-profile" href="#" id="userDropdown" role="button">

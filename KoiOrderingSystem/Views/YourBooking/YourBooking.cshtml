@@ -307,9 +307,9 @@
                                     {
                                     <span class="custom-payment-available">Ready To Pay</span>
                                     }
-                                    else if (booking.Status == "Payment Completed")
+                                    else if (booking.Status == "Confirmed")
                                     {
-                                    <span class="custom-completed">Payment Completed</span>
+                                    <span class="custom-completed">Confirmed</span>
                                     }
                                     else if (booking.Status == "Checked in" || booking.Status == "Checked out")
                                     {
@@ -331,19 +331,23 @@
                             <td class="custom-td">
                                     @if (booking.QuotedAmount.HasValue && booking.QuotedAmount > 0)
                                     {
-                                        var formattedAmount = booking.QuotedAmount.Value % 1 == 0
-                                        ? string.Format("{0:0}", booking.QuotedAmount.Value)
-                                        : string.Format("{0:0.00}", booking.QuotedAmount.Value);
+                                        // Tính toán giá trị đã cộng thêm 5%
+                                        var adjustedAmount = booking.QuotedAmount.Value * (decimal)1.05; // Chuyển đổi 1.05 thành kiểu decimal
+
+                                        var formattedAmount = adjustedAmount % 1 == 0
+                                        ? string.Format("{0:0}", adjustedAmount)
+                                        : string.Format("{0:0.00}", adjustedAmount);
+
                                         @($"{formattedAmount} USD")
                                     }
                                     else
                                     {
-                                        <text></text> <!-- Display empty if there is no QuotedAmount -->
+                                        <text></text> <!-- Hiển thị trống nếu không có QuotedAmount -->
                                     }
                             </td>
                             <td class="custom-td action-buttons">
                                 <!-- Display Pay button only when status is "Accepted" -->
-                                    @if (booking.Status == "Accepted" || booking.Status == "Payment Completed" || booking.Status == "Checked in" || booking.Status == "Checked out" || booking.Status == "Delivering" || booking.Status == "Delivered")
+                                    @if (booking.Status == "Accepted" || booking.Status == "Confirmed" || booking.Status == "Checked in" || booking.Status == "Checked out" || booking.Status == "Delivering" || booking.Status == "Delivered")
                                     {
                                     <button class="custom-pay-btn custom-btn" title="Pay Now" onclick="window.location.href='/YourBooking/Payment?bookingId=@booking.BookingId';">
                                         <i class="fa-regular fa-credit-card fa-fw"></i>
@@ -351,7 +355,7 @@
                                     }
 
                                 <!-- Display More Info button only for specific statuses -->
-                                    @if (booking.Status == "Payment Completed" || booking.Status == "Checked in" || booking.Status == "Checked out" || booking.Status == "Delivering" || booking.Status == "Delivered")
+                                    @if (booking.Status == "Confirmed" || booking.Status == "Checked in" || booking.Status == "Checked out" || booking.Status == "Delivering" || booking.Status == "Delivered")
                                     {
                                     <button class="custom-more-btn custom-btn" title="More Info" onclick="window.location.href='@Url.Action("TripDetail", "YourBooking", new { bookingId = booking.BookingId })'">
                                         <i class="fa-solid fa-info-circle fa-fw"></i>
@@ -359,7 +363,7 @@
                                     }
 
                                 <!-- Display Delete button only when status is not restricted -->
-                                    @if (booking.Status != "Canceled" && booking.Status != "Payment Completed" && booking.Status != "Checked in" && booking.Status != "Checked out" && booking.Status != "Delivering" && booking.Status != "Delivered")
+                                    @if (booking.Status != "Canceled" && booking.Status != "Confirmed" && booking.Status != "Checked in" && booking.Status != "Checked out" && booking.Status != "Delivering" && booking.Status != "Delivered")
                                     {
                                     <form method="post" action="/YourBooking/CancelBooking?bookingId=@booking.BookingId" style="display:inline;">
                                         <button type="submit" class="custom-cancel-btn custom-btn" title="Cancel Order" onclick="return confirm('Are you sure you want to cancel this booking?');">

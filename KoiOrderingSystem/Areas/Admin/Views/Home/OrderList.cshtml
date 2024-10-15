@@ -3,10 +3,10 @@
 @{
     ViewData["Title"] = "Order Management";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
-    var roleId = Context.Session.GetInt32("RoleId"); // Get RoleId from Session
+    var adminRoleId = Context.Session.GetInt32("AdminRoleId");
 }
 
-@if (roleId == 2)
+@if (adminRoleId == 2)
 {
     <head>
         <meta charset="UTF-8">
@@ -98,7 +98,7 @@
                         <option value="Processing">Processing</option>
                         <option value="Rejected">Rejected</option>
                         <option value="Canceled">Canceled</option>
-                        <option value="Payment Completed">Payment Completed</option>
+                        <option value="Confirmed">Confirmed</option>
                         <option value="Checked in">Checked in</option>
                         <option value="Checked out">Checked out</option>
                         <option value="Delivering">Delivering</option>
@@ -149,7 +149,7 @@
                                                 "rejected" => "badge-cancel",
                                                 "accepted" => "badge-confirm",
                                                 "delivered" => "badge-confirm",
-                                                "payment completed" => "badge-confirm",
+                                                "confirmed" => "badge-confirm",
                                                 _ => "badge-other"
                                             };
                                         }

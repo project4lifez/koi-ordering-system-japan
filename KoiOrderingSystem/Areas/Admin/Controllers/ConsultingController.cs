@@ -21,7 +21,7 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
         public IActionResult Consulting(int bookingId)
         {
             // Retrieve the RoleId from the session
-            var roleId = HttpContext.Session.GetInt32("RoleId");
+            var roleId = HttpContext.Session.GetInt32("AdminRoleId");
 
             // Check if the RoleId is null or not equal to 4
             if (roleId == null || roleId != 4)

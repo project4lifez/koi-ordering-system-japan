@@ -35,7 +35,12 @@ namespace KoiOrderingSystem
                 options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
             })
-            .AddCookie()
+            .AddCookie(options =>
+            {
+                // Custom cookie configuration (optional)
+                options.Cookie.HttpOnly = true;
+                options.LoginPath = "/Login"; // Redirect here if unauthorized
+            })
             .AddGoogle(googleOptions =>
             {
                 googleOptions.ClientId = "#"; // Replace with your ClientId
@@ -116,12 +121,12 @@ namespace KoiOrderingSystem
             app.MapControllerRoute(
                 name: "order_management_area",
                 pattern: "{area:exists}/{controller=Home}/{action=OrderManagement}/{id?}");
+
             app.MapControllerRoute(
-                name: "order_management_area",
+                name: "order_management_list",
                 pattern: "{area:exists}/{controller=Home}/{action=OrderList}/{id?}");
 
             app.Run();
-
         }
     }
 }

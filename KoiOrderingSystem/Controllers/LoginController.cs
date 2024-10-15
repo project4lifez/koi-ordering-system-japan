@@ -39,23 +39,41 @@ namespace KoiOrderingSystem.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Kiểm tra người dùng trong cơ sở dữ liệu
+                // Check user in the database
                 var user = _db.Accounts
                               .FirstOrDefault(u => u.Username == model.Username && u.Password == model.Password);
 
                 if (user != null)
                 {
-                    // Kiểm tra nếu tài khoản bị vô hiệu hóa
+                    // Check if the account is disabled
                     if (user.Status == false)
                     {
                         ViewBag.Error = "Your account has been disabled. Please contact support.";
                         return View(model);
                     }
 
-                    // Phân biệt khách hàng và các role khác (Admin, Staff)
-                    if (user.RoleId == 1) // Khách hàng
+                    // Store information in session
+                    HttpContext.Session.SetString("Username", user.Username);
+                    HttpContext.Session.SetString("Lastname", user.Lastname);
+                    HttpContext.Session.SetInt32("Status", user.Status == true ? 1 : 0);
+                    HttpContext.Session.SetInt32("RoleId", user.RoleId ?? 0);
+
+                    // Check for specific roles and store admin session if applicable
+                    if (user.RoleId >= 2 && user.RoleId <= 5) // Admin/Staff
                     {
-                        // Lấy CustomerId từ bảng Customers dựa trên AccountId
+                        HttpContext.Session.SetString("AdminSession", user.Username);
+                        
+                        HttpContext.Session.SetInt32("AdminRoleId", user.RoleId ?? 0);
+                        
+                        HttpContext.Session.SetString("AdminLastname", user.Lastname);
+
+
+
+                        // Store AdminRoleId
+                    }
+                    else if (user.RoleId == 1) // Customer
+                    {
+                        // Retrieve CustomerId from the Customers table
                         var customer = _db.Customers.FirstOrDefault(c => c.AccountId == user.AccountId);
                         if (customer == null)
                         {
@@ -63,142 +81,171 @@ namespace KoiOrderingSystem.Controllers
                             return View(model);
                         }
 
-                        // Lưu CustomerId vào session
+                        // Store CustomerId and Username in session for customers
                         HttpContext.Session.SetInt32("CustomerId", customer.CustomerId);
-                    }
-                    else if (user.RoleId >= 2 && user.RoleId <= 5) // Các role Admin hoặc Staff
-                    {
-                        // Không cần kiểm tra CustomerId cho các role Admin và Staff
-                        HttpContext.Session.SetString("StaffRole", "true");  // Lưu vai trò nhân viên
+                        HttpContext.Session.SetString("CustomerLastName", user.Lastname);
+                        HttpContext.Session.SetString("CustomerSession", user.Username);
+                        HttpContext.Session.SetInt32("CustomerRoleId",user.RoleId ?? 0);
                     }
 
-                    // Lưu thông tin vào Session
-                    HttpContext.Session.SetString("Username", user.Username);
-                    HttpContext.Session.SetString("Lastname", user.Lastname);
-                    HttpContext.Session.SetInt32("Status", user.Status == true ? 1 : 0);
-                    HttpContext.Session.SetInt32("RoleId", user.RoleId ?? 0);
-
-                    // Chuyển hướng dựa trên RoleId
-                    if (user.RoleId == 1) // Khách hàng
+                    // Redirect based on RoleId
+                    if (user.RoleId == 1) // Customer
                     {
-                        return RedirectToAction("", "Home"); // Chuyển hướng đến trang HomePage của khách hàng
+                        return RedirectToAction("", "Home"); // Customer Home page
                     }
-                    else if (user.RoleId >= 2 && user.RoleId <= 5) // Admin roles hoặc Staff
+                    else if (user.RoleId >= 2 && user.RoleId <= 5) // Admin/Staff
                     {
-                        return RedirectToAction("Home", "Admin"); // Chuyển hướng đến Admin Dashboard
+                        return RedirectToAction("Home", "Admin"); // Admin Dashboard page
                     }
                 }
                 else
                 {
-                    // Thông báo lỗi nếu đăng nhập không thành công
                     ViewBag.Error = "Invalid username or password.";
                     return View(model);
                 }
             }
 
-            // Nếu ModelState không hợp lệ
             return View(model);
         }
 
+        // Initiate Google Login
         public async Task GoogleLogin()
         {
             await HttpContext.ChallengeAsync(GoogleDefaults.AuthenticationScheme,
                 new AuthenticationProperties
                 {
-                    RedirectUri = Url.Action("GoogleRespone")
+                    RedirectUri = Url.Action("GoogleResponse")
                 });
         }
 
-
-        public async Task<IActionResult> GoogleRespone()
+        // Handle Google response
+        public async Task<IActionResult> GoogleResponse()
         {
             var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
             if (result.Principal != null)
             {
-                // Extract the email, first name, and last name from the Google response
                 var email = result.Principal.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
                 var firstName = result.Principal.FindFirst(c => c.Type == ClaimTypes.GivenName)?.Value;
                 var lastName = result.Principal.FindFirst(c => c.Type == ClaimTypes.Surname)?.Value;
 
-                // Check if the email is null or empty before proceeding
                 if (string.IsNullOrEmpty(email))
                 {
                     ViewBag.Error = "Email not found in Google response.";
                     return View("Login");
                 }
 
-                // Check if the user exists in the database
+                // Tìm tài khoản dựa trên email
                 var existingUser = _db.Accounts.FirstOrDefault(u => u.Email == email);
 
                 if (existingUser == null)
                 {
-                    // Create a new user if not found
+                    // Tạo tài khoản mới nếu không tìm thấy
                     var newUser = new Account
                     {
-                        Username = email, // Use email as Username
+                        Username = email,
                         Email = email,
-                        Firstname = firstName ?? string.Empty, // Assign empty string if null
-                        Lastname = lastName ?? string.Empty,   // Assign empty string if null
-                        Status = true, // Assuming active account
-                        RoleId = 1     // Assuming RoleId = 1 is for customers
+                        Firstname = firstName ?? string.Empty,
+                        Lastname = lastName ?? string.Empty,
+                        Status = true, // Mặc định tài khoản mới được kích hoạt
+                        RoleId = 1 // Chỉ cho phép RoleId là 1 (Customer) đăng nhập qua Google
                     };
 
                     _db.Accounts.Add(newUser);
                     _db.SaveChanges();
-
                     existingUser = newUser;
 
-                    // Create a new customer entry for RoleId = 1 (Customer)
-                    if (newUser.RoleId == 1)
+                    // Tạo đối tượng Customer mới nếu chưa có
+                    var newCustomer = new Customer
                     {
-                        var newCustomer = new Customer
-                        {
-                            AccountId = newUser.AccountId,
-                            // Add other customer-specific information here
-                        };
+                        AccountId = newUser.AccountId
+                    };
 
-                        _db.Customers.Add(newCustomer);
-                        _db.SaveChanges();
+                    _db.Customers.Add(newCustomer);
+                    _db.SaveChanges();
 
-                        // Store CustomerId in session
-                        HttpContext.Session.SetInt32("CustomerId", newCustomer.CustomerId);
-                    }
+                    // Lưu CustomerId vào session
+                    HttpContext.Session.SetInt32("CustomerId", newCustomer.CustomerId);
+                    HttpContext.Session.SetString("CustomerSession", newUser.Username);
+                    HttpContext.Session.SetString("CustomerLastName", newUser.Lastname);
+                    HttpContext.Session.SetInt32("CustomerRoleId", newUser.RoleId ?? 0); // Lưu RoleId cho khách hàng
                 }
                 else
                 {
-                    // If user already exists, get associated CustomerId (if RoleId == 1)
+                    // Đảm bảo chỉ khách hàng (RoleId = 1) được phép đăng nhập qua Google
+                    if (existingUser.RoleId != 1)
+                    {
+                        ViewBag.Error = "Only customers can log in with Google.";
+                        return View("Login");
+                    }
+
+                    // Lấy CustomerId từ bảng Customers nếu người dùng là Customer
                     var customer = _db.Customers.FirstOrDefault(c => c.AccountId == existingUser.AccountId);
                     if (customer != null)
                     {
                         HttpContext.Session.SetInt32("CustomerId", customer.CustomerId);
+                        HttpContext.Session.SetString("CustomerSession", existingUser.Username);
+                        HttpContext.Session.SetString("CustomerLastName", existingUser.Lastname); // Lưu LastName vào session
+                        HttpContext.Session.SetInt32("CustomerRoleId", existingUser.RoleId ?? 0); // Lưu RoleId vào session
                     }
                 }
 
-                // Save user info into session safely, with null checks
+                // Lưu thông tin người dùng vào session
                 HttpContext.Session.SetString("Username", existingUser.Username ?? string.Empty);
                 HttpContext.Session.SetString("Lastname", existingUser.Lastname ?? string.Empty);
                 HttpContext.Session.SetInt32("Status", existingUser.Status == true ? 1 : 0);
                 HttpContext.Session.SetInt32("RoleId", existingUser.RoleId ?? 0);
+
+                // Chỉ khách hàng (RoleId = 1) mới được phép login qua Google
+                if (existingUser.RoleId == 1)
+                {
+                    return RedirectToAction("", "Home"); // Chuyển đến trang chủ cho khách hàng
+                }
             }
             else
             {
-                // Handle the case where authentication fails
                 ViewBag.Error = "Authentication failed.";
                 return View("Login");
             }
 
-            // Redirect to home or appropriate page
-            return RedirectToAction("Login", "Login");
+            return RedirectToAction("", "Login");
         }
+
 
         public IActionResult Logout()
         {
-            HttpContext.Session.Clear();
-            return RedirectToAction("", "Home");
+            // Kiểm tra RoleId trong session để xác định loại người dùng
+            var roleId = HttpContext.Session.GetInt32("RoleId");
+
+            if (roleId == 1) // Customer
+            {
+                // Xóa session cho Customer
+                HttpContext.Session.Remove("CustomerSession");
+                HttpContext.Session.Remove("CustomerId");
+                HttpContext.Session.Remove("CustomerRoleId");
+                HttpContext.Session.Remove("Status");
+                HttpContext.Session.Remove("Username");
+                HttpContext.Session.Remove("Lastname");
+
+
+
+            }
+            else if (roleId >= 2 && roleId <= 5) // Admin hoặc Staff
+            {
+                // Xóa session cho Admin
+                HttpContext.Session.Remove("AdminSession");
+                HttpContext.Session.Remove("AdminRoleId");
+                HttpContext.Session.Remove("Status");
+                HttpContext.Session.Remove("Username");
+                HttpContext.Session.Remove("Lastname");
+                HttpContext.Session.Remove("AdminLastname");
+
+
+            }
+
+
+            // Redirect đến trang đăng nhập
+            return RedirectToAction("", "Login");
         }
-
-
-       
     }
 }

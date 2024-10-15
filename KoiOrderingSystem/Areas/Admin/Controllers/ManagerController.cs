@@ -20,10 +20,10 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
         public IActionResult Manager(int id)
         {
             // Retrieve the RoleId from the session
-            var roleId = HttpContext.Session.GetInt32("RoleId");
+            var adminRoleId = HttpContext.Session.GetInt32("AdminRoleId");
 
             // Check if the RoleId is null or not equal to 2
-            if (roleId == null || roleId != 2)
+            if (adminRoleId == null || adminRoleId != 2)
             {
                 return NotFound("You do not have permission to access this page.");
             }
@@ -66,9 +66,9 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
                 }
 
                 // Update the booking status
-                
-                    booking.Status = status;
-                
+
+                booking.Status = status;
+
 
                 // Update QuoteSentDate
                 booking.QuoteSentDate = DateOnly.FromDateTime(DateTime.Now);
@@ -107,7 +107,146 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
             // Redirect back to the Manager page with updated status
             return Redirect("Manager?id=" + bookingId);
         }
+    
+
+        public IActionResult KoiVarietyList()
+        {
+            // Fetch specific fields but still create full Variety objects
+            var varieties = _db.Varieties
+                .Select(v => new Variety
+                {
+                    VarietyId = v.VarietyId,
+                    VarietyName = v.VarietyName,
+                    ImageUrl = v.ImageUrl
+                })
+                .ToList();
+
+            return View(varieties);
+        }
+
+
+        public IActionResult CreateVariety()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult AddVariety(Variety model, IFormFile ImageUrl)
+        {
+            if (ModelState.IsValid)
+            {
+                // Handle the image upload
+                if (ImageUrl != null && ImageUrl.Length > 0)
+                {
+                    // Create a unique file name to avoid overwriting files with the same name
+                    var fileName = Path.GetFileNameWithoutExtension(ImageUrl.FileName) + "_" + Guid.NewGuid() + Path.GetExtension(ImageUrl.FileName);
+                    var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/KoiVarieties");
+                    var filePath = Path.Combine(directoryPath, fileName);
+
+                    // Ensure the directory exists
+                    if (!Directory.Exists(directoryPath))
+                    {
+                        Directory.CreateDirectory(directoryPath);
+                    }
+
+                    // Save the image file to the specified path
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        ImageUrl.CopyTo(stream);
+                    }
+
+                    // Set the image URL in the model (relative path)
+                    model.ImageUrl = "/images/KoiVarieties/" + fileName;
+                }
+
+                // Add the new variety to the database
+                _db.Varieties.Add(model);
+                _db.SaveChanges();
+
+                // Redirect to the list of varieties after successful creation
+                return Redirect("/Admin/Manager/ListOfVariety");
+            }
+
+            // If model state is not valid, return the view with the current model
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult DeleteVariety(int id)
+        {
+            var variety = _db.Varieties.Find(id);
+            if (variety != null)
+            {
+                _db.Varieties.Remove(variety);
+                _db.SaveChanges();
+            }
+
+            // Redirect to the list of varieties
+            return Redirect("/Admin/Manager/ListOfVariety");
+        }
+
+
+
+        [HttpGet]
+        public IActionResult Edits(int id)
+        {
+            var variety = _db.Varieties.Find(id);
+            if (variety == null)
+            {
+                return NotFound();
+            }
+            return View(variety);
+        }
+
+        [HttpPost]
+        public IActionResult UpdateVariety(int id, Variety model, IFormFile ImageUrl)
+        {
+            // Tìm variety hiện tại theo ID
+            var existingVariety = _db.Varieties.FirstOrDefault(v => v.VarietyId == id);
+
+            if (existingVariety == null)
+            {
+                return NotFound();
+            }
+
+
+            if (!string.IsNullOrWhiteSpace(model.VarietyName))
+            {
+                existingVariety.VarietyName = model.VarietyName;
+            }
+
+
+            if (!string.IsNullOrWhiteSpace(model.Description))
+            {
+                existingVariety.Description = model.Description;
+            }
+
+            // Xử lý upload ảnh nếu có ảnh mới được cung cấp
+            if (ImageUrl != null && ImageUrl.Length > 0)
+            {
+                var fileName = Path.GetFileNameWithoutExtension(ImageUrl.FileName) + "_" + Guid.NewGuid() + Path.GetExtension(ImageUrl.FileName);
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/KoiVarieties", fileName);
+
+                // Lưu ảnh mới vào server
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    ImageUrl.CopyTo(stream);
+                }
+
+                // Cập nhật URL ảnh trong cơ sở dữ liệu với ảnh mới
+                existingVariety.ImageUrl = "/images/KoiVarieties/" + fileName;
+            }
+
+
+            // Lưu thay đổi vào cơ sở dữ liệu
+            _db.SaveChanges();
+
+            // Chuyển hướng đến trang Edits sau khi cập nhật thành công
+            return Redirect($"/Admin/Manager/Edits?id={id}");
+        }
 
     }
+
 }
+
 

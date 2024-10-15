@@ -1,7 +1,10 @@
 ﻿@{
     Layout = null;
-    var roleId = Context.Session.GetInt32("RoleId"); // Lấy RoleId từ Session
+    var adminRoleId = Context.Session.GetInt32("AdminRoleId");
+    var adminLastName = Context.Session.GetString("AdminLastname");
+
 }
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -20,9 +23,9 @@
 </head>
 <body class="sb-nav-fixed">
     <!-- Top Navigation Bar -->
-    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+    <nav class="sb-topnav navbar navbar-expand navbar-dark" style="background-color: #343a40 !important;">
         <!-- Navbar Brand -->
-        <a class="navbar-brand ps-3" href="@Url.Action("Index", "Dashboard")">Koi88 Staff Dashboard</a>
+        <a class="navbar-brand ps-3" href="@Url.Action("Index", "Dashboard")" style="background-color: #343a40 !important;">Koi88 Staff Dashboard</a>
         <!-- Sidebar Toggle Button -->
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle"><i class="fas fa-bars"></i></button>
 
@@ -58,15 +61,15 @@
     <!-- Sidebar and Content -->
     <div id="layoutSidenav">
         <!-- Sidebar -->
-        <div id="layoutSidenav_nav">
+        <div id="layoutSidenav_nav" style="background-color: #000000 !important;">
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-                <div class="sb-sidenav-menu">
+                <div class="sb-sidenav-menu" style="background-color: #343a40 !important;">
                     <div class="nav">
                         <!-- Core Menu Heading -->
                         <div class="sb-sidenav-menu-heading">Core</div>
 
                         <!-- Dashboard hiển thị cho RoleId từ 2 đến 5 -->
-                        @if (roleId >= 2 && roleId <= 5)
+                        @if (adminRoleId >= 2 && adminRoleId <= 5)
                         {
                             <!-- Dashboard Link -->
                             <a class="nav-link" href="@Url.Action("Home", "Admin")">
@@ -88,10 +91,28 @@
                                 </nav>
                             </div>
                         }
+                        @if (adminRoleId == 2)
+                        {
+                            <!-- Product Link with Submenus (Product Management) -->
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseProduct" aria-expanded="false" aria-controls="collapseProduct">
+                                <div class="sb-nav-link-icon"><i class="fas fa-box"></i></div>
+                                Product
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+
+                        
+                        <div class="collapse" id="collapseProduct" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="/Admin/Manager/KoiFarmList">Koi Farm List</a>
+                                    <a class="nav-link" href="/Admin/Manager/KoiVarietyList">Variety List</a>
+                                    <a class="nav-link" href="/Admin/Manager/KoiFishList">Koi Fish List</a>
+                                </nav>
+                            </div>
+
+                        
 
                         <!-- Hiển thị tất cả mục cho RoleId 2 (Admin) -->
-                        @if (roleId == 2)
-                        {
+                      
                             <!-- Account Information Link -->
                             <a class="nav-link" href="@Url.Action("Index", "Account")">
                                 <div class="sb-nav-link-icon"><i class="fas fa-user"></i></div>

@@ -1,0 +1,142 @@
+﻿@{
+    ViewData["Title"] = "Variety";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <h1 class="text-center">Variety Information</h1>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding: 20px;
+        }
+
+        .form-container {
+            width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .form-section-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .btn-next {
+            background-color: #007bff;
+            border-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            float: right;
+        }
+
+            .btn-next:hover {
+                background-color: #0056b3;
+                border-color: #0056b3;
+            }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .form-control {
+            height: calc(2.25rem + 2px);
+        }
+
+        textarea.form-control {
+            height: auto;
+        }
+
+        .form-layout {
+            display: flex;
+        }
+
+        .sidebar {
+            width: 25%;
+            padding-right: 15px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .form-content {
+            width: 75%;
+        }
+
+        #previewImage {
+            margin-top: 10px;
+            max-width: 300px; /* Set maximum width for the image preview */
+            height: auto;
+        }
+
+        /* Styling for the disabled Variety ID field */
+        #varietyId {
+            background-color: #e9ecef;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <div class="form-layout">
+            <!-- Left Side Panel -->
+            <div class="sidebar">
+                <p class="general-info-label">Update Information</p>
+            </div>
+
+            <!-- Right Form Section -->
+            <div class="form-content">
+                <form method="post" id="formUpdate" action="/Admin/Manager/UpdateVariety/@Model.VarietyId" enctype="multipart/form-data">
+
+                    <input type="hidden" name="VarietyId" value="@Model.VarietyId" /> <!-- Lưu VarietyId -->
+                    <div class="form-group">
+                        <label for="varietyName" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="varietyName" name="VarietyName" value="@Model.VarietyName" placeholder="Enter variety name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="varietyDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="varietyDescription" name="Description" rows="3" placeholder="Enter variety description" required>@Model.Description</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="varietyImage" class="form-label">Image URL</label>
+                        <input type="file" class="form-control" id="varietyImage" name="ImageUrl" accept="image/*">
+                        <img id="previewImage" src="@Model?.ImageUrl" alt="Image Preview" style="display:block; margin-top:10px; max-width:100px; height:auto;">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // JavaScript to preview the selected image
+        document.getElementById('varietyImage').addEventListener('change', function (event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const img = document.getElementById('previewImage');
+                    img.src = e.target.result; // Set the source of the image
+                    img.style.display = 'block'; // Show the image
+                };
+                reader.readAsDataURL(file); // Convert the file to a data URL
+            }
+        });
+    </script>
+</body>

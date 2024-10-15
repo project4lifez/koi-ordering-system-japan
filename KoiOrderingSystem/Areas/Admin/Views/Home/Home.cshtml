@@ -3,156 +3,6 @@
     var years = Enumerable.Range(currentYear - 4, 5).ToList(); // Last 5 years including current year
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
-<style>
-    body {
-        background-color: #f8f9fa; /* Light gray background for the body */
-        font-family: 'Arial', sans-serif;
-    }
-
-    .container-fluid {
-        padding-top: 20px;
-    }
-
-    .card {
-        border-radius: 12px;
-        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow for cards */
-        transition: transform 0.2s;
-    }
-
-        .card:hover {
-            transform: translateY(-5px); /* Slight lift on hover for interaction */
-        }
-
-    .card-body {
-        font-size: 1.2rem;
-        font-weight: 600;
-    }
-
-    .card-footer {
-        font-size: 1.5rem;
-        font-weight: bold;
-    }
-
-    .bg-primary {
-        background-color: #007bff !important; /* Soft blue */
-    }
-
-    .bg-warning {
-        background-color: #ffc107 !important; /* Yellow */
-    }
-
-    .bg-success {
-        background-color: #28a745 !important; /* Green */
-    }
-
-    .bg-danger {
-        background-color: #dc3545 !important; /* Red */
-    }
-
-    /* Styling for the chart containers */
-    .card-header {
-        font-size: 1.1rem;
-        font-weight: bold;
-        color: #333;
-    }
-
-    .chart-container {
-        min-height: 450px; /* Ensure both have the same minimum height */
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between; /* Evenly space the content */
-        padding: 20px;
-        background-color: white;
-        border-radius: 12px;
-        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
-        margin-top: 20px;
-    }
-
-    /* Subtle borders for sections */
-    .section-title {
-        font-size: 1.5rem;
-        font-weight: 600;
-        margin-bottom: 15px;
-        color: #333;
-    }
-
-    /* Recent Orders Table */
-    .recent-orders-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-    }
-
-        .recent-orders-table th, .recent-orders-table td {
-            padding: 13.5px;
-            text-align: left;
-        }
-
-        .recent-orders-table th {
-            background-color: #f8f9fa;
-            font-weight: bold;
-        }
-
-    .badge {
-        padding: 5px 10px;
-        border-radius: 12px;
-        color: white;
-    }
-
-    .badge-gray {
-        background-color: #6c757d;
-    }
-
-    .badge-red {
-        background-color: #dc3545;
-    }
-
-    .badge-yellow {
-        background-color: #ffc107;
-    }
-
-    .badge-green {
-        background-color: #28a745;
-    }
-
-    /* Dashboard Title Styling */
-    .dashboard-title {
-        font-size: 2.5rem; /* Increase font size for Dashboard title */
-        font-weight: 700; /* Make it bold */
-        color: #333; /* Text color */
-        font-family: 'Arial', sans-serif; /* Change the font if needed */
-    }
-
-    /* Select Year Label Styling */
-    .select-year-label {
-        font-size: 1rem; /* Decrease font size for Select Year label */
-        font-weight: 500; /* Lighter weight for the label */
-        color: #333; /* Text color */
-        font-family: 'Arial', sans-serif; /* Change the font if needed */
-    }
-
-    /* Chart and Recent Orders Container Styling */
-    .recent-orders-container {
-        min-height: 450px; /* Same height as the chart-container */
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        padding: 20px;
-        background-color: white;
-        border-radius: 12px;
-        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
-        margin-top: 20px;
-    }
-
-    .row {
-        display: flex;
-        align-items: flex-start; /* Align both sections at the top */
-    }
-    .mt-4 {
-        margin-top: -0.5rem !important;
-    }
-
-</style>
 @{
     // Định dạng tiền tệ với dấu phẩy hàng ngàn và xử lý trường hợp 0 thành "0.0 USD"
     Func<decimal, string> FormatCurrency = amount =>
@@ -161,224 +11,478 @@
     };
 }
 
-<main>
-    <div class="container-fluid">
-        <!-- Dashboard Title -->
-        <h1 class="dashboard-title mt-4 text-dark">
-            <i class="fas fa-chart-line icon"></i>Dashboard
-        </h1>
 
-        <!-- Year Selection Dropdown -->
-        <div class="row mb-3">
-            <div class="col-md-4">
-                <form method="get" id="yearForm">
-                    <label for="yearSelect" class="form-label select-year-label text-dark">Select Year:</label>
-                    <select class="form-select" id="yearSelect" name="selectedYear" onchange="document.getElementById('yearForm').submit();">
-                        @foreach (var year in years)
-                        {
-                            <option value="@year" @(year == ViewBag.SelectedYear ? "selected" : "")>@year</option>
-                        }
-                    </select>
-                </form>
-            </div>
-        </div>
+<!DOCTYPE html>
+<html lang="en">
 
-        <!-- Metrics Cards Row -->
-        <div class="row">
-            <div class="col-xl-3 col-md-6">
-                <div class="card bg-primary text-white mb-4">
-                    <div class="card-body">Total Orders</div>
-                    <div class="card-footer d-flex align-items-center justify-content-between">
-                        <div>@ViewBag.TotalOrders</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-3 col-md-6">
-                <div class="card bg-warning text-white mb-4">
-                    <div class="card-body">Monthly Revenue</div>
-                    <div class="card-footer d-flex align-items-center justify-content-between">
-                        <div>@FormatCurrency(ViewBag.TotalMonthlyRevenue)</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-3 col-md-6">
-                <div class="card bg-success text-white mb-4">
-                    <div class="card-body">Total Revenue</div>
-                    <div class="card-footer d-flex align-items-center justify-content-between">
-                        <div>@FormatCurrency(ViewBag.TotalMonthlyRevenue)</div> <!-- Custom format -->
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-3 col-md-6">
-                <div class="card bg-danger text-white mb-4">
-                    <div class="card-body">Total Trips Success</div>
-                    <div class="card-footer d-flex align-items-center justify-content-between">
-                        <div>@ViewBag.TotalTripsSuccess</div>
-                    </div>
-                </div>
-            </div>
-        </div>
+<head>
 
-        <!-- Charts Row (Revenue Chart and Recent Orders Table) -->
-        <div class="row">
-            <!-- Revenue Chart -->
-            <div class="col-xl-6">
-                <div class="chart-container">
-                    <div class="section-title"><i class="fas fa-chart-bar icon"></i>Revenue For @ViewBag.SelectedYear</div>
-                    <canvas id="revenueChart" width="100%" height="40"></canvas>
-                </div>
-            </div>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-            <!-- Recent Orders Table -->
-            <div class="col-xl-6">
-                <div class="chart-container recent-orders-container">
-                    <div class="section-title"><i class="fas fa-receipt icon"></i> Recent Bookings</div>
-                    <table class="recent-orders-table">
-                        <thead>
-                            <tr>
-                                <th>BookingID</th>
-                                <th>Customer Name</th>
-                                <th>Booking Date</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var order in ViewBag.RecentOrders)
-                            {
-                                <tr>
-                                    <td>@order.BookingId</td>
-                                    <td>@order.FullName</td> <!-- FullName from Booking -->
-                                    <td>@order.BookingDate.ToString("dd-MM-yyyy")</td>
-                                    <td>
-                                        <span class="badge @GetStatusBadge(order.Status)">
-                                            @order.Status
+    <title>Dashboard</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+          rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="~/css/sb-admin-2.min.css" rel="stylesheet">
+
+
+    <!-- Custom CSS for Hover Effects -->
+    <style>
+        /* Base card style */
+        .card {
+            transition: all 0.3s ease-in-out;
+            border-radius: 10px;
+        }
+
+        /* Hover effect for cards */
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Buttons hover effects */
+        .btn:hover {
+            background-color: #4e73df;
+            color: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+
+        /* Form inline styling */
+        .form-inline {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Adjust form size */
+        .form-control {
+            width: 150px;
+            height: 36px;
+            padding: 5px 10px;
+            border-radius: 10px;
+        }
+
+        /* Mobile responsiveness */
+        
+
+        /* Area Chart hover */
+        .chart-area:hover {
+            cursor: pointer;
+        }
+
+        /* Enhanced Dropdown Menu */
+        .dropdown-item:hover {
+            background-color: #f8f9fc;
+            color: #4e73df;
+        }
+
+        /* Icon hover effect */
+        .fas.fa-2x {
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .fas.fa-2x:hover {
+            transform: scale(1.2);
+        }
+    </style>
+</head>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800 mt-3">Dashboard</h1>
+
+                        <!-- Year Selection Form -->
+                        <form method="get" id="yearForm" class="form-inline">
+                            <label for="yearSelect" class="form-label mr-2 text-dark">Select Year:</label>
+                            <select class="form-control" id="yearSelect" name="selectedYear" onchange="document.getElementById('yearForm').submit();">
+                                @foreach (var year in years)
+                                {
+                                    <option value="@year" @(year == ViewBag.SelectedYear ? "selected" : "")>@year</option>
+                                }
+                            </select>
+                        </form>
+
+                        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                            <i class="fas fa-download fa-sm text-white-50"></i> Generate Report
+                        </a>
+                    </div>
+
+                    <!-- Content Row -->
+                    <div class="row">
+
+                        <!-- Earnings (Monthly) Card Example -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-primary shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Earnings (Monthly)</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">@FormatCurrency(ViewBag.TotalMonthlyRevenue)</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Earnings (Annual) Card Example -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-success shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Earnings (Annual)</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">@FormatCurrency(ViewBag.TotalRevenue)</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Total Orders Card Example -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-info shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Total Orders</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.TotalOrders</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-shopping-cart fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Total Trip Success Card Example -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-warning shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Total Trip Success</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.TotalTripsSuccess</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Content Row -->
+                    <div class="row">
+
+                        <!-- Area Chart (Earnings Overview) -->
+                        <div class="col-xl-8 col-lg-8">
+                            <div class="card shadow mb-4">
+                                <!-- Card Header - Dropdown -->
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-primary">Earnings Overview</h6>
+                                    <div class="dropdown no-arrow">
+                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                                            <div class="dropdown-header">Dropdown Header:</div>
+                                            <a class="dropdown-item" href="#">Action</a>
+                                            <a class="dropdown-item" href="#">Another action</a>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item" href="#">Something else here</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Card Body -->
+                                <div class="card-body">
+                                    <div class="chart-area">
+                                        <canvas id="myAreaChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pie Chart (Revenue Sources) -->
+                        <div class="col-xl-4 col-lg-4">
+                            <div class="card shadow mb-4">
+                                <!-- Card Header - Dropdown -->
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-primary">Booking Status Distribution</h6>
+                                    <div class="dropdown no-arrow">
+                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                                            <div class="dropdown-header">Dropdown Header:</div>
+                                            <a class="dropdown-item" href="#">Action</a>
+                                            <a class="dropdown-item" href="#">Another action</a>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item" href="#">Something else here</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Card Body -->
+                                <div class="card-body">
+                                    <div class="chart-pie pt-4 pb-2">
+                                        <canvas id="myPieChart"></canvas>
+                                    </div>
+                                    <div class="mt-4 text-center small">
+                                        <span class="mr-2">
+                                            <i class="fas fa-circle text-primary"></i> Requested
                                         </span>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+                                        <span class="mr-2">
+                                            <i class="fas fa-circle text-success"></i> Confirmed
+                                        </span>
+                                        <span class="mr-2">
+                                            <i class="fas fa-circle text-danger"></i> Canceled
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
                 </div>
+                <!-- /.container-fluid -->
+
             </div>
+            <!-- End of Main Content -->
+
         </div>
+        <!-- End of Content Wrapper -->
+
     </div>
-</main>
+    <!-- End of Page Wrapper -->
 
-<!-- Include necessary scripts -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> <!-- Font Awesome for icons -->
-<!-- Chart.js script for monthly revenue -->
-<script>
-    var monthlyRevenue = @Html.Raw(Json.Serialize(ViewBag.MonthlyRevenue));
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
 
-    var ctx = document.getElementById('revenueChart').getContext('2d');
-    var revenueChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'], // Number labels for months
-            datasets: [{
-                label: 'Revenue',
-                data: monthlyRevenue,
-                fill: true,
-                borderColor: 'rgba(54, 162, 235, 1)', // Custom blue color
-                backgroundColor: 'rgba(54, 162, 235, 0.2)', // Slightly transparent fill
-                pointBackgroundColor: 'rgba(54, 162, 235, 1)', // Points color
-                pointBorderColor: '#fff',
-                pointHoverBackgroundColor: '#fff',
-                pointHoverBorderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 2, // Thicker line for better appearance
-                tension: 0.4 // Smooth curves for the line chart
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'top', // Position the legend at the top
-                    labels: {
-                        usePointStyle: true, // Use circles instead of rectangles in the legend
-                        font: {
-                            size: 14 // Adjust font size for the legend
-                        }
-                    }
+    <!-- Bootstrap core JavaScript-->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/startbootstrap-sb-admin-2/4.0.7/js/sb-admin-2.min.js"></script>
+
+    <!-- Page level plugins -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+
+    <script>
+        // Check if the data is all zeros or empty
+        var monthlyRevenue = @Html.Raw(Json.Serialize(ViewBag.MonthlyRevenue)); // Pass the monthly data from ViewBag
+
+        // Function to check if all elements in the dataset are zero
+        function isAllZero(data) {
+            return data.every(function (value) {
+                return value === 0;
+            });
+        }
+
+        var ctx = document.getElementById("myAreaChart");
+
+        // If all data is zero, provide a message instead of a chart
+        if (isAllZero(monthlyRevenue)) {
+            ctx.getContext('2d').font = '16px Arial';
+            ctx.getContext('2d').fillText('No data available for the selected year', ctx.width / 2 - 130, ctx.height / 2);
+        } else {
+            // Chart with dynamic data
+            var myLineChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                    datasets: [{
+                        label: "Earnings",
+                        lineTension: 0.3,
+                        backgroundColor: "rgba(78, 115, 223, 0.05)",
+                        borderColor: "rgba(78, 115, 223, 1)",
+                        pointRadius: 3,
+                        pointBackgroundColor: "rgba(78, 115, 223, 1)",
+                        pointBorderColor: "rgba(78, 115, 223, 1)",
+                        pointHoverRadius: 3,
+                        pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
+                        pointHoverBorderColor: "rgba(78, 115, 223, 1)",
+                        pointHitRadius: 10,
+                        pointBorderWidth: 2,
+                        data: monthlyRevenue,  // Dynamic data from ViewBag.MonthlyRevenue
+                    }],
                 },
-                tooltip: {
-                    enabled: true,
-                    backgroundColor: 'rgba(0, 0, 0, 0.7)', // Dark background for tooltips
-                    titleFont: {
-                        size: 16,
-                        weight: 'bold'
+                options: {
+                    maintainAspectRatio: false,
+                    layout: {
+                        padding: {
+                            left: 10,
+                            right: 25,
+                            top: 25,
+                            bottom: 0
+                        }
                     },
-                    bodyFont: {
-                        size: 14
-                    },
-                    borderColor: 'rgba(54, 162, 235, 1)', // Tooltip border color
-                    borderWidth: 1,
-                    callbacks: {
-                        label: function (context) {
-                            var label = context.dataset.label || '';
-                            if (label) {
-                                label += ': ';
+                    scales: {
+                        xAxes: [{
+                            time: {
+                                unit: 'month'
+                            },
+                            gridLines: {
+                                display: false,
+                                drawBorder: false
+                            },
+                            ticks: {
+                                maxTicksLimit: 6, // Ensures it displays every second month
+                                callback: function (value, index, values) {
+                                    if (index % 2 === 0) {
+                                        return value;
+                                    } else {
+                                        return '';
+                                    }
+                                }
                             }
-                            label += '$' + context.raw.toLocaleString(); // Format the tooltip with a dollar sign and commas
-                            return label;
+                        }],
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true, // Ensure the chart starts at zero to avoid negative values
+                                suggestedMin: 0, // Start y-axis at 0
+                                padding: 10,
+                                callback: function (value, index, values) {
+                                    return '$' + number_format(value);
+                                }
+                            },
+                            gridLines: {
+                                color: "rgb(234, 236, 244)",
+                                zeroLineColor: "rgb(234, 236, 244)",
+                                drawBorder: false,
+                                borderDash: [2],
+                                zeroLineBorderDash: [2]
+                            }
+                        }],
+                    },
+                    legend: {
+                        display: false
+                    },
+                    tooltips: {
+                        backgroundColor: "rgb(255,255,255)",
+                        bodyFontColor: "#858796",
+                        titleMarginBottom: 10,
+                        titleFontColor: '#6e707e',
+                        titleFontSize: 14,
+                        borderColor: '#dddfeb',
+                        borderWidth: 1,
+                        xPadding: 15,
+                        yPadding: 15,
+                        displayColors: false,
+                        intersect: false,
+                        mode: 'index',
+                        caretPadding: 10,
+                        callbacks: {
+                            label: function (tooltipItem, chart) {
+                                var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+                                return datasetLabel + ': $' + number_format(tooltipItem.yLabel);
+                            }
                         }
                     }
                 }
-            },
-            scales: {
-                x: {
-                    grid: {
-                        display: false // Remove the vertical grid lines
-                    },
-                    ticks: {
-                        font: {
-                            size: 14 // Font size for x-axis labels
-                        }
-                    }
-                },
-                y: {
-                    beginAtZero: true,
-                    grid: {
-                        borderDash: [5, 5], // Dashed lines for y-axis grid
-                        color: 'rgba(200, 200, 200, 0.3)' // Lighter grid lines
-                    },
-                    ticks: {
-                        callback: function (value) {
-                            return '$' + value.toLocaleString(); // Format y-axis values with a dollar sign and commas
-                        },
-                        font: {
-                            size: 14 // Font size for y-axis labels
-                        }
-                    }
-                }
-            }
+            });
         }
-    });
-</script>
 
-<!-- Helper function to assign badge color based on status -->
-@functions {
-    public string GetStatusBadge(string status)
-    {
-        switch (status)
-        {
-            case "Requested":
-                return "badge-gray";
-            case "Rejected":
-            case "Canceled":
-                return "badge-red";
-            case "Processing":
-            case "Checked in":
-            case "Checked out":
-            case "Delivering":
-                return "badge-yellow";
-            case "Accepted":
-            case "Payment Completed":
-            case "Delivered":
-                return "badge-green";
-            default:
-                return "badge-gray";
+        // Format number function
+        function number_format(number, decimals, dec_point, thousands_sep) {
+            number = (number + '').replace(',', '').replace(' ', '');
+            var n = !isFinite(+number) ? 0 : +number,
+                prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
+                sep = (typeof thousands_sep === 'undefined') ? ',' : thousands_sep,
+                dec = (typeof dec_point === 'undefined') ? '.' : dec_point,
+                s = '',
+                toFixedFix = function (n, prec) {
+                    var k = Math.pow(10, prec);
+                    return '' + Math.round(n * k) / k;
+                };
+            s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
+            if (s[0].length > 3) {
+                s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
+            }
+            if ((s[1] || '').length < prec) {
+                s[1] = s[1] || '';
+                s[1] += new Array(prec - s[1].length + 1).join('0');
+            }
+            return s.join(dec);
         }
-    }
-}
+
+        // Set new default font family and font color to mimic Bootstrap's default styling
+        Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+        Chart.defaults.global.defaultFontColor = '#858796';
+
+        // Pie Chart Example for Booking Status
+        var ctx = document.getElementById("myPieChart");
+        var myPieChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                // Updated labels for Booking Status
+                labels: ["Requested", "Confirmed", "Canceled"],
+                datasets: [{
+                    // Updated data for Booking Status
+                    data: [@ViewBag.PieChartData["Requested"], @ViewBag.PieChartData["Confirmed"], @ViewBag.PieChartData["Canceled"]],
+                    // Custom colors for each status
+                    backgroundColor: ['#4e73df', '#1cc88a', '#e74a3b'],
+                    hoverBackgroundColor: ['#2e59d9', '#17a673', '#e74a3b'],
+                    hoverBorderColor: "rgba(234, 236, 244, 1)",
+                }],
+            },
+            options: {
+                maintainAspectRatio: false,
+                tooltips: {
+                    backgroundColor: "rgb(255,255,255)",
+                    bodyFontColor: "#858796",
+                    borderColor: '#dddfeb',
+                    borderWidth: 1,
+                    xPadding: 15,
+                    yPadding: 15,
+                    displayColors: false,
+                    caretPadding: 10,
+                },
+                legend: {
+                    display: false
+                },
+                cutoutPercentage: 80,
+            },
+        });
+
+    </script>
+
+</body>
+
+</html>
