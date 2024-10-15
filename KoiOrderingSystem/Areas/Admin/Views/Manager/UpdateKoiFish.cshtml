@@ -173,46 +173,41 @@
                 <p class="general-info-label">Update Information</p>
             </div>
             <div class="form-content">
-                <div id="general-info" class="form-sections">
-                    <div class="form-group">
-                        <label for="koiFishId" class="form-label">Koi Fish ID:</label>
-                        <input type="text" class="form-control" id="koiFishId" name="koiFishId" value="KOI123" readonly>
+                <form method="post" id="formUpdateKoiFish" action="/Admin/Manager/EditKoiFish/@Model.KoiId" enctype="multipart/form-data">
+                    <input type="hidden" name="KoiId" value="@Model.KoiId" /> <!-- Lưu KoiId -->
+                    <div id="general-info" class="form-sections">
+                        <div class="form-group">
+                            <label for="koiFishId" class="form-label">Koi Fish ID:</label>
+                            <input type="text" class="form-control" id="koiFishId" name="KoiId" value="@Model.KoiId" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="name" class="form-label">Name Koi:</label>
+                            <input type="text" class="form-control" id="name" name="KoiName" value="@Model.KoiName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="description" class="form-label">Description:</label>
+                            <input type="text" class="form-control" id="description" name="Description" value="@Model.Description" required>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="name" class="form-label">Name Koi:</label>
-                        <input type="text" class="form-control" id="name" name="name" required>
+                    <div id="more-info" class="form-sections">
+                        <div class="form-group">
+                            <label for="variety" class="form-label dropdown-label">Variety:</label>
+                            <select class="form-select" id="variety" name="VarietyId" required>
+                                <option value="">Select Koi Variety</option>
+                                @foreach (var variety in ViewBag.Varieties)
+                                {
+                                    <option value="@variety.VarietyId" @(variety.VarietyId == Model.VarietyId ? "selected" : "")>@variety.VarietyName</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="koiImage" class="form-label">Upload Koi Image:</label>
+                            <input type="file" class="form-control" id="koiImage" name="ImageUrl" accept="image/*">
+                            <img id="previewImage" src="@Model?.ImageUrl" alt="Koi Image Preview" style="display:block; margin-top:10px; max-width:100px; height:auto;">
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="description" class="form-label">Description:</label>
-                        <input type="text" class="form-control" id="description" name="description" required>
-                    </div>
-                </div>
-                <div id="more-info" class="form-sections">
-                    <div class="form-group">
-                        <label for="variety" class="form-label dropdown-label">Variety:</label>
-                        <select class="form-select" id="variety" name="variety" required>
-                            <option value="">Select Koi</option>
-                            <option value="kohaku">Kohaku</option>
-                            <option value="sanke">Sanke</option>
-                            <option value="showa">Showa</option>
-                            <option value="utsuri">Utsuri</option>
-                            <option value="shusui">Shusui</option>
-                            <option value="asagi">Asagi</option>
-                            <option value="kohaku_sanke">Goromo</option>
-                            <option value="kujaku">Kujaku</option>
-                            <option value="goshiki">Goshiki</option>
-                            <option value="hikari_muji">Hikari Muji</option>
-                            <option value="taisho">Taisho</option>
-                            <option value="kawarimono">Kawarimono</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="koiImage" class="form-label">Upload Koi Image</label>
-                        <input type="file" class="form-control" id="koiImage" name="Image" accept="image/*" required>
-                    </div>
-                    <img id="previewImage" src="" alt="Koi Image Preview">
-                    <button class="btn btn-next" onclick="submitForm()">Update</button>
-                </div>
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </form>
             </div>
         </div>
     </div>
@@ -225,7 +220,8 @@
         $(document).ready(function () {
             $('#variety').select2({
                 placeholder: 'Choose a Koi breed',
-                allowClear: true
+                allowClear: false
+                // minimumResultsForSearch: Infinity Hides the search box
             });
         });
 

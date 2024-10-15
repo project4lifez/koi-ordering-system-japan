@@ -167,42 +167,36 @@
                 <h2 class="section-title">Additional Information</h2>
             </div>
             <div class="form-content">
-                <div id="general-info" class="form-sections">
-                    <div class="form-group">
-                        <label for="name" class="form-label">Name Koi:</label>
-                        <input type="text" class="form-control" id="name" name="name" required>
+                <form method="post" action="/Admin/Manager/AddKoiFish" enctype="multipart/form-data">
+                    <div id="general-info" class="form-sections">
+                        <div class="form-group">
+                            <label for="KoiName" class="form-label">Koi Name:</label>
+                            <input type="text" class="form-control" id="KoiName" name="KoiName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="Description" class="form-label">Description:</label>
+                            <input type="text" class="form-control" id="Description" name="Description" required>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="description" class="form-label">Description:</label>
-                        <input type="text" class="form-control" id="description" name="description" required>
+                    <div id="more-info" class="form-sections">
+                        <div class="form-group">
+                            <label for="VarietyId" class="form-label">Variety:</label>
+                            <select class="form-select" id="VarietyId" name="VarietyId" required>
+                                <option value="">Select a Variety</option>
+                                @foreach (var variety in ViewBag.Varieties)
+                                {
+                                    <option value="@variety.VarietyId">@variety.VarietyName</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="ImageUrl" class="form-label">Upload Koi Image</label>
+                            <input type="file" class="form-control" id="ImageUrl" name="ImageUrl" accept="image/*" required>
+                        </div>
+                        <img id="previewImage" src="" alt="Koi Image Preview">
+                        <button type="submit" class="btn btn-next">Add</button>
                     </div>
-                </div>
-                <div id="more-info" class="form-sections">
-                    <div class="form-group">
-                        <label for="variety" class="form-label dropdown-label">Variety:</label>
-                        <select class="form-select" id="variety" name="variety" required>
-                            <option value="">Select Koi</option>
-                            <option value="kohaku">Kohaku</option>
-                            <option value="sanke">Sanke</option>
-                            <option value="showa">Showa</option>
-                            <option value="utsuri">Utsuri</option>
-                            <option value="shusui">Shusui</option>
-                            <option value="asagi">Asagi</option>
-                            <option value="kohaku_sanke">Goromo</option>
-                            <option value="kujaku">Kujaku</option>
-                            <option value="goshiki">Goshiki</option>
-                            <option value="hikari_muji">Hikari Muji</option>
-                            <option value="taisho">Taisho</option>
-                            <option value="kawarimono">Kawarimono</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="koiImage" class="form-label">Upload Koi Image</label>
-                        <input type="file" class="form-control" id="koiImage" name="Image" accept="image/*" required>
-                    </div>
-                    <img id="previewImage" src="" alt="Koi Image Preview">
-                    <button class="btn btn-next" onclick="submitForm()">Add</button>
-                </div>
+                </form>
             </div>
         </div>
     </div>
@@ -219,7 +213,7 @@
             });
         });
 
-        document.getElementById('koiImage').addEventListener('change', function (event) {
+        document.getElementById('ImageUrl').addEventListener('change', function (event) {
             const previewImage = document.getElementById('previewImage');
             const file = event.target.files[0];
             const reader = new FileReader();

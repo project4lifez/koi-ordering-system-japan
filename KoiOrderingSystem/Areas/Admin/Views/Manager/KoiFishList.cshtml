@@ -1,4 +1,5 @@
-﻿@{
+﻿@model IEnumerable<KoiOrderingSystem.Models.KoiFish>
+@{
     ViewData["Title"] = "Koi Fish List";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml"; // Use the shared layout
 }
@@ -144,7 +145,7 @@
 
         <!-- Create button on the right -->
         <div class="button-row-variety mb-3">
-            <a href="/Admin/Manager/CreateVariety" class="btn btn-create-variety">Create New Koi Fish</a>
+            <a href="/Admin/Manager/CreateKoiFish" class="btn btn-create-variety">Create New Koi Fish</a>
         </div>
 
         <!-- Koi Fish List -->
@@ -162,62 +163,29 @@
                     </thead>
                     <tbody>
                         <!-- Example Rows with Images -->
-                        <tr>
-                            <td>1</td>
-                            <td><img src="https://sieuthicakoi.vn/uploads/images/62c297e35b3f4d6415d8f429/ca-koi-asagi-2.webp" alt="Koi Image"></td>
-                            <td>Gosanke</td> <!-- Example variety -->
-                            <td>Kohaku</td> <!-- Example koi name -->
-                            <td>
-                                <button class="btn btn-variety btn-outline-success-variety">
-                                    <i class="fas fa-edit"></i> Edit
-                                </button>
-                                <button class="btn btn-variety btn-outline-danger-variety">
-                                    <i class="fas fa-trash-alt"></i> Delete
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td><img src="https://via.placeholder.com/200" alt="Koi Image"></td>
-                            <td>Gosanke</td>
-                            <td>Sanke</td>
-                            <td>
-                                <button class="btn btn-variety btn-outline-success-variety">
-                                    <i class="fas fa-edit"></i> Edit
-                                </button>
-                                <button class="btn btn-variety btn-outline-danger-variety">
-                                    <i class="fas fa-trash-alt"></i> Delete
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td><img src="https://via.placeholder.com/200" alt="Koi Image"></td>
-                            <td>Gosanke</td>
-                            <td>Showa</td>
-                            <td>
-                                <button class="btn btn-variety btn-outline-success-variety">
-                                    <i class="fas fa-edit"></i> Edit
-                                </button>
-                                <button class="btn btn-variety btn-outline-danger-variety">
-                                    <i class="fas fa-trash-alt"></i> Delete
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>4</td>
-                            <td><img src="https://via.placeholder.com/200" alt="Koi Image"></td>
-                            <td>Asagi</td>
-                            <td>Asagi</td>
-                            <td>
-                                <button class="btn btn-variety btn-outline-success-variety">
-                                    <i class="fas fa-edit"></i> Edit
-                                </button>
-                                <button class="btn btn-variety btn-outline-danger-variety">
-                                    <i class="fas fa-trash-alt"></i> Delete
-                                </button>
-                            </td>
-                        </tr>
+                        @foreach (var koi in Model)
+                        {
+                            <tr>
+                                <td>@koi.KoiId</td>
+                                <td>
+                                    <img src="@koi.ImageUrl" alt="Koi Image" style="width: 100px; height: 100px; object-fit: cover;" />
+                                </td>
+                                <td>@koi.Variety?.VarietyName</td> <!-- Lấy tên variety -->
+                                <td>@koi.KoiName</td>
+                                <td>
+                                    <a href="javascript:void(0);" onclick="location.href='/Admin/Manager/UpdateKoiFish?id=@koi.KoiId'" class="btn btn-variety btn-outline-success-variety">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
+                                    <form id="deleteKoiFishForm_@koi.KoiId" method="post" action="/Admin/Manager/DeleteKoiFish" style="display:inline;">
+                                        <input type="hidden" name="id" value="@koi.KoiId" />
+                                        <a href="#" class="btn btn-variety btn-outline-danger-variety" onclick="event.preventDefault(); document.getElementById('deleteKoiFishForm_@koi.KoiId').submit();">
+                                            <i class="fas fa-trash-alt"></i> Delete
+                                        </a>
+                                    </form>
+
+                                </td>
+                            </tr>
+                        }
                     </tbody>
                 </table>
             </div>

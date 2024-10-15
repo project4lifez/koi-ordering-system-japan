@@ -107,7 +107,7 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
             // Redirect back to the Manager page with updated status
             return Redirect("Manager?id=" + bookingId);
         }
-    
+
 
         public IActionResult KoiVarietyList()
         {
@@ -186,9 +186,8 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
         }
 
 
-
         [HttpGet]
-        public IActionResult Edits(int id)
+        public IActionResult UpdateVariety(int id)
         {
             var variety = _db.Varieties.Find(id);
             if (variety == null)
@@ -242,10 +241,160 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
             _db.SaveChanges();
 
             // Chuyển hướng đến trang Edits sau khi cập nhật thành công
-            return Redirect($"/Admin/Manager/Edits?id={id}");
+            return Redirect($"/Admin/Manager/UpdateKoiVariety?id={id}");
         }
 
+        public IActionResult KoiFishList()
+        {
+            var koiFishes = _db.KoiFishes
+                             .Include(k => k.Variety) // Lấy thông tin Variety liên quan
+                             .ToList();
+            return View(koiFishes);
+        }
+
+
+        [HttpGet]
+        public IActionResult CreateKoiFish()
+        {
+            // Fetch the list of varieties from the database
+            var varieties = _db.Varieties.ToList();
+
+            // Pass the list of varieties to the view using ViewBag
+            ViewBag.Varieties = varieties;
+
+            // Return the view for koi fish creation
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult AddKoiFish(KoiFish model, IFormFile ImageUrl)
+        {
+            if (ModelState.IsValid)
+            {
+                // Handle the image upload
+                if (ImageUrl != null && ImageUrl.Length > 0)
+                {
+                    // Create a unique file name to avoid overwriting files with the same name
+                    var fileName = Path.GetFileNameWithoutExtension(ImageUrl.FileName) + "_" + Guid.NewGuid() + Path.GetExtension(ImageUrl.FileName);
+                    var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/KoiFish");
+                    var filePath = Path.Combine(directoryPath, fileName);
+
+                    // Ensure the directory exists
+                    if (!Directory.Exists(directoryPath))
+                    {
+                        Directory.CreateDirectory(directoryPath);
+                    }
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        ImageUrl.CopyTo(stream);
+                    }
+
+                    // Set the image URL in the model (relative path)
+                    model.ImageUrl = "/images/KoiFish/" + fileName;
+                }
+
+                // Add the new variety to the database
+                _db.KoiFishes.Add(model);
+                _db.SaveChanges();
+
+                
+                return Redirect("/Admin/Manager/KoiFishList");
+            }
+
+            
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult DeleteKoiFish(int id)
+        {
+            var koiFishes = _db.KoiFishes.Find(id);
+            if (koiFishes != null)
+            {
+                _db.KoiFishes.Remove(koiFishes);
+                _db.SaveChanges();
+            }
+
+            // Redirect to the list of varieties
+            return Redirect("/Admin/Manager/KoiFishList");
+        }
+
+        public IActionResult UpdateKoiFish(int id)
+        {
+            var koiFish = _db.KoiFishes.Find(id);
+            if (koiFish == null)
+            {
+                return NotFound();
+            }
+
+            // Fetch the list of varieties to populate the dropdown
+            var varieties = _db.Varieties.ToList();
+
+            // Prepare a ViewModel (or use ViewBag) to pass data to the view
+            ViewBag.Varieties = varieties;
+            return View(koiFish);
+        }
+
+        [HttpPost]
+        public IActionResult EditKoiFish(int id, KoiFish model, IFormFile ImageUrl)
+        {
+         
+            var existingKoiFish = _db.KoiFishes.FirstOrDefault(k => k.KoiId == id);
+
+            if (existingKoiFish == null)
+            {
+                return NotFound();
+            }
+
+          
+            if (!string.IsNullOrWhiteSpace(model.KoiName))
+            {
+                existingKoiFish.KoiName = model.KoiName;
+            }
+
+            if (!string.IsNullOrWhiteSpace(model.Description))
+            {
+                existingKoiFish.Description = model.Description;
+            }
+
+            // Cập nhật VarietyId và VarietyName
+            if (model.VarietyId != 0) 
+            {
+                existingKoiFish.VarietyId = model.VarietyId;
+
+                // Cập nhật VarietyName từ variety model
+                var variety = _db.Varieties.FirstOrDefault(v => v.VarietyId == model.VarietyId);
+                if (variety != null)
+                {
+                    existingKoiFish.Variety.VarietyName = variety.VarietyName;
+                }
+            }
+
+           
+            if (ImageUrl != null && ImageUrl.Length > 0)
+            {
+                var fileName = Path.GetFileNameWithoutExtension(ImageUrl.FileName) + "_" + Guid.NewGuid() + Path.GetExtension(ImageUrl.FileName);
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/KoiFish", fileName);
+
+                // Lưu ảnh mới vào server
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    ImageUrl.CopyTo(stream);
+                }
+
+                // Cập nhật URL ảnh trong cơ sở dữ liệu với ảnh mới
+                existingKoiFish.ImageUrl = "/images/KoiFish/" + fileName;
+            }
+
+           
+            _db.SaveChanges();
+
+          
+            return Redirect($"/Admin/Manager/UpdateKoiFish?id={id}");
+        }
     }
+
 
 }
 
