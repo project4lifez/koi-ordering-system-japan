@@ -1,0 +1,357 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <h1>Kohaku Koi</h1>
+    <style>
+        body {
+            font-family: "Arial", sans-serif;
+            background-color: #fff;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container-s {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            margin-top: 30px;
+        }
+
+        .text-content-s {
+            flex: 1;
+            min-width: 500px;
+            padding-right: 20px;
+        }
+
+        h1 {
+            font-size: 36px;
+            font-weight: normal;
+            color: #333;
+        }
+
+        p {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .section-s {
+            margin-bottom: 15px;
+        }
+
+        .dropdown-button-s {
+            width: 100%;
+            text-align: left;
+            font-size: 18px;
+            font-weight: normal;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            position: relative;
+        }
+
+            .dropdown-button-s:hover {
+                background-color: #f1f1f1;
+            }
+
+            .dropdown-button-s:after {
+                content: '+';
+                position: absolute;
+                right: 20px;
+                top: 50%;
+                transform: translateY(-50%);
+                font-size: 20px;
+            }
+
+        .active .dropdown-button-s:after {
+            content: '-';
+        }
+
+        .dropdown-content-s {
+            display: none;
+            padding: 10px;
+            border: 1px solid #ddd;
+            margin-top: 5px;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+
+            .dropdown-content-s p {
+                margin: 0;
+                padding: 10px 0;
+            }
+
+        .fish-image-s {
+            flex: 1;
+            min-width: 200px;
+            max-width: 250px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+            .fish-image-s img {
+                max-width: 100%;
+                height: 264px;
+                margin-top: 55px;
+            }
+
+        .footer-text-s {
+            margin-top: 30px;
+            font-size: 16px;
+        }
+
+        (max-width: 768px) {
+            .container-s
+
+        {
+            flex-direction: column;
+        }
+
+        .text-content-s {
+            min-width: 100%;
+            padding-right: 0;
+        }
+
+        .fish-image-s {
+            margin-top: 20px;
+        }
+
+        }
+
+        /* Search Section Styling */
+        .search-section {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+            .search-section h4 {
+                font-size: 22px;
+                font-weight: bold;
+                color: #dc3545;
+            }
+
+            .search-section .form-control, .search-section .form-select {
+                border: 2px solid #e3e3e3;
+                border-radius: 5px;
+                padding: 10px;
+                font-size: 14px;
+            }
+
+            .search-section .btn-primary {
+                background-color: #5BB2F1;
+                border: none;
+                transition: background-color 0.3s ease;
+            }
+
+                .search-section .btn-primary:hover {
+                    background-color: #4A9ED4;
+                }
+
+        .koi-fish-breeds-section h2 {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        /* Card Styling */
+        .koi-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+            .koi-card:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Image Container */
+        .img-container {
+            height: 430px;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+
+            .img-container img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transition: transform 0.4s ease;
+            }
+
+        .koi-card:hover img {
+            transform: scale(1.1);
+        }
+
+        /* Pagination Styling */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .page-item {
+            margin: 0 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-s">
+        <div class="text-content-s">
+            <h2>Kohaku</h2>
+            <p>It is often said that koi keeping both begins and ends with the Kohaku variety. Any koi that features red patterns is judged based on the Kohaku pattern. Kohaku, Taisho Sanke, and Showa are the three most renowned koi varieties, collectively referred to as the Gosanke.</p>
+
+            <div class="section-s">
+                <div class="dropdown-s">
+                    <div class="dropdown-button-s" onclick="toggleDropdown('judge-s')">How to Judge Kohaku</div>
+                    <div id="judge-s" class="dropdown-content-s">
+                        <p>When evaluating a Kohaku, the most important factors are the clarity and balance of its red and white markings. The colors should be bright, crisp, and free from any blurring or fading, while the pattern should appear symmetrical and well-proportioned across the fish's body.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-s">
+                <div class="dropdown-s">
+                    <div class="dropdown-button-s" onclick="toggleDropdown('origin-s')">Origin of Kohaku Koi</div>
+                    <div id="origin-s" class="dropdown-content-s">
+                        <p>The Kohaku koi originated in Japan during the early 1800s. They were selectively bred for their striking red and white color patterns, and they quickly became one of the first major varieties of koi specifically bred for ornamental purposes.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="fish-image-s">
+            <img src="~/images/Kohaku.png" alt="Kohaku Koi">
+        </div>
+    </div>
+    <div class="footer-text-s">
+        <p style="text-align:center">We have Kohaku koi available to buy if shown below the search field. If not, please contact us with what you are looking for and we will help find the right koi for you.</p>
+    </div>
+
+    
+
+    <!-- Koi Fish Breeds Section -->
+    <section class="koi-fish-breeds-section my-5">
+
+        <div class="container">
+            <div class="row g-4" id="koiContainer">
+                <!-- Cards will be populated by JavaScript -->
+            </div>
+            <div class="pagination" id="pagination">
+                <!-- Pagination buttons will be populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+
+
+    <script>
+        function toggleDropdown(id) {
+            var content = document.getElementById(id);
+            var parent = content.parentElement;
+
+            if (content.style.display === "block") {
+                content.style.display = "none";
+                parent.classList.remove('active');
+            } else {
+                content.style.display = "block";
+                parent.classList.add('active');
+            }
+        }
+
+        const koiData = [
+            { name: "Hirenaga Kohaku", description: "This long-finned variety of koi boasts a stunning contrast between its vibrant red markings and a clean white body. The red pattern can vary, but often takes the form of large patches or streaks that flow gracefully across the koi's body. Hirenaga Kohaku are known for their elegant swimming style, their fins trailing behind them like flowing ribbons. Bred in the Hirasawa region of Japan, these koi are prized for their beauty and resilience.", image: "https://www.kodamakoifarm.com/wp-content/uploads/2024/09/w0912s030.jpg" },
+            { name: "Hirenaga Kohaku", description: "Another stunning example of the Hirenaga Kohaku variety. This koi displays a captivating interplay of red and white. The vibrant red markings dance across its pearly white body, creating a mesmerizing pattern. With its long, flowing fins, this koi embodies grace and elegance as it glides through the water.", image: "https://www.kodamakoifarm.com/wp-content/uploads/2024/09/w0913a041.jpg" },
+            { name: "Doitsu Kohaku", description: "The Doitsu Kohaku koi is a majestic fish, known for its bold red markings on a scaleless white body. The lack of scales gives the koi a smooth, almost porcelain-like appearance, highlighting the vibrant contrast between the red and white. These koi can develop a wide range of red patterns, each one unique and captivating. Doitsu Kohaku are prized for their striking beauty and their confident presence in the pond.", image: "https://www.kodamakoifarm.com/wp-content/uploads/2024/09/w0913a033.jpg" },
+            { name: "Doitsu Kohaku", description: "This Doitsu Kohaku koi showcases a powerful display of red on a clean white canvas. The absence of scales emphasizes the koi's bold personality. The red markings are well-defined, creating a captivating pattern that draws the eye. This koi is sure to be a centerpiece in any koi pond, its presence commanding attention.", image: "https://www.kodamakoifarm.com/wp-content/uploads/2024/10/w1014n004.jpg" },
+            { name: "Tancho Kohaku", description: "The Tancho Kohaku koi is a truly captivating fish. Its white body is a canvas for a single, brilliant red spot on its head, resembling the rising sun (Himachu in Japanese). This unique marking is what gives the Tancho Kohaku its name, translating to 'single-red-spot koi.' These koi are known for their elegance and grace, often swimming in a calm and deliberate manner. Owning a Tancho Kohaku is considered a mark of good fortune and prosperity in some cultures.", image: "https://www.kodamakoifarm.com/wp-content/uploads/2024/10/w1013n013.jpg" },
+
+            // Other koi data
+        ];
+
+        const itemsPerPage = 8;
+        let currentPage = 1;
+
+        function displayKoi(page, filterKeyword = '') {
+            const start = (page - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+
+            const filteredKoiData = koiData.filter(koi => koi.name.toLowerCase().includes(filterKeyword.toLowerCase()));
+            const koiToDisplay = filteredKoiData.slice(start, end);
+
+            const koiContainer = document.getElementById('koiContainer');
+            koiContainer.innerHTML = '';
+
+            koiToDisplay.forEach(koi => {
+                const card = `
+                    <div class="col-lg-3 col-md-6">
+                        <div class="card border-0 shadow-sm h-100 koi-card">
+                            <div class="img-container">
+                                <img src="${koi.image}" class="card-img-top img-fluid" alt="${koi.name}">
+                            </div>
+                            <div class="card-body text-center d-flex flex-column">
+                                <h5 class="card-title text-danger">${koi.name}</h5>
+                                <p class="card-text">${koi.description}</p>
+                            </div>
+                            <div class="card-footer text-center border-0 bg-transparent d-flex justify-content-between">
+                            </div>
+                        </div>
+                    </div>
+                `;
+                koiContainer.innerHTML += card;
+            });
+        }
+
+        function filterByKeyword() {
+            const searchInput = document.querySelector('.form-control').value;
+            displayKoi(1, searchInput);
+            setupPagination(searchInput);
+        }
+
+        function setupPagination(filterKeyword = '') {
+            const filteredKoiData = koiData.filter(koi => koi.name.toLowerCase().includes(filterKeyword.toLowerCase()));
+            const totalPages = Math.ceil(filteredKoiData.length / itemsPerPage);
+            const paginationContainer = document.getElementById('pagination');
+            paginationContainer.innerHTML = '';
+
+            for (let i = 1; i <= totalPages; i++) {
+                const pageItem = `
+                    <li class="page-item">
+                        <a class="page-link" href="#" onclick="changePage(${i}, '${filterKeyword}')">${i}</a>
+                    </li>
+                `;
+                paginationContainer.innerHTML += pageItem;
+            }
+        }
+
+        function changePage(page, filterKeyword = '') {
+            currentPage = page;
+            displayKoi(currentPage, filterKeyword);
+        }
+
+        displayKoi(currentPage);
+        setupPagination();
+    </script>
+</body>
+</html>
