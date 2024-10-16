@@ -1,0 +1,363 @@
+﻿@{
+    ViewData["Title"] = "Quote";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quote (Detail Trip)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            margin-top: 40px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        .day-content {
+            background-color: #f8f9fa;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 5px;
+        }
+
+        .btn-primary, .btn-success {
+            background-color: #007bff;
+        }
+
+        .btn-success {
+            margin-top: 120px;
+        }
+
+        .form-control {
+            box-shadow: none;
+            border-radius: 0.25rem;
+            border-color: #ced4da;
+        }
+
+        .form-control:focus {
+            border-color: #80bdff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+        .addMainTopicButton, .addKoiButton {
+            margin-top: 10px;
+        }
+
+        .text-danger {
+            font-size: 0.875rem;
+        }
+
+        /* Ensure the button is aligned properly */
+        /* Style for the professional button */
+        .btn.addKoiButton {
+            background-color: #343a40; /* Dark gray (near black) */
+            color: #fff; /* White text */
+            font-size: 18px; /* Smaller, sleek font */
+            padding: 5px 10px; /* Smaller padding */
+            border-radius: 50%; /* Circular shape */
+            border: none; /* No border */
+            width: 20px; /* Slightly smaller width */
+            height: 20px; /* Slightly smaller height */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.2s ease; /* Smooth transition for subtle effects */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); /* Soft shadow */
+        }
+
+            .btn.addKoiButton:hover {
+                background-color: #495057; /* Slightly lighter on hover */
+                transform: scale(1.05); /* Gentle zoom effect */
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* More pronounced shadow */
+            }
+
+            .btn.addKoiButton:active {
+                background-color: #212529; /* Darker gray (near black) on click */
+                transform: scale(1); /* Return to normal size on click */
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Minimal shadow when pressed */
+            }
+
+
+        .gray-bg {
+            background-color: #f0f0f0; /* Màu nền xám nhạt */
+            color: #6c757d; /* Màu chữ xám tối để dễ đọc */
+            border: 1px solid #dcdcdc; /* Đường viền xám nhạt */
+        }
+
+            /* Loại bỏ nền trắng khi input có focus */
+            .gray-bg:focus {
+                background-color: #f0f0f0; /* Giữ màu nền xám khi focus */
+                outline: none; /* Loại bỏ đường viền mặc định khi focus */
+                box-shadow: none; /* Loại bỏ hiệu ứng bóng khi focus */
+            }
+
+            .gray-bg:disabled {
+                background-color: #f0f0f0; /* Giữ màu nền xám khi input bị disabled */
+                cursor: not-allowed; /* Thay đổi con trỏ thành dấu x để người dùng biết ô input bị khóa */
+            }
+        /* Style for the button with trash can icon */
+        .btn.deleteKoiButton {
+            background-color: #dc3545; /* Bootstrap's red background */
+            color: #fff; /* White color for the icon */
+            font-size: 18px; /* Font size */
+            padding: 9px 10px; /* Padding for smaller size */
+            border: none; /* No border */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); /* Soft shadow */
+        }
+
+            .btn.deleteKoiButton:hover {
+                background-color: #c82333; /* Slightly darker red on hover */
+                transform: scale(1.05); /* Slight zoom on hover */
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* More shadow on hover */
+            }
+
+            .btn.deleteKoiButton:active {
+                background-color: #bd2130; /* Even darker red when clicked */
+                transform: scale(1); /* Return to normal size on click */
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Minimal shadow on click */
+            }
+
+
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <h1 class="text-center">Information Trip</h1>
+
+        <div class="row mb-3">
+            <div class="col-md-3">
+                <label for="bookingID">Booking ID:</label>
+                <input type="text" class="form-control gray-bg" id="bookingID" value="BookingID" readonly>
+            </div>
+            <div class="col-md-3">
+                <label for="customerName">Name Customer:</label>
+                <input type="text" class="form-control gray-bg" id="customerName" value="Tai" readonly>
+            </div>
+            <div class="col-md-3">
+                <label for="contactPhone">Contact Phone:</label>
+                <input type="text" class="form-control gray-bg" id="contactPhone" value="123456789" readonly>
+            </div>
+            <div class="col-md-3">
+                <label for="contactEmail">Contact Email:</label>
+                <input type="email" class="form-control gray-bg" id="contactEmail" value="customer@example.com" readonly>
+            </div>
+            <div class="col-md-3">
+                <label for="tripName">Trip Name:</label>
+                <input type="text" class="form-control gray-bg" id="tripName" value="Trip Name" readonly>
+            </div>
+            <div class="col-md-3">
+                <label for="startDate">Start Date:</label>
+                <input type="date" class="form-control gray-bg" id="startDate" value="2024-10-01" readonly>
+            </div>
+            <div class="col-md-3">
+                <label for="endDate">End Date:</label>
+                <input type="date" class="form-control gray-bg" id="endDate" value="2024-10-05" readonly>
+            </div>
+        </div>
+
+        <!-- Koi Purchase Order section -->
+        <div id="daysContainer">
+            <!-- Day 1 -->
+            <div class="day-content">
+
+                <h3 class="text-center mb-3">Day 1</h3>
+                <div class="col-md-3">
+                    <label for="date8">Date:</label>
+                    <input type="date" class="form-control" id="purchaseDate1" value="">
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="farm1">Farm:</label>
+                        <input type="text" class="form-control mb-2" id="farm1" value="">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="deposit1">Deposit of Farm:</label>
+                        <input type="text" class="form-control mb-2" id="deposit1" value="">
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <label>Koi Purchased:</label>
+                        <div class="koiContainer">
+                            <div class="row mb-2">
+                                <div class="col-md-3">
+                                    <select class="form-control">
+                                        <option value="" disabled selected>Select Koi</option>
+                                        <option value="Koi1">Koi 1</option>
+                                        <option value="Koi2">Koi 2</option>
+                                        <option value="Koi2">Koi 3</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control gray-bg" placeholder="Special" value="" readonly>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" placeholder="Quantity" value="">
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="text" class="form-control" placeholder="Price" value="">
+                                </div>
+                                
+                                <div class="col-md-1">
+                                    <button class="btn btn-dark btn-sm deleteKoiButton">
+                                        <i class="fas fa-trash-alt"></i> <!-- Trash can icon from Font Awesome -->
+                                    </button>
+                                </div>
+
+                            </div>
+                        </div>
+                        <button class="btn btn-primary btn-sm addKoiButton">+</button>
+
+                    </div>
+                </div>
+            </div>
+            <!-- Add additional day sections here -->
+
+
+        </div>
+
+        <!-- Add Day Button (will move down) -->
+        <div class="row mt-4">
+            <div class="col-md-4 text-start">
+                <button id="addDayButton" class="btn btn-primary">Add Day</button>
+            </div>
+            <div class="col-md-4 text-center">
+                <button class="btn btn-success">Confirm</button>
+            </div>
+            <div class="col-md-4"></div> <!-- Empty column to balance the layout -->
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            let dayCount = 1; // Initial Day 1
+
+            // Event delegation for "Delete" buttons inside the container
+            document.getElementById('daysContainer').addEventListener('click', function (event) {
+                if (event.target.classList.contains('deleteKoiButton')) {
+                    const koiRow = event.target.closest('.row');
+                    koiRow.remove();
+                }
+            });
+
+            // Event delegation for "Add Koi" buttons
+            document.getElementById('daysContainer').addEventListener('click', function (event) {
+                if (event.target.classList.contains('addKoiButton')) {
+                    const koiContainer = event.target.previousElementSibling;
+                    addKoi(koiContainer);
+                }
+            });
+
+            // Add new day when the "Add Day" button is clicked
+            document.getElementById('addDayButton').addEventListener('click', function () {
+                dayCount++;
+                addDay(dayCount);
+            });
+
+            // Function to add Koi to the list with dropdown, delete button, and date input
+            function addKoi(koiContainer) {
+                const newKoiRow = document.createElement('div');
+                newKoiRow.className = 'row mb-2';
+                newKoiRow.innerHTML =
+                    `<div class="col-md-3">
+                        <select class="form-control">
+                            <option value="" disabled selected>Select Koi</option>
+                            <option value="Koi1">Koi 1</option>
+                            <option value="Koi2">Koi 2</option>
+                            <option value="Koi3">Koi 3</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" class="form-control gray-bg" placeholder="Special" value="" readonly>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" placeholder="Quantity">
+                    </div>
+                    <div class="col-md-2">
+                        <input type="text" class="form-control" placeholder="Price">
+                    </div>
+                    <div class="col-md-1">
+                    <button class="btn btn-dark btn-sm deleteKoiButton">
+                    <i class="fas fa-trash-alt"></i> <!-- Trash can icon from Font Awesome -->
+                    </button>
+                     </div>`;
+                koiContainer.appendChild(newKoiRow);
+            }
+
+            // Function to add a new day
+            function addDay(dayNumber) {
+                const dayContainer = document.createElement('div');
+                dayContainer.className = 'day-content';
+                dayContainer.innerHTML =
+                    `<h3 class="text-center mb-3">Day ${dayNumber}</h3>
+                        <div class="col-md-3">
+                                <label for="date8">Date:</label>
+                            <input type="date" class="form-control" id="purchaseDate1" value="">
+                        </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="farm${dayNumber}">Farm:</label>
+                            <input type="text" class="form-control mb-2" id="farm${dayNumber}" value="">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="deposit${dayNumber}">Deposit of Farm:</label>
+                            <input type="text" class="form-control mb-2" id="deposit${dayNumber}" value="">
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <label>Koi Purchased:</label>
+                            <div class="koiContainer">
+                                <div class="row mb-2">
+                                    <div class="col-md-3">
+                                        <select class="form-control">
+                                            <option value="" disabled selected>Select Koi</option>
+                                            <option value="Koi1">Koi 1</option>
+                                            <option value="Koi2">Koi 2</option>
+                                            <option value="Koi3">Koi 3</option>
+                                        </select>
+                                    </div>
+                                            <div class="col-md-3">
+                                            <input type="text" class="form-control gray-bg" placeholder="Special" value="" readonly>
+                                        </div>
+                                    <div class="col-md-3">
+                                        <input type="text" class="form-control" placeholder="Quantity">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input type="text" class="form-control" placeholder="Price">
+                                    </div>
+                                            <div class="col-md-1">
+                                            <button class="btn btn-dark btn-sm deleteKoiButton">
+                                                <i class="fas fa-trash-alt"></i> <!-- Trash can icon from Font Awesome -->
+                                            </button>
+                                        </div>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary btn-sm addKoiButton">+</button>
+                        </div>
+                    </div>`;
+                document.getElementById('daysContainer').appendChild(dayContainer);
+            }
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+</body>
+
