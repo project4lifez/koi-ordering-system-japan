@@ -12,6 +12,7 @@
     <Folder Include="EF\" />
     <Folder Include="wwwroot\images\avatars\" />
     <Folder Include="wwwroot\images\KoiFish\" />
+    <Folder Include="wwwroot\images\Icon\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -843,6 +843,79 @@
         #home3 {
             background-image: url('/images/banner003.jpg');
         }
+
+
+
+        .chat-container {
+            position: fixed;
+            bottom: 90px; /* Đặt vị trí cao hơn nút "quay lại đầu trang" */
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .chat-bubble {
+            width: 50px;
+            height: 50px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+            .chat-bubble:hover {
+                background-color: #0056b3;
+            }
+
+        .chat-icons {
+            display: flex;
+            flex-direction: column;
+            position: absolute;
+            bottom: 70px; /* Các biểu tượng xuất hiện phía trên bong bóng chính */
+            right: 0;
+            transition: opacity 0.3s, visibility 0.3s;
+            opacity: 0;
+            visibility: hidden;
+            align-items: center; /* Căn giữa các biểu tượng */
+        }
+
+            .chat-icons a {
+                margin-bottom: 10px;
+            }
+
+            .chat-icons img {
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                transition: transform 0.3s;
+                margin-bottom: 10px; /* Khoảng cách đều giữa các biểu tượng */
+                padding: 5px; /* Khoảng cách bên trong cho đều */
+            }
+
+                .chat-icons img:hover {
+                    transform: scale(1.2);
+                }
+
+        .chat-container:hover .chat-icons {
+            opacity: 1; /* Hiện khi di chuột vào chat-container */
+            visibility: visible; /* Hiện khi di chuột vào chat-container */
+        }
+
+            .chat-icons.visible {
+                opacity: 1;
+                visibility: visible;
+            }
+
+        .hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+
     </style>
 </head>
 <body>
@@ -1285,6 +1358,30 @@
     </section>
     <button class="back-to-top" onclick="scrollToTop()">↑</button>
 
+    <!-- Phần bong bóng chat -->
+    <div class="chat-container">
+        <!-- Bong bóng chính -->
+        <div id="main-chat-icon" class="chat-bubble">
+            <i class="fas fa-comments"></i> <!-- Hoặc thay bằng biểu tượng khác -->
+        </div>
+
+       
+        <!-- Các biểu tượng chat nhỏ -->
+        <div id="chat-options" class="chat-icons">
+            <a href="https://m.me/yourpage" target="_blank">
+                <img src="~/images/Icon/messenger-icon.png" alt="Messenger">
+            </a>
+            <a href="https://zalo.me/yourzalo" target="_blank">
+                <img src="~/images/Icon/zalo-icon.png" alt="Zalo">
+            </a>
+            <a href="/Home/BookingForm">
+                <img src="~/images/Icon/booking-icon.png" alt="Booking"> 
+            </a>
+        </div>
+
+
+
+
 
 
     <script>
@@ -1467,6 +1564,19 @@
                 left: -300,
                 behavior: 'smooth'
             });
+        });
+        // bong bóng
+        document.getElementById("main-chat-icon").addEventListener("click", function () {
+            const chatOptions = document.getElementById("chat-options");
+
+            // Kiểm tra trạng thái hiện tại của chatOptions
+            if (chatOptions.classList.contains("hidden")) {
+                chatOptions.classList.remove("hidden");
+                chatOptions.classList.add("visible");
+            } else {
+                chatOptions.classList.remove("visible");
+                chatOptions.classList.add("hidden");
+            }
         });
 
 

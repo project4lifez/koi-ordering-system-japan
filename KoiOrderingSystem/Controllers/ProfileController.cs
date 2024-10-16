@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace KoiOrderingSystem.Controllers
 {
     public class ProfileController : Controller
@@ -142,7 +143,85 @@ namespace KoiOrderingSystem.Controllers
             return RedirectToAction("CustomerProfile");
 
         }
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(string currentPassword, string newPassword, string confirmPassword)
+        {
+            // Lấy CustomerId từ session
+            var customerId = HttpContext.Session.GetInt32("CustomerId");
+
+            if (customerId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            // Lấy thông tin tài khoản khách hàng từ database
+            var customer = await _db.Customers
+                                    .Include(c => c.Account)
+                                    .FirstOrDefaultAsync(c => c.CustomerId == customerId);
+
+            if (customer == null)
+            {
+                TempData["PasswordError"] = "Customer not found.";
+                return RedirectToAction("CustomerProfile");
+            }
+
+            // So sánh mật khẩu hiện tại nhập vào với mật khẩu trong cơ sở dữ liệu
+            if (customer.Account.Password != currentPassword)
+            {
+                TempData["PasswordError"] = "Current password is incorrect.";
+                return RedirectToAction("CustomerProfile");
+            }
+
+            // Kiểm tra mật khẩu mới và mật khẩu xác nhận có khớp không
+            if (newPassword != confirmPassword)
+            {
+                TempData["PasswordError"] = "New password and confirmation do not match.";
+                return RedirectToAction("CustomerProfile");
+            }
+
+            // Cập nhật mật khẩu mới vào cơ sở dữ liệu
+            customer.Account.Password = newPassword;
+            await _db.SaveChangesAsync();
+
+            return RedirectToAction("CustomerProfile");
+        }
+
+        [HttpPost]
+        public IActionResult CheckCurrentPassword(string currentPassword)
+        {
+            // Lấy CustomerId từ session
+            var customerId = HttpContext.Session.GetInt32("CustomerId");
+
+            if (customerId == null)
+            {
+                return Json(new { isValid = false, message = "Please log in again." });
+            }
+
+            // Lấy thông tin tài khoản khách hàng từ database
+            var customer = _db.Customers
+                              .Include(c => c.Account)
+                              .FirstOrDefault(c => c.CustomerId == customerId);
+
+            if (customer == null)
+            {
+                return Json(new { isValid = false, message = "Customer not found." });
+            }
+
+            // So sánh mật khẩu hiện tại nhập vào với mật khẩu trong cơ sở dữ liệu
+            if (customer.Account.Password != currentPassword)
+            {
+                return Json(new { isValid = false, message = "Current password is incorrect." });
+            }
+
+            return Json(new { isValid = true });
+        }
+    }
+
+
+
+
+
 
 
     }
-}
+
