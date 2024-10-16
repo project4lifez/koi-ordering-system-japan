@@ -93,8 +93,8 @@
 
             /* Image styles */
             .variety-table-custom td img {
-                width: 100px; /* Set larger width for images */
-                height: 100px; /* Set larger height for images */
+                width: 145px; /* Set larger width for images */
+                height: 190px !important; /* Set larger height for images */
                 object-fit: cover;
                 border-radius: 8px;
                 box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Soft shadow for images */
@@ -135,7 +135,10 @@
                 background-color: #dc3545;
                 color: white;
                 transition: background-color 0.3s; /* Smooth transition */
+             
             }
+        
+         }
     </style>
 </head>
 
@@ -154,7 +157,7 @@
                 <table class="variety-table-custom table">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>No</th>
                             <th>Image</th>
                             <th>Variety</th> <!-- Add Variety column -->
                             <th>Koi Name</th> <!-- Koi Name column -->
@@ -162,11 +165,14 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @{
+                            var rowNumber = 1;
+                        }
                         <!-- Example Rows with Images -->
                         @foreach (var koi in Model)
                         {
                             <tr>
-                                <td>@koi.KoiId</td>
+                                <td>@rowNumber</td>
                                 <td>
                                     <img src="@koi.ImageUrl" alt="Koi Image" style="width: 100px; height: 100px; object-fit: cover;" />
                                 </td>
@@ -189,6 +195,7 @@
 
                                 </td>
                             </tr>
+                            rowNumber++;
                         }
                     </tbody>
                 </table>

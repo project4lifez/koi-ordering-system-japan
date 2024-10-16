@@ -125,7 +125,9 @@ namespace KoiOrderingSystem
             app.MapControllerRoute(
                 name: "order_management_list",
                 pattern: "{area:exists}/{controller=Home}/{action=OrderList}/{id?}");
-
+            app.MapControllerRoute(
+               name: "podetail_area",
+               pattern: "{area:exists}/{controller=PoDetail}/{action=PoDetail}/{id?}");
             app.Run();
         }
     }

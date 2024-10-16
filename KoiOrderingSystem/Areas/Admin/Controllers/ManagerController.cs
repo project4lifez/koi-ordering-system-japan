@@ -60,13 +60,15 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
                 // Prevent updates if the current status is "Requested"
                 if (booking.Status == "Requested")
                 {
-                    // Set error message in ModelState and return to Manager page
+                    // Set error message in TempData and redirect to Manager page
                     ModelState.AddModelError("", "Cannot update status from 'Requested'.");
                     return View("Manager", booking);
                 }
 
                 // Update the booking status
+
                 booking.Status = status;
+
 
                 // Update QuoteSentDate
                 booking.QuoteSentDate = DateOnly.FromDateTime(DateTime.Now);
@@ -75,54 +77,37 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
                 if (status == "Accepted")
                 {
                     booking.QuoteApprovedDate = DateOnly.FromDateTime(DateTime.Now);
-                    var existingPayment = booking.BookingPayments.FirstOrDefault();
 
-                    // Create a new BookingPayment if it doesn't exist
+                    // Check if a BookingPayment already exists for this booking
+                    var existingPayment = booking.BookingPayments.FirstOrDefault();
                     if (existingPayment == null)
                     {
+                        // Create a new BookingPayment if it doesn't exist
                         var bookingPayment = new BookingPayment
                         {
                             Status = "Pending", // Set the initial status
                             BookingId = booking.BookingId // Assign the BookingId to the new BookingPayment
                         };
 
+                        // Add the new BookingPayment to the context
                         _db.BookingPayments.Add(bookingPayment);
                     }
                 }
-                else if (status == "Rejected" || status == "Canceled")
+
+                // Prevent QuoteApprovedDate from updating if status is "Rejected" or "Canceled"
+                if (status == "Rejected" || status == "Canceled")
                 {
                     booking.QuoteApprovedDate = null; // Optionally reset it
-                    TempData["SuccessMessage"] = $"Status updated to '{status}' successfully.";
                 }
 
                 // Save the changes
                 _db.SaveChanges();
-
-                // Set success message for Accepted status
-                if (status == "Accepted")
-                {
-                    TempData["SuccessMessage"] = $"Status updated to '{status}' successfully.";
-                }
-
-                // Redirect back to the Manager page with updated status
-                return View("Manager", booking);
             }
 
-            // If booking not found, redirect or return a not found result
-            return NotFound();
+            // Redirect back to the Manager page with updated status
+            return Redirect("Manager?id=" + bookingId);
         }
 
-
-        public IActionResult KoiFarmList()
-        {
-            return View();
-        }
-
-        public IActionResult CreateFarm()
-        {
-            return View();
-        }
-    
 
         public IActionResult KoiVarietyList()
         {
@@ -201,7 +186,6 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
         }
 
 
-
         [HttpGet]
         public IActionResult UpdateVariety(int id)
         {
@@ -257,8 +241,9 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
             _db.SaveChanges();
 
             // Chuyển hướng đến trang Edits sau khi cập nhật thành công
-            return Redirect($"/Admin/Manager/UpdateVariety?id={id}");
+            return Redirect($"/Admin/Manager/UpdateKoiVariety?id={id}");
         }
+
         public IActionResult KoiFishList()
         {
             var koiFishes = _db.KoiFishes
@@ -408,10 +393,218 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
 
             return Redirect($"/Admin/Manager/UpdateKoiFish?id={id}");
         }
+
+        public IActionResult KoiFarmList()
+        {
+            var koiFarms = _db.KoiFarms
+                     .Include(farm => farm.SpecialVarieties) // Include SpecialVarieties associated with the farm
+                     .ThenInclude(sv => sv.Variety)          // Include the Variety through SpecialVariety
+                     .ToList();
+
+            return View(koiFarms);
+        }
+
+        [HttpGet]
+        public IActionResult CreateFarm()
+        {
+
+            var varieties = _db.Varieties.ToList();
+
+
+            ViewBag.Varieties = varieties;
+
+
+            return View();
+        }
+        [HttpPost]
+        public IActionResult AddKoiFarm(KoiFarm model, IFormFile imageUrl, List<int> selectedVarietyIds)
+        {
+            if (ModelState.IsValid)
+            {
+                // Handle image upload
+                if (imageUrl != null && imageUrl.Length > 0)
+                {
+                    // Create a unique file name to avoid overwriting
+                    var fileName = Path.GetFileNameWithoutExtension(imageUrl.FileName) + "_" + Guid.NewGuid() + Path.GetExtension(imageUrl.FileName);
+                    var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/KoiFarm");
+                    var filePath = Path.Combine(directoryPath, fileName);
+
+                    // Create directory if it does not exist
+                    if (!Directory.Exists(directoryPath))
+                    {
+                        Directory.CreateDirectory(directoryPath);
+                    }
+
+                    // Save the image file
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        imageUrl.CopyTo(stream);
+                    }
+
+                    model.ImageUrl = Url.Content("~/images/KoiFarm/" + fileName); // Use Url.Content to handle URL properly
+                }
+
+                // Add the KoiFarm to the database
+                _db.KoiFarms.Add(model);
+                _db.SaveChanges(); // Save to generate FarmId
+
+                // Create SpecialVarieties based on selected varieties
+                if (selectedVarietyIds != null && selectedVarietyIds.Count > 0)
+                {
+                    foreach (var varietyId in selectedVarietyIds)
+                    {
+                        var specialVariety = new SpecialVariety
+                        {
+                            FarmId = model.FarmId, // Assuming FarmId is generated after SaveChanges
+                            VarietyId = varietyId
+                        };
+                        _db.SpecialVarieties.Add(specialVariety);
+                    }
+                    _db.SaveChanges(); // Save the SpecialVarieties to the database
+                }
+
+                return Redirect("/Admin/Manager/KoiFarmList");
+            }
+
+            // If the model state is invalid, return to the create view with the current model
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult DeleteKoiFarm(int id)
+        {
+            var farmToDelete = _db.KoiFarms
+                .Include(f => f.SpecialVarieties) // Include related SpecialVarieties
+                .FirstOrDefault(f => f.FarmId == id);
+
+            if (farmToDelete == null)
+            {
+                return NotFound();
+            }
+
+            // Remove associated SpecialVariety records first
+            _db.SpecialVarieties.RemoveRange(farmToDelete.SpecialVarieties);
+
+            // Then remove the KoiFarm
+            _db.KoiFarms.Remove(farmToDelete);
+
+            _db.SaveChanges();
+
+            return Redirect("/Admin/Manager/KoiFarmList");
+        }
+
+
+        [HttpGet]
+        public IActionResult UpdateFarm(int id)
+        {
+            // Fetch the KoiFarm with its associated SpecialVarieties
+            var model = _db.KoiFarms
+                .Include(farm => farm.SpecialVarieties)
+                .ThenInclude(sv => sv.Variety)
+                .FirstOrDefault(farm => farm.FarmId == id);
+
+            if (model == null)
+            {
+                return NotFound();
+            }
+
+            // Get the list of varieties for the checkbox list
+            var varieties = _db.Varieties.ToList();
+            ViewBag.Varieties = varieties;
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult EditKoiFarms(int id, KoiFarm model, IFormFile ImageUrl, int[] selectedVarietyIds)
+        {
+            // Fetch the existing KoiFarm from the database
+            var existingKoiFarm = _db.KoiFarms
+                .Include(farm => farm.SpecialVarieties)
+                .ThenInclude(sv => sv.Variety)
+                .FirstOrDefault(farm => farm.FarmId == id);
+
+            if (existingKoiFarm == null)
+            {
+                return NotFound();
+            }
+
+            // Update properties of the existing KoiFarm
+            if (!string.IsNullOrWhiteSpace(model.FarmName))
+            {
+                existingKoiFarm.FarmName = model.FarmName;
+            }
+
+            if (!string.IsNullOrWhiteSpace(model.Location))
+            {
+                existingKoiFarm.Location = model.Location;
+            }
+
+            if (!string.IsNullOrWhiteSpace(model.ContactInfo))
+            {
+                existingKoiFarm.ContactInfo = model.ContactInfo;
+            }
+
+            // Convert selectedVarietyIds to a list for easier manipulation
+            var selectedVarietiesList = selectedVarietyIds?.ToList() ?? new List<int>();
+
+            // Update VarietyId for existing SpecialVarieties
+            foreach (var specialVariety in existingKoiFarm.SpecialVarieties.ToList())
+            {
+                if (selectedVarietiesList.Contains((int)specialVariety.VarietyId))
+                {
+                    // If it is, keep it as is (no need to change)
+                    continue;
+                }
+                else
+                {
+                    // If it's not in the selected variety IDs, you may want to remove it
+                    _db.SpecialVarieties.Remove(specialVariety);
+                }
+            }
+
+            // If you want to add new special varieties based on the selected IDs
+            foreach (var selectedVarietyId in selectedVarietiesList)
+            {
+                // Check if the special variety already exists
+                if (!existingKoiFarm.SpecialVarieties.Any(sv => sv.VarietyId == selectedVarietyId))
+                {
+                    // If it doesn't exist, create a new SpecialVariety
+                    existingKoiFarm.SpecialVarieties.Add(new SpecialVariety
+                    {
+                        FarmId = existingKoiFarm.FarmId,
+                        VarietyId = selectedVarietyId
+                    });
+                }
+            }
+
+            // Handle image upload if provided
+            if (ImageUrl != null && ImageUrl.Length > 0)
+            {
+                var fileName = Path.GetFileNameWithoutExtension(ImageUrl.FileName) + "_" + Guid.NewGuid() + Path.GetExtension(ImageUrl.FileName);
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/KoiFarm", fileName);
+
+                // Save the new image to the server
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    ImageUrl.CopyTo(stream);
+                }
+
+                // Update the ImageUrl in the KoiFarm
+                existingKoiFarm.ImageUrl = "/images/KoiFarm/" + fileName;
+            }
+
+            // Save changes to the database
+            _db.SaveChanges();
+
+            // Redirect to the appropriate page
+            return Redirect($"/Admin/Manager/UpdateFarm?id={id}");
+        }
     }
-
-
 }
+
+
+
 
 
 

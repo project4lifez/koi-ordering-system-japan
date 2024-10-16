@@ -843,6 +843,78 @@
         #home3 {
             background-image: url('/images/banner003.jpg');
         }
+
+
+
+        .chat-container {
+            position: fixed;
+            bottom: 90px; /* Đặt vị trí cao hơn nút "quay lại đầu trang" */
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .chat-bubble {
+            width: 50px;
+            height: 50px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+            .chat-bubble:hover {
+                background-color: #0056b3;
+            }
+
+        .chat-icons {
+            display: flex;
+            flex-direction: column;
+            position: absolute;
+            bottom: 70px; /* Các biểu tượng xuất hiện phía trên bong bóng chính */
+            right: 0;
+            transition: opacity 0.3s, visibility 0.3s;
+            opacity: 0;
+            visibility: hidden;
+            align-items: center; /* Căn giữa các biểu tượng */
+        }
+
+            .chat-icons a {
+                margin-bottom: 10px;
+            }
+
+            .chat-icons img {
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                transition: transform 0.3s;
+                margin-bottom: 10px; /* Khoảng cách đều giữa các biểu tượng */
+                padding: 5px; /* Khoảng cách bên trong cho đều */
+            }
+
+                .chat-icons img:hover {
+                    transform: scale(1.2);
+                }
+
+            .chat-icons.visible {
+                opacity: 1;
+                visibility: visible;
+            }
+
+        .hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .chat-container:hover .chat-icons {
+            opacity: 1; /* Hiện khi di chuột vào chat-container */
+            visibility: visible; /* Hiện khi di chuột vào chat-container */
+        }
+
     </style>
 </head>
 <body>
@@ -1285,194 +1357,231 @@
     </section>
     <button class="back-to-top" onclick="scrollToTop()">↑</button>
 
+    <!-- Phần bong bóng chat -->
+    <div class="chat-container">
+        <!-- Bong bóng chính -->
+        <div id="main-chat-icon" class="chat-bubble">
+            <i class="fas fa-comments"></i> <!-- Hoặc thay bằng biểu tượng khác -->
+        </div>
 
 
-    <script>
-        let currentSlide = 0;
-        const slides = document.querySelectorAll('.hero');
-        const totalSlides = slides.length;
+        <!-- Các biểu tượng chat nhỏ -->
+        <div id="chat-options" class="chat-icons">
+            <a href="https://m.me/yourpage" target="_blank">
+                <img src="~/images/Icon/messenger-icon.png" alt="Messenger">
+            </a>
+            <a href="https://zalo.me/yourzalo" target="_blank">
+                <img src="~/images/Icon/zalo-icon.png" alt="Zalo">
+            </a>
+            <a href="/Home/BookingForm">
+                <img src="~/images/Icon/booking-icon.png" alt="Booking">
+            </a>
+        </div>
 
-        function showSlide(index) {
-            const slider = document.querySelector('.hero-slider');
-            slider.style.transform = `translateX(-${index * 100}%)`;
-        }
 
-        function nextSlide() {
-            currentSlide = (currentSlide + 1) % totalSlides;
-            showSlide(currentSlide);
-        }
 
-        function prevSlide() {
-            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
-            showSlide(currentSlide);
-        }
 
-        setInterval(nextSlide, 5000); // Change slide every 5 seconds
 
-        function searchFunction() {
-            var input = document.getElementById('searchInput').value.toLowerCase();
-            if (input === 'koi' || input === 'nishikigoi') {
-                alert('Koi information found!');
-            } else if (input === '') {
-                alert('Please enter a search term.');
-            } else {
-                alert('No results found for: ' + input);
+
+        <script>
+            let currentSlide = 0;
+            const slides = document.querySelectorAll('.hero');
+            const totalSlides = slides.length;
+
+            function showSlide(index) {
+                const slider = document.querySelector('.hero-slider');
+                slider.style.transform = `translateX(-${index * 100}%)`;
             }
-        }
 
-        function toggleMenu() {
-            const menu = document.querySelector('.mobile-menu');
-            menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
-        }
+            function nextSlide() {
+                currentSlide = (currentSlide + 1) % totalSlides;
+                showSlide(currentSlide);
+            }
 
-        function scrollToTop() {
-            document.body.scrollTop = 0;
-            document.documentElement.scrollTop = 0;
-        }
+            function prevSlide() {
+                currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+                showSlide(currentSlide);
+            }
 
-        window.onscroll = function () {
-            document.querySelector('.back-to-top').style.display = document.body.scrollTop > 20 || document.documentElement.scrollTop > 20 ? 'block' : 'none';
-        };
+            setInterval(nextSlide, 5000); // Change slide every 5 seconds
 
-        const tabsData = [
-            { name: 'Dainichi', id: 'dainichi' },
-            { name: 'Otsuka', id: 'otsuka' },
-            { name: 'Fukasawa', id: 'fukasawa' },
-            { name: 'Hosokai', id: 'hosokai' },
-            { name: 'Shinoda', id: 'additional1' },
-            { name: 'Farm 2', id: 'additional2' }
-        ];
-
-        const tabsContainer = document.getElementById('tab-container');
-        const farmSections = document.querySelectorAll('.koi-farm-content');
-        let currentFarm = 0;  // Currently visible farm
-        let startTabIndex = 0;  // Start index of visible tabs
-        const maxVisibleTabs = 4;  // Maximum number of visible tabs
-
-        // Function to display the current farm and hide others
-        function showFarm(index) {
-            document.querySelectorAll('.koi-farm-tab').forEach((tab, i) => {
-                tab.classList.toggle('active', i === index - startTabIndex);  // Adjusted for the visible tabs
-            });
-            farmSections.forEach((section, i) => {
-                section.style.display = i === index ? 'flex' : 'none';
-            });
-        }
-
-        // Function to render tabs based on the visible range
-        function renderTabs() {
-            tabsContainer.innerHTML = '';  // Clear current tabs
-            const visibleTabs = tabsData.slice(startTabIndex, startTabIndex + maxVisibleTabs);
-            visibleTabs.forEach((tabData, index) => {
-                const tabElement = document.createElement('div');
-                tabElement.classList.add('koi-farm-tab');
-                if (startTabIndex + index === currentFarm) {
-                    tabElement.classList.add('active');
+            function searchFunction() {
+                var input = document.getElementById('searchInput').value.toLowerCase();
+                if (input === 'koi' || input === 'nishikigoi') {
+                    alert('Koi information found!');
+                } else if (input === '') {
+                    alert('Please enter a search term.');
+                } else {
+                    alert('No results found for: ' + input);
                 }
-                tabElement.innerText = tabData.name;
-                tabElement.addEventListener('click', () => {
-                    currentFarm = startTabIndex + index;
+            }
+
+            function toggleMenu() {
+                const menu = document.querySelector('.mobile-menu');
+                menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+            }
+
+            function scrollToTop() {
+                document.body.scrollTop = 0;
+                document.documentElement.scrollTop = 0;
+            }
+
+            window.onscroll = function () {
+                document.querySelector('.back-to-top').style.display = document.body.scrollTop > 20 || document.documentElement.scrollTop > 20 ? 'block' : 'none';
+            };
+
+            const tabsData = [
+                { name: 'Dainichi', id: 'dainichi' },
+                { name: 'Otsuka', id: 'otsuka' },
+                { name: 'Fukasawa', id: 'fukasawa' },
+                { name: 'Hosokai', id: 'hosokai' },
+                { name: 'Shinoda', id: 'additional1' },
+                { name: 'Farm 2', id: 'additional2' }
+            ];
+
+            const tabsContainer = document.getElementById('tab-container');
+            const farmSections = document.querySelectorAll('.koi-farm-content');
+            let currentFarm = 0;  // Currently visible farm
+            let startTabIndex = 0;  // Start index of visible tabs
+            const maxVisibleTabs = 4;  // Maximum number of visible tabs
+
+            // Function to display the current farm and hide others
+            function showFarm(index) {
+                document.querySelectorAll('.koi-farm-tab').forEach((tab, i) => {
+                    tab.classList.toggle('active', i === index - startTabIndex);  // Adjusted for the visible tabs
+                });
+                farmSections.forEach((section, i) => {
+                    section.style.display = i === index ? 'flex' : 'none';
+                });
+            }
+
+            // Function to render tabs based on the visible range
+            function renderTabs() {
+                tabsContainer.innerHTML = '';  // Clear current tabs
+                const visibleTabs = tabsData.slice(startTabIndex, startTabIndex + maxVisibleTabs);
+                visibleTabs.forEach((tabData, index) => {
+                    const tabElement = document.createElement('div');
+                    tabElement.classList.add('koi-farm-tab');
+                    if (startTabIndex + index === currentFarm) {
+                        tabElement.classList.add('active');
+                    }
+                    tabElement.innerText = tabData.name;
+                    tabElement.addEventListener('click', () => {
+                        currentFarm = startTabIndex + index;
+                        showFarm(currentFarm);
+                        renderTabs();
+                    });
+                    tabsContainer.appendChild(tabElement);
+                });
+            }
+
+            // Event listeners for Previous and Next tab buttons
+            document.getElementById('prev-tabs-button').addEventListener('click', () => {
+                if (currentFarm > 0) {
+                    currentFarm--;
+                    if (currentFarm < startTabIndex) {
+                        startTabIndex--;
+                    }
                     showFarm(currentFarm);
                     renderTabs();
+                }
+            });
+
+            document.getElementById('next-tabs-button').addEventListener('click', () => {
+                if (currentFarm < tabsData.length - 1) {
+                    currentFarm++;
+                    if (currentFarm >= startTabIndex + maxVisibleTabs) {
+                        startTabIndex++; // Shift visible tabs to the right
+                    }
+                    showFarm(currentFarm);
+                    renderTabs();
+                }
+            });
+
+            // Initial render of tabs and farms
+            renderTabs();
+            showFarm(currentFarm);
+
+            let currentService = 0;
+            const services = document.querySelectorAll('.service');
+            const totalServices = services.length;
+
+            function showService(index) {
+                const serviceSlider = document.querySelector('.service-slider');
+                serviceSlider.style.transform = `translateX(-${index * 100}%)`;
+            }
+
+            function nextService() {
+                currentService = (currentService + 1) % totalServices;
+                showService(currentService);
+            }
+
+            function prevService() {
+                currentService = (currentService - 1 + totalServices) % totalServices;
+                showService(currentService);
+            }
+
+            setInterval(nextService, 15000); // Change service every 15 seconds
+
+            const feedbackCards = document.querySelectorAll('.feedback-card');
+            let currentFeedback = 0;
+
+            function showFeedback(index) {
+                feedbackCards.forEach((card, i) => {
+                    card.classList.remove('active');
+                    if (i === index) {
+                        card.classList.add('active');
+                    }
                 });
-                tabsContainer.appendChild(tabElement);
-            });
-        }
-
-        // Event listeners for Previous and Next tab buttons
-        document.getElementById('prev-tabs-button').addEventListener('click', () => {
-            if (currentFarm > 0) {
-                currentFarm--;
-                if (currentFarm < startTabIndex) {
-                    startTabIndex--;
-                }
-                showFarm(currentFarm);
-                renderTabs();
             }
-        });
 
-        document.getElementById('next-tabs-button').addEventListener('click', () => {
-            if (currentFarm < tabsData.length - 1) {
-                currentFarm++;
-                if (currentFarm >= startTabIndex + maxVisibleTabs) {
-                    startTabIndex++; // Shift visible tabs to the right
-                }
-                showFarm(currentFarm);
-                renderTabs();
-            }
-        });
+            document.getElementById('prev-feedback').addEventListener('click', () => {
+                currentFeedback = (currentFeedback - 1 + feedbackCards.length) % feedbackCards.length;
+                showFeedback(currentFeedback);
+            });
 
-        // Initial render of tabs and farms
-        renderTabs();
-        showFarm(currentFarm);
+            document.getElementById('next-feedback').addEventListener('click', () => {
+                currentFeedback = (currentFeedback + 1) % feedbackCards.length;
+                showFeedback(currentFeedback);
+            });
 
-        let currentService = 0;
-        const services = document.querySelectorAll('.service');
-        const totalServices = services.length;
+            showFeedback(currentFeedback);
 
-        function showService(index) {
-            const serviceSlider = document.querySelector('.service-slider');
-            serviceSlider.style.transform = `translateX(-${index * 100}%)`;
-        }
+            const feedbackCarousel = document.querySelector('.feedback-carousel');
+            const nextButton = document.getElementById('next-feedback');
+            const prevButton = document.getElementById('prev-feedback');
 
-        function nextService() {
-            currentService = (currentService + 1) % totalServices;
-            showService(currentService);
-        }
+            nextButton.addEventListener('click', () => {
+                feedbackCarousel.scrollBy({
+                    left: 300, // Scroll khoảng cách tương đương với chiều rộng của feedback card
+                    behavior: 'smooth'
+                });
+            });
 
-        function prevService() {
-            currentService = (currentService - 1 + totalServices) % totalServices;
-            showService(currentService);
-        }
+            prevButton.addEventListener('click', () => {
+                feedbackCarousel.scrollBy({
+                    left: -300,
+                    behavior: 'smooth'
+                });
+            });
+            // bong bóng
+            document.getElementById("main-chat-icon").addEventListener("click", function () {
+                const chatOptions = document.getElementById("chat-options");
 
-        setInterval(nextService, 15000); // Change service every 15 seconds
-
-        const feedbackCards = document.querySelectorAll('.feedback-card');
-        let currentFeedback = 0;
-
-        function showFeedback(index) {
-            feedbackCards.forEach((card, i) => {
-                card.classList.remove('active');
-                if (i === index) {
-                    card.classList.add('active');
+                // Kiểm tra trạng thái hiện tại của chatOptions
+                if (chatOptions.classList.contains("hidden")) {
+                    chatOptions.classList.remove("hidden");
+                    chatOptions.classList.add("visible");
+                } else {
+                    chatOptions.classList.remove("visible");
+                    chatOptions.classList.add("hidden");
                 }
             });
-        }
-
-        document.getElementById('prev-feedback').addEventListener('click', () => {
-            currentFeedback = (currentFeedback - 1 + feedbackCards.length) % feedbackCards.length;
-            showFeedback(currentFeedback);
-        });
-
-        document.getElementById('next-feedback').addEventListener('click', () => {
-            currentFeedback = (currentFeedback + 1) % feedbackCards.length;
-            showFeedback(currentFeedback);
-        });
-
-        showFeedback(currentFeedback);
-
-        const feedbackCarousel = document.querySelector('.feedback-carousel');
-        const nextButton = document.getElementById('next-feedback');
-        const prevButton = document.getElementById('prev-feedback');
-
-        nextButton.addEventListener('click', () => {
-            feedbackCarousel.scrollBy({
-                left: 300, // Scroll khoảng cách tương đương với chiều rộng của feedback card
-                behavior: 'smooth'
-            });
-        });
-
-        prevButton.addEventListener('click', () => {
-            feedbackCarousel.scrollBy({
-                left: -300,
-                behavior: 'smooth'
-            });
-        });
 
 
 
 
-    </script>
+        </script>
 
 </body>
 </html>

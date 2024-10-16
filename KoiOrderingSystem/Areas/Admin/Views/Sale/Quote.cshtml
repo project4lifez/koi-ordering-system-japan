@@ -12,7 +12,25 @@
 </head>
 <body>
     <style>
-        /* Styles as before */
+        .trip-detail {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 0.25rem;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+        }
+
+        .removeDetailBtn {
+            margin-top: 0.5rem;
+        }
+
+        .form-label {
+            font-weight: bold;
+        }
+
+        .text-danger {
+            color: red;
+        }
     </style>
 
     <main class="container-fluid px-4">
@@ -93,6 +111,20 @@
                                                         <div class="tripDetailError text-danger"></div>
                                                     </div>
 
+                                                    <!-- Farm Selection -->
+                                                    <div class="form-group mb-3">
+                                                        <label for="farmSelect" class="form-label">Farm</label>
+                                                        <select class="form-control" name="farmIds[]" required>
+                                                            <option value="">Select Farm</option>
+                                                            @foreach (var farm in ViewBag.Farms)
+                                                            {
+                                                                <option value="@farm.FarmId" @(tripDetail.KoiFarm?.FarmId == farm.FarmId ? "selected" : "")>
+                                                                    @farm.FarmName
+                                                                </option>
+                                                            }
+                                                        </select>
+                                                    </div>
+
                                                     <div class="form-group mb-3">
                                                         <label for="mainTopics" class="form-label">Main Topic</label>
                                                         <input type="text" class="form-control" name="mainTopics[]" value="@tripDetail.MainTopic" required placeholder="Enter main topic" />
@@ -119,6 +151,18 @@
                                                     <label for="days" class="form-label">Date</label>
                                                     <input type="date" class="form-control tripDetailDate" name="days[]" required />
                                                     <div class="tripDetailError text-danger"></div>
+                                                </div>
+
+                                                <!-- New Farm Selection -->
+                                                <div class="form-group mb-3">
+                                                    <label for="farmSelect" class="form-label">Farm</label>
+                                                    <select class="form-control" name="farmIds[]" required>
+                                                        <option value="">Select Farm</option>
+                                                        @foreach (var farm in ViewBag.Farms)
+                                                        {
+                                                            <option value="@farm.FarmId">@farm.FarmName</option>
+                                                        }
+                                                    </select>
                                                 </div>
 
                                                 <div class="form-group mb-3">
@@ -179,8 +223,8 @@
                 }
             });
         }
+
         document.addEventListener('DOMContentLoaded', function () {
-            // Initialize TinyMCE for existing subtopic textareas
             initializeTinyMCE('textarea[name="subTopics[]"]');
 
             var startDateInput = document.getElementById('startDate');
@@ -191,27 +235,40 @@
             // Add detail button click event
             addDetailBtn.addEventListener('click', function () {
                 var tripDetailHtml = `
-                    <div class="mb-3 trip-detail p-3 border rounded shadow-sm">
-                        <div class="form-group mb-3">
-                            <label for="days" class="form-label">Date</label>
-                            <input type="date" class="form-control tripDetailDate" name="days[]" required />
-                            <div class="tripDetailError text-danger"></div>
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="mainTopics" class="form-label">Main Topic</label>
-                            <input type="text" class="form-control" name="mainTopics[]" required placeholder="Enter main topic" />
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="subTopics" class="form-label">Sub Topic</label>
-                            <textarea class="form-control" name="subTopics[]" rows="5" required></textarea>
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="notePrices" class="form-label">Note Price</label>
-                            <input type="text" class="form-control" name="notePrices[]" placeholder="Enter note price" />
-                        </div>
-                        <button type="button" class="btn btn-danger removeDetailBtn">Remove</button>
-                    </div>
-                `;
+                                            <div class="mb-3 trip-detail p-3 border rounded shadow-sm">
+                                                <div class="form-group mb-3">
+                                                    <label for="days" class="form-label">Date</label>
+                                                    <input type="date" class="form-control tripDetailDate" name="days[]" required />
+                                                    <div class="tripDetailError text-danger"></div>
+                                                </div>
+
+                                                <!-- New Farm Selection -->
+                                                <div class="form-group mb-3">
+                                                    <label for="farmSelect" class="form-label">Farm</label>
+                                                            <select class="form-control" name="farmIds[]" required>
+                                                        <option value="">Select Farm</option>
+        @foreach (var farm in ViewBag.Farms)
+        {
+                                                                <option value="@farm.FarmId">@farm.FarmName</option>
+        }
+                                                    </select>
+                                                </div>
+
+                                                <div class="form-group mb-3">
+                                                    <label for="mainTopics" class="form-label">Main Topic</label>
+                                                    <input type="text" class="form-control" name="mainTopics[]" required placeholder="Enter main topic" />
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <label for="subTopics" class="form-label">Sub Topic</label>
+                                                    <textarea class="form-control" name="subTopics[]" rows="5" required></textarea>
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <label for="notePrices" class="form-label">Note Price</label>
+                                                    <input type="text" class="form-control" name="notePrices[]" placeholder="Enter note price" />
+                                                </div>
+                                                <button type="button" class="btn btn-danger removeDetailBtn">Remove</button>
+                                            </div>
+                                        `;
                 tripDetailsContainer.insertAdjacentHTML('beforeend', tripDetailHtml);
                 initializeTinyMCE('textarea[name="subTopics[]"]');
 
@@ -228,7 +285,7 @@
                 }
             });
 
-            // Date validation logic (existing)
+            // Date validation logic
             function validateDates() {
                 const startDate = new Date(startDateInput.value);
                 const endDate = new Date(endDateInput.value);
@@ -303,12 +360,6 @@
                 }
             });
         });
-
-
-
-
-
     </script>
-
 </body>
 </html>

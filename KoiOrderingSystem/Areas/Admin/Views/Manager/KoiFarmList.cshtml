@@ -92,8 +92,8 @@
 
             /* Image styles for farm images */
             .farm-table-custom td img {
-                width: 100px; /* Set larger width for images */
-                height: 100px; /* Set larger height for images */
+                width: 200px; /* Set larger width for images */
+                height: 110px; /* Set larger height for images */
                 object-fit: cover;
                 border-radius: 8px;
                 box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Soft shadow for images */
@@ -156,68 +156,38 @@
                             <th>ID</th>
                             <th>Image</th>
                             <th>Farm</th> <!-- Farm column -->
-                            <th>Special Variety</th> <!-- Special Variety column -->
+                            <th>Location</th> <!-- Special Variety column -->
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Example Rows with Images -->
-                        <tr>
-                            <td>1</td>
-                            <td><img src="https://via.placeholder.com/200" alt="Farm Image"></td>
-                            <td>KoiFarm Tokyo</td> <!-- Example farm name -->
-                            <td>Gosanke</td> <!-- Example special variety -->
-                            <td>
-                                <button class="btn btn-farm btn-outline-success-farm">
-                                    <i class="fas fa-edit"></i> Edit
-                                </button>
-                                <button class="btn btn-farm btn-outline-danger-farm">
-                                    <i class="fas fa-trash-alt"></i> Delete
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td><img src="https://via.placeholder.com/200" alt="Farm Image"></td>
-                            <td>KoiFarm Kyoto</td>
-                            <td>Sanke</td>
-                            <td>
-                                <button class="btn btn-farm btn-outline-success-farm">
-                                    <i class="fas fa-edit"></i> Edit
-                                </button>
-                                <button class="btn btn-farm btn-outline-danger-farm">
-                                    <i class="fas fa-trash-alt"></i> Delete
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td><img src="https://via.placeholder.com/200" alt="Farm Image"></td>
-                            <td>KoiFarm Osaka</td>
-                            <td>Showa</td>
-                            <td>
-                                <button class="btn btn-farm btn-outline-success-farm">
-                                    <i class="fas fa-edit"></i> Edit
-                                </button>
-                                <button class="btn btn-farm btn-outline-danger-farm">
-                                    <i class="fas fa-trash-alt"></i> Delete
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>4</td>
-                            <td><img src="https://via.placeholder.com/200" alt="Farm Image"></td>
-                            <td>KoiFarm Hokkaido</td>
-                            <td>Asagi</td>
-                            <td>
-                                <button class="btn btn-farm btn-outline-success-farm">
-                                    <i class="fas fa-edit"></i> Edit
-                                </button>
-                                <button class="btn btn-farm btn-outline-danger-farm">
-                                    <i class="fas fa-trash-alt"></i> Delete
-                                </button>
-                            </td>
-                        </tr>
+                        @foreach (var farm in Model)
+                        {
+                            <tr>
+                                <td>@farm.FarmId</td>
+                                <td>
+                                    <img src="@farm.ImageUrl" alt="@farm.FarmName Image">
+                                </td>
+                                <td>@farm.FarmName</td>
+                                <td>@farm.Location</td>
+
+
+                                <!-- Actions (Edit/Delete) -->
+                                <td>
+                                    <a href="/Admin/Manager/UpdateFarm/@farm.FarmId" class="btn btn-farm btn-outline-success-farm">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
+                                    <form id="deleteKoiFarmForm_@farm.FarmId" method="post" action="/Admin/Manager/DeleteKoiFarm" style="display:inline;">
+                                        <input type="hidden" name="id" value="@farm.FarmId" />
+                                        <a href="#" class="btn btn-farm btn-outline-danger-farm"
+                                           onclick="if (confirm('Do you want to delete Farm ID = @farm.FarmId?')) { document.getElementById('deleteKoiFarmForm_@farm.FarmId').submit(); } return false;"
+                                           title="Delete Farm">
+                                            <i class="fas fa-trash-alt"></i> Delete
+                                        </a>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
                     </tbody>
                 </table>
             </div>

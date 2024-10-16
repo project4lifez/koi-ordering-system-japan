@@ -240,20 +240,10 @@ public partial class Koi88Context : DbContext
             entity.Property(e => e.Location)
                 .HasMaxLength(200)
                 .HasColumnName("location");
-            entity.Property(e => e.SpecialVarietyId).HasColumnName("special_variety_id");
-            entity.Property(e => e.TripDetailId).HasColumnName("trip_detail_id");
 
             entity.HasOne(d => d.Koi).WithMany(p => p.KoiFarms)
                 .HasForeignKey(d => d.KoiId)
                 .HasConstraintName("FK__KoiFarm__koi_id__797309D9");
-
-            entity.HasOne(d => d.SpecialVariety).WithMany(p => p.KoiFarms)
-                .HasForeignKey(d => d.SpecialVarietyId)
-                .HasConstraintName("FK_Farm_SpecialVariety");
-
-            entity.HasOne(d => d.TripDetail).WithMany(p => p.KoiFarms)
-                .HasForeignKey(d => d.TripDetailId)
-                .HasConstraintName("FK__KoiFarm__trip_de__787EE5A0");
         });
 
         modelBuilder.Entity<KoiFish>(entity =>
@@ -449,14 +439,9 @@ public partial class Koi88Context : DbContext
             entity.Property(e => e.PriceTotal)
                 .HasColumnType("decimal(10, 2)")
                 .HasColumnName("price_total");
-            entity.Property(e => e.TripDetailId).HasColumnName("trip_detail_id");
             entity.Property(e => e.TripName)
                 .HasMaxLength(100)
                 .HasColumnName("trip_name");
-
-            entity.HasOne(d => d.TripDetail).WithMany(p => p.Trips)
-                .HasForeignKey(d => d.TripDetailId)
-                .HasConstraintName("FK__Trip__trip_detai__778AC167");
         });
 
         modelBuilder.Entity<TripDetail>(entity =>
@@ -466,6 +451,7 @@ public partial class Koi88Context : DbContext
             entity.ToTable("TripDetail");
 
             entity.Property(e => e.TripDetailId).HasColumnName("trip_detail_id");
+            entity.Property(e => e.FarmId).HasColumnName("farm_id");
             entity.Property(e => e.MainTopic)
                 .HasMaxLength(200)
                 .HasColumnName("main_topic");
@@ -474,6 +460,10 @@ public partial class Koi88Context : DbContext
                 .HasColumnName("note_price");
             entity.Property(e => e.SubTopic).HasColumnName("sub_topic");
             entity.Property(e => e.TripId).HasColumnName("trip_id");
+
+            entity.HasOne(d => d.KoiFarm).WithMany(p => p.TripDetails)
+                .HasForeignKey(d => d.FarmId)
+                .HasConstraintName("FK_KoiFarm");
 
             entity.HasOne(d => d.Trip).WithMany(p => p.TripDetails)
                 .HasForeignKey(d => d.TripId)

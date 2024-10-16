@@ -79,6 +79,17 @@
         .modal-footer {
             justify-content: center;
         }
+
+        .btn-yellow {
+            background-color: #f7e6a2; /* Màu vàng nhạt */
+            border-color: #f7e6a2; /* Đổi màu viền nếu cần */
+            color: #000; /* Màu chữ đen */
+        }
+
+            .btn-yellow:hover {
+                background-color: #e6d597; /* Màu vàng đậm hơn khi hover */
+                border-color: #e6d597; /* Đổi màu viền khi hover */
+            }
     </style>
 </head>
 
@@ -139,6 +150,10 @@
                             {
                                 <th>Quote</th> <!-- Detail column only for role 2 and 3 -->
                             }
+                        }
+                        @if (adminRoleId == 2 || adminRoleId == 4)
+                        {
+                            <th>Po</th>
                         }
                     </tr>
                 </thead>
@@ -242,6 +257,13 @@
                                         <!-- Quote logic for only role 2 and 3 -->
                                         <td>
                                             <a href="/Admin/Sale/Quote?bookingId=@booking.BookingId" class="btn btn-info btn-sm">Quote</a>
+                                        </td>
+                                    }
+                                    @if (adminRoleId == 2 || adminRoleId == 4)
+                                    {
+                                        <td>
+                                            <a href="" class="btn btn-yellow btn-sm">Po</a>
+
                                         </td>
                                     }
 
