@@ -471,9 +471,14 @@ namespace KoiOrderingSystem.Controllers
 
             // Truy xuất thông tin booking từ database và kiểm tra customerId
             var booking = _db.Bookings
-                             .Include(b => b.Trip) // Bao gồm thông tin Trip liên kết với booking
-                             .ThenInclude(t => t.TripDetails) // Bao gồm cả TripDetails của Trip
-                             .FirstOrDefault(b => b.BookingId == bookingId && b.CustomerId == customerId);
+        .Include(b => b.Trip) // Bao gồm thông tin Trip liên kết với booking
+        .ThenInclude(t => t.TripDetails) // Bao gồm TripDetails
+        .ThenInclude(td => td.KoiFarm) // Bao gồm thông tin KoiFarm
+        .Include(b => b.Po) // Bao gồm thông tin Purchase Order (Po)
+        .ThenInclude(po => po.Podetails) // Bao gồm Podetails
+        .ThenInclude(pd => pd.Koi) // Bao gồm thông tin Fish
+        .ThenInclude(f => f.Variety) // Bao gồm thông tin Variety
+        .FirstOrDefault(b => b.BookingId == bookingId && b.CustomerId == customerId);
 
             // Kiểm tra nếu booking không tồn tại hoặc không có chuyến đi liên quan
             if (booking == null || booking.Trip == null)
@@ -482,10 +487,19 @@ namespace KoiOrderingSystem.Controllers
             }
 
             // Kiểm tra trạng thái booking
-            if (booking.Status != "Confirmed")
+            if (booking.Status != "Confirmed" &&
+                booking.Status != "Checked in" &&
+                booking.Status != "Checked out" &&
+                booking.Status != "Delivering" &&
+                booking.Status != "Delivered")
             {
-                return NotFound("You do not have access to this page because the booking is not Payment Completed.");
+                return NotFound("You do not have access to this page because the booking is not in a valid status.");
             }
+            var farms = _db.KoiFarms.ToList();
+            ViewBag.Farms = farms;
+
+            var poDetails = booking.Po.Podetails.ToList();
+            ViewBag.PoDetails = poDetails; // Pass it to the view
 
             // Trả về view với thông tin của Trip
             return View(booking);

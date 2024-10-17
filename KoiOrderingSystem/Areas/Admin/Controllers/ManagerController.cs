@@ -48,6 +48,7 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
 
         // Action to update status
         [HttpPost]
+        [HttpPost]
         public IActionResult UpdateStatusManager(int bookingId, string status)
         {
             // Fetch the booking by ID
@@ -66,9 +67,7 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
                 }
 
                 // Update the booking status
-
                 booking.Status = status;
-
 
                 // Update QuoteSentDate
                 booking.QuoteSentDate = DateOnly.FromDateTime(DateTime.Now);
@@ -102,11 +101,19 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
 
                 // Save the changes
                 _db.SaveChanges();
+
+                // Set a success message in TempData with updated status
+                TempData["SuccessMessage"] = $"Status updated to '{status}' successfully!";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Booking not found.";
             }
 
             // Redirect back to the Manager page with updated status
             return Redirect("Manager?id=" + bookingId);
         }
+
 
 
         public IActionResult KoiVarietyList()

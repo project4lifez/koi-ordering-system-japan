@@ -107,11 +107,12 @@
         }
 
         <!-- Form Inline (Same Row) -->
+        <a class="btn btn-primary mb-2" href="/Admin/PoDetail/PoDetail?bookingId=@Model.BookingId" style="margin-top: 8px">Update Koi Order</a>
+
         <form action="/Admin/Consulting/UpdateStatus" method="post">
             <input type="hidden" name="bookingId" value="@Model.BookingId" />
 
             <div class="form-inline mb-4">
-                <button class="btn btn-primary mb-2" id="updateKoiBtn" style="margin-top: 8px">Update Koi Order</button>
                 <select class="form-select mb-2" name="status" id="status" style="width: 150px; margin-top: 8px">
                     <option value="checkin" @(Model.Status == "Checked in" ? "selected" : "")>Check in</option>
                     <option value="checkout" @(Model.Status == "Checked out" ? "selected" : "")>Check out</option>
@@ -132,56 +133,7 @@
         </form>
 
         <!-- Modal for Update Koi Order -->
-        <div id="updateModal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <h4>Update Koi Order</h4>
-
-                <!-- Form Fields -->
-                <div class="form-group">
-                    <label for="day-selection">Select Day:</label>
-                    <select id="day-selection" class="form-select">
-                        <option value="day1">Day 1</option>
-                        <option value="day2">Day 2</option>
-                        <option value="day3">Day 3</option>
-                        <option value="day4">Day 4</option>
-                        <option value="day5">Day 5</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="koi-breed">Koi Breed:</label>
-                    <input type="text" id="koi-breed" class="form-control" placeholder="Enter Koi Breed">
-                </div>
-
-                <div class="form-group">
-                    <label for="farm">Farm:</label>
-                    <input type="text" id="farm" class="form-control" placeholder="Enter Farm">
-                </div>
-
-                <div class="form-group">
-                    <label for="quantity">Quantity:</label>
-                    <input type="number" id="quantity" class="form-control" placeholder="Enter Quantity">
-                </div>
-
-                <div class="form-group">
-                    <label for="deposit">Deposit:</label>
-                    <input type="text" id="deposit" class="form-control" placeholder="Enter Deposit">
-                </div>
-
-                <div class="form-group">
-                    <label for="price">Price:</label>
-                    <input type="text" id="price" class="form-control" placeholder="Enter Price">
-                </div>
-
-                <div class="form-group">
-                    <label for="image-upload">Image:</label>
-                    <input type="file" id="image-upload" class="form-control">
-                </div>
-
-                <button class="btn btn-primary mt-3">Update</button>
-            </div>
-        </div>
+       
 
         <div class="row">
             <!-- Left Column: Customer Information and Updated Information -->
@@ -216,6 +168,20 @@
                                     : "")
                             </span>
                         </p>
+                        <p>
+                            <strong>Status Po:</strong>
+                            <span id="updated-status">@Model.Po?.Status</span>
+
+                            <!-- Button to set status to 'Deposited' -->
+                            <form action="/Admin/Consulting/SetStatusToDeposited" method="post" style="display: inline-block; margin-left: 10px;">
+                                <input type="hidden" name="bookingId" value="@Model.BookingId" />
+                                <input type="hidden" name="poId" value="@Model.Po?.PoId" />
+                                <button type="submit" class="btn btn-warning btn-sm" style="display: inline;"
+                                @(Model.Status != "Checked in" ? "disabled" : "")>
+                                    Set to Deposited
+                                </button>
+                            </form>
+                        </p>
                     </div>
                 </div>
             </div>
@@ -249,21 +215,7 @@
                                 <label>Delivery Location</label>
                                 <input type="text" name="deliveryLocation" class="form-control" value="@Model.Po?.DeliveryLocation" />                          
                             </div>
-                            <div class="form-group">
-                                <label>Koi Price</label>
-                                <input type="number" name="koiPrice" class="form-control" value="@Model.Po?.TotalAmount" />
-                            </div>
-
-                                @if (Model.Po?.Podetails != null && Model.Po.Podetails.Any())
-                                {
-                                    var detail = Model.Po.Podetails.First(); // Lấy phần tử đầu tiên
-                                    <div class="form-group">
-                                        <label>Deposit</label>
-                                        <input type="number" name="deposit" class="form-control"
-                                               value="@detail.Deposit" step="0.01" />
-                                    </div>
-                                }
-
+                           
                                 <button type="submit" class="btn btn-primary mt-3"
                                 @(Model.Status != "Checked in" && Model.Status != "Checked out" ? "disabled" : "")>
                                     Update Delivery

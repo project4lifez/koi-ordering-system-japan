@@ -79,6 +79,17 @@
             .modal-footer {
                 justify-content: center;
             }
+
+            .btn-yellow {
+                background-color: #f7e6a2; /* Màu vàng nhạt */
+                border-color: #f7e6a2; /* Đổi màu viền nếu cần */
+                color: #000; /* Màu chữ đen */
+            }
+
+                .btn-yellow:hover {
+                    background-color: #e6d597; /* Màu vàng đậm hơn khi hover */
+                    border-color: #e6d597; /* Đổi màu viền khi hover */
+                }
         </style>
     </head>
 
@@ -121,6 +132,7 @@
                             <th>Booking Form</th>
                             <th>Edit</th>
                             <th>Quote</th>
+                            <th>Po</th>
                         </tr>
                     </thead>
 
@@ -172,6 +184,11 @@
                                     <td>
                                         <a href="/Admin/Sale/Quote?bookingId=@booking.BookingId" class="btn btn-info btn-sm">Quote</a>
                                     </td>
+                                    
+                                    <td>
+                                        <a href="/Admin/PoDetail/PoDetail?bookingId=@booking.BookingId" class="btn btn-yellow btn-sm">Po</a>
+
+                                    </td>                                   
                                 </tr>
                                 index++; // Increment counter
                             }

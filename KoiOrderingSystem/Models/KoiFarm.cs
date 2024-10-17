@@ -23,8 +23,6 @@ public partial class KoiFarm
 
     public virtual ICollection<Podetail> Podetails { get; set; } = new List<Podetail>();
 
-    public virtual ICollection<Po> Pos { get; set; } = new List<Po>();
-
     public virtual ICollection<SpecialVariety> SpecialVarieties { get; set; } = new List<SpecialVariety>();
 
     public virtual ICollection<TripDetail> TripDetails { get; set; } = new List<TripDetail>();

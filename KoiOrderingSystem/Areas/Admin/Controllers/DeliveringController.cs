@@ -29,9 +29,11 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
 
             // Load Booking with related PO and PODetails
             var booking = _context.Bookings
-                .Include(b => b.Po)                  // Include the related PO
-                .ThenInclude(po => po.Podetails)     // Include the related PODetails
-                .FirstOrDefault(b => b.BookingId == id);
+      .Include(b => b.Po)                  // Include the related PO
+      .ThenInclude(po => po.Podetails)      // Include the related PODetails
+      .ThenInclude(podetail => podetail.Koi)
+      .Include(t => t.Trip)// Include the related Koi for each Podetail
+      .FirstOrDefault(b => b.BookingId == id);
 
             if (booking == null)
             {
@@ -80,6 +82,47 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
             // Redirect back to the 'Delivering' page after successful update
             return Redirect("Delivering?id=" + id);
         }
+
+
+        [HttpPost]
+        public IActionResult SetStatusToPaid(int id)
+        {
+            // Tìm booking dựa trên bookingId
+            var booking = _context.Bookings
+                                  .Include(b => b.Po)
+                                  .FirstOrDefault(b => b.BookingId == id);
+
+            if (booking != null)
+            {
+                // Chỉ cho phép cập nhật trạng thái nếu trạng thái hiện tại là "Checked in"
+                if (!booking.Status.Equals("Delivering"))
+                {
+                    // Thêm thông báo lỗi vào ModelState nếu trạng thái không phải là "Checked in"
+                    ModelState.AddModelError("StatusError", "The booking must be in 'Delivering' status before updating to 'Paid'.");
+
+                    // Tải lại trang với thông báo lỗi
+                    return View("Delivering", booking);
+                }
+
+                // Kiểm tra nếu trạng thái hiện tại chưa phải là "Paid"
+                if (!booking.Po.Status.Equals("Paid"))
+                {
+                    // Cập nhật trạng thái thành "Paid"
+                    booking.Po.Status = "Paid";
+
+                    // Lưu thay đổi vào cơ sở dữ liệu
+                    _context.SaveChanges();
+
+                    // Đặt thông báo thành công
+                    TempData["SuccessMessage"] = $"Po status updated to 'Paid' successfully.";
+                }
+            }
+
+            // Chuyển hướng người dùng về trang 'Delivering' sau khi cập nhật thành công
+            return Redirect("Delivering?id=" + id);
+        }
+
+
     }
 
 }

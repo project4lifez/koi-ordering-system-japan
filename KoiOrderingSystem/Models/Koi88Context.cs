@@ -323,24 +323,14 @@ public partial class Koi88Context : DbContext
             entity.Property(e => e.DeliveryLocation)
                 .HasMaxLength(200)
                 .HasColumnName("Delivery_Location");
-            entity.Property(e => e.FarmId).HasColumnName("farm_id");
             entity.Property(e => e.KoiDeliveryDate).HasColumnName("koi_delivery_date");
             entity.Property(e => e.KoiDeliveryTime).HasColumnName("koi_delivery_time");
-            entity.Property(e => e.PoDetailId).HasColumnName("po_detail_id");
             entity.Property(e => e.Status)
                 .HasMaxLength(100)
                 .HasColumnName("status");
             entity.Property(e => e.TotalAmount)
                 .HasColumnType("decimal(10, 2)")
                 .HasColumnName("total_amount");
-
-            entity.HasOne(d => d.Farm).WithMany(p => p.Pos)
-                .HasForeignKey(d => d.FarmId)
-                .HasConstraintName("FK__PO__farm_id__72C60C4A");
-
-            entity.HasOne(d => d.PoDetail).WithMany(p => p.Pos)
-                .HasForeignKey(d => d.PoDetailId)
-                .HasConstraintName("FK_PO_PODetail");
         });
 
         modelBuilder.Entity<Podetail>(entity =>
@@ -358,11 +348,9 @@ public partial class Koi88Context : DbContext
                 .HasMaxLength(100)
                 .HasColumnName("imageUrl");
             entity.Property(e => e.KoiId).HasColumnName("koi_id");
+            entity.Property(e => e.Note).HasColumnName("note");
             entity.Property(e => e.PoId).HasColumnName("po_id");
             entity.Property(e => e.Quantity).HasColumnName("quantity");
-            entity.Property(e => e.RemainingPrice)
-                .HasColumnType("decimal(10, 2)")
-                .HasColumnName("remaining_price");
             entity.Property(e => e.TotalKoiPrice)
                 .HasColumnType("decimal(10, 2)")
                 .HasColumnName("total_koi_price");

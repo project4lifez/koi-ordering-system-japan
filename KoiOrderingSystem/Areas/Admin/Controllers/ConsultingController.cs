@@ -49,8 +49,9 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult UpdateStatus(int bookingId, string status)
         {
-            // Retrieve the booking from the database
-            var booking = _db.Bookings.FirstOrDefault(b => b.BookingId == bookingId);
+            var booking = _db.Bookings
+                             .Include(b => b.Po)
+                             .FirstOrDefault(b => b.BookingId == bookingId);
 
             if (booking == null)
             {
@@ -58,17 +59,30 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
                 return View("Consulting", booking);
             }
 
-            // Ensure that "Checked out" can only happen if the booking is already "Checked in"
             if (status == "checkout" && booking.Status != "Checked in")
             {
                 ModelState.AddModelError("StatusError", "Cannot check out without checking in first.");
-                return View("Consulting", booking); // Return view with error
+                return View("Consulting", booking);
             }
 
-            // Update the booking status (only if allowed)
             if (status == "checkin")
             {
                 booking.Status = "Checked in";
+
+                // Nếu không có Po, tạo mới Po và gán trạng thái "Created"
+                if (booking.Po == null)
+                {
+                    booking.Po = new Po
+                    {
+                        Status = "Created"
+                        // Các thuộc tính khác nếu có thể cần được khởi tạo
+                    };
+                    _db.Add(booking.Po);
+                }
+                else
+                {
+                    booking.Po.Status = "Created"; // Cập nhật Po nếu đã tồn tại
+                }
             }
             else if (status == "checkout")
             {
@@ -78,13 +92,13 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
             _db.SaveChanges();
 
             TempData["SuccessMessage"] = $"Booking status updated to '{booking.Status}' successfully.";
-
             return Redirect("Consulting?Bookingid=" + bookingId);
         }
 
 
+
         [HttpPost]
-        public IActionResult UpdateDelivering(int bookingId, DateOnly deliveryDate, TimeOnly deliveryTime, string deliveryLocation, decimal koiPrice, decimal deposit)
+        public IActionResult UpdateDelivering(int bookingId, DateOnly deliveryDate, TimeOnly deliveryTime, string deliveryLocation)
         {
             var booking = _db.Bookings
                              .Include(b => b.Po)
@@ -105,14 +119,14 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
                 return View("Consulting", booking);
             }
 
+            // Update or create Po with new delivery information, but without updating koiPrice or deposit
             if (booking.Po == null)
             {
                 booking.Po = new Po
                 {
                     KoiDeliveryDate = deliveryDate,
                     KoiDeliveryTime = deliveryTime,
-                    DeliveryLocation = deliveryLocation,
-                    TotalAmount = koiPrice,
+                    DeliveryLocation = deliveryLocation
                 };
 
                 _db.Add(booking.Po);
@@ -122,24 +136,38 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
                 booking.Po.KoiDeliveryDate = deliveryDate;
                 booking.Po.KoiDeliveryTime = deliveryTime;
                 booking.Po.DeliveryLocation = deliveryLocation;
-                booking.Po.TotalAmount = koiPrice;
             }
 
-            var poDetail = booking.Po.Podetails.FirstOrDefault();
-            if (poDetail != null)
-            {
-                poDetail.Deposit = deposit;
-            }
-            else
-            {
-                booking.Po.Podetails.Add(new Podetail
-                {
-                    Deposit = deposit,
-                });
-            }
-
+            // Save changes to the database
             _db.SaveChanges();
+
             return Redirect("Consulting?Bookingid=" + bookingId);
+        }
+
+        [HttpPost]
+        public IActionResult SetStatusToDeposited(int bookingId, int poId)
+        {
+            // Tìm booking dựa trên bookingId và bao gồm cả thông tin Po
+            var booking = _db.Bookings
+                             .Include(b => b.Po)
+                             .FirstOrDefault(b => b.BookingId == bookingId && b.Po.PoId == poId);
+
+            // Nếu không tìm thấy booking hoặc Po, trả về lỗi
+            if (booking == null || booking.Po == null)
+            {
+                ModelState.AddModelError(string.Empty, "Booking or Po not found.");
+                return View("Consulting", booking);
+            }
+
+            // Cập nhật trạng thái của Po thành "Deposited"
+            booking.Po.Status = "Deposited";
+
+            // Lưu thay đổi vào cơ sở dữ liệu
+            _db.SaveChanges();
+
+            // Redirect về trang Consulting với thông báo thành công
+            TempData["SuccessMessage"] = "Po Status has been updated to 'Deposited'.";
+            return Redirect("Consulting?BookingId=" + bookingId);
         }
 
     }

@@ -3,6 +3,10 @@
 @{
     ViewData["Title"] = "TripDetail";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var tripDetailsList = Model.Trip.TripDetails.ToList();
+    int orderNumber = 1; // Initialize the order number here
+
+
 }
 
 <!DOCTYPE html>
@@ -179,6 +183,17 @@
                 transform: rotate(180deg);
             }
 
+        .total-section, .image-section {
+            margin-top: 15px; /* Add spacing between sections */
+            padding: 10px; /* Add padding for better appearance */
+            background-color: #f0f0f0; /* Light background for visibility */
+            border-radius: 5px; /* Rounded corners */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+        }
+
+            .total-section h4, .image-section h4 {
+                margin-bottom: 5px; /* Space below headings */
+            }
     </style>
 
 </head>
@@ -204,24 +219,64 @@
             <div class="trip-sidebar-section">
                 <div class="trip-fish-info-section">
                     <h4><strong>Information about purchased fish</strong></h4>
-                    <label for="trip-day-select">Day</label>
-                    <select id="trip-day-select" class="trip-select">
-                        <option value="1">Day 1</option>
-                        <option value="2">Day 2</option>
-                        <option value="3">Day 3</option>
-                        <option value="4">Day 4</option>
-                        <option value="5">Day 5</option>
-                    </select>
-                    <p>Koi breed: <span class="trip-data-placeholder"></span></p>
-                    <p>Farm: <span class="trip-data-placeholder"></span></p>
-                    <p>Quantity: <span class="trip-data-placeholder"></span></p>
-                    <p>Deposit: <span class="trip-data-placeholder"></span></p>
-                    <p>Price: <span class="trip-data-placeholder"></span></p>
-                    <p>Total day <span id="total-day-number">1</span>: <span class="trip-data-placeholder"></span></p>
-                    <p>Total all: <span class="trip-data-placeholder"></span></p>
-                    <p>Images: <span class="trip-data-placeholder"></span></p>
+                    @if (Model.Po != null && Model.Po.Podetails.Any())
+                    {
+                        // Group by Day
+                        var groupedPodetails = Model.Po.Podetails.GroupBy(pd => pd.Day).OrderBy(g => g.Key);
+
+                        <label for="day-select">Select a Day:</label>
+                        <select id="day-select" class="trip-select" onchange="updateFishInfo()">
+                            <option value="">-- Select a Day --</option>
+                            @foreach (var group in groupedPodetails)
+                            {
+                                <option value="@group.Key">@group.Key</option>
+                            }
+                        </select>
+
+                        <div id="fish-info" style="display:none;">
+                            @foreach (var group in groupedPodetails)
+                            {
+                                var firstPoDetail = group.First(); // Get the first PoDetail for the farm
+
+                                <div class="day-info" data-day="@group.Key" style="display:none;">
+                                    <p>Farm: <span class="trip-data-placeholder">@firstPoDetail.Farm?.FarmName</span></p>
+
+                                    @foreach (var poDetail in group)
+                                    {
+                                        <div class="order-details">
+                                            <h6><strong>Order @orderNumber:</strong></h6>
+                                            <p>Koi breed: <span class="trip-data-placeholder">@poDetail.Koi?.Variety?.VarietyName</span></p>
+                                            <p>Koi Fish: <span class="trip-data-placeholder">@poDetail.Koi?.KoiName</span></p>
+                                            <p>Quantity: <span class="trip-data-placeholder">@poDetail.Quantity</span></p>
+                                            <p>Deposit: <span class="trip-data-placeholder">@poDetail.Deposit</span></p>
+                                            <p>Price: <span class="trip-data-placeholder">@poDetail.TotalKoiPrice</span></p>
+                                        </div>
+                                        orderNumber++; // Increment the order number
+                                    }
+
+                                    <p>Note: <span class="trip-data-placeholder">@firstPoDetail.Note</span></p> <!-- Moved Note to the bottom -->
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <p>No purchase order details available.</p>
+                    }
+
+                    <!-- Added sections for Total Amount and Images -->
+                    <div class="total-section">
+                        <h4><strong>Total Amount:</strong></h4>
+                        <p><span class="trip-data-placeholder">@Model.Po.TotalAmount USD</span></p>
+                    </div>
+
+                    <div class="image-section">
+                        <h4><strong>Images:</strong></h4>
+                        <p><span class="trip-data-placeholder">@string.Join(", ", Model.Po.Podetails.Select(pd => pd.ImageUrl))</span></p>
+                    </div>
                 </div>
             </div>
+
         </div>
 
         <!-- Main Trip Details -->
@@ -241,14 +296,24 @@
                     <div class="trip-day-section">
                         <!-- Display the index of each day (1-based index) -->
                         <button class="trip-toggle-btn" onclick="toggleDayDetails(this)">
-                            <h4>Day @(detail.index + 1) (@detail.value.Day): @detail.value.MainTopic</h4>
+                            <h4>Day @(detail.index + 1) (@detail.value.Day?.ToString("dd/MM/yyyy")): @detail.value.MainTopic</h4>
                             <span class="arrow">&#9660;</span>
                         </button>
 
                         <div class="trip-timeline">
                             <!-- Display Main Topic and Subtopic with TinyMCE -->
                             <div class="trip-event">
-                                <div class="trip-time">@detail.value.MainTopic</div>
+                                <!-- Display Farm Name -->
+                                @if (detail.value.KoiFarm != null)
+                                {
+                                    <div class="trip-time">Farm: @detail.value.KoiFarm.FarmName (@detail.value.KoiFarm.Location)</div>
+                                }
+                                else
+                                {
+                                    <div class="trip-time text-danger">No farm assigned</div>
+                                }
+
+                                <!-- SubTopic in TinyMCE Editor -->
                                 <textarea class="trip-details-editor">@detail.value.SubTopic</textarea>
                             </div>
 
@@ -264,6 +329,32 @@
     </div>
 
     <script>
+
+        function updateFishInfo() {
+            const daySelect = document.getElementById('day-select');
+            const selectedDay = daySelect.value;
+
+            // Lấy tất cả các div thông tin ngày
+            const dayInfos = document.querySelectorAll('.day-info');
+
+            // Ẩn tất cả các thông tin ngày
+            dayInfos.forEach((info) => {
+                info.style.display = 'none'; // Ẩn tất cả
+            });
+
+            // Nếu có ngày được chọn, hiển thị thông tin tương ứng
+            if (selectedDay) {
+                const selectedInfo = document.querySelector(`.day-info[data-day="${selectedDay}"]`);
+                if (selectedInfo) {
+                    selectedInfo.style.display = 'block'; // Hiển thị thông tin cho ngày được chọn
+                }
+            }
+
+            // Hiển thị hoặc ẩn phần thông tin cá nếu có ngày được chọn
+            const fishInfo = document.getElementById('fish-info');
+            fishInfo.style.display = selectedDay ? 'block' : 'none';
+        }
+
         function toggleDayDetails(button) {
             var tripTimeline = button.nextElementSibling;
             var arrow = button.querySelector('.arrow');
