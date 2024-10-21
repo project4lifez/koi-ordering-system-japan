@@ -1,0 +1,225 @@
+﻿@{
+    ViewData["Title"] = "FarmDetail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <h1>Danichi Koi Farm - Koi Farms Search</h1>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        a {
+            color: #5BB2F1; /* Đặt màu chữ */
+            text-decoration: none; /* Loại bỏ gạch chân */
+        }
+
+
+        .farm-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .farm-header {
+            transform: translate(3px, 25px);
+            text-align: center;
+            margin-bottom: 40px;
+            background-color: #5BB2F1;
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .farm-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .farm-subtitle {
+            font-size: 1.5rem;
+            font-weight: 300;
+            margin-top: 10px;
+        }
+
+        .farm-intro {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .farm-image {
+            flex: 1;
+            max-width: 500px;
+            border-radius: 10px;
+            margin-right: 20px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+            .farm-image:hover {
+                transform: scale(1.05);
+            }
+
+        .farm-description {
+            margin-top: 50px;
+            flex: 2;
+            padding-left: 20px;
+            border-left: 3px solid #5BB2F1;
+        }
+
+            .farm-description h2 {
+                font-size: 2rem;
+                color: black;
+                font-weight: 700;
+                margin-bottom: 20px;
+            }
+
+            .farm-description p {
+                font-size: 1.1rem;
+                line-height: 1.8;
+                color: #666;
+                margin-bottom: 20px;
+            }
+
+        .farm-info {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+
+        .farm-info-item {
+            flex: 1;
+            min-width: 250px;
+            margin-bottom: -28px;
+            padding: 20px;
+            background-color: #f9f9fb;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
+            transition: background-color 0.3s ease;
+        }
+
+            .farm-info-item:hover {
+                background-color: #f0f4f8;
+            }
+
+            .farm-info-item h3 {
+                font-size: 1.5rem;
+                color: #5BB2F1;
+                font-weight: 700;
+                margin-bottom: 10px;
+            }
+
+            .farm-info-item p {
+                font-size: 1.1rem;
+                color: #666;
+            }
+
+        .farm-footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            padding-bottom: 20px;
+            border-top: 1px solid #ddd;
+            background-color: #5BB2F1;
+            color: white;
+            border-radius: 15px;
+        }
+
+            .farm-footer p {
+                font-size: 1rem;
+                color: white;
+                margin: 0;
+            }
+
+        .btn-primary {
+            background-color: #5BB2F1;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1.1rem;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+            .btn-primary:hover {
+                background-color: #244f78;
+            }
+
+        .contact-button {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    
+    <div class="farm-container">
+        <div class="container-s">
+            <div class="breadcrumb-container" style="margin-top: 20px; width: 100%;">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="https://localhost:7234/Home/HomePage">Home</a></li>
+                    <li class="breadcrumb-item"><a href="https://localhost:7234/Home/Farm">Farm</a></li>
+                    <li class="breadcrumb-item active" aria-current="page"><strong>Danichi Koi Farm </strong></li>
+                </ol>
+            </div>
+        </div>
+
+        <header class="farm-header"> 
+            <h1 class="farm-title">Danichi Koi Farm</h1>
+            <p class="farm-subtitle">The finest Koi in Japan since 1965</p>
+        </header>
+
+        <section class="farm-intro">
+            <img src="~/images/Dainichi.jpg" alt="Koi Farm" class="farm-image">
+            <div class="farm-description">
+                <h2>About Our Farm</h2>
+                <p>Located in Niigata, Japan, Danichi Koi Farm is renowned for breeding premium Koi. With a legacy dating back to 1965, we have cultivated a world-class reputation for producing Koi with superior patterns, color, and body structure. Our commitment to excellence has made us one of the leading breeders globally, attracting Koi enthusiasts from all over the world.</p>
+                <p>We invite you to visit our farm and witness the beauty of our Koi firsthand. Our tours provide insights into our breeding techniques and allow you to interact with our experts who are passionate about Koi care and breeding.</p>
+                <div class="contact-button">
+                    <a href="#" class="btn btn-primary">Contact Us for More Info</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="farm-info">
+            <div class="farm-info-item">
+                <h3>Location</h3>
+                <p>Niigata Prefecture, Japan</p>
+            </div>
+            <div class="farm-info-item">
+                <h3>Specialties</h3>
+                <p>Showa, Kohaku, Sanke</p>
+            </div>
+            <div class="farm-info-item">
+                <h3>Phone</h3>
+                <p>+81 123-456-789</p>
+            </div>
+            <div class="farm-info-item">
+                <h3>Email</h3>
+                <p>info@danichikoifarm.jp</p>
+            </div>
+        </section>
+
+        
+    </div>
+</body>
+</html>
