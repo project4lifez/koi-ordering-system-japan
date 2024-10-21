@@ -1,0 +1,189 @@
+﻿@{
+    ViewData["Title"] = "Manager";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Cards</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f5f7;
+            padding: 3rem;
+        }
+
+        .employee-card {
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            text-align: center;
+            transition: transform 0.2s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            height: 350px;
+        }
+
+            .employee-card:hover {
+                transform: scale(1.05);
+            }
+
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .avatar img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+        .btn-details {
+            background-color: #186ff5;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 0.5rem 1.5rem;
+            font-weight: bold;
+            transition: all 0.3s ease-in-out;
+        }
+
+            .btn-details:hover {
+                background-color: #0b5be7;
+            }
+
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom:15px;
+        }
+
+        .filter-container {
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: 20px;
+        }
+
+            .filter-container select {
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 10px;
+                background-color: #fff;
+                cursor: pointer;
+            }
+            h5 {
+                margin-bottom:1rem;
+            }
+            p {
+                margin-bottom:5px;
+            }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Employee Cards</h1>
+            <button class="btn btn-details">+ Create New Account</button>
+        </div>
+
+        <div class="filter-container">
+            <select id="positionFilter">
+                <option value="">All Positions</option>
+                <option value="sale">Sale Staff</option>
+                <option value="consulting">Consulting Staff</option>
+                <option value="delivering">Delivering Staff</option>
+            </select>
+        </div>
+
+        <div class="card-container" id="employeeCards">
+            <div class="employee-card" data-role="sale">
+                <div class="avatar">
+                    <img src="https://i1.sndcdn.com/artworks-yywyCklgyq5BiEGX-eAxBDw-t1080x1080.jpg" alt="Avatar">
+                </div>
+                <h5>KhoaPASE</h5>
+                <p>Staff ID: #1</p>
+                <p>Sale Staff</p>
+                <button class="btn btn-details">Details</button>
+            </div>
+
+            <div class="employee-card" data-role="delivering">
+                <div class="avatar">
+                    <img src="https://thanhnien.mediacdn.vn/Uploaded/haoph/2021_10_21/jack-va-thien-an-5805.jpeg" alt="Avatar">
+                </div>
+                <h5>TaiNT</h5>
+                <p>Staff ID: #2</p>
+                <p>Delivering Staff</p>
+                <button class="btn btn-details">Details</button>
+            </div>
+
+            <div class="employee-card" data-role="consulting">
+                <div class="avatar">
+                    <img src="https://via.placeholder.com/100" alt="Avatar">
+                </div>
+                <h5>TrungDN</h5>
+                <p>Staff ID: #3</p>
+                <p>Consulting Staff</p>
+                <button class="btn btn-details">Details</button>
+            </div>
+
+            <div class="employee-card" data-role="consulting">
+                <div class="avatar">
+                    <img src="https://via.placeholder.com/100" alt="Avatar">
+                </div>
+                <h5>LeMinhThun</h5>
+                <p>Staff ID: #4</p>
+                <p>Consulting Staff</p>
+                <button class="btn btn-details">Details</button>
+            </div>
+
+            <div class="employee-card" data-role="sale">
+                <div class="avatar">
+                    <img src="https://via.placeholder.com/100" alt="Avatar">
+                </div>
+                <h5>VietKieu</h5>
+                <p>Staff ID: #5</p>
+                <p>Sale Staff</p>
+                <button class="btn btn-details">Details</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('positionFilter').addEventListener('change', function () {
+            const selectedRole = this.value;
+            const employeeCards = document.querySelectorAll('.employee-card');
+
+            employeeCards.forEach(card => {
+                const role = card.getAttribute('data-role');
+                if (selectedRole === "" || role === selectedRole) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

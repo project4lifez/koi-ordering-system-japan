@@ -1,0 +1,228 @@
+﻿@{
+    ViewData["Title"] = "CreateAccount";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New Account</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f5f7;
+            padding-top: 3rem;
+        }
+
+        .form-account-container {
+            max-width: 80%;
+            padding: 3rem;
+            background-color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            margin: auto;
+        }
+
+        .form-control, .form-select {
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .form-select {
+            height: calc(2.75rem + 2px);
+            background-color: #fff;
+        }
+
+            .form-select:hover {
+                border-color: #186ff5;
+                background-color: #f9f9f9;
+            }
+
+            .form-select:focus {
+                border-color: #0b5be7;
+                box-shadow: 0 0 8px rgba(11, 91, 231, 0.15);
+                outline: none;
+            }
+
+        .form-floating label {
+            opacity: 0.7;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .form-floating input:not(:placeholder-shown) + label,
+        .form-floating select:not(:placeholder-shown) + label {
+            opacity: 1;
+            transform: translateY(-10px);
+            font-size: 0.85rem;
+        }
+
+        .btn-submit {
+            background-color: #186ff5;
+            color: white;
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            margin-top: 2rem;
+            width: 50%;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: bold;
+            transition: all 0.3s ease-in-out;
+        }
+
+            .btn-submit:hover {
+                background-color: #0b5be7;
+                transform: scale(1.05);
+            }
+
+        h2 {
+            text-align: center;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .avatar-preview {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f1f1f1;
+            margin-top: 1rem;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+            .avatar-preview img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+    </style>
+</head>
+
+<body>
+    <div class="container form-account-container">
+        <h2>Create New Account</h2>
+
+        <form asp-controller="UserAccount" asp-action="Create" method="post" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <div class="form-floating">
+                        <input asp-for="FirstName" class="form-control" id="FirstName" placeholder="Enter your first name" />
+                        <label for="FirstName">First Name</label>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="form-floating">
+                        <input asp-for="LastName" class="form-control" id="LastName" placeholder="Enter your last name" />
+                        <label for="LastName">Last Name</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <div class="form-floating">
+                        <input asp-for="PhoneNumber" class="form-control" id="PhoneNumber" placeholder="Enter your phone number" />
+                        <label for="PhoneNumber">Phone Number</label>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="form-floating">
+                        <input asp-for="Email" class="form-control" id="Email" placeholder="Enter your email address" />
+                        <label for="Email">Email</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <div class="form-floating">
+                        <select asp-for="Gender" class="form-select" id="Gender" required>
+                            <option value="" selected disabled>Choose Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <label for="Gender">Gender</label>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="form-floating">
+                        <input asp-for="Username" class="form-control" id="Username" placeholder="Choose a username" />
+                        <label for="Username">Username</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <div class="form-floating">
+                        <input asp-for="Password" type="password" class="form-control" id="Password" placeholder="Create a password" />
+                        <label for="Password">Password</label>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="form-floating">
+                        <select asp-for="Role" class="form-select" id="Role" required>
+                            <option value="" selected disabled>Choose Role</option>
+                            <option value="Customer">Customer</option>
+                            <option value="Manager">Manager</option>
+                            <option value="SaleStaff">Sale Staff</option>
+                            <option value="ConsultingStaff">Consulting Staff</option>
+                            <option value="DeliveringStaff">Delivering Staff</option>
+                        </select>
+                        <label for="Role">Role</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 mb-3">
+                    <label for="ProfilePicture" class="form-label">Profile Image</label>
+                    <input type="file" asp-for="Avatar" class="form-control" id="ProfilePicture" accept="image/*" onchange="previewAvatar(event)" />
+                </div>
+
+                <div class="col-md-12">
+                    <div class="avatar-preview">
+                        <img id="avatarDisplay" src="https://via.placeholder.com/150" alt="Avatar Preview" />
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-submit">Create Account</button>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function previewAvatar(event) {
+            const avatarDisplay = document.getElementById('avatarDisplay');
+            const file = event.target.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    avatarDisplay.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+</body>
+
+</html>
