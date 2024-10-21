@@ -19,8 +19,6 @@ public partial class KoiFarm
 
     public virtual KoiFish? Koi { get; set; }
 
-    public virtual ICollection<KoiPackage> KoiPackages { get; set; } = new List<KoiPackage>();
-
     public virtual ICollection<Podetail> Podetails { get; set; } = new List<Podetail>();
 
     public virtual ICollection<SpecialVariety> SpecialVarieties { get; set; } = new List<SpecialVariety>();

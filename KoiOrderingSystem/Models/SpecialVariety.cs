@@ -11,8 +11,6 @@ public partial class SpecialVariety
 
     public int? VarietyId { get; set; }
 
-    public string? SpecialDescription { get; set; }
-
     public virtual KoiFarm? Farm { get; set; }
 
     public virtual Variety? Variety { get; set; }

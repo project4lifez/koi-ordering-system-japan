@@ -2,15 +2,16 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order History - Nishikigoi Ordering Service</title>
     <h2>Order History - Nishikigoi Ordering Service</h2>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        /* Same styles from YourBooking view */
         body {
             background-color: #f8f9fa;
             margin: 0;
@@ -91,10 +92,10 @@
         }
 
             .custom-content h2 {
-                font-size: 24px; /* Same font size for headings */
-                font-weight: 600; /* Ensure consistency in weight */
-                color: #1565c0; /* The blue color used in Your Booking */
                 margin-bottom: 20px;
+                font-weight: 600;
+                font-size: 1.5rem;
+                color: #1565c0;
             }
 
         .custom-table {
@@ -107,7 +108,8 @@
             overflow: hidden;
         }
 
-        .custom-th, .custom-td {
+        .custom-th,
+        .custom-td {
             padding: 20px;
             text-align: center;
             border-bottom: 1px solid #ddd;
@@ -120,6 +122,7 @@
         }
 
         .custom-td {
+            position: relative;
             font-size: 1rem;
         }
 
@@ -137,11 +140,99 @@
             border-radius: 20px;
         }
 
-        tbody tr:hover {
-            background-color: #f0f0f0;
+        .custom-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: #a3d9d6;
+            color: white;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .custom-pay-btn:hover {
+            background-color: #7bc1bc;
+        }
+
+        .custom-more-btn {
+            background-color: #90caf9;
+        }
+
+            .custom-more-btn:hover {
+                background-color: #64b5f6;
+            }
+
+        /* Màu nền cam nhạt cho icon feedback */
+        .custom-feedback-btn {
+            background-color: #FFD699;
+            color: white;
+        }
+
+            .custom-feedback-btn:hover {
+                background-color: #FFCC80;
+            }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Star rating CSS */
+        .rating i {
+            font-size: 30px;
+            color: #ccc;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+            .rating i.checked {
+                color: #FFD700;
+            }
+
+            .rating i:hover {
+                color: #FFD700;
+            }
+
+        /* Modal custom styles */
+        .modal-lg {
+            max-width: 700px;
+        }
+
+        .modal-dialog {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .d-flex {
+            margin-top: 20px;
+        }
+
+        .modal-body input,
+        .modal-body textarea {
+            width: 100%;
+            padding: 10px;
+        }
+
+        .custom-canceled-gray-btn {
+            background-color: #cfd8dc;
+        }
+
+        .custom-canceled-gray-btn:hover {
+            background-color: #b0bec5;
         }
     </style>
 </head>
+
 <body>
     <div class="custom-container">
         <!-- Sidebar Section -->
@@ -156,7 +247,7 @@
                 <li class="custom-active">
                     <a href="/YourBooking/OrderHistory" style="display: flex; align-items: center; justify-content: space-between;">
                         Booking History
-                        <span class="custom-order-count" style="margin-left: 8px;">@Model.Count()</span> <!-- Display the number next to Order History -->
+                        <span class="custom-order-count">@Model.Count()</span>
                     </a>
                 </li>
                 <li>
@@ -179,6 +270,7 @@
                         <th class="custom-th">Trip Name</th>
                         <th class="custom-th">Status</th>
                         <th class="custom-th">Price</th>
+                        <th class="custom-th">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -204,19 +296,41 @@
                                 <td class="custom-td">
                                     @if (booking.QuotedAmount.HasValue && booking.QuotedAmount > 0)
                                     {
-                                        // Tính toán giá trị đã cộng thêm 5%
-                                        var adjustedAmount = booking.QuotedAmount.Value * (decimal)1.05; // Cộng thêm 5%
-
-                                        // Định dạng giá trị đã điều chỉnh
+                                        var adjustedAmount = booking.QuotedAmount.Value * (decimal)1.05;
                                         var formattedAmount = adjustedAmount % 1 == 0
                                         ? string.Format("{0:0}", adjustedAmount)
                                         : string.Format("{0:0.00}", adjustedAmount);
-
                                         @($"{formattedAmount} USD")
                                     }
-                                    else
+                                </td>
+                                <td class="custom-td action-buttons">
+                                    @if (booking.Status != "Canceled" && !string.IsNullOrEmpty(booking.Trip?.TripName))
                                     {
-                                        <text></text> <!-- Hiển thị trống nếu không có QuotedAmount -->
+                                        <button class="custom-pay-btn custom-btn" title="Pay Now" onclick="window.location.href='/YourBooking/Payment?bookingId=@booking.BookingId';">
+                                            <i class="fa-regular fa-credit-card fa-fw"></i>
+                                        </button>
+                                        <button class="custom-more-btn custom-btn" title="More Info" onclick="window.location.href='@Url.Action("TripDetail", "YourBooking", new { bookingId = booking.BookingId })'">
+                                            <i class="fa-solid fa-info-circle fa-fw"></i>
+                                        </button>
+
+                                        @if (booking.Status == "Delivered")
+                                        {
+                                            <button class="custom-feedback-btn custom-btn" title="Leave Feedback" data-booking-id="@booking.BookingId" data-trip-name="@booking.Trip?.TripName">
+                                                <i class="fa-solid fa-comment-dots fa-fw"></i>
+                                            </button>
+                                        }
+                                    }
+                                    else if (booking.Status == "Canceled" && !string.IsNullOrEmpty(booking.Trip?.TripName))
+                                    {
+                                        <button class="custom-more-btn custom-btn" title="More Info" onclick="window.location.href='@Url.Action("TripDetail", "YourBooking", new { bookingId = booking.BookingId })'">
+                                            <i class="fa-solid fa-info-circle fa-fw"></i>
+                                        </button>
+                                    }
+                                    else if (booking.Status == "Canceled" && string.IsNullOrEmpty(booking.Trip?.TripName))
+                                    {
+                                        <button class="custom-canceled-gray-btn custom-btn" title="You canceled the form request before receiving a quote" disabled>
+                                            <i class="fa-solid fa-ban fa-fw"></i>
+                                        </button>
                                     }
                                 </td>
                             </tr>
@@ -226,12 +340,128 @@
                     else
                     {
                         <tr>
-                            <td colspan="5" class="custom-td" style="text-align: center;">No order history found.</td>
+                            <td colspan="6" class="custom-td" style="text-align: center;">No order history found.</td>
                         </tr>
                     }
                 </tbody>
             </table>
         </div>
     </div>
+
+    <!-- Feedback Modal -->
+    <div class="modal fade" id="feedbackModal" tabindex="-1" aria-labelledby="feedbackModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="feedbackModalLabel">Feedback</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="feedbackForm" method="post" action="/YourBooking/SubmitFeedback">
+                        <input type="hidden" id="BookingId" name="BookingId" />
+                        <div class="mb-3">
+                            <label for="TripName" class="form-label">Trip Name</label>
+                            <input type="text" class="form-control" id="TripName" readonly />
+                        </div>
+                        <div class="mb-3">
+                            <label for="rating" class="form-label">Rating</label>
+                            <div id="starRating" class="rating">
+                                <i class="fa fa-star" data-value="1"></i>
+                                <i class="fa fa-star" data-value="2"></i>
+                                <i class="fa fa-star" data-value="3"></i>
+                                <i class="fa fa-star" data-value="4"></i>
+                                <i class="fa fa-star" data-value="5"></i>
+                            </div>
+                            <input type="hidden" id="Rating" name="Rating" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="Comments" class="form-label">Comments</label>
+                            <textarea class="form-control" id="Comments" name="Comments" rows="4"></textarea>
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            <button type="submit" class="btn btn-primary">Submit Feedback</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Hiển thị modal và điền dữ liệu khi nhấn nút Feedback
+            document.querySelectorAll('.custom-feedback-btn').forEach(button => {
+                button.addEventListener('click', function () {
+                    const bookingId = this.dataset.bookingId;
+                    const tripName = this.dataset.tripName;
+
+                    document.getElementById('BookingId').value = bookingId;
+                    document.getElementById('TripName').value = tripName;
+
+                    // Gửi yêu cầu AJAX để lấy dữ liệu feedback
+                    fetch(`/YourBooking/GetFeedback?bookingId=${bookingId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success && data.feedback) {
+                                // Nếu có feedback, điền vào form và đặt chế độ chỉ xem
+                                document.getElementById('Rating').value = data.feedback.rating;
+                                document.getElementById('Comments').value = data.feedback.comments;
+                                highlightStars(data.feedback.rating); // Đánh dấu sao
+
+                                // Đặt các trường vào chế độ chỉ đọc
+                                document.querySelectorAll('.rating i').forEach(star => {
+                                    star.style.pointerEvents = 'none'; // Không cho phép click vào các ngôi sao
+                                });
+                                document.getElementById('Comments').setAttribute('readonly', true); // Comments không thể chỉnh sửa
+
+                                // Ẩn nút "Submit Feedback"
+                                document.querySelector('#feedbackForm button[type="submit"]').style.display = 'none';
+                            } else {
+                                // Nếu không có feedback, reset form
+                                document.getElementById('Rating').value = "";
+                                document.getElementById('Comments').value = "";
+                                highlightStars(0); // Reset các sao
+
+                                // Đặt lại các trường để có thể chỉnh sửa
+                                document.querySelectorAll('.rating i').forEach(star => {
+                                    star.style.pointerEvents = 'auto'; // Cho phép click vào các ngôi sao
+                                });
+                                document.getElementById('Comments').removeAttribute('readonly'); // Comments có thể chỉnh sửa
+
+                                // Hiển thị nút "Submit Feedback"
+                                document.querySelector('#feedbackForm button[type="submit"]').style.display = 'block';
+                            }
+
+                            let feedbackModal = new bootstrap.Modal(document.getElementById('feedbackModal'));
+                            feedbackModal.show();
+                        })
+                        .catch(error => {
+                            console.error('Error fetching feedback:', error);
+                        });
+                });
+            });
+
+            // Đánh giá sao
+            const stars = document.querySelectorAll('#starRating .fa-star');
+            stars.forEach(star => {
+                star.addEventListener('click', function () {
+                    const rating = this.dataset.value;
+                    document.getElementById('Rating').value = rating;
+                    highlightStars(rating);
+                });
+            });
+
+            function highlightStars(rating) {
+                stars.forEach(star => {
+                    star.classList.remove('checked');
+                    if (star.dataset.value <= rating) {
+                        star.classList.add('checked');
+                    }
+                });
+            }
+        });
+    </script>
 </body>
+
 </html>

@@ -101,14 +101,30 @@
                         Trip Name
                     </div>
                     <div class="card-body">
-                        <h5>@(Model.Trip?.TripName ?? "No Trip Name available")</h5>
+                        <h5>@Model.Trip?.TripName</h5>
                         <div class="d-flex flex-column">
-                            <p style="text-align: right;"><strong>Koi Price:@Model.Po?.TotalAmount?.ToString() $</strong></p>
-                            <p style="text-align: right;"><strong>Deposit:@Model?.Po?.Podetails?.FirstOrDefault()?.Deposit $</strong></p>
+                            <p style="text-align: right;">
+                                <strong>Koi Price:</strong>
+                                @(Model.Po?.Podetails
+                                    ?.Where(pd => pd.PoId == Model.Po.PoId)
+                                    .Sum(pd => pd.TotalKoiPrice) ?? 0) USD
+                            </p>
+                            <p style="text-align: right;">
+                                <strong>Total Deposited:</strong>
+                                @(Model?.Po?.Podetails
+                                    ?.Where(pd => pd.PoId == Model.Po.PoId)
+                                    .GroupBy(pd => pd.FarmId) // Group by FarmId
+                                    .Sum(group => group.FirstOrDefault()?.Deposit ?? 0) ?? 0) USD
+                            </p>
                         </div>
                         <div class="d-flex flex-column">
-                            <p style="text-align: right;"><strong>Remaining Payment:@((Model.Po?.TotalAmount ?? 0) - (Model.Po?.Podetails?.FirstOrDefault()?.Deposit ?? 0))$</strong></p>
-                            <p class="text-danger" style="text-align: right;"><strong>Status:@Model.Status</strong></p>
+                            <p style="text-align: right;">
+                                <strong>Remaining Payment:</strong>
+                                @Model.Po?.TotalAmount USD
+                            </p>
+                            <p class="text-danger" style="text-align: right;">
+                                <strong>Status:</strong> @Model?.Status
+                            </p>
                         </div>
                     </div>
                 </div>

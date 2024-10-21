@@ -41,7 +41,12 @@ namespace KoiOrderingSystem.Controllers
             return View();
         }
 
-        public IActionResult KoiBreed()
+        public IActionResult Variety()
+        {
+            return View();
+        }
+
+        public IActionResult VarietyDetail()
         {
             return View();
         }

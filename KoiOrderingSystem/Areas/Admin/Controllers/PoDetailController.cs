@@ -18,6 +18,14 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
 
         public IActionResult PoDetail(int bookingId)
         {
+            var adminRoleId = HttpContext.Session.GetInt32("AdminRoleId");
+
+            // Check if the RoleId is null or not equal to 2
+            if (adminRoleId != 2 && adminRoleId != 4)
+            {
+                return NotFound("You do not have permission to access this page.");
+            }
+
             // Truy xuất thông tin booking với tất cả các quan hệ cần thiết
             var booking = _db.Bookings
                 .Include(b => b.Po)

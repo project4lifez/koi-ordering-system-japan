@@ -17,7 +17,5 @@ public partial class Variety
 
     public virtual ICollection<KoiFish> KoiFishes { get; set; } = new List<KoiFish>();
 
-    public virtual KoiPackage? Package { get; set; }
-
     public virtual ICollection<SpecialVariety> SpecialVarieties { get; set; } = new List<SpecialVariety>();
 }

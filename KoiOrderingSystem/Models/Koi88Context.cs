@@ -29,8 +29,6 @@ public partial class Koi88Context : DbContext
 
     public virtual DbSet<KoiFish> KoiFishes { get; set; }
 
-    public virtual DbSet<KoiPackage> KoiPackages { get; set; }
-
     public virtual DbSet<PaymentMethod> PaymentMethods { get; set; }
 
     public virtual DbSet<Po> Pos { get; set; }
@@ -215,7 +213,11 @@ public partial class Koi88Context : DbContext
                 .HasMaxLength(1000)
                 .HasColumnName("comments");
             entity.Property(e => e.CustomerId).HasColumnName("customer_id");
+            entity.Property(e => e.Feedbackdate).HasColumnName("feedbackdate");
             entity.Property(e => e.Rating).HasColumnName("rating");
+            entity.Property(e => e.Status)
+                .HasMaxLength(100)
+                .HasColumnName("status");
 
             entity.HasOne(d => d.Customer).WithMany(p => p.Feedbacks)
                 .HasForeignKey(d => d.CustomerId)
@@ -267,37 +269,6 @@ public partial class Koi88Context : DbContext
                 .HasConstraintName("FK__KoiFish__variety__7D439ABD");
         });
 
-        modelBuilder.Entity<KoiPackage>(entity =>
-        {
-            entity.HasKey(e => e.PackageId).HasName("PK__KoiPacka__63846AE85C4C080A");
-
-            entity.ToTable("KoiPackage");
-
-            entity.Property(e => e.PackageId).HasColumnName("package_id");
-            entity.Property(e => e.Description)
-                .HasMaxLength(200)
-                .HasColumnName("description");
-            entity.Property(e => e.FarmId).HasColumnName("farm_id");
-            entity.Property(e => e.ImageUrl)
-                .HasMaxLength(100)
-                .HasColumnName("imageUrl");
-            entity.Property(e => e.PackageName)
-                .HasMaxLength(100)
-                .HasColumnName("package_name");
-            entity.Property(e => e.PackagePrice)
-                .HasColumnType("decimal(10, 2)")
-                .HasColumnName("package_price");
-            entity.Property(e => e.PoDetailId).HasColumnName("po_detail_id");
-
-            entity.HasOne(d => d.Farm).WithMany(p => p.KoiPackages)
-                .HasForeignKey(d => d.FarmId)
-                .HasConstraintName("FK__KoiPackag__farm___7E37BEF6");
-
-            entity.HasOne(d => d.PoDetail).WithMany(p => p.KoiPackages)
-                .HasForeignKey(d => d.PoDetailId)
-                .HasConstraintName("FK__KoiPackag__po_de__7F2BE32F");
-        });
-
         modelBuilder.Entity<PaymentMethod>(entity =>
         {
             entity.HasKey(e => e.PaymentMethodId).HasName("PK__PaymentM__8A3EA9EB667F3F2D");
@@ -344,9 +315,6 @@ public partial class Koi88Context : DbContext
                 .HasColumnType("decimal(10, 2)")
                 .HasColumnName("deposit");
             entity.Property(e => e.FarmId).HasColumnName("farm_id");
-            entity.Property(e => e.ImageUrl)
-                .HasMaxLength(100)
-                .HasColumnName("imageUrl");
             entity.Property(e => e.KoiId).HasColumnName("koi_id");
             entity.Property(e => e.Note).HasColumnName("note");
             entity.Property(e => e.PoId).HasColumnName("po_id");
@@ -376,7 +344,12 @@ public partial class Koi88Context : DbContext
 
             entity.Property(e => e.PoPaymentId).HasColumnName("po_payment_id");
             entity.Property(e => e.PaymentDate).HasColumnName("payment_date");
+            entity.Property(e => e.PaymentMethodId).HasColumnName("payment_method_id");
             entity.Property(e => e.PoId).HasColumnName("po_id");
+
+            entity.HasOne(d => d.PaymentMethod).WithMany(p => p.Popayments)
+                .HasForeignKey(d => d.PaymentMethodId)
+                .HasConstraintName("FK_POPayment_PO_PaymentMethod");
 
             entity.HasOne(d => d.Po).WithMany(p => p.Popayments)
                 .HasForeignKey(d => d.PoId)
@@ -403,9 +376,6 @@ public partial class Koi88Context : DbContext
 
             entity.Property(e => e.SpecialVarietyId).HasColumnName("special_variety_id");
             entity.Property(e => e.FarmId).HasColumnName("farm_id");
-            entity.Property(e => e.SpecialDescription)
-                .HasMaxLength(200)
-                .HasColumnName("special_description");
             entity.Property(e => e.VarietyId).HasColumnName("variety_id");
 
             entity.HasOne(d => d.Farm).WithMany(p => p.SpecialVarieties)
@@ -473,10 +443,6 @@ public partial class Koi88Context : DbContext
             entity.Property(e => e.VarietyName)
                 .HasMaxLength(100)
                 .HasColumnName("variety_name");
-
-            entity.HasOne(d => d.Package).WithMany(p => p.Varieties)
-                .HasForeignKey(d => d.PackageId)
-                .HasConstraintName("FK__Variety__package__7A672E12");
         });
 
         OnModelCreatingPartial(modelBuilder);

@@ -41,13 +41,56 @@ namespace KoiOrderingSystem.Controllers
 
             // Get the list of bookings for the current user
             var bookings = await _db.Bookings
-                             .Include(b => b.Trip) // Include the related Trip entity to access TripName
-                             .Where(b => b.CustomerId == customerId.Value &&
-                                         b.Status != "Canceled" &&
-                                         b.Status != "Delivered")
-                             .ToListAsync();
+      .Include(b => b.Trip)        // Include the related Trip entity to access TripName
+      .Include(b => b.Feedback)    // Include the related Feedback entity
+      .Where(b => b.CustomerId == customerId.Value &&
+                  b.Status != "Canceled" &&
+                  (b.Feedback == null || b.Feedback.Status != "Completed")) // Fix: Ensure null check and status condition
+      .ToListAsync();
+
 
             return View(bookings); // Pass the booking list to the view
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SubmitFeedback(int bookingId, int rating, string comments)
+        {
+            // Kiểm tra xem người dùng đã đăng nhập hay chưa
+            if (HttpContext.Session.GetString("Username") == null)
+            {
+                return RedirectToAction("", "Login");
+            }
+
+            // Lấy CustomerId từ session để kiểm tra người dùng hiện tại
+            var customerId = HttpContext.Session.GetInt32("CustomerId");
+
+            if (customerId == null)
+            {
+                return RedirectToAction("", "Login");
+            }
+
+            // Tìm booking dựa trên bookingId và kiểm tra tồn tại
+            var booking = await _db.Bookings
+                            .Include(b => b.Feedback)
+                            .FirstOrDefaultAsync(b => b.BookingId == bookingId && b.CustomerId == customerId.Value);
+
+            // Nếu không tìm thấy booking hoặc không có quyền (CustomerId không khớp), trả về lỗi 404
+            if (booking == null || booking.Feedback == null)
+            {
+                return NotFound("Booking not found or you don't have permission to update this feedback.");
+            }
+
+            // Cập nhật Feedback nếu booking thuộc về đúng khách hàng
+            booking.Feedback.Rating = rating;
+            booking.Feedback.Comments = comments;
+            booking.Feedback.Status = "Completed"; // Cập nhật trạng thái feedback thành 'Completed'
+            booking.Feedback.Feedbackdate = DateOnly.FromDateTime(DateTime.Now);
+
+            // Lưu thay đổi vào cơ sở dữ liệu
+            await _db.SaveChangesAsync();
+
+            // Điều hướng lại về trang "YourBooking"
+            return RedirectToAction("YourBooking");
         }
 
         // Payment Action to display the payment form for a specific booking
@@ -446,16 +489,44 @@ namespace KoiOrderingSystem.Controllers
                                                .CountAsync();
 
             // Get the list of bookings with status "Canceled" or "Delivered" for the current user
-            var orderHistory = await _db.Bookings
-                                        .Include(b => b.Trip) // Include the related Trip entity so you can access TripName
-                                        .Where(b => b.CustomerId == customerId.Value &&
-                                                    (b.Status == "Canceled" || b.Status == "Delivered"))
-                                        .ToListAsync();
+         var orderHistory = await _db.Bookings
+                     .Include(b => b.Trip)        // Include the related Trip entity so you can access TripName
+                     .Include(b => b.Feedback)    // Include the related Feedback entity
+                     .Where(b => b.CustomerId == customerId.Value &&
+                                 (b.Status == "Canceled" || 
+                                 (b.Status == "Delivered" && (b.Feedback == null || b.Feedback.Status == "Completed"))))
+                     .ToListAsync();
 
             // Pass the active bookings count and order history to the view using ViewData
             ViewData["ActiveBookingsCount"] = activeBookingsCount;
 
             return View(orderHistory); // Pass the filtered booking list to the view
+        }
+
+        public async Task<IActionResult> GetFeedback(int bookingId)
+        {
+            // Lấy booking từ cơ sở dữ liệu dựa trên BookingId
+            var booking = await _db.Bookings
+                                   .Include(b => b.Feedback) // Bao gồm Feedback liên quan
+                                   .FirstOrDefaultAsync(b => b.BookingId == bookingId);
+
+            // Kiểm tra nếu có Feedback tồn tại cho Booking này
+            if (booking?.Feedback != null)
+            {
+                // Trả về thông tin Feedback
+                return Json(new
+                {
+                    success = true,
+                    feedback = new
+                    {
+                        rating = booking.Feedback.Rating,
+                        comments = booking.Feedback.Comments
+                    }
+                });
+            }
+
+            // Trả về thông báo không có Feedback
+            return Json(new { success = false });
         }
 
         public IActionResult TripDetail(int bookingId)
@@ -487,7 +558,9 @@ namespace KoiOrderingSystem.Controllers
             }
 
             // Kiểm tra trạng thái booking
-            if (booking.Status != "Confirmed" &&
+            if (
+                booking.Status != "Canceled" &&
+                booking.Status != "Confirmed" &&
                 booking.Status != "Checked in" &&
                 booking.Status != "Checked out" &&
                 booking.Status != "Delivering" &&
@@ -498,8 +571,12 @@ namespace KoiOrderingSystem.Controllers
             var farms = _db.KoiFarms.ToList();
             ViewBag.Farms = farms;
 
-            var poDetails = booking.Po.Podetails.ToList();
-            ViewBag.PoDetails = poDetails; // Pass it to the view
+            if (booking.Po?.Podetails != null)
+            {
+                var poDetails = booking.Po.Podetails.ToList();
+                ViewBag.PoDetails = poDetails; // Pass it to the view
+            }
+          
 
             // Trả về view với thông tin của Trip
             return View(booking);

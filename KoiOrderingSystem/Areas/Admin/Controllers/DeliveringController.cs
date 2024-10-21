@@ -50,7 +50,8 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
         public IActionResult UpdateStatusDelivering(int id, string status)
         {
             // Find the booking by ID
-            var booking = _context.Bookings.FirstOrDefault(b => b.BookingId == id);
+            var booking = _context.Bookings
+                                  .FirstOrDefault(b => b.BookingId == id);
 
             if (booking != null)
             {
@@ -71,6 +72,24 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
                     // Update the new status
                     booking.Status = status;
 
+                    // If status is set to 'Delivered', create a new Feedback record
+                    if (status.Equals("Delivered", StringComparison.OrdinalIgnoreCase))
+                    {
+                        // Create a new Feedback object
+                        var feedback = new Feedback
+                        {
+                            CustomerId = booking.CustomerId, // Assign the CustomerId from the Booking
+                            Status = "Pending" // Set Feedback status to 'Pending'
+                        };
+
+                        // Add the new Feedback to the context
+                        _context.Feedbacks.Add(feedback);
+                        _context.SaveChanges(); // Save to get the new Feedback ID
+
+                        // Now associate the newly created Feedback ID with the Booking
+                        booking.FeedbackId = feedback.FeedbackId; // Assuming Booking has a FeedbackId property
+                    }
+
                     // Save changes to the database
                     _context.SaveChanges();
 
@@ -82,6 +101,7 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
             // Redirect back to the 'Delivering' page after successful update
             return Redirect("Delivering?id=" + id);
         }
+
 
 
         [HttpPost]

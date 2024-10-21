@@ -19,8 +19,6 @@ public partial class Podetail
 
     public int? Quantity { get; set; }
 
-    public string? ImageUrl { get; set; }
-
     public DateOnly? Day { get; set; }
 
     public string? Note { get; set; }
@@ -29,9 +27,5 @@ public partial class Podetail
 
     public virtual KoiFish? Koi { get; set; }
 
-    public virtual ICollection<KoiPackage> KoiPackages { get; set; } = new List<KoiPackage>();
-
     public virtual Po? Po { get; set; }
-
-
 }

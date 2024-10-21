@@ -48,7 +48,6 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
 
         // Action to update status
         [HttpPost]
-        [HttpPost]
         public IActionResult UpdateStatusManager(int bookingId, string status)
         {
             // Fetch the booking by ID
@@ -607,6 +606,48 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
             // Redirect to the appropriate page
             return Redirect($"/Admin/Manager/UpdateFarm?id={id}");
         }
+
+        public async Task<IActionResult> Feedback(int page = 1, int pageSize = 8)
+        {
+            // Query the feedbacks with related customer and trip information
+            var feedbacks = await _db.Feedbacks
+                                     .Include(f => f.Customer)
+                                     .Include(f => f.Bookings)
+                                     .ThenInclude(b => b.Trip)
+                                     .OrderByDescending(f => f.Feedbackdate)
+                                     .Skip((page - 1) * pageSize)
+                                     .Take(pageSize)
+                                     .ToListAsync();
+
+            // Get the total number of feedbacks for pagination
+            var totalFeedbacks = await _db.Feedbacks.CountAsync();
+
+            // Send feedbacks and pagination info to the view
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = (int)Math.Ceiling(totalFeedbacks / (double)pageSize);
+
+            return View(feedbacks);
+        }
+
+
+        public IActionResult FeedbackDetail(int feedbackId)
+        {
+            var feedback = _db.Feedbacks
+                .Include(f => f.Bookings)
+                .ThenInclude(b => b.Trip)
+                .FirstOrDefault(f => f.FeedbackId == feedbackId);
+
+            if (feedback == null)
+            {
+                return NotFound();
+            }
+
+            return View(feedback); // Pass the feedback object to the view
+        }
+
+
+
+
     }
 }
 

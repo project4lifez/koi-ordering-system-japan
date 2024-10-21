@@ -1,0 +1,167 @@
+﻿@model IEnumerable<KoiOrderingSystem.Models.Feedback>
+@{
+    ViewData["Title"] = "Manager Feedback View";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review List with Pagination</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #eef2f7;
+            margin: 0;
+            padding: 0;
+        }
+
+        .review-list {
+            width: 85%;
+            margin: 50px auto;
+            background: #fff;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease;
+        }
+
+          
+
+        h2 {
+            text-align: center;
+            color: #333;
+            font-size: 36px;
+            margin-bottom: 40px;
+            border-bottom: 3px solid #009688;
+            padding-bottom: 20px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+            table th, table td {
+                padding: 18px;
+                text-align: center;
+                border-bottom: 1px solid #ddd;
+                font-size: 18px;
+            }
+
+            table th {
+                background-color: #009688;
+                color: #fff;
+                text-transform: uppercase;
+                font-size: 16px;
+                font-weight: bold;
+                letter-spacing: 1px;
+            }
+
+            table td {
+                font-size: 16px;
+                color: #555;
+            }
+
+            table tr:nth-child(even) {
+                background-color: #f3f6f9;
+            }
+
+            table tr:hover {
+                background-color: #eaf1f8;
+                transition: background-color 0.3s ease;
+            }
+
+        .btn-detail {
+            background-color: #1abc9c;
+            color: #fff;
+            border: none;
+            padding: 12px 30px;
+            cursor: pointer;
+            border-radius: 10px;
+            text-decoration: none;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease, color 0.3s ease; /* Added color transition */
+            font-size: 16px;
+        }
+
+            .btn-detail:hover {
+                background-color: #16a085;
+                color: #eafaf1; /* Adjusted text color to a soft light green */
+                transform: translateY(-5px);
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            }
+
+        .pagination {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+            .pagination a {
+                color: #009688;
+                padding: 12px 20px;
+                text-decoration: none;
+                border: 1px solid #ddd;
+                margin: 0 5px;
+                border-radius: 10px;
+                transition: background-color 0.3s ease, color 0.3s ease;
+                font-size: 16px;
+            }
+
+                .pagination a.active {
+                    background-color: #009688;
+                    color: white;
+                    border: 1px solid #009688;
+                }
+
+                .pagination a:hover {
+                    background-color: #00796b;
+                    color: white;
+                }
+    </style>
+</head>
+
+<body>
+    <div class="review-list">
+        <h2>Feedback List</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Trip</th>
+                    <th>Customer</th>
+                    <th>Rating</th>
+                    <th>Date</th>
+                    <th>Action</th> <!-- Changed from Comment to Action -->
+                </tr>
+            </thead>
+            <tbody>
+                @for (var i = 0; i < Model.Count(); i++)
+                {
+                    var feedback = Model.ElementAt(i); // Get feedback by index
+                    <tr>
+                        <td>@(i + 1)</td> <!-- Displaying sequential number -->
+                        <td>@(feedback.Bookings.FirstOrDefault()?.Trip?.TripName ?? "Unknown Trip")</td>
+                        <td>@(feedback.Bookings.FirstOrDefault()?.Fullname ?? "Anonymous")</td>
+                        <td>@(new string('⭐', feedback.Rating ?? 0))</td>
+                        <td>@feedback.Feedbackdate?.ToString("yyyy-MM-dd")</td>
+                        <td>
+                            <a class="btn-detail" href="/Admin/Manager/FeedbackDetail?feedbackId=@feedback.FeedbackId">Detail</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="pagination">
+            @for (var i = 1; i <= ViewBag.TotalPages; i++)
+            {
+                <a href="/Admin/Manager/Feedback?page=@i" class="@(i == ViewBag.CurrentPage ? "active" : "")">@i</a>
+            }
+        </div>
+    </div>
+</body>

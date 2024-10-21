@@ -208,7 +208,7 @@
                             <div class="row mt-3">
                                 <div class="col-md-12">
                                     <label for="noteDay@dayCount">Note</label>
-                                    <textarea class="form-control" name="poDetails[@dayCount].Note" rows="3" placeholder="Enter any notes for the day">@Model.Po?.Podetails.FirstOrDefault(pd => pd.Day == tripDetail.Day)?.Note</textarea>
+                                    <textarea class="form-control noteTextArea" id="noteDay@dayCount" name="poDetails[@dayCount].Note" rows="3">@Model.Po?.Podetails.FirstOrDefault(pd => pd.Day == tripDetail.Day)?.Note</textarea>
                                 </div>
                             </div>
                         </div>
@@ -225,8 +225,91 @@
                 </div>
             }
         </form>
+        <script src="https://cdn.tiny.cloud/1/as08codcfmfm7iyms5ub7ozusoy1f9vkq3xm4a5e7fmyuoyr/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
 
         <script>
+
+            tinymce.init({
+                selector: '.noteTextArea', // Target a specific textarea by ID. Use '.class' if it's a class
+                height: 600, // Set the height to 600px for a spacious editor
+                plugins: [
+                    'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'image', 'link', 'lists', 'media', 'searchreplace',
+                    'table', 'visualblocks', 'wordcount', 'fullscreen', 'code', 'help',
+                    // Premium plugins (if available in the free trial or purchased)
+                    'checklist', 'mediaembed', 'casechange', 'export', 'formatpainter', 'pageembed', 'a11ychecker', 'tinymcespellchecker',
+                    'permanentpen', 'powerpaste', 'advtable', 'advcode', 'editimage', 'advtemplate', 'ai', 'mentions', 'tinycomments',
+                    'tableofcontents', 'footnotes', 'mergetags', 'autocorrect', 'typography', 'inlinecss', 'markdown'
+                ],
+                toolbar: 'undo redo | styleselect | bold italic underline strikethrough | fontfamily fontsize blocks | ' +
+                    'link image media codesample | alignleft aligncenter alignright alignjustify | ' +
+                    'bullist numlist outdent indent checklist | emoticons charmap | table tableofcontents footnotes | ' +
+                    'fullscreen preview code export print | spellcheckdialog a11ycheck formatpainter pageembed | ' +
+                    'removeformat | addcomment showcomments',
+                tinycomments_mode: 'embedded', // Commenting system mode
+                tinycomments_author: 'Author name', // Name displayed for comments
+                mergetags_list: [
+                    { value: 'First.Name', title: 'First Name' },
+                    { value: 'Email', title: 'Email' }
+                ],
+
+                // AI Assistant integration (not functional unless implemented, example provided for future use)
+                ai_request: (request, respondWith) => respondWith.string(() => Promise.reject('AI Assistant not implemented')),
+
+                // Fullscreen and preview options
+                toolbar_mode: 'floating', // Allows the toolbar to be floating
+                branding: false, // Removes TinyMCE branding
+                image_advtab: true, // Adds advanced tab for image editing
+                content_style: "body { font-family: Roboto, sans-serif; font-size: 14px; }",
+
+                // Media options
+                media_live_embeds: true, // Enable live embedding for media
+                mediaembed_service_url: 'https://noembed.com/embed', // Example for embedding URLs
+
+                // Spellcheck and A11Y Checker (accessibility) configurations
+                a11ychecker_allow_decorative_images: true, // Allow images without alt text to pass checker
+                spellchecker_dialog: true, // Enable the spellcheck dialog
+                spellchecker_language: 'en', // Set the spellcheck language
+                spellchecker_active: true, // Turn on spellchecker
+                spellchecker_whitelist: ['TinyMCE', 'HTML', 'CSS'], // Custom whitelist for words
+
+                // Export options (e.g., PDF or Word export)
+                export_formats: [
+                    { title: 'HTML Document', format: 'html' },
+                    { title: 'Word Document', format: 'docx' },
+                    { title: 'PDF Document', format: 'pdf' }
+                ],
+
+                // File and image upload settings (Optional)
+                images_upload_url: '/uploadImage', // Custom upload endpoint
+                automatic_uploads: true, // Automatically upload images
+                file_picker_types: 'file image media', // Types of files to allow
+                file_picker_callback: function (callback, value, meta) {
+                    // Provide custom file picking logic here
+                },
+
+                // Set up content-specific options
+                content_css: '/css/content-style.css', // Link to your content's CSS
+                content_style: 'body { font-family: Roboto; font-size: 14px; }', // Additional inline styling for the editor
+
+                // Other useful configurations
+                menubar: 'file edit view insert format tools table help', // Menubar customization
+                statusbar: true, // Show status bar
+                toolbar_sticky: true, // Sticky toolbar
+                paste_as_text: true, // Paste content as plain text by default
+
+                // Advanced Table features (premium)
+                advtable_sorting: true, // Enable table sorting
+                advtable_sort_by: 'alpha', // Set default table sorting
+
+                // Callbacks for saving content
+                setup: function (editor) {
+                    editor.on('change', function () {
+                        editor.save(); // Automatically save content as it's changed
+                    });
+                },
+            });
+
+           
             // Khai báo mảng để lưu trữ các Koi đã thêm
             let koiDetails = [];
 
