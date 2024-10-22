@@ -13,38 +13,39 @@
 
     <style>
         body {
-            background-color: #f4f4f4; /* Màu nền bên ngoài */
+            background-color: #f4f4f4; /* Background color */
         }
 
         .koibreed-column {
-            border-radius: 8px; /* Góc bo tròn */
-            padding: 10px; /* Khoảng cách bên trong khung */
-            background-color: #f8f9fa; /* Màu nền khung */
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Hiệu ứng bóng */
+            border-radius: 8px; /* Rounded corners */
+            padding: 10px; /* Inner padding */
+            background-color: #f8f9fa; /* Background color of the box */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Shadow effect */
+            min-width: 90%; /* Added minimum width */
         }
 
         .koibreed-divider {
-            border-top: 2px solid; /* Đường phân cách */
-            margin: 20px 0; /* Khoảng cách trên và dưới đường phân cách */
+            border-top: 2px solid; /* Divider line */
+            margin: 20px 0; /* Margin above and below the divider */
         }
 
         .koibreed-title {
-            font-weight: bold; /* In đậm */
-            font-size: 1.5rem; /* Kích thước chữ lớn hơn */
-            color: #1070FD; /* Màu xanh */
+            font-weight: bold; /* Bold text */
+            font-size: 1.5rem; /* Larger font size */
+            color: #1070FD; /* Blue color */
         }
 
         .koibreed-edit-button {
-            background-color: #1070FD; /* Màu nền xanh */
-            color: white; /* Màu chữ trắng */
-            border: none; /* Không có viền */
+            background-color: #1070FD; /* Blue background color */
+            color: white; /* White text */
+            border: none; /* No border */
         }
 
-        .koibreed-edit-button:hover {
-            background-color: #0d63c2; /* Màu nền khi hover (màu xanh đậm hơn) */
-            color: white; /* Giữ màu chữ trắng */
-            transition: background-color 0.3s ease; /* Hiệu ứng chuyển màu mượt mà */
-        }
+            .koibreed-edit-button:hover {
+                background-color: #0d63c2; /* Darker blue on hover */
+                color: white; /* Keep white text */
+                transition: background-color 0.3s ease; /* Smooth transition */
+            }
 
         .profile_image {
             width: 150px;
@@ -71,8 +72,8 @@
                             </div>
                             <div class="ms-3" style="margin-top: 207px; color: black">
                                 <h5>
-                                    <span class="koibreed-last-name">Trịnh Trần</span>
-                                    <span class="koibreed-first-name">Phương Tuấn</span>
+                                    <span class="koibreed-last-name">Trịnh Trần</span> <!-- Last Name -->
+                                    <span class="koibreed-first-name">Phương Tuấn</span> <!-- First Name -->
                                 </h5>
                                 <p>Customer ID:</p>
                             </div>
@@ -96,6 +97,8 @@
                                 <div class="koibreed-divider"></div>
                                 <p class="koibreed-title mb-1">About</p>
                                 <div class="p-4 bg-body-tertiary">
+                                    <p class="font-italic mb-1"><strong>First Name:</strong> Phương Tuấn</p> 
+                                    <p class="font-italic mb-1"><strong>Last Name:</strong> Trịnh Trần</p>
                                     <p class="font-italic mb-1"><strong>Gender:</strong> Male</p>
                                     <p class="font-italic mb-1"><strong>Email:</strong> example@email.com</p>
                                     <p class="font-italic mb-1"><strong>Phone:</strong> 0987654321</p>
@@ -110,11 +113,11 @@
     </section>
 
     <script>
-        $(document).ready(function() {
-            $('.koibreed-confirm-button').click(function() {
+        $(document).ready(function () {
+            $('.koibreed-confirm-button').click(function () {
                 // Get the selected status from the dropdown
                 var selectedStatus = $('#statusSelect').val();
-                
+
                 // Update the displayed status
                 $('#displayStatus').text(selectedStatus.charAt(0).toUpperCase() + selectedStatus.slice(1));
             });
