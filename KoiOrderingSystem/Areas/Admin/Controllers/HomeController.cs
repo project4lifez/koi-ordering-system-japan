@@ -5,6 +5,8 @@ using System.Linq; // For querying
 using System.Threading.Tasks; // For async operations
 using Microsoft.EntityFrameworkCore; // For database context if using EF Core
 using System;
+using PagedList;
+using Microsoft.EntityFrameworkCore; // Ensure you have this included for .Include()
 
 
 namespace KoiAdmin.Areas.Admin.Controllers
@@ -124,16 +126,50 @@ namespace KoiAdmin.Areas.Admin.Controllers
             return View(bookings);
         }
 
-        public async Task<IActionResult> OrderList()
+        public async Task<IActionResult> OrderList(string searchQuery, string statusFilter, int page = 1, int pageSize = 15)
         {
-            // Fetch the list of bookings from the database, including the related Trip entity
-            var bookings = await _db.Bookings
-                .Include(b => b.Trip) // Include the related Trip entity so you can access TripName
+            // Tạo truy vấn ban đầu
+            var bookingsQuery = _db.Bookings.Include(b => b.Trip).AsQueryable();
+
+            // Thực hiện tìm kiếm
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                bookingsQuery = bookingsQuery.Where(b =>
+                    (b.BookingId.ToString().Contains(searchQuery)) ||
+                    (b.Fullname != null && b.Fullname.ToLower().Contains(searchQuery.ToLower())) ||
+                    (b.Trip != null && b.Trip.TripName != null && b.Trip.TripName.ToLower().Contains(searchQuery.ToLower())) ||
+                    (b.QuotedAmount != null && b.QuotedAmount.ToString().Contains(searchQuery))
+                );
+            }
+
+            // Lọc theo trạng thái
+            if (!string.IsNullOrEmpty(statusFilter))
+            {
+                bookingsQuery = bookingsQuery.Where(b => b.Status.ToLower() == statusFilter.ToLower());
+            }
+
+            // Tổng số lượng đơn hàng sau khi tìm kiếm và lọc
+            var totalBookings = await bookingsQuery.CountAsync();
+
+            // Lấy danh sách đơn hàng với phân trang
+            var bookings = await bookingsQuery
+                .OrderBy(b => b.BookingId)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
 
+            // Truyền dữ liệu xuống View
+            ViewBag.TotalBookings = totalBookings;
+            ViewBag.Page = page;
+            ViewBag.PageSize = pageSize;
+            ViewBag.TotalPages = (int)Math.Ceiling((double)totalBookings / pageSize);
+            ViewBag.SearchQuery = searchQuery;
+            ViewBag.StatusFilter = statusFilter;
 
-            // Pass the list of bookings to the view
             return View(bookings);
         }
+
+
+
     }
 }
