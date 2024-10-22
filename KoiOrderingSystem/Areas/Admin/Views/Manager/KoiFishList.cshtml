@@ -2,6 +2,9 @@
 @{
     ViewData["Title"] = "Koi Fish List";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml"; // Use the shared layout
+    var currentPage = ViewBag.CurrentPage;
+    var totalPages = ViewBag.TotalPages;
+    var query = ViewBag.Query ?? ""; // Use an empty string if there's no search query
 }
 
 <head>
@@ -135,10 +138,40 @@
                 background-color: #dc3545;
                 color: white;
                 transition: background-color 0.3s; /* Smooth transition */
-             
             }
-        
-         }
+
+        /* Search bar styles */
+        .search-container {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 10px; /* Create space between input and search button */
+            margin-bottom: 20px;
+        }
+
+            .search-container .form-control {
+                padding: 10px 20px; /* Increase padding inside the search input */
+                font-size: 1rem; /* Font size */
+                width: 300px; /* Limit the width */
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add shadow to highlight the search bar */
+            }
+
+            .search-container .btn-primary {
+                border-radius: 30px; /* Round the button */
+                padding: 10px 20px; /* Increase button size */
+                display: flex;
+                align-items: center;
+                font-size: 1rem; /* Font size */
+            }
+
+                .search-container .btn-primary i {
+                    margin-right: 5px; /* Space between the icon and text */
+                }
+
+            .search-container .form-control:focus {
+                box-shadow: 0 4px 6px rgba(0, 123, 255, 0.2); /* Highlight when focused */
+                outline: none; /* Remove default focus border */
+            }
     </style>
 </head>
 
@@ -146,11 +179,18 @@
     <main class="container-fluid px-4 variety-container-custom">
         <h1 class="mt-4 variety-title">Koi Fish List</h1>
 
-        <!-- Create button on the right -->
-        <div class="button-row-variety mb-3">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <!-- Search bar -->
+            <form method="get" action="/Admin/Manager/KoiFishList" class="search-container">
+                <input type="text" class="form-control" placeholder="Search koi fish or variety..." name="query" value="@query">
+                <button class="btn btn-primary" type="submit">
+                    <i class="fas fa-search"></i> Search
+                </button>
+            </form>
+
+            <!-- Create button -->
             <a href="/Admin/Manager/CreateKoiFish" class="btn btn-create-variety">Create New Koi Fish</a>
         </div>
-
         <!-- Koi Fish List -->
         <div class="card mb-4">
             <div class="card-body">
@@ -166,7 +206,7 @@
                     </thead>
                     <tbody>
                         @{
-                            var rowNumber = 1;
+                            var rowNumber = (currentPage - 1) * 8 + 1; // Calculate row number based on page
                         }
                         <!-- Example Rows with Images -->
                         @foreach (var koi in Model)
@@ -201,6 +241,25 @@
                 </table>
             </div>
         </div>
+        <!-- Pagination Controls -->
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                    <a class="page-link" href="?query=@query&page=@(currentPage - 1)">Previous</a>
+                </li>
+
+                @for (var i = 1; i <= totalPages; i++)
+                {
+                    <li class="page-item @(i == currentPage ? "active" : "")">
+                        <a class="page-link" href="?query=@query&page=@i">@i</a>
+                    </li>
+                }
+
+                <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                    <a class="page-link" href="?query=@query&page=@(currentPage + 1)">Next</a>
+                </li>
+            </ul>
+        </nav>
     </main>
 
     <!-- Bootstrap JS and dependencies -->

@@ -1,6 +1,10 @@
 ﻿@{
     ViewData["Title"] = "List of Farms";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml"; // Use the shared layout
+    var currentPage = ViewBag.CurrentPage;
+    var totalPages = ViewBag.TotalPages;
+    var rowNumber = (currentPage - 1) * 8 + 1; // Calculate starting row number based on current page
+
 }
 
 <head>
@@ -135,6 +139,39 @@
                 color: white;
                 transition: background-color 0.3s; /* Smooth transition */
             }
+
+        /* Tùy chỉnh thanh tìm kiếm */
+        .search-container {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 10px; /* Tạo khoảng cách giữa input và nút Search */
+        }
+
+        .search-container .form-control {
+            padding: 10px 20px; /* Tăng khoảng cách bên trong ô tìm kiếm */
+            font-size: 1rem; /* Cỡ chữ */
+            width: 300px; /* Giới hạn chiều rộng */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Thêm bóng để làm nổi bật */
+        }
+
+        .search-container .btn-primary {
+            border-radius: 30px; /* Bo tròn nút */
+            padding: 10px 20px; /* Tăng kích thước nút */
+            display: flex;
+            align-items: center;
+            font-size: 1rem; /* Cỡ chữ */
+        }
+
+            .search-container .btn-primary i {
+                margin-right: 5px; /* Khoảng cách giữa icon và chữ */
+            }
+
+        .search-container .form-control:focus {
+            box-shadow: 0 4px 6px rgba(0, 123, 255, 0.2); /* Hiệu ứng bóng khi focus */
+            outline: none; /* Bỏ đường viền mặc định khi focus */
+        }
+
     </style>
 </head>
 
@@ -142,10 +179,20 @@
     <main class="container-fluid px-4 farm-container-custom">
         <h1 class="mt-4 farm-title">Farms List</h1>
 
-        <!-- Create button on the right -->
-        <div class="button-row-farm mb-3">
+        <!-- Search bar and Create button in one row with flex layout -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <!-- Search bar -->
+            <form method="get" action="/Admin/Manager/KoiFarmList" class="search-container">
+                <input type="text" class="form-control" placeholder="Search farms or location farms..." name="query">
+                <button class="btn btn-primary" type="submit">
+                    <i class="fas fa-search"></i> Search
+                </button>
+            </form>
+
+            <!-- Create button -->
             <a href="/Admin/Manager/CreateFarm" class="btn btn-create-farm">Create New Farm</a>
         </div>
+
 
         <!-- Farms List -->
         <div class="card mb-4">
@@ -153,7 +200,7 @@
                 <table class="farm-table-custom table">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>No</th> <!-- Change ID to No -->
                             <th>Image</th>
                             <th>Farm</th> <!-- Farm column -->
                             <th>Location</th> <!-- Special Variety column -->
@@ -164,7 +211,7 @@
                         @foreach (var farm in Model)
                         {
                             <tr>
-                                <td>@farm.FarmId</td>
+                                <td>@rowNumber</td>
                                 <td>
                                     <img src="@farm.ImageUrl" alt="@farm.FarmName Image">
                                 </td>
@@ -187,9 +234,31 @@
                                     </form>
                                 </td>
                             </tr>
+                            rowNumber++;
                         }
                     </tbody>
                 </table>
+
+                <!-- Pagination Controls -->
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                            <a class="page-link" href="?query=@Context.Request.Query["query"]&page=@(currentPage - 1)">Previous</a>
+                        </li>
+
+                        @for (var i = 1; i <= totalPages; i++)
+                        {
+                            <li class="page-item @(i == currentPage ? "active" : "")">
+                                <a class="page-link" href="?query=@Context.Request.Query["query"]&page=@i">@i</a>
+                            </li>
+                        }
+
+                        <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                            <a class="page-link" href="?query=@Context.Request.Query["query"]&page=@(currentPage + 1)">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+
             </div>
         </div>
     </main>

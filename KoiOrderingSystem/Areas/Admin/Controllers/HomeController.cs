@@ -236,6 +236,12 @@ namespace KoiAdmin.Areas.Admin.Controllers
             // Tạo truy vấn ban đầu
             var bookingsQuery = _db.Bookings.Include(b => b.Trip).AsQueryable();
 
+            DateOnly? parsedDate = null; // Khởi tạo biến chứa ngày tìm kiếm nếu có
+
+            if (DateOnly.TryParseExact(searchQuery, "M/d/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateOnly dateValue))
+            {
+                parsedDate = dateValue;
+            }
             // Thực hiện tìm kiếm
             if (!string.IsNullOrEmpty(searchQuery))
             {
@@ -243,7 +249,9 @@ namespace KoiAdmin.Areas.Admin.Controllers
                     (b.BookingId.ToString().Contains(searchQuery)) ||
                     (b.Fullname != null && b.Fullname.ToLower().Contains(searchQuery.ToLower())) ||
                     (b.Trip != null && b.Trip.TripName != null && b.Trip.TripName.ToLower().Contains(searchQuery.ToLower())) ||
-                    (b.QuotedAmount != null && b.QuotedAmount.ToString().Contains(searchQuery))
+                    (b.QuotedAmount != null && b.QuotedAmount.ToString().Contains(searchQuery)) ||
+                    (parsedDate != null && b.BookingDate == parsedDate) // Tìm kiếm trong Booking Date
+
                 );
             }
 

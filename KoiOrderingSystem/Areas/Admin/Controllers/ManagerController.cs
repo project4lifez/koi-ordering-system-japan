@@ -115,19 +115,42 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
 
 
 
-        public IActionResult KoiVarietyList()
+        public IActionResult KoiVarietyList(string query, int page = 1, int pageSize = 8)
         {
-            // Fetch specific fields but still create full Variety objects
-            var varieties = _db.Varieties
+            // Start by fetching all varieties
+            var varieties = _db.Varieties.AsQueryable();
+
+            // If query is not null or empty, filter the varieties by VarietyName
+            if (!string.IsNullOrEmpty(query))
+            {
+                var lowerCaseQuery = query.ToLower();
+                varieties = varieties.Where(v => v.VarietyName.ToLower().Contains(lowerCaseQuery));
+            }
+
+            // Count total varieties after filtering
+            var totalVarieties = varieties.Count();
+
+            // Calculate total number of pages
+            var totalPages = (int)Math.Ceiling((double)totalVarieties / pageSize);
+
+            // Fetch the varieties for the current page using Skip and Take
+            var varietiesOnCurrentPage = varieties
                 .Select(v => new Variety
                 {
                     VarietyId = v.VarietyId,
                     VarietyName = v.VarietyName,
                     ImageUrl = v.ImageUrl
                 })
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .ToList();
 
-            return View(varieties);
+            // Pass current page, total pages, and search query to the view via ViewBag
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = totalPages;
+            ViewBag.Query = query;  // Pass query to keep it in the search input
+
+            return View(varietiesOnCurrentPage);
         }
 
 
@@ -250,13 +273,42 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
             return Redirect($"/Admin/Manager/UpdateKoiVariety?id={id}");
         }
 
-        public IActionResult KoiFishList()
+        public IActionResult KoiFishList(string query, int page = 1, int pageSize = 8)
         {
+            // Start by fetching all koi fishes, including their Variety
             var koiFishes = _db.KoiFishes
-                             .Include(k => k.Variety) // Lấy thông tin Variety liên quan
-                             .ToList();
-            return View(koiFishes);
+                               .Include(k => k.Variety) // Include related Variety
+                               .AsQueryable();
+
+            // If there's a search query, filter by Koi Name or Variety Name
+            if (!string.IsNullOrEmpty(query))
+            {
+                var lowerCaseQuery = query.ToLower(); // Convert to lowercase for case-insensitive search
+                koiFishes = koiFishes.Where(k =>
+                    k.KoiName.ToLower().Contains(lowerCaseQuery) ||  // Search in Koi Name
+                    k.Variety.VarietyName.ToLower().Contains(lowerCaseQuery));  // Search in Variety Name
+            }
+
+            // Get total number of koi fishes after filtering
+            var totalKoiFishes = koiFishes.Count();
+
+            // Calculate total pages
+            var totalPages = (int)Math.Ceiling((double)totalKoiFishes / pageSize);
+
+            // Fetch koi fishes for the current page using Skip and Take
+            var koiFishesOnCurrentPage = koiFishes
+                                         .Skip((page - 1) * pageSize) // Skip previous pages
+                                         .Take(pageSize)              // Take only koi fishes for the current page
+                                         .ToList();
+
+            // Pass current page, total pages, and search query to the view
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = totalPages;
+            ViewBag.Query = query; // Keep the query in the search box
+
+            return View(koiFishesOnCurrentPage);
         }
+
 
 
         [HttpGet]
@@ -400,14 +452,42 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
             return Redirect($"/Admin/Manager/UpdateKoiFish?id={id}");
         }
 
-        public IActionResult KoiFarmList()
+        public IActionResult KoiFarmList(string query, int page = 1, int pageSize = 5)
         {
+            // Bắt đầu với danh sách tất cả các farm
             var koiFarms = _db.KoiFarms
-                     .Include(farm => farm.SpecialVarieties) // Include SpecialVarieties associated with the farm
-                     .ThenInclude(sv => sv.Variety)          // Include the Variety through SpecialVariety
-                     .ToList();
+                .Include(farm => farm.SpecialVarieties)
+                .ThenInclude(sv => sv.Variety)
+                .AsQueryable();
 
-            return View(koiFarms);
+            // Nếu query không rỗng hoặc null, tiến hành tìm kiếm
+            if (!string.IsNullOrEmpty(query))
+            {
+                var lowerCaseQuery = query.ToLower();
+                koiFarms = koiFarms.Where(farm =>
+                    farm.FarmName.ToLower().Contains(lowerCaseQuery) ||
+                    farm.Location.ToLower().Contains(lowerCaseQuery) ||
+                    farm.SpecialVarieties.Any(sv => sv.Variety.VarietyName.ToLower().Contains(lowerCaseQuery))
+                );
+            }
+
+            // Tính tổng số farm sau khi lọc
+            var totalFarms = koiFarms.Count();
+
+            // Tính toán số trang
+            var totalPages = (int)Math.Ceiling((double)totalFarms / pageSize);
+
+            // Sử dụng Skip và Take để lấy đúng dữ liệu cho trang hiện tại
+            var farmsOnCurrentPage = koiFarms
+                .Skip((page - 1) * pageSize) // Skip các farm của các trang trước
+                .Take(pageSize)              // Chỉ lấy đúng số lượng farm cho trang hiện tại
+                .ToList();
+
+            // Trả về View với dữ liệu đã phân trang
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = totalPages;
+
+            return View(farmsOnCurrentPage);
         }
 
         [HttpGet]
