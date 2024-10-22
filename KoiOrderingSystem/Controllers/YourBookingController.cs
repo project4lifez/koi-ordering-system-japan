@@ -23,8 +23,11 @@ namespace KoiOrderingSystem.Controllers
         }
 
         // Action to display the list of bookings
-        public async Task<IActionResult> YourBooking()
+        public async Task<IActionResult> YourBooking(string searchKeyword, int page = 1)
         {
+            // Define the number of records per page
+            int pageSize = 10;
+
             // Check if the user is logged in
             if (HttpContext.Session.GetString("Username") == null)
             {
@@ -40,17 +43,55 @@ namespace KoiOrderingSystem.Controllers
             }
 
             // Get the list of bookings for the current user
-            var bookings = await _db.Bookings
-      .Include(b => b.Trip)        // Include the related Trip entity to access TripName
-      .Include(b => b.Feedback)    // Include the related Feedback entity
-      .Where(b => b.CustomerId == customerId.Value &&
-                  b.Status != "Canceled" &&
-                  (b.Feedback == null || b.Feedback.Status != "Completed")) // Fix: Ensure null check and status condition
-      .ToListAsync();
+            var bookingsQuery = _db.Bookings
+                .Include(b => b.Trip)        // Include the related Trip entity to access TripName
+                .Include(b => b.Feedback)    // Include the related Feedback entity
+                .Where(b => b.CustomerId == customerId.Value &&
+                            b.Status != "Canceled" &&
+                            (b.Feedback == null || b.Feedback.Status != "Completed"));
 
+            // Nếu có từ khóa tìm kiếm
+            if (!string.IsNullOrEmpty(searchKeyword))
+            {
+                searchKeyword = searchKeyword.ToLower();
 
-            return View(bookings); // Pass the booking list to the view
+                DateOnly? parsedDate = null;
+
+                // Cố gắng chuyển từ khóa thành ngày theo format M/d/yyyy
+                if (DateOnly.TryParseExact(searchKeyword, "M/d/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateOnly dateValue))
+                {
+                    parsedDate = dateValue;
+                }
+
+                // Áp dụng bộ lọc tìm kiếm cho tên chuyến đi, trạng thái, và ngày
+                bookingsQuery = bookingsQuery.Where(b =>
+                    (b.Trip != null && b.Trip.TripName.ToLower().Contains(searchKeyword)) || // Tìm kiếm trong Trip Name
+                    b.Status.ToLower().Contains(searchKeyword) || // Tìm kiếm trong Status
+                    (parsedDate != null && b.BookingDate == parsedDate.Value)); // Tìm kiếm trong Booking Date
+            }
+
+            // Đếm tổng số bản ghi
+            int totalRecords = await bookingsQuery.CountAsync();
+
+            // Lấy bản ghi cho trang hiện tại
+            var bookings = await bookingsQuery
+                .Skip((page - 1) * pageSize) // Bỏ qua các trang trước đó
+                .Take(pageSize)              // Chỉ lấy số lượng bản ghi của trang hiện tại
+                .ToListAsync();
+
+            // Sử dụng ViewBag để truyền dữ liệu phân trang
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
+            ViewBag.SearchKeyword = searchKeyword;
+
+            return View(bookings); // Trả dữ liệu bookings và phân trang về view
         }
+
+
+      
+
+
+
 
         [HttpPost]
         public async Task<IActionResult> SubmitFeedback(int bookingId, int rating, string comments)
@@ -467,8 +508,11 @@ namespace KoiOrderingSystem.Controllers
 
             return RedirectToAction("YourBooking");
         }
-        public async Task<IActionResult> BookingHistory()
+        public async Task<IActionResult> BookingHistory(string searchKeywords, int page = 1)
         {
+            // Define the number of records per page
+            int pageSize = 10;
+
             // Check if the user is logged in
             if (HttpContext.Session.GetString("Username") == null)
             {
@@ -483,25 +527,55 @@ namespace KoiOrderingSystem.Controllers
                 return RedirectToAction("", "Login");
             }
 
-            // Get active bookings (Status != "Canceled" and Status != "Delivered")
-            var activeBookingsCount = await _db.Bookings
-                                               .Where(b => b.CustomerId == customerId.Value && b.Status != "Canceled" && b.Status != "Delivered")
-                                               .CountAsync();
+           
+            // Get the list of bookings for the current user
+            var orderHistory = _db.Bookings
+                .Include(b => b.Trip)        // Include the related Trip entity so you can access TripName
+                .Include(b => b.Feedback)    // Include the related Feedback entity
+                .Where(b => b.CustomerId == customerId.Value &&
+                            (b.Status == "Canceled" ||
+                             (b.Status == "Delivered" && (b.Feedback == null || b.Feedback.Status == "Completed"))));
 
-            // Get the list of bookings with status "Canceled" or "Delivered" for the current user
-         var orderHistory = await _db.Bookings
-                     .Include(b => b.Trip)        // Include the related Trip entity so you can access TripName
-                     .Include(b => b.Feedback)    // Include the related Feedback entity
-                     .Where(b => b.CustomerId == customerId.Value &&
-                                 (b.Status == "Canceled" || 
-                                 (b.Status == "Delivered" && (b.Feedback == null || b.Feedback.Status == "Completed"))))
-                     .ToListAsync();
 
-            // Pass the active bookings count and order history to the view using ViewData
-            ViewData["ActiveBookingsCount"] = activeBookingsCount;
+            // If search keywords are provided
+            if (!string.IsNullOrEmpty(searchKeywords))
+            {
+                searchKeywords = searchKeywords.ToLower();
 
-            return View(orderHistory); // Pass the filtered booking list to the view
+                DateOnly? parsedDate = null;
+
+                // Try to parse the search keyword as a date (MM/dd/yyyy format)
+                if (DateOnly.TryParseExact(searchKeywords, "M/d/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateOnly dateValue))
+                {
+                    parsedDate = dateValue;
+                }
+
+                // Áp dụng bộ lọc tìm kiếm cho tên chuyến đi, trạng thái, và ngày
+                orderHistory = orderHistory.Where(b =>
+                    (b.Trip != null && b.Trip.TripName.ToLower().Contains(searchKeywords)) || // Tìm kiếm trong Trip Name
+                    b.Status.ToLower().Contains(searchKeywords) || // Tìm kiếm trong Status
+                    (parsedDate != null && b.BookingDate == parsedDate.Value)); // Tìm kiếm trong Booking Date
+            }
+
+
+
+            // Count total records
+            int totalRecords = await orderHistory.CountAsync();
+
+            // Get records for the current page
+            var bookings = await orderHistory
+                .Skip((page - 1) * pageSize) // Skip the previous pages
+                .Take(pageSize)              // Take only the number of records for this page
+                .ToListAsync();
+
+            // Use ViewBag to pass pagination data
+            ViewBag.CurrentPages = page;
+            ViewBag.TotalPagess = (int)Math.Ceiling((double)totalRecords / pageSize);
+            ViewBag.SearchKeywords = searchKeywords;
+
+            return View(bookings); // Pass the bookings and pagination data to the view
         }
+
 
         public async Task<IActionResult> GetFeedback(int bookingId)
         {

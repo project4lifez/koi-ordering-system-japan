@@ -21,7 +21,7 @@ namespace KoiOrderingSystem.Controllers
         {
             if (HttpContext.Session.GetString("Username") == null)
             {
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("", "Login");
             }
 
             // Get CustomerId from session
@@ -29,7 +29,7 @@ namespace KoiOrderingSystem.Controllers
 
             if (customerId == null)
             {
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("", "Login");
             }
 
             var customer = _db.Customers
@@ -102,7 +102,7 @@ namespace KoiOrderingSystem.Controllers
 
             if (customerId == null)
             {
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("", "Login");
             }
 
             // Fetch the existing customer based on customerId
@@ -142,6 +142,61 @@ namespace KoiOrderingSystem.Controllers
             return RedirectToAction("CustomerProfile");
 
         }
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(string currentPassword, string newPassword, string confirmPassword)
+        {
+            // Retrieve CustomerId from the session
+            var customerId = HttpContext.Session.GetInt32("CustomerId");
+
+            if (customerId == null)
+            {
+                return Json(new { errors = new List<string> { "User not logged in." } });
+            }
+
+            // Fetch the existing customer based on customerId
+            var customer = await _db.Customers.Include(c => c.Account)
+                                               .FirstOrDefaultAsync(c => c.CustomerId == customerId);
+
+            if (customer == null)
+            {
+                return Json(new { errors = new List<string> { "Customer not found." } }); // Return a 404 if the customer is not found
+            }
+
+            var errors = new List<string>();
+
+            // Validate the current password
+            if (currentPassword != customer.Account.Password) // Assuming Password is stored in plaintext
+            {
+                errors.Add("Current password is incorrect.");
+            }
+
+            // Check if new password and confirm password match
+            if (newPassword != confirmPassword)
+            {
+                errors.Add("New password and confirm password do not match.");
+            }
+
+            // Check the length of the new password
+            if (newPassword.Length < 8)
+            {
+                errors.Add("New password must be at least 8 characters long.");
+            }
+
+            if (errors.Any())
+            {
+                return Json(new { errors }); // Return errors as JSON
+            }
+
+            // Update the password
+            customer.Account.Password = newPassword; // Update to the new password
+            await _db.SaveChangesAsync();
+
+            return Json(new { success = true }); // Return success response
+        }
+
+
+
+
 
 
     }

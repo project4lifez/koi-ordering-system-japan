@@ -1,6 +1,7 @@
 ﻿@model KoiOrderingSystem.Models.Customer
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,7 +31,7 @@
             border-right: 2px solid #ddd;
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            margin-top: 20px; /* Added top margin for breathing space */
+            margin-top: 20px;
         }
 
             .unique-custom-sidebars h2 {
@@ -102,13 +103,21 @@
             }
 
             .unique-profile-headers a {
-                color: #007bff;
-                text-decoration: none;
+                color: #007bff !important;
+                text-decoration: underline;
+                cursor: pointer;
             }
 
                 .unique-profile-headers a:hover {
-                    text-decoration: underline;
+                    text-decoration: none !important;
+                    color: #007bff !important;
+                    transition: color 0.3s ease !important;
                 }
+
+        .error-message {
+            color: red;
+            margin-bottom: 20px;
+        }
 
         .unique-profile-forms label {
             display: block;
@@ -129,9 +138,9 @@
             background-color: #90caf9;
             color: white;
             border: none;
-            font-size: 1rem; /* Reduced font size */
+            font-size: 1rem;
             cursor: pointer;
-            padding: 8px 16px; /* Adjusted padding for smaller button */
+            padding: 8px 16px;
             border-radius: 5px;
             transition: background-color 0.3s ease;
         }
@@ -164,9 +173,9 @@
                 background-color: #90caf9;
                 color: white;
                 border: none;
-                font-size: 1rem; /* Reduced font size */
+                font-size: 1rem;
                 cursor: pointer;
-                padding: 8px 16px; /* Adjusted padding for smaller button */
+                padding: 8px 16px;
                 border-radius: 5px;
                 transition: background-color 0.3s ease;
             }
@@ -178,17 +187,17 @@
         .select-container {
             position: relative;
             display: inline-block;
-            width: 100%; /* Thay đổi kích thước theo nhu cầu */
+            width: 100%;
         }
 
             .select-container select {
                 width: 100%;
                 padding: 10px;
-                padding-right: 30px; /* Thêm không gian bên phải cho biểu tượng */
+                padding-right: 30px;
                 border: 1px solid #ccc;
                 border-radius: 5px;
-                appearance: none; /* Ẩn biểu tượng mặc định của trình duyệt */
-                font-size: 1rem; /* Kích thước chữ */
+                appearance: none;
+                font-size: 1rem;
             }
 
         .select-icon {
@@ -196,13 +205,121 @@
             top: 37%;
             right: 10px;
             transform: translateY(-50%);
-            pointer-events: none; /* Không cho phép nhấp vào biểu tượng */
-            color: #aaa; /* Màu cho biểu tượng */
+            pointer-events: none;
+            color: #aaa;
         }
+
+        /* Popup styling */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .popup-content {
+            background-color: white;
+            padding: 40px; /* Increased padding */
+            border-radius: 10px;
+            width: 440px; /* Increased width */
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 50px;
+        }
+
+            .popup-content h3 {
+                margin-top: 0;
+                color: #1565c0;
+                font-size: 1.5rem; /* Increased font size */
+                margin-bottom: 30px;
+                text-align: center; /* Centered title */
+            }
+
+            .popup-content input {
+                width: 100%; /* Adjusted width for full responsiveness */
+                padding: 10px;
+                margin-bottom: 10px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                position: relative; /* Added for positioning icon */
+            }
+
+            .popup-content button {
+                width: 100%; /* Make buttons take full width */
+                padding: 10px;
+                background-color: #90caf9;
+                border: none;
+                color: white;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+                margin-top: 10px; /* Margin to separate buttons */
+            }
+
+                .popup-content button:hover {
+                    background-color: #64b5f6;
+                }
+
+        .password-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+            .password-container input {
+                width: 100%;
+                padding: 12px;
+                padding-top: 16px; /* Extra top padding to ensure label doesn't overlap input text */
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                font-size: 1rem;
+                background-color: white;
+                outline: none;
+                transition: border-color 0.3s ease;
+            }
+
+            .password-container label {
+                position: absolute;
+                top: 14px; /* Start label in the middle of the input */
+                left: 12px;
+                font-size: 1rem;
+                color: #aaa;
+                transition: all 0.3s ease;
+                pointer-events: none;
+            }
+
+            .password-container input:focus + label,
+            .password-container input:not(:placeholder-shown) + label {
+                top: -20px; /* Move label above the input when focused or filled */
+                left: 12px;
+                font-size: 0.85rem; /* Shrink the label */
+                color: #1565c0;
+            }
+
+            .password-container input:focus {
+                border-color: #1565c0;
+            }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px; /* Adjusted to move the icon slightly left */
+            top: 46%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #aaa;
+        }
+
+            .toggle-password:hover {
+                color: #007bff;
+            }
+
     </style>
 </head>
-<body class="unique-body">
 
+<body class="unique-body">
     <div class="unique-custom-containers">
         <div class="unique-custom-sidebars">
             <h2>Information</h2>
@@ -221,11 +338,22 @@
                 <div class="unique-profile-forms">
                     <div class="unique-profile-headers">
                         <h2>My Profile</h2>
-                        <a href="#change-password">Change Password</a>
+                        <a id="change-password-link">Change Password</a>
                     </div>
+
+                    <!-- Display error messages -->
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div class="error-message">
+                            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                            {
+                                <p>@error.ErrorMessage</p>
+                            }
+                        </div>
+                    }
+
                     <form id="customerUpdate" method="post" action="/Profile/UpdateProfile">
-                        <input type="hidden" name="CustomerId" value="@Model.CustomerId" /> <!-- Hidden field for CustomerId -->
-                        <!-- Update action -->
+                        <input type="hidden" name="CustomerId" value="@Model.CustomerId" />
                         <label for="bjl">Email</label>
                         <input type="email" id="email" name="email" value="@Model.Account?.Email" disabled>
 
@@ -268,7 +396,6 @@
                             <span class="select-icon"><i class="fas fa-chevron-down"></i></span>
                         </div>
 
-
                         <label for="phone">Phone Number</label>
                         <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" value="@Model.Account?.Phone" required>
 
@@ -278,18 +405,49 @@
 
                 <form method="post" enctype="multipart/form-data" action="/Profile/SaveAvatar">
                     <div class="unique-profile-avatars">
-                        <!-- The avatar preview -->
                         <img id="avatar-preview" src="@Url.Content(Model.Account?.ImageUrl ?? "/images/avatars/avatar-placeholder.png")" alt="Avatar" style="object-fit: cover;">
-
-                        <!-- File input for avatar upload -->
                         <input type="file" id="avatar" name="avatar" accept="image/*" onchange="previewAvatar()">
-
-                        <!-- Save button -->
                         <button type="submit" class="unique-avatar-buttons">Save Avatar</button>
                     </div>
                 </form>
-
             </div>
+        </div>
+    </div>
+
+    <div class="popup-overlay" id="popup-overlay">
+        <div class="popup-content">
+            <h3>Change Password</h3>
+            <!-- Display error message -->
+            <div class="error-message" id="error-message" style="color: red; display: none; text-align: center;"></div>
+
+            <form id="change-password-form" method="post" action="/Profile/ChangePassword" onsubmit="return submitForm(event)">
+                <div class="password-container">
+                    <input type="password" name="currentPassword" required placeholder=" " id="currentPassword">
+                    <label for="currentPassword">Current Password</label>
+                    <span class="toggle-password" onclick="togglePasswordVisibility('currentPassword')">
+                        <i class="fas fa-eye" id="currentPassword-eye"></i>
+                    </span>
+                </div>
+
+                <div class="password-container">
+                    <input type="password" name="newPassword" id="newPassword" required placeholder=" ">
+                    <label for="newPassword">New Password</label>
+                    <span class="toggle-password" onclick="togglePasswordVisibility('newPassword')">
+                        <i class="fas fa-eye" id="newPassword-eye"></i>
+                    </span>
+                </div>
+                <div class="password-container">
+                    <input type="password" name="confirmPassword" id="confirmPassword" required placeholder=" ">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <span class="toggle-password" onclick="togglePasswordVisibility('confirmPassword')">
+                        <i class="fas fa-eye" id="confirmPassword-eye"></i>
+                    </span>
+                </div>
+                <div id="password-error" class="error-message" style="display: none; text-align: center;"></div>
+
+                <button type="submit">Submit</button>
+                <button type="button" onclick="closePopup()">Cancel</button>
+            </form>
         </div>
     </div>
 
@@ -308,7 +466,199 @@
                 reader.readAsDataURL(avatarInput.files[0]);
             }
         }
+
+        const changePasswordLink = document.getElementById('change-password-link');
+        const popupOverlay = document.getElementById('popup-overlay');
+
+        changePasswordLink.addEventListener('click', () => {
+            popupOverlay.style.display = 'flex';
+            document.getElementById('error-message').style.display = 'none'; // Reset error message
+            document.getElementById('password-error').style.display = 'none'; // Reset password error message
+        });
+
+        function closePopup() {
+            popupOverlay.style.display = 'none';
+            document.getElementById('error-message').style.display = 'none'; // Reset error message
+            document.getElementById('password-error').style.display = 'none'; // Reset password error message
+        }
+
+        // Kiểm tra sự phù hợp giữa mật khẩu mới và xác nhận mật khẩu
+        function validatePasswords() {
+            const currentPassword = document.querySelector('input[name="currentPassword"]').value;
+            const newPassword = document.querySelector('input[name="newPassword"]').value;
+            const confirmPassword = document.querySelector('input[name="confirmPassword"]').value;
+            const passwordErrorDiv = document.getElementById('password-error');
+            const submitButton = document.querySelector('button[type="submit"]');
+
+            let errorMessage = '';
+
+            // Reset error messages
+            passwordErrorDiv.style.display = 'none';
+
+            // Check if New Password or Confirm Password are filled without Current Password
+            if ((newPassword.length > 0 || confirmPassword.length > 0) && currentPassword.length === 0) {
+                errorMessage += "Please enter Current Password first.<br>";
+            }
+
+            // Check if New Password is at least 8 characters long
+            if (newPassword.length < 8 && newPassword.length > 0) {
+                errorMessage += "New password must be at least 8 characters long.<br>";
+            }
+
+            // Check if Confirm Password matches New Password
+            if (newPassword !== confirmPassword && confirmPassword.length > 0) {
+                errorMessage += "Passwords do not match.<br>";
+            }
+
+            // Display error messages if any, and disable submit button
+            if (errorMessage) {
+                passwordErrorDiv.innerHTML = errorMessage;
+                passwordErrorDiv.style.display = 'block';
+                submitButton.disabled = true;
+            } else {
+                passwordErrorDiv.style.display = 'none';
+                submitButton.disabled = false;
+            }
+        }
+
+        // Add event listeners to monitor input changes
+        document.querySelector('input[name="newPassword"]').addEventListener('input', validatePasswords);
+        document.querySelector('input[name="confirmPassword"]').addEventListener('input', validatePasswords);
+        document.querySelector('input[name="currentPassword"]').addEventListener('input', validatePasswords);
+
+        async function submitForm(event) {
+            event.preventDefault(); // Ngăn không cho reload trang
+
+            const passwordErrorDiv = document.getElementById('password-error');
+            const newPassword = document.querySelector('input[name="newPassword"]').value;
+            const confirmPassword = document.querySelector('input[name="confirmPassword"]').value;
+
+            // Kiểm tra mật khẩu mới có ít nhất 8 ký tự không
+            if (newPassword.length < 8) {
+                passwordErrorDiv.innerHTML = "New password must be at least 8 characters long.";
+                passwordErrorDiv.style.display = 'block'; // Hiện thông báo lỗi
+                return; // Ngăn không cho gửi form
+            }
+
+            // Kiểm tra sự phù hợp của mật khẩu mới và xác nhận mật khẩu
+            if (newPassword !== confirmPassword) {
+                passwordErrorDiv.innerHTML = "Passwords do not match.";
+                passwordErrorDiv.style.display = 'block'; // Hiện thông báo lỗi
+                return; // Ngăn không cho gửi form
+            }
+
+            const form = document.getElementById('change-password-form');
+            const formData = new FormData(form);
+            const errorMessageDiv = document.getElementById('error-message');
+
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    alert("Saved Password Successfully!!");
+                    closePopup();
+
+                    window.location.reload(); // Tải lại trang nếu cần
+                } else {
+                    // Hiển thị lỗi
+                    errorMessageDiv.innerHTML = result.errors.join('<br>'); // Hiển thị lỗi
+                    errorMessageDiv.style.display = 'block'; // Hiện lỗi
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                errorMessageDiv.innerHTML = 'An unexpected error occurred.';
+                errorMessageDiv.style.display = 'block'; // Hiện lỗi
+            }
+        }
+
+        function togglePasswordVisibility(field) {
+            const passwordInput = document.querySelector(`input[name="${field}"]`);
+            const eyeIcon = document.getElementById(`${field}-eye`);
+
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                eyeIcon.classList.remove("fa-eye");
+                eyeIcon.classList.add("fa-eye-slash");
+            } else {
+                passwordInput.type = "password";
+                eyeIcon.classList.remove("fa-eye-slash");
+                eyeIcon.classList.add("fa-eye");
+            }
+        }
+
+        window.addEventListener('load', () => {
+            document.querySelectorAll('.password-container input').forEach(input => {
+                if (input.value) {
+                    input.dispatchEvent(new Event('input'));
+                }
+            });
+        });
+
+        document.getElementById('customerUpdate').addEventListener('submit', async (event) => {
+            event.preventDefault(); // Ngăn không cho reload trang
+
+            const form = event.target;
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    alert("Updated Information Successfully!!!");
+                    window.location.reload(); // Tải lại trang nếu cần
+                } else {
+                    const result = await response.json();
+                    const errorMessageDiv = document.getElementById('error-message');
+                    errorMessageDiv.innerHTML = result.errors.join('<br>'); // Hiển thị lỗi
+                    errorMessageDiv.style.display = 'block'; // Hiện lỗi
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An unexpected error occurred.');
+            }
+        });
+
+        document.querySelector('form[action="/Profile/SaveAvatar"]').addEventListener('submit', async (event) => {
+            event.preventDefault(); // Ngăn không cho reload trang
+
+            const form = event.target;
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    alert("Saved Image Successfully!!!");
+                    window.location.reload(); // Tải lại trang nếu cần
+                } else {
+                    const result = await response.json();
+                    const errorMessageDiv = document.getElementById('error-message');
+                    errorMessageDiv.innerHTML = result.errors.join('<br>'); // Hiển thị lỗi
+                    errorMessageDiv.style.display = 'block'; // Hiện lỗi
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An unexpected error occurred.');
+            }
+        });
+
     </script>
+
+
+
+
+
 
 </body>
 </html>

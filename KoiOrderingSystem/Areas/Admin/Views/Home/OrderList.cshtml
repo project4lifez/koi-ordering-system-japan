@@ -90,6 +90,23 @@
                     background-color: #e6d597; /* Màu vàng đậm hơn khi hover */
                     border-color: #e6d597; /* Đổi màu viền khi hover */
                 }
+
+            .pagination {
+                margin-top: 20px; /* Đảm bảo khoảng cách giữa bảng và phân trang */
+                display: flex;
+                justify-content: center;
+            }
+
+                .pagination .page-item.active .page-link {
+                    background-color: #007bff;
+                    border-color: #007bff;
+                    color: white;
+                }
+
+                .pagination .page-item .page-link {
+                    color: #007bff;
+                }
+
         </style>
     </head>
 
@@ -98,25 +115,29 @@
             <h1 class="mt-4">Order List</h1>
 
             <!-- Search and Filter Section -->
-            <div class="row mb-4">
-                <div class="col-md-4">
-                    <input type="text" id="searchInput" class="form-control" placeholder="Search by Booking ID or Trip Name">
+            <form method="get" action="/Admin/Home/OrderList">
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <input type="text" name="searchQuery" id="searchInput" class="form-control" placeholder="Search by Booking ID, Trip Name, or Customer"
+                               value="@ViewBag.SearchQuery">
+                    </div>
+                    <div class="col-md-4">
+                        <select name="statusFilter" id="statusFilter" class="form-select">
+                            <option value="">Filter by Status</option>
+                            <option value="Requested" @(ViewBag.StatusFilter == "Requested" ? "selected" : "")>Requested</option>
+                            <option value="Processing" @(ViewBag.StatusFilter == "Processing" ? "selected" : "")>Processing</option>
+                            <option value="Rejected" @(ViewBag.StatusFilter == "Rejected" ? "selected" : "")>Rejected</option>
+                            <option value="Canceled" @(ViewBag.StatusFilter == "Canceled" ? "selected" : "")>Canceled</option>
+                            <option value="Confirmed" @(ViewBag.StatusFilter == "Confirmed" ? "selected" : "")>Confirmed</option>
+                            <option value="Delivering" @(ViewBag.StatusFilter == "Delivering" ? "selected" : "")>Delivering</option>
+                            <option value="Delivered" @(ViewBag.StatusFilter == "Delivered" ? "selected" : "")>Delivered</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </div>
                 </div>
-                <div class="col-md-4">
-                    <select id="statusFilter" class="form-select">
-                        <option value="">Filter by Status</option>
-                        <option value="Requested">Requested</option>
-                        <option value="Processing">Processing</option>
-                        <option value="Rejected">Rejected</option>
-                        <option value="Canceled">Canceled</option>
-                        <option value="Confirmed">Confirmed</option>
-                        <option value="Checked in">Checked in</option>
-                        <option value="Checked out">Checked out</option>
-                        <option value="Delivering">Delivering</option>
-                        <option value="Delivered">Delivered</option>
-                    </select>
-                </div>
-            </div>
+            </form>
 
             <div class="table-responsive">
                 <table class="table table-bordered table-hover" id="orderTable">
@@ -135,13 +156,12 @@
                             <th>Po</th>
                         </tr>
                     </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            int index = (ViewBag.Page - 1) * ViewBag.PageSize + 1; // Tính toán số thứ tự bắt đầu
 
-                    @if (Model != null && Model.Any())
-                    {
-                        int index = 1;
-
-                        <tbody>
-                            @foreach (var booking in Model)
+                            foreach (var booking in Model)
                             {
                                 <tr>
                                     <td>@index</td>
@@ -150,8 +170,6 @@
                                     <td class="text-success">@booking.Fullname</td>
                                     <td class="trip-name">@(booking.Trip?.TripName ?? "No Trip Name")</td>
                                     <td>@booking.QuotedAmount</td>
-
-                                    <!-- Render Status Column -->
                                     <td class="booking-status">
                                         @{
                                             string statusClass = booking.Status.ToLower() switch
@@ -167,124 +185,154 @@
                                         }
                                         <span class="badge @statusClass">@booking.Status</span>
                                     </td>
-
                                     <td>
                                         <a href="javascript:void(0);" class="btn btn-primary btn-sm"
                                            onclick="openFormModal('@booking.Fullname', '@booking.Phone', '@booking.Email',
-                                         '@booking.Gender', '@booking.Favoritefarm', '@booking.FavoriteKoi',
-                                         '@booking.StartDate', '@booking.EndDate',
-                                         '@booking.EstimatedCost', '@booking.HotelAccommodation',
-                                         '@booking.Note')">View Form</a>
+                                       '@booking.Gender', '@booking.Favoritefarm', '@booking.FavoriteKoi',
+                                       '@booking.StartDate', '@booking.EndDate',
+                                       '@booking.EstimatedCost', '@booking.HotelAccommodation',
+                                       '@booking.Note')">View Form </a>
                                     </td>
-
                                     <td>
                                         <a href="/Admin/Manager/Manager?id=@booking.BookingId" class="btn btn-warning btn-sm">Edit</a>
                                     </td>
-
                                     <td>
                                         <a href="/Admin/Sale/Quote?bookingId=@booking.BookingId" class="btn btn-info btn-sm">Quote</a>
                                     </td>
-                                    
                                     <td>
                                         <a href="/Admin/PoDetail/PoDetail?bookingId=@booking.BookingId" class="btn btn-yellow btn-sm">Po</a>
-
-                                    </td>                                   
+                                    </td>
                                 </tr>
-                                index++; // Increment counter
+                                index++; // Tăng số thứ tự
                             }
-                        </tbody>
-                    }
-                    else
-                    {
-                        <p>No bookings available.</p>
-                    }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="11">No bookings available.</td>
+                            </tr>
+                        }
+                    </tbody>
                 </table>
             </div>
 
-            <!-- Modal for Form -->
-            <div class="modal fade" id="formModal" tabindex="-1" aria-labelledby="formModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="formModalLabel">Customer Booking</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="formFullName" class="form-label">Full Name</label>
-                                        <input type="text" class="form-control" id="formFullName" readonly>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="formPhone" class="form-label">Phone</label>
-                                        <input type="text" class="form-control" id="formPhone" readonly>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="formEmail" class="form-label">Email</label>
-                                        <input type="text" class="form-control" id="formEmail" readonly>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="formGender" class="form-label">Gender</label>
-                                        <input type="text" class="form-control" id="formGender" readonly>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="formFarm" class="form-label">The farm which want to come</label>
-                                        <input type="text" class="form-control" id="formFarm" readonly>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="formBreed" class="form-label">Koi breed which want to buy</label>
-                                        <input type="text" class="form-control" id="formBreed" readonly>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="formStartDate" class="form-label">Estimated departure date</label>
-                                        <input type="text" class="form-control" id="formStartDate" readonly>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="formEndDate" class="form-label">Return date</label>
-                                        <input type="text" class="form-control" id="formEndDate" readonly>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="formCost" class="form-label">Estimated cost</label>
-                                        <input type="text" class="form-control" id="formCost" readonly>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="formHotel" class="form-label">Hotel accommodation</label>
-                                        <input type="text" class="form-control" id="formHotel" readonly>
-                                    </div>
+            <!-- Pagination -->
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    <!-- Nút Previous -->
+                    @if (ViewBag.Page > 1)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" href="?page=@(ViewBag.Page - 1)&searchQuery=@ViewBag.SearchQuery&statusFilter=@ViewBag.StatusFilter" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                    }
+
+                    <!-- Hiển thị số trang -->
+                    @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                    {
+                        <li class="page-item @(i == ViewBag.Page ? "active" : "")">
+                            <a class="page-link" href="?page=@i&searchQuery=@ViewBag.SearchQuery&statusFilter=@ViewBag.StatusFilter">@i</a>
+                        </li>
+                    }
+
+                    <!-- Nút Next -->
+                    @if (ViewBag.Page < ViewBag.TotalPages)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" href="?page=@(ViewBag.Page + 1)&searchQuery=@ViewBag.SearchQuery&statusFilter=@ViewBag.StatusFilter" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        </main>
+
+        <!-- Modal for Form -->
+        <div class="modal fade" id="formModal" tabindex="-1" aria-labelledby="formModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="formModalLabel">Customer Booking</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="formFullName" class="form-label">Full Name</label>
+                                    <input type="text" class="form-control" id="formFullName" readonly>
                                 </div>
                             </div>
-                            <div class="mb-3">
-                                <label for="formNote" class="form-label">Additional Information</label>
-                                <textarea id="formNote" class="form-control" rows="4" readonly></textarea>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="formPhone" class="form-label">Phone</label>
+                                    <input type="text" class="form-control" id="formPhone" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="formEmail" class="form-label">Email</label>
+                                    <input type="text" class="form-control" id="formEmail" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="formGender" class="form-label">Gender</label>
+                                    <input type="text" class="form-control" id="formGender" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="formFarm" class="form-label">The farm which want to come</label>
+                                    <input type="text" class="form-control" id="formFarm" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="formBreed" class="form-label">Koi breed which want to buy</label>
+                                    <input type="text" class="form-control" id="formBreed" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="formStartDate" class="form-label">Estimated departure date</label>
+                                    <input type="text" class="form-control" id="formStartDate" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="formEndDate" class="form-label">Return date</label>
+                                    <input type="text" class="form-control" id="formEndDate" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="formCost" class="form-label">Estimated cost</label>
+                                    <input type="text" class="form-control" id="formCost" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="formHotel" class="form-label">Hotel accommodation</label>
+                                    <input type="text" class="form-control" id="formHotel" readonly>
+                                </div>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary" onclick="printForm()">Print Form</button>
+                        <div class="mb-3">
+                            <label for="formNote" class="form-label">Additional Information</label>
+                            <textarea id="formNote" class="form-control" rows="4" readonly></textarea>
                         </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" onclick="printForm()">Print Form</button>
                     </div>
                 </div>
             </div>
-        </main>
+        </div>
 
         <script>
             function openFormModal(fullName, phone, email, gender, farm, breed, startDate, endDate, cost, hotel, note) {
@@ -312,38 +360,6 @@
                 win.print();
                 win.close();
             }
-
-            // Search and filter functionality
-            document.getElementById('searchInput').addEventListener('keyup', function () {
-                var filter = this.value.toLowerCase();
-                var rows = document.querySelectorAll('#orderTable tbody tr');
-
-                rows.forEach(function (row) {
-                    var bookingId = row.querySelector('.booking-id').textContent.toLowerCase();
-                    var tripName = row.querySelector('.trip-name').textContent.toLowerCase();
-
-                    if (bookingId.includes(filter) || tripName.includes(filter)) {
-                        row.style.display = '';
-                    } else {
-                        row.style.display = 'none';
-                    }
-                });
-            });
-
-            document.getElementById('statusFilter').addEventListener('change', function () {
-                var filter = this.value.toLowerCase();
-                var rows = document.querySelectorAll('#orderTable tbody tr');
-
-                rows.forEach(function (row) {
-                    var status = row.querySelector('.booking-status .badge').textContent.toLowerCase();
-
-                    if (filter === '' || status === filter) {
-                        row.style.display = '';
-                    } else {
-                        row.style.display = 'none';
-                    }
-                });
-            });
 
             // Initialize Bootstrap tooltips
             var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));

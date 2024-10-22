@@ -230,6 +230,76 @@
         .custom-canceled-gray-btn:hover {
             background-color: #b0bec5;
         }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        #searchInput {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: calc(100% - 100px); /* Adjust the width */
+        }
+
+        #searchButton {
+            padding: 10px 20px;
+            background-color: #1565c0;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+            #searchButton:hover {
+                background-color: #0d47a1;
+            }
+
+        #searchDate {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-left: 10px; /* Add some space between inputs */
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            list-style: none;
+            padding: 0;
+        }
+
+        .page-item {
+            margin: 0 5px; /* Khoảng cách giữa các nút */
+        }
+
+        .page-link {
+            padding: 10px 15px;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #1565c0;
+            background-color: #e3f2fd;
+            border: 1px solid #ddd;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+            .page-link:hover {
+                background-color: #1565c0;
+                color: white;
+            }
+
+        .page-item.active .page-link {
+            background-color: #64b5f6;
+            color: white;
+            border-color: #64b5f6;
+        }
+
+        .page-item.disabled .page-link {
+            background-color: #f0f0f0;
+            color: #999;
+            border-color: #ddd;
+        }
     </style>
 </head>
 
@@ -262,6 +332,15 @@
         <!-- Main Content Section -->
         <div class="custom-content">
             <h2>Booking History</h2>
+            <!-- Search bar with Flatpickr integrated -->
+            <form method="get" action="/YourBooking/BookingHistory">
+                <div class="input-group mb-3" style="max-width: 400px;">
+                    <!-- Combined search input for trip name, status, or date -->
+                    <input type="text" id="searchInput" name="searchKeywords" class="form-control" placeholder="Search for trip name, status, or date">
+
+                    <button class="btn btn-primary" id="searchButton" type="submit">Search</button>
+                </div>
+            </form>
             <table class="custom-table">
                 <thead>
                     <tr>
@@ -276,7 +355,10 @@
                 <tbody>
                     @if (Model != null && Model.Any())
                     {
-                        int index = 1; // Counter for numbering
+                        int currentPage = ViewBag.CurrentPages ?? 1; // Nếu ViewBag.CurrentPage là null, đặt giá trị mặc định là 1
+                        int pageSize = ViewBag.PageSizes ?? 10;      // Nếu ViewBag.PageSize là null, đặt giá trị mặc định là 10
+
+                        int index = 1 + (currentPage - 1) * pageSize; // Tính toán chỉ số bắt đầu
                         foreach (var booking in Model)
                         {
                             <tr>
@@ -345,7 +427,24 @@
                     }
                 </tbody>
             </table>
-        </div>
+            <!-- Ensure the pagination controls are directly below the table -->
+            <div class="pagination-container" style="margin-top: 20px; text-align: center;">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item @(ViewBag.CurrentPages == 1 ? "disabled" : "")">
+                        <a class="page-link" href="?page=@(ViewBag.CurrentPages - 1)&searchKeywords=@ViewBag.SearchKeywords">Previous</a>
+                    </li>
+                    @for (int i = 1; i <= ViewBag.TotalPagess; i++)
+                    {
+                        <li class="page-item @(ViewBag.CurrentPages == i ? "active" : "")">
+                            <a class="page-link" href="?page=@i&searchKeywords=@ViewBag.SearchKeywords">@i</a>
+                        </li>
+                    }
+                    <li class="page-item @(ViewBag.CurrentPages == ViewBag.TotalPagess ? "disabled" : "")">
+                        <a class="page-link" href="?page=@(ViewBag.CurrentPages + 1)&searchKeywords=@ViewBag.SearchKeywords">Next</a>
+                    </li>
+                </ul>
+            </div>
+      </div>
     </div>
 
     <!-- Feedback Modal -->
@@ -387,7 +486,6 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             // Hiển thị modal và điền dữ liệu khi nhấn nút Feedback
