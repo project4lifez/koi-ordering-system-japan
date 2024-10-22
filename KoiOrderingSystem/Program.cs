@@ -133,6 +133,10 @@ namespace KoiOrderingSystem
                 name: "Profile_default",
                 pattern: "{area:exists}/{controller=Profile}/{action=Profile}/{id?}");
 
+            app.MapControllerRoute(
+               name: "StaffList_default",
+               pattern: "{area:exists}/{controller=StaffList}/{action=StaffList}/{id?}");
+
             app.Run();
         }
     }
