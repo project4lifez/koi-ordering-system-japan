@@ -128,6 +128,11 @@ namespace KoiOrderingSystem
             app.MapControllerRoute(
                name: "podetail_area",
                pattern: "{area:exists}/{controller=PoDetail}/{action=PoDetail}/{id?}");
+
+            app.MapControllerRoute(
+                name: "Profile_default",
+                pattern: "{area:exists}/{controller=Profile}/{action=Profile}/{id?}");
+
             app.Run();
         }
     }
