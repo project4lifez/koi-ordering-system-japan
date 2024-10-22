@@ -1,0 +1,295 @@
+﻿@model KoiOrderingSystem.Models.Variety
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <h1>@Model.VarietyName</h1>
+    <style>
+        body {
+            font-family: "Arial", sans-serif;
+            background-color: #f4f4f9; /* Sử dụng màu nền nhẹ nhàng */
+            color: #444; /* Màu chữ giảm độ tương phản để dễ đọc hơn */
+            margin: 0;
+            padding: 0;
+        }
+
+        .container-s {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+        }
+
+        .text-content-s {
+            flex: 1;
+            min-width: 500px;
+            padding-right: 20px;
+        }
+
+        h1 {
+            font-size: 36px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        p {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .section-s {
+            margin-bottom: 15px;
+        }
+
+        .fish-image-s {
+            flex: 1;
+            min-width: 200px;
+            max-width: 250px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+            .fish-image-s img {
+                max-width: 100%;
+                height: 264px;
+                margin-top: 55px;
+                border-radius: 10px;
+            }
+
+        .footer-text-s {
+            margin-top: 30px;
+            font-size: 16px;
+            color: #666;
+        }
+
+        media (max-width: 768px) {
+            .container-s
+
+        {
+            flex-direction: column;
+        }
+
+        .text-content-s {
+            min-width: 100%;
+            padding-right: 0;
+        }
+
+        .fish-image-s {
+            margin-top: 20px;
+        }
+
+        }
+
+        /* Search Section Styling */
+        .search-section {
+            background-color: #eef1f5;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+            .search-section h4 {
+                font-size: 22px;
+                font-weight: bold;
+                color: #dc3545;
+            }
+
+            .search-section .form-control,
+            .search-section .form-select {
+                border: 2px solid #d3d6da;
+                border-radius: 5px;
+                padding: 10px;
+                font-size: 14px;
+            }
+
+            .search-section .btn-primary {
+                background-color: #5BB2F1;
+                border: none;
+                transition: background-color 0.3s ease;
+            }
+
+                .search-section .btn-primary:hover {
+                    background-color: #4A9ED4;
+                }
+
+        .koi-fish-breeds-section h2 {
+            text-align: center;
+            font-size: 32px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        /* Card Styling */
+        .koi-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background-color: #fff;
+            border: 1px solid #d3d6da;
+            border-radius: 10px;
+        }
+
+            .koi-card:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Image Container */
+        .img-container {
+            height: 430px;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+
+            .img-container img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transition: transform 0.4s ease;
+            }
+
+        .koi-card:hover img {
+            transform: scale(1.1);
+        }
+
+        /* Pagination Styling */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .page-item {
+            margin: 0 5px;
+        }
+
+        h3 {
+            font-size: 28px;
+            color: #dc3545;
+            margin-top: 20px;
+            font-weight: bold;
+            border-bottom: 2px solid #f8f9fa;
+            padding-bottom: 10px;
+        }
+
+        .breadcrumb {
+            background-color: transparent;
+            margin-bottom: 15px;
+            padding: 0;
+            list-style: none;
+            font-size: 14px;
+        }
+
+        .breadcrumb-item {
+            display: inline;
+        }
+
+            .breadcrumb-item + .breadcrumb-item::before {
+                content: "/";
+                padding: 0 5px;
+                color: #4A9ED4;
+            }
+
+            .breadcrumb-item a {
+                color: #4A9ED4;
+                text-decoration: none;
+            }
+
+                .breadcrumb-item a:hover {
+                    text-decoration: underline;
+                }
+
+            .breadcrumb-item.active {
+                color: #333;
+            }
+
+        .footer-text-s {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+            .footer-text-s p {
+                font-size: 18px;
+                font-weight: bold;
+                color: #555;
+                background-color: #e9ecef;
+                padding: 15px;
+                border: none;
+                border-radius: 10px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                margin-bottom: 20px;
+            }
+    </style>
+</head>
+<body>
+    <div class="container-s" style="margin: 0 0 0 0 ">
+        <div class="breadcrumb-container" style="margin-top: 20px;width: 100%;">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item"><a href="#">Service</a></li>
+                <li class="breadcrumb-item"><a href="#">Variety</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@Model.VarietyName</li>
+            </ol>
+        </div>
+    </div>
+    <div class="container-s" style="margin-top:-50px">
+        <div class="container-s">
+            <div class="text-content-s">
+                <h3>@Model.VarietyName</h3>
+                <p>@Model.Description</p>
+            </div>
+
+            <div class="fish-image-s">
+                <img src="@Model.ImageUrl" alt="@Model.VarietyName" class="img-fluid" style="border-radius: 10px;">
+            </div>
+        </div>
+    </div>
+    <div class="footer-text-s">
+        <p>
+            Browse our available Koi below. Contact us for personalized advice.
+        </p>
+    </div>
+
+    <!-- Koi Fish Breeds Section -->
+    <section class="koi-fish-breeds-section my-5">
+        <div class="container">
+            <h2 class="text-center mb-4">Available Koi</h2>
+            <div class="row g-4" id="koiContainer">
+                @foreach (var koi in Model.KoiFishes)
+                {
+                    <div class="col-lg-3 col-md-6">
+                        <div class="card border-0 shadow-sm h-100 koi-card">
+                            <div class="img-container">
+                                <img src="@koi.ImageUrl" class="card-img-top img-fluid" alt="@koi.KoiName">
+                            </div>
+                            <div class="card-body text-center d-flex flex-column">
+                                <h5 class="card-title text-danger">@koi.KoiName</h5>
+                                <p class="card-text">@koi.Description</p>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="pagination" id="pagination">
+                <!-- Pagination buttons can be added here if needed -->
+            </div>
+        </div>
+    </section>
+</body>
+</html>

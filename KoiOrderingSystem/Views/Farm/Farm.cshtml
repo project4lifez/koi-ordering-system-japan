@@ -1,0 +1,218 @@
+﻿@model IEnumerable<KoiOrderingSystem.Models.KoiFarm>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <h1>Koi Farms Search</h1>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f9f9f9;
+            line-height: 1.6;
+            padding-top: 10px;
+        }
+
+        /* Search Section Styling */
+        .search-section {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+            .search-section h4 {
+                font-size: 22px;
+                font-weight: bold;
+                color: #dc3545;
+            }
+
+            .search-section .form-control,
+            .search-section .form-select {
+                border: 2px solid #e3e3e3;
+                border-radius: 5px;
+                padding: 10px;
+                font-size: 14px;
+            }
+
+            .search-section .btn-primary {
+                background-color: #5BB2F1;
+                border: none;
+                transition: background-color 0.3s ease;
+            }
+
+                .search-section .btn-primary:hover {
+                    background-color: #4A9ED4;
+                }
+
+        /* Farm grid section */
+        .farm-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .farm-card {
+            background-color: #fff;
+            width: 300px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+            .farm-card:hover {
+                transform: translateY(-5px);
+            }
+
+            .farm-card img {
+                width: 100%;
+                height: 200px;
+                object-fit: cover;
+            }
+
+            .farm-card .card-body {
+                padding: 15px;
+                text-align: center;
+            }
+
+            .farm-card h5 {
+                font-size: 18px;
+                margin-bottom: 10px;
+                color: #333;
+            }
+
+            .farm-card p {
+                font-size: 14px;
+                color: #666;
+            }
+
+            .farm-card .view-btn {
+                margin-top: 10px;
+                background-color: #0d6efd;
+                color: white;
+                padding: 10px 15px;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+            }
+
+                .farm-card .view-btn:hover {
+                    background-color: #0a58ca;
+                }
+
+        .view-more-btn {
+            font-size: 14px;
+            padding: 10px 20px;
+            background-color: #5BB2F1;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+            .view-more-btn:hover {
+                background-color: #4A9ED4;
+                transform: scale(1.05);
+            }
+
+        /* Custom styles for dropdowns */
+        .selectpicker {
+            max-height: 120px; /* Set max height to show only four options */
+            overflow-y: scroll; /* Enable vertical scrolling */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Search Section for Farm Information -->
+    <section class="search-section py-4">
+        <div class="container">
+            <div class="row justify-content-center">
+                <!-- Search Bar Title -->
+                <div class="col-12 text-center mb-3">
+                    <h4 class="text-danger">Search Farms</h4>
+                </div>
+                <!-- Search Form -->
+                <div class="col-lg-10">
+                    <form class="row g-2 justify-content-center" method="get" action="@Url.Action("Search", "Farm")">
+                        <!-- Search by Farm Name -->
+                        <div class="col-md-4 col-12">
+                            <input type="text" name="FarmName" class="form-control" placeholder="Search by farm name">
+                        </div>
+                        <!-- Search by Location Dropdown -->
+                        <div class="col-md-3 col-12">
+                            <select name="Location" class="form-select">
+                                <option value="" selected disabled>Search by location</option>
+                                <option value="Niigata">Niigata</option>
+                                <option value="Ojiya">Ojiya</option>
+                            </select>
+                        </div>
+
+                        <!-- Search by Koi Type Dropdown -->
+                        <div class="col-md-3 col-12">
+                            <select name="koiType" class="form-select">
+                                <option value="" selected disabled>Search by koi type</option>
+                                @{
+                                    var uniqueKoiTypes = new HashSet<string>();
+                                }
+                                @foreach (var farm in Model)
+                                {
+                                    foreach (var specialVariety in farm.SpecialVarieties)
+                                    {
+                                        if (uniqueKoiTypes.Add(specialVariety.Variety.VarietyName))
+                                        {
+                                            <option value="@specialVariety.Variety.VarietyName">@specialVariety.Variety.VarietyName</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+
+                        <!-- Search Button -->
+                        <div class="col-md-2 col-12">
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fas fa-search"></i> Filter
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Koi Farm Cards Section -->
+    <div class="farm-grid">
+        @foreach (var farm in Model)
+        {
+            <div class="farm-card">
+                <img src="@(!string.IsNullOrEmpty(farm.ImageUrl) ? farm.ImageUrl : "/path/to/default/image.jpg")" alt="@farm.FarmName" />
+                <div class="card-body">
+                    <h5>@(!string.IsNullOrEmpty(farm.FarmName) ? farm.FarmName : "Unknown Farm")</h5>
+                    <p>Location: @(!string.IsNullOrEmpty(farm.Location) ? farm.Location : "Unknown Location")</p>
+                    <div class="text-center mt-4">
+                        <a href="/Farm/FarmDetail?id=@farm.FarmId" class="btn btn-primary view-more-btn">View More</a>
+                    </div>
+                </div>
+            </div>
+
+        }
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+</body>
+</html>
