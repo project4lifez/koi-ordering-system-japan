@@ -20,14 +20,17 @@ namespace KoiOrderingSystem
             builder.Services.AddDistributedMemoryCache();
             builder.Services.AddSession(options =>
             {
-                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.IdleTimeout = TimeSpan.FromMinutes(30); // Session timeout
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
 
-            // Add PayPal configuration
+            // Register PayPal configuration
             var payPalConfig = builder.Configuration.GetSection("PayPal");
             builder.Services.Configure<PayPalConfig>(payPalConfig);
+
+            // Register SMTP settings for email (OTP)
+            builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("EmailSettings"));
 
             // Add Google authentication
             builder.Services.AddAuthentication(options =>
@@ -45,9 +48,10 @@ namespace KoiOrderingSystem
             {
                 googleOptions.ClientId = "#"; // Replace with your ClientId
                 googleOptions.ClientSecret = "#"; // Replace with your ClientSecret
-                googleOptions.CallbackPath = "/signin-google"; // This is the path Google will redirect to after authentication
+                googleOptions.CallbackPath = "/signin-google"; // Path where Google redirects after authentication
             });
 
+            // Register controllers with views
             builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
@@ -82,10 +86,17 @@ namespace KoiOrderingSystem
                 name: "register_default",
                 pattern: "{controller=Register}/{action=Register}/{id?}");
 
-            // Update YourBooking route to include PaymentExecuted
             app.MapControllerRoute(
                 name: "YourBooking_default",
                 pattern: "{controller=YourBooking}/{action=YourBooking}/{id?}");
+
+            app.MapControllerRoute(
+               name: "ForgotPasword_default",
+               pattern: "{controller=Account}/{action=ForgotPassword}/{id?}");
+
+            app.MapControllerRoute(
+               name: "Farm_default",
+               pattern: "{controller=Farm}/{action=Farm}/{id?}");
 
             // Add a specific route for PaymentExecuted
             app.MapControllerRoute(
@@ -125,9 +136,11 @@ namespace KoiOrderingSystem
             app.MapControllerRoute(
                 name: "order_management_list",
                 pattern: "{area:exists}/{controller=Home}/{action=OrderList}/{id?}");
+
             app.MapControllerRoute(
                name: "podetail_area",
                pattern: "{area:exists}/{controller=PoDetail}/{action=PoDetail}/{id?}");
+
             app.Run();
         }
     }

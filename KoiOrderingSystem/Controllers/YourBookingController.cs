@@ -170,14 +170,14 @@ namespace KoiOrderingSystem.Controllers
             // Check if the user is logged in
             if (HttpContext.Session.GetString("Username") == null)
             {
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("", "Login");
             }
 
             // Get CustomerId from session
             var customerId = HttpContext.Session.GetInt32("CustomerId");
             if (customerId == null)
             {
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("", "Login");
             }
 
             // Find the specific booking for the customer
