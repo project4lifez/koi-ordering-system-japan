@@ -29,10 +29,10 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
 
             // Load Booking with related PO and PODetails
             var booking = _context.Bookings
-      .Include(b => b.Po)                  // Include the related PO
-      .ThenInclude(po => po.Podetails)      // Include the related PODetails
+      .Include(b => b.Po)              
+      .ThenInclude(po => po.Podetails)     
       .ThenInclude(podetail => podetail.Koi)
-      .Include(t => t.Trip)// Include the related Koi for each Podetail
+      .Include(t => t.Trip)
       .FirstOrDefault(b => b.BookingId == id);
 
             if (booking == null)
