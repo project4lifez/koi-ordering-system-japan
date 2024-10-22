@@ -137,6 +137,14 @@ namespace KoiOrderingSystem
                name: "StaffList_default",
                pattern: "{area:exists}/{controller=StaffList}/{action=StaffList}/{id?}");
 
+            app.MapControllerRoute(
+               name: "CreateAccount_default",
+               pattern: "{area:exists}/{controller=CreateAccount}/{action=CreateAccount}/{id?}");
+
+            app.MapControllerRoute(
+              name: "ProfileDetail_default",
+              pattern: "{area:exists}/{controller=ProfileDetail}/{action=ProfileDetail}/{id?}");
+
             app.Run();
         }
     }
