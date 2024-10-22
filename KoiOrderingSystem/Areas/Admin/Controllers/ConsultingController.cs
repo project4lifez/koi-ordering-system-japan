@@ -49,8 +49,6 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult UpdateStatus(int bookingId, string status)
         {
-            // Retrieve the booking from the database
-            var booking = _db.Bookings.FirstOrDefault(b => b.BookingId == bookingId);
 
             if (booking == null)
             {
@@ -62,13 +60,27 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
             if (status == "checkout" && booking.Status != "Checked in")
             {
                 ModelState.AddModelError("StatusError", "Cannot check out without checking in first.");
-                return View("Consulting", booking); // Return view with error
             }
 
             // Update the booking status (only if allowed)
             if (status == "checkin")
             {
                 booking.Status = "Checked in";
+
+                // Nếu không có Po, tạo mới Po và gán trạng thái "Created"
+                if (booking.Po == null)
+                {
+                    booking.Po = new Po
+                    {
+                        Status = "Created"
+                        // Các thuộc tính khác nếu có thể cần được khởi tạo
+                    };
+                    _db.Add(booking.Po);
+                }
+                else
+                {
+                    booking.Po.Status = "Created"; // Cập nhật Po nếu đã tồn tại
+                }
             }
             else if (status == "checkout")
             {
@@ -83,8 +95,8 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
         }
 
 
+
         [HttpPost]
-        public IActionResult UpdateDelivering(int bookingId, DateOnly deliveryDate, TimeOnly deliveryTime, string deliveryLocation, decimal koiPrice, decimal deposit)
         {
             var booking = _db.Bookings
                              .Include(b => b.Po)
@@ -105,14 +117,13 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
                 return View("Consulting", booking);
             }
 
+            // Update or create Po with new delivery information, but without updating koiPrice or deposit
             if (booking.Po == null)
             {
                 booking.Po = new Po
                 {
                     KoiDeliveryDate = deliveryDate,
                     KoiDeliveryTime = deliveryTime,
-                    DeliveryLocation = deliveryLocation,
-                    TotalAmount = koiPrice,
                 };
 
                 _db.Add(booking.Po);
@@ -125,21 +136,16 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
                 booking.Po.TotalAmount = koiPrice;
             }
 
-            var poDetail = booking.Po.Podetails.FirstOrDefault();
-            if (poDetail != null)
+        }
+        {
             {
-                poDetail.Deposit = deposit;
-            }
-            else
-            {
-                booking.Po.Podetails.Add(new Podetail
-                {
-                    Deposit = deposit,
-                });
             }
 
+            // Cập nhật trạng thái của Po thành "Deposited"
+            booking.Po.Status = "Deposited";
+
+            // Lưu thay đổi vào cơ sở dữ liệu
             _db.SaveChanges();
-            return Redirect("Consulting?Bookingid=" + bookingId);
         }
 
     }

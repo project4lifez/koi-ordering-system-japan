@@ -3,6 +3,10 @@
 @{
     ViewData["Title"] = "TripDetail";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var tripDetailsList = Model.Trip.TripDetails.ToList();
+    int orderNumber = 1; // Initialize the order number here
+
+
 }
 
 <!DOCTYPE html>
@@ -14,7 +18,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.tiny.cloud/1/as08codcfmfm7iyms5ub7ozusoy1f9vkq3xm4a5e7fmyuoyr/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
 
     <style>
         body {
@@ -179,6 +182,67 @@
                 transform: rotate(180deg);
             }
 
+        .total-section, .image-section {
+            margin-top: 15px; /* Add spacing between sections */
+            padding: 10px; /* Add padding for better appearance */
+            background-color: #f0f0f0; /* Light background for visibility */
+            border-radius: 5px; /* Rounded corners */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+        }
+
+            .total-section h4, .image-section h4 {
+                margin-bottom: 5px; /* Space below headings */
+            }
+
+        .toggle-editor-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 10px;
+            background-color: #3498db;
+            color: white;
+            border-radius: 5px;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+            .toggle-editor-btn:hover {
+                background-color: #2980b9;
+                transform: scale(1.05);
+            }
+
+            .toggle-editor-btn:focus {
+                outline: none;
+            }
+
+        /* Modal Styling */
+        /* Modal Styling */
+        .modal-dialog {
+            max-width: 90%;
+            margin: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-dialog-centered {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 1rem);
+        }
+
+        .modal-content {
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .modal-body {
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
     </style>
 
 </head>
@@ -203,23 +267,45 @@
             <!-- Second section (Information about purchased fish) -->
             <div class="trip-sidebar-section">
                 <div class="trip-fish-info-section">
-                    <h4><strong>Information about purchased fish</strong></h4>
-                    <label for="trip-day-select">Day</label>
-                    <select id="trip-day-select" class="trip-select">
-                        <option value="1">Day 1</option>
-                        <option value="2">Day 2</option>
-                        <option value="3">Day 3</option>
-                        <option value="4">Day 4</option>
-                        <option value="5">Day 5</option>
-                    </select>
-                    <p>Koi breed: <span class="trip-data-placeholder"></span></p>
-                    <p>Farm: <span class="trip-data-placeholder"></span></p>
-                    <p>Quantity: <span class="trip-data-placeholder"></span></p>
-                    <p>Deposit: <span class="trip-data-placeholder"></span></p>
-                    <p>Price: <span class="trip-data-placeholder"></span></p>
-                    <p>Total day <span id="total-day-number">1</span>: <span class="trip-data-placeholder"></span></p>
-                    <p>Total all: <span class="trip-data-placeholder"></span></p>
-                    <p>Images: <span class="trip-data-placeholder"></span></p>
+                        </select>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <p>No purchase order details available.</p>
+                    }
+
+                    @if (Model.Po != null)
+                    {
+                        <div class="total-section">
+                            <h4><strong>Total Amount:</strong></h4>
+                            <p><span class="trip-data-placeholder">@Model.Po.TotalAmount USD</span></p>
+                        </div>
+                    }
+                    else
+                    {
+                        <p>No purchase order available.</p>
+                    }
+                </div>
+            </div>
+            <!-- Modal for Notes -->
+            <div class="modal fade" id="noteModal" tabindex="-1" aria-labelledby="noteModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="noteModalLabel">Purchase Notes</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- TinyMCE editor will appear here -->
+                            <textarea id="tripNote" class="trip-details-editor">@Model.Po?.Podetails.FirstOrDefault()?.Note</textarea>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="toggle-editor-btn" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -241,14 +327,12 @@
                     <div class="trip-day-section">
                         <!-- Display the index of each day (1-based index) -->
                         <button class="trip-toggle-btn" onclick="toggleDayDetails(this)">
-                            <h4>Day @(detail.index + 1) (@detail.value.Day): @detail.value.MainTopic</h4>
                             <span class="arrow">&#9660;</span>
                         </button>
 
                         <div class="trip-timeline">
                             <!-- Display Main Topic and Subtopic with TinyMCE -->
                             <div class="trip-event">
-                                <div class="trip-time">@detail.value.MainTopic</div>
                                 <textarea class="trip-details-editor">@detail.value.SubTopic</textarea>
                             </div>
 
@@ -264,62 +348,94 @@
     </div>
 
     <script>
-        function toggleDayDetails(button) {
-            var tripTimeline = button.nextElementSibling;
-            var arrow = button.querySelector('.arrow');
 
-            if (tripTimeline.style.display === "block") {
-                tripTimeline.style.display = "none";
-                arrow.classList.remove('rotate');
-            } else {
-                tripTimeline.style.display = "block";
-                arrow.classList.add('rotate');
-            }
-        }
+        tinymce.init({
+            selector: '#tripNote',  // Your selector for the editor
+            height: 400,  // Set height to 600px
+            menubar: false,  // Keep the menubar visible
+            plugins: 'print export',  // Only include print and export plugins
+            toolbar: 'print export',  // Display only print and export in the toolbar
+            setup: function (editor) {
+                // Disable typing and interaction but keep toolbar active
+                editor.on('init', function () {
+                    // Disable interaction with the content
+                    editor.getBody().setAttribute('contenteditable', false);
+                });
+
+                console.log('Editor initialized with print and export');
+                editor.on('change', function () {
+                    editor.save(); // Ensure content is saved
+                });
+            },
+            export_formats: [
+                { title: 'HTML Document', format: 'html' },
+                { title: 'Word Document', format: 'docx' },
+                { title: 'PDF Document', format: 'pdf' }
+            ]
+        });
+
+
+
+
+
+                function updateFishInfo() {
+                    const daySelect = document.getElementById('day-select');
+                    const selectedDay = daySelect.value;
+                    const dayInfos = document.querySelectorAll('.day-info');
+                    dayInfos.forEach((info) => info.style.display = 'none');
+                    if (selectedDay) {
+                        const selectedInfo = document.querySelector(`.day-info[data-day="${selectedDay}"]`);
+                        if (selectedInfo) selectedInfo.style.display = 'block';
+                    }
+                    document.getElementById('fish-info').style.display = selectedDay ? 'block' : 'none';
+                }
+
+                function toggleDayDetails(button) {
+                    var tripTimeline = button.nextElementSibling;
+                    var arrow = button.querySelector('.arrow');
+                }
 
         // Initialize TinyMCE on SubTopic fields
-     tinymce.init({
-    selector: '.trip-details-editor',
-    menubar: false,
-    plugins: 'lists link',
-    toolbar: '', // Set toolbar to an empty string to remove it
-    branding: false,
-    statusbar: false,
-    readonly: true, // Make the editor read-only
-    setup: function (editor) {
-        editor.on('init', function () {
-            adjustEditorHeight(editor);
-        });
-        editor.on('SetContent', function () {
-            adjustEditorHeight(editor);
-        });
-    }
-});
+                tinymce.init({
+                    selector: '.trip-details-editor',
+                    menubar: false,
+                    plugins: 'lists link',
+                    branding: false,
+                    statusbar: false,
+                    setup: function (editor) {
+                        editor.on('init', function () {
+                            adjustEditorHeight(editor);
+                        });
+                        editor.on('SetContent', function () {
+                            adjustEditorHeight(editor);
+                        });
+                    }
+                });
 
 // Function to adjust the editor height based on its content
-function adjustEditorHeight(editor) {
-    const content = editor.getContent();
-    const tempDiv = document.createElement('div');
-    tempDiv.style.visibility = 'hidden';
-    tempDiv.style.position = 'absolute';
-    tempDiv.style.width = editor.getContainer().clientWidth + 'px';
-    tempDiv.innerHTML = content;
+                function adjustEditorHeight(editor) {
+                    const content = editor.getContent();
+                    const tempDiv = document.createElement('div');
+                    tempDiv.style.visibility = 'hidden';
+                    tempDiv.style.position = 'absolute';
+                    tempDiv.style.width = editor.getContainer().clientWidth + 'px';
+                    tempDiv.innerHTML = content;
 
-    document.body.appendChild(tempDiv);
+                    document.body.appendChild(tempDiv);
 
-    let newHeight = tempDiv.clientHeight + 20; // Add some padding
-    const minHeight = 130; // Set the minimum height of the editor
-    const maxHeight = 290; // Set the maximum height of the editor
+                    let newHeight = tempDiv.clientHeight + 20; // Add some padding
+                    newHeight = Math.max(minHeight, Math.min(newHeight, maxHeight));
 
-    // Adjust the height based on the content but within the constraints
-    newHeight = Math.max(minHeight, Math.min(newHeight, maxHeight));
+                    editor.getContainer().style.height = newHeight + 'px';
 
-    editor.getContainer().style.height = newHeight + 'px';
+                    document.body.removeChild(tempDiv);
+                }
 
-    document.body.removeChild(tempDiv);
-}
+
 
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/@@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
 
 </body>
 </html>

@@ -2,9 +2,11 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order History - Nishikigoi Ordering Service</title>
     <h2>Order History - Nishikigoi Ordering Service</h2>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
@@ -95,6 +97,9 @@
                 font-weight: 600; /* Ensure consistency in weight */
                 color: #1565c0; /* The blue color used in Your Booking */
                 margin-bottom: 20px;
+                font-weight: 600;
+                font-size: 1.5rem;
+                color: #1565c0;
             }
 
         .custom-table {
@@ -107,7 +112,6 @@
             overflow: hidden;
         }
 
-        .custom-th, .custom-td {
             padding: 20px;
             text-align: center;
             border-bottom: 1px solid #ddd;
@@ -120,6 +124,7 @@
         }
 
         .custom-td {
+            position: relative;
             font-size: 1rem;
         }
 
@@ -137,11 +142,13 @@
             border-radius: 20px;
         }
 
-        tbody tr:hover {
             background-color: #f0f0f0;
+            color: #999;
+            border-color: #ddd;
         }
     </style>
 </head>
+
 <body>
     <div class="custom-container">
         <!-- Sidebar Section -->
@@ -156,7 +163,6 @@
                 <li class="custom-active">
                     <a href="/YourBooking/OrderHistory" style="display: flex; align-items: center; justify-content: space-between;">
                         Booking History
-                        <span class="custom-order-count" style="margin-left: 8px;">@Model.Count()</span> <!-- Display the number next to Order History -->
                     </a>
                 </li>
                 <li>
@@ -171,6 +177,15 @@
         <!-- Main Content Section -->
         <div class="custom-content">
             <h2>Booking History</h2>
+            <!-- Search bar with Flatpickr integrated -->
+            <form method="get" action="/YourBooking/BookingHistory">
+                <div class="input-group mb-3" style="max-width: 400px;">
+                    <!-- Combined search input for trip name, status, or date -->
+                    <input type="text" id="searchInput" name="searchKeywords" class="form-control" placeholder="Search for trip name, status, or date">
+
+                    <button class="btn btn-primary" id="searchButton" type="submit">Search</button>
+                </div>
+            </form>
             <table class="custom-table">
                 <thead>
                     <tr>
@@ -179,12 +194,12 @@
                         <th class="custom-th">Trip Name</th>
                         <th class="custom-th">Status</th>
                         <th class="custom-th">Price</th>
+                        <th class="custom-th">Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     @if (Model != null && Model.Any())
                     {
-                        int index = 1; // Counter for numbering
                         foreach (var booking in Model)
                         {
                             <tr>
@@ -204,19 +219,13 @@
                                 <td class="custom-td">
                                     @if (booking.QuotedAmount.HasValue && booking.QuotedAmount > 0)
                                     {
-                                        // Tính toán giá trị đã cộng thêm 5%
-                                        var adjustedAmount = booking.QuotedAmount.Value * (decimal)1.05; // Cộng thêm 5%
-
-                                        // Định dạng giá trị đã điều chỉnh
                                         var formattedAmount = adjustedAmount % 1 == 0
                                         ? string.Format("{0:0}", adjustedAmount)
                                         : string.Format("{0:0.00}", adjustedAmount);
 
                                         @($"{formattedAmount} USD")
                                     }
-                                    else
                                     {
-                                        <text></text> <!-- Hiển thị trống nếu không có QuotedAmount -->
                                     }
                                 </td>
                             </tr>
@@ -226,12 +235,143 @@
                     else
                     {
                         <tr>
-                            <td colspan="5" class="custom-td" style="text-align: center;">No order history found.</td>
                         </tr>
                     }
                 </tbody>
             </table>
+            <!-- Ensure the pagination controls are directly below the table -->
+            <div class="pagination-container" style="margin-top: 20px; text-align: center;">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item @(ViewBag.CurrentPages == 1 ? "disabled" : "")">
+                        <a class="page-link" href="?page=@(ViewBag.CurrentPages - 1)&searchKeywords=@ViewBag.SearchKeywords">Previous</a>
+                    </li>
+                    @for (int i = 1; i <= ViewBag.TotalPagess; i++)
+                    {
+                        <li class="page-item @(ViewBag.CurrentPages == i ? "active" : "")">
+                            <a class="page-link" href="?page=@i&searchKeywords=@ViewBag.SearchKeywords">@i</a>
+                        </li>
+                    }
+                    <li class="page-item @(ViewBag.CurrentPages == ViewBag.TotalPagess ? "disabled" : "")">
+                        <a class="page-link" href="?page=@(ViewBag.CurrentPages + 1)&searchKeywords=@ViewBag.SearchKeywords">Next</a>
+                    </li>
+                </ul>
+            </div>
+      </div>
+    </div>
+
+    <!-- Feedback Modal -->
+    <div class="modal fade" id="feedbackModal" tabindex="-1" aria-labelledby="feedbackModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="feedbackModalLabel">Feedback</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="feedbackForm" method="post" action="/YourBooking/SubmitFeedback">
+                        <input type="hidden" id="BookingId" name="BookingId" />
+                        <div class="mb-3">
+                            <label for="TripName" class="form-label">Trip Name</label>
+                            <input type="text" class="form-control" id="TripName" readonly />
+                        </div>
+                        <div class="mb-3">
+                            <label for="rating" class="form-label">Rating</label>
+                            <div id="starRating" class="rating">
+                                <i class="fa fa-star" data-value="1"></i>
+                                <i class="fa fa-star" data-value="2"></i>
+                                <i class="fa fa-star" data-value="3"></i>
+                                <i class="fa fa-star" data-value="4"></i>
+                                <i class="fa fa-star" data-value="5"></i>
+                            </div>
+                            <input type="hidden" id="Rating" name="Rating" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="Comments" class="form-label">Comments</label>
+                            <textarea class="form-control" id="Comments" name="Comments" rows="4"></textarea>
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            <button type="submit" class="btn btn-primary">Submit Feedback</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Hiển thị modal và điền dữ liệu khi nhấn nút Feedback
+            document.querySelectorAll('.custom-feedback-btn').forEach(button => {
+                button.addEventListener('click', function () {
+                    const bookingId = this.dataset.bookingId;
+                    const tripName = this.dataset.tripName;
+
+                    document.getElementById('BookingId').value = bookingId;
+                    document.getElementById('TripName').value = tripName;
+
+                    // Gửi yêu cầu AJAX để lấy dữ liệu feedback
+                    fetch(`/YourBooking/GetFeedback?bookingId=${bookingId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success && data.feedback) {
+                                // Nếu có feedback, điền vào form và đặt chế độ chỉ xem
+                                document.getElementById('Rating').value = data.feedback.rating;
+                                document.getElementById('Comments').value = data.feedback.comments;
+                                highlightStars(data.feedback.rating); // Đánh dấu sao
+
+                                // Đặt các trường vào chế độ chỉ đọc
+                                document.querySelectorAll('.rating i').forEach(star => {
+                                    star.style.pointerEvents = 'none'; // Không cho phép click vào các ngôi sao
+                                });
+                                document.getElementById('Comments').setAttribute('readonly', true); // Comments không thể chỉnh sửa
+
+                                // Ẩn nút "Submit Feedback"
+                                document.querySelector('#feedbackForm button[type="submit"]').style.display = 'none';
+                            } else {
+                                // Nếu không có feedback, reset form
+                                document.getElementById('Rating').value = "";
+                                document.getElementById('Comments').value = "";
+                                highlightStars(0); // Reset các sao
+
+                                // Đặt lại các trường để có thể chỉnh sửa
+                                document.querySelectorAll('.rating i').forEach(star => {
+                                    star.style.pointerEvents = 'auto'; // Cho phép click vào các ngôi sao
+                                });
+                                document.getElementById('Comments').removeAttribute('readonly'); // Comments có thể chỉnh sửa
+
+                                // Hiển thị nút "Submit Feedback"
+                                document.querySelector('#feedbackForm button[type="submit"]').style.display = 'block';
+                            }
+
+                            let feedbackModal = new bootstrap.Modal(document.getElementById('feedbackModal'));
+                            feedbackModal.show();
+                        })
+                        .catch(error => {
+                            console.error('Error fetching feedback:', error);
+                        });
+                });
+            });
+
+            // Đánh giá sao
+            const stars = document.querySelectorAll('#starRating .fa-star');
+            stars.forEach(star => {
+                star.addEventListener('click', function () {
+                    const rating = this.dataset.value;
+                    document.getElementById('Rating').value = rating;
+                    highlightStars(rating);
+                });
+            });
+
+            function highlightStars(rating) {
+                stars.forEach(star => {
+                    star.classList.remove('checked');
+                    if (star.dataset.value <= rating) {
+                        star.classList.add('checked');
+                    }
+                });
+            }
+        });
+    </script>
 </body>
+
 </html>

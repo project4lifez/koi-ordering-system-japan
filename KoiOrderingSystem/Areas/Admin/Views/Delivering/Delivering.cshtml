@@ -51,8 +51,22 @@
                     <p><strong>Delivery Date:</strong> @Model?.Po?.KoiDeliveryDate?.ToString("dd/MM/yyyy")</p>
                     <p><strong>Delivery Time:</strong> @Model?.Po?.KoiDeliveryTime</p>
                     <p><strong>Koi Fish:</strong></p>
-                    <p><strong>Koi Package:</strong></p>
                     <p><strong>Delivery Location:</strong> @Model?.Po?.DeliveryLocation</p>
+                    <!-- Po Status and Set to Paid Button -->
+                    <div style="display: flex; align-items: center;">
+                        <strong>Po Status: </strong>
+                        <span id="po-status" style="margin-right: 10px;"> @Model?.Po?.Status</span>
+
+                        <!-- Button to set status to 'Paid' -->
+                        <form action="/Admin/Delivering/SetStatusToPaid" method="post" style="display: inline-block;">
+                            <input type="hidden" name="id" value="@Model.BookingId" />
+                            <input type="hidden" name="poId" value="@Model.Po?.PoId" />
+                            <button type="submit" class="btn btn-success btn-sm" style="margin-left: 10px;"
+                            @(Model.Status != "Delivering" || Model.Po?.Status == "Paid" ? "disabled" : "")>
+                                Set to Paid
+                            </button>
+                        </form>
+                    </div>
 
 
 
@@ -91,14 +105,9 @@
                     Trip Details
                 </div>
                 <div class="card-body">
-                    <h5>@Model?.FavoriteKoi</h5>
                     <div class="d-flex flex-column">
-                        <p style="text-align: right;"><strong>Koi Price:</strong> @Model.Po?.TotalAmount?.ToString() $</p>
-                        <p style="text-align: right;"><strong>Deposit:</strong> @Model?.Po?.Podetails?.FirstOrDefault()?.Deposit $</p>
                     </div>
                     <div class="d-flex flex-column">
-                        <p style="text-align: right;"><strong>Remaining Payment:</strong> @((Model.Po?.TotalAmount ?? 0) - (Model.Po?.Podetails?.FirstOrDefault()?.Deposit ?? 0)) $</p>
-                        <p class="text-danger" style="text-align: right;"><strong>Status:</strong> @Model?.Status</p>
                     </div>
                 </div>
             </div>

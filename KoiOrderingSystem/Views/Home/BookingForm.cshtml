@@ -194,10 +194,7 @@
                 <h3>Trip Design Information</h3>
                 <div class="row">
                     <div class="col-md-6 form-floating-label">
-                        <select asp-for="Favoritefarm" class="form-control selectpicker" id="Favoritefarm"
                                 data-live-search="true" data-style="btn-outline-secondary"
-                                title="Select the farm you want to visit" onchange="updateKoiBreeds()">
-                            <option value="" disabled selected>Select the farm you want to visit</option>
                             <option value="Dainichi Koi Farm">Dainichi Koi Farm</option>
                             <option value="Otsuka Koi Farm">Otsuka Koi Farm</option>
                             <option value="Fukasawa Koi Farm">Fukasawa Koi Farm</option>
@@ -208,9 +205,8 @@
                             <option value="Izumiya Koi Farm">Izumiya Koi Farm</option>
                         </select>
 
-                        <label asp-for="Favoritefarm">The farm you want to come</label>
-                        <span asp-validation-for="Favoritefarm" class="text-danger"></span>
                     </div>
+
 
                     <div class="col-md-6 form-floating-label">
                         <input asp-for="FavoriteKoi" class="form-control" placeholder=" " id="FavoriteKoi" />
@@ -261,7 +257,7 @@
     <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.5.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js"></script>
-  <script>
+    <script>
 
         $(document).ready(function () {
             // Initialize Bootstrap Select with live search enabled
@@ -270,6 +266,7 @@
                 liveSearchPlaceholder: 'Search for a farm...' // Placeholder text in the search box
             });
         });
+
         function updateKoiBreeds() {
             const farmSelect = document.getElementById('Favoritefarm');
             const koiInput = document.getElementById('FavoriteKoi');
@@ -294,182 +291,184 @@
                 koiInput.value = koiBreeds[selectedFarm].join(', ');
             }
         }
- document.addEventListener('DOMContentLoaded', function () {
-    const form = document.getElementById('orderForm');
-    const progressBar = document.getElementById('progressBar');
-    const formElements = form.querySelectorAll('input, select, textarea'); // Tất cả các trường nhập liệu
-    const requiredFields = ['Fullname', 'Phone', 'Email', 'FavoriteKoi', 'StartDate', 'EndDate']; // Các trường bắt buộc
-    
-    // Lấy ngày hiện tại (today) và đặt giờ về 0 để chỉ lấy phần ngày
-    const today = new Date();
-    today.setHours(0, 0, 0, 0); // Đặt giờ về 0 để so sánh chính xác theo ngày
+        function updateSelectedFarm() {
+            var select = document.getElementById("Favoritefarm");
+            var selectedFarm = select.options[select.selectedIndex].text;
+            document.getElementById("SelectedFarmInput").value = selectedFarm;
+        }
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('orderForm');
+            const progressBar = document.getElementById('progressBar');
+            const formElements = form.querySelectorAll('input, select, textarea'); // Tất cả các trường nhập liệu
+            const requiredFields = ['Fullname', 'Phone', 'Email', 'FavoriteKoi', 'StartDate', 'EndDate']; // Các trường bắt buộc
 
-    // Tính ngày sau 3 ngày kể từ hôm nay
-    const minStartDate = new Date();
-    minStartDate.setDate(today.getDate() + 3); // Ngày bắt đầu phải sau 3 ngày kể từ hôm nay
-    minStartDate.setHours(0, 0, 0, 0); // Đảm bảo chỉ lấy phần ngày
+            // Lấy ngày hiện tại (today) và đặt giờ về 0 để chỉ lấy phần ngày
+            const today = new Date();
+            today.setHours(0, 0, 0, 0); // Đặt giờ về 0 để so sánh chính xác theo ngày
 
-    // Bắt sự kiện nhập hoặc thay đổi cho tất cả các trường để cập nhật thanh tiến trình
-    formElements.forEach(function(element) {
-        element.addEventListener('input', function() {
-            // Kiểm tra định dạng chỉ khi người dùng đang nhập vào
-            if (element.value.trim() !== "" && requiredFields.includes(element.id)) {
-                validateField(element); // Chỉ validate nếu trường không trống
+            // Tính ngày sau 3 ngày kể từ hôm nay
+            const minStartDate = new Date();
+            minStartDate.setDate(today.getDate() + 3); // Ngày bắt đầu phải sau 3 ngày kể từ hôm nay
+            minStartDate.setHours(0, 0, 0, 0); // Đảm bảo chỉ lấy phần ngày
+
+            // Bắt sự kiện nhập hoặc thay đổi cho tất cả các trường để cập nhật thanh tiến trình
+                    // Kiểm tra định dạng chỉ khi người dùng đang nhập vào
+                    if (element.value.trim() !== "" && requiredFields.includes(element.id)) {
+                        validateField(element); // Chỉ validate nếu trường không trống
+                    }
+                    updateProgress(); // Cập nhật thanh tiến trình
+                });
+            });
+
+            // Attach event listener to the form's submit event
+            form.addEventListener('submit', function (e) {
+                let valid = true;
+
+                // Validate các trường bắt buộc khi submit (chỉ hiển thị lỗi khi bấm submit)
+                    const field = document.getElementById(fieldId);
+                    if (field.value.trim() === "") {
+                        showError(field, `${field.labels[0].innerText} is required.`);
+                        valid = false;
+                    } else {
+                        hideError(field); // Remove error if the field is filled
+                    }
+                });
+
+                // Nếu form không hợp lệ, ngăn việc submit
+                if (!valid) {
+                    e.preventDefault(); // Ngăn chặn form nếu không hợp lệ
+                }
+            });
+
+            // Validate từng trường cho định dạng
+            function validateField(field) {
+                const fieldId = field.id;
+                switch (fieldId) {
+                    case 'Phone':
+                        return validatePhone();
+                    case 'Email':
+                        return validateEmail();
+                    case 'StartDate':
+                        return validateStartDate();
+                    case 'EndDate':
+                        return validateEndDate();
+                    default:
+                        // Không kiểm tra các trường khác ngay lập tức
+                        return true;
+                }
             }
-            updateProgress(); // Cập nhật thanh tiến trình
-        });
-    });
 
-    // Attach event listener to the form's submit event
-    form.addEventListener('submit', function (e) {
-        let valid = true;
+            // Validate Phone Number
+            function validatePhone() {
+                const phone = document.getElementById('Phone');
+                const phonePattern = /^\d{10,11}$/;
+                if (!phonePattern.test(phone.value)) {
+                    showError(phone, 'Please enter a valid phone number (10-11 digits).');
+                    return false;
+                } else {
+                    hideError(phone);
+                    return true;
+                }
+            }
 
-        // Validate các trường bắt buộc khi submit (chỉ hiển thị lỗi khi bấm submit)
-        requiredFields.forEach(function(fieldId) {
-            const field = document.getElementById(fieldId);
-            if (field.value.trim() === "") {
-                showError(field, `${field.labels[0].innerText} is required.`);
-                valid = false;
-            } else {
-                hideError(field); // Remove error if the field is filled
+            // Validate Email
+            function validateEmail() {
+                const email = document.getElementById('Email');
+                const emailPattern = /^[a-zA-Z0-9._-]+@@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+                if (!emailPattern.test(email.value)) {
+                    showError(email, 'Please enter a valid email address.');
+                    return false;
+                } else {
+                    hideError(email);
+                    return true;
+                }
+            }
+
+            // Validate Start Date (phải sau 3 ngày kể từ hôm nay)
+            function validateStartDate() {
+                const startDate = document.getElementById('StartDate');
+                if (new Date(startDate.value) <= minStartDate) {
+                    showError(startDate, `Start date must be at least 3 days after today (${formatDate(minStartDate)}).`);
+                    return false;
+                } else {
+                    hideError(startDate);
+                    return true;
+                }
+            }
+
+            // Validate End Date (phải sau Start Date, cách Start Date ít nhất 2 ngày, và trong vòng 14 ngày)
+            function validateEndDate() {
+                const startDate = document.getElementById('StartDate');
+                const endDate = document.getElementById('EndDate');
+
+                if (new Date(endDate.value) <= new Date(startDate.value)) {
+                    showError(endDate, 'End date must be after the start date.');
+                    return false;
+                }
+
+                const start = new Date(startDate.value);
+                const end = new Date(endDate.value);
+                const timeDiff = end - start;
+                const daysDiff = timeDiff / (1000 * 3600 * 24);
+
+                if (daysDiff < 2) {
+                    showError(endDate, 'The trip must be at least 2 days long.');
+                    return false;
+                } else if (daysDiff > 14) {
+                    showError(endDate, 'The trip duration must be within 14 days.');
+                    return false;
+                } else {
+                    hideError(endDate);
+                    return true;
+                }
+            }
+
+            // Show error message
+            function showError(field, message) {
+                let errorElement = field.parentNode.querySelector('.error-message');
+                if (!errorElement) {
+                    errorElement = document.createElement('div');
+                    errorElement.classList.add('error-message');
+                    field.parentNode.appendChild(errorElement);
+                }
+                errorElement.innerText = message;
+                field.classList.add('is-invalid');
+            }
+
+            // Hide error message
+            function hideError(field) {
+                let errorElement = field.parentNode.querySelector('.error-message');
+                if (errorElement) {
+                    errorElement.remove();
+                }
+                field.classList.remove('is-invalid');
+            }
+
+            // Progress bar update logic
+            function updateProgress() {
+                let validElements = 0;
+
+                formElements.forEach(function (element) {
+                    if (element.value.trim() !== "" && (element.classList.contains('is-valid') || !element.classList.contains('is-invalid'))) {  // Only count if the field is valid or not showing an error
+                        validElements++;
+                    }
+                });
+
+                // Cập nhật thanh tiến trình
+                const progressPercentage = (validElements / formElements.length) * 100;
+                progressBar.style.width = progressPercentage + '%';
+            }
+
+            // Format date as yyyy-mm-dd
+            function formatDate(date) {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0'); // Tháng 1-12
+                const day = String(date.getDate()).padStart(2, '0'); // Ngày 01-31
+                return `${year}-${month}-${day}`;
             }
         });
 
-        // Nếu form không hợp lệ, ngăn việc submit
-        if (!valid) {
-            e.preventDefault(); // Ngăn chặn form nếu không hợp lệ
-        }
-    });
-
-    // Validate từng trường cho định dạng
-    function validateField(field) {
-        const fieldId = field.id;
-        switch (fieldId) {
-            case 'Phone':
-                return validatePhone();
-            case 'Email':
-                return validateEmail();
-            case 'StartDate':
-                return validateStartDate();
-            case 'EndDate':
-                return validateEndDate();
-            default:
-                // Không kiểm tra các trường khác ngay lập tức
-                return true;
-        }
-    }
-
-    // Validate Phone Number
-    function validatePhone() {
-        const phone = document.getElementById('Phone');
-        const phonePattern = /^\d{10,11}$/;
-        if (!phonePattern.test(phone.value)) {
-            showError(phone, 'Please enter a valid phone number (10-11 digits).');
-            return false;
-        } else {
-            hideError(phone);
-            return true;
-        }
-    }
-
-    // Validate Email
-    function validateEmail() {
-        const email = document.getElementById('Email');
-        const emailPattern = /^[a-zA-Z0-9._-]+@@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-        if (!emailPattern.test(email.value)) {
-            showError(email, 'Please enter a valid email address.');
-            return false;
-        } else {
-            hideError(email);
-            return true;
-        }
-    }
-
-    // Validate Start Date (phải sau 3 ngày kể từ hôm nay)
-    function validateStartDate() {
-        const startDate = document.getElementById('StartDate');
-        if (new Date(startDate.value) <= minStartDate) {
-            showError(startDate, `Start date must be at least 3 days after today (${formatDate(minStartDate)}).`);
-            return false;
-        } else {
-            hideError(startDate);
-            return true;
-        }
-    }
-
-    // Validate End Date (phải sau Start Date, cách Start Date ít nhất 2 ngày, và trong vòng 14 ngày)
-    function validateEndDate() {
-        const startDate = document.getElementById('StartDate');
-        const endDate = document.getElementById('EndDate');
-        
-        if (new Date(endDate.value) <= new Date(startDate.value)) {
-            showError(endDate, 'End date must be after the start date.');
-            return false;
-        }
-
-        const start = new Date(startDate.value);
-        const end = new Date(endDate.value);
-        const timeDiff = end - start;
-        const daysDiff = timeDiff / (1000 * 3600 * 24);
-
-        if (daysDiff < 2) {
-            showError(endDate, 'The trip must be at least 2 days long.');
-            return false;
-        } else if (daysDiff > 14) {
-            showError(endDate, 'The trip duration must be within 14 days.');
-            return false;
-        } else {
-            hideError(endDate);
-            return true;
-        }
-    }
-
-    // Show error message
-    function showError(field, message) {
-        let errorElement = field.parentNode.querySelector('.error-message');
-        if (!errorElement) {
-            errorElement = document.createElement('div');
-            errorElement.classList.add('error-message');
-            field.parentNode.appendChild(errorElement);
-        }
-        errorElement.innerText = message;
-        field.classList.add('is-invalid');
-    }
-
-    // Hide error message
-    function hideError(field) {
-        let errorElement = field.parentNode.querySelector('.error-message');
-        if (errorElement) {
-            errorElement.remove();
-        }
-        field.classList.remove('is-invalid');
-    }
-
-    // Progress bar update logic
-    function updateProgress() {
-        let validElements = 0;
-
-        formElements.forEach(function (element) {
-            if (element.value.trim() !== "" && (element.classList.contains('is-valid') || !element.classList.contains('is-invalid'))) {  // Only count if the field is valid or not showing an error
-                validElements++;
-            }
-        });
-
-        // Cập nhật thanh tiến trình
-        const progressPercentage = (validElements / formElements.length) * 100;
-        progressBar.style.width = progressPercentage + '%';
-    }
-
-    // Format date as yyyy-mm-dd
-    function formatDate(date) {
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0'); // Tháng 1-12
-        const day = String(date.getDate()).padStart(2, '0'); // Ngày 01-31
-        return `${year}-${month}-${day}`;
-    }
-});
-
-</script>
+    </script>
 
 
 </body>

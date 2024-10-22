@@ -215,7 +215,11 @@ public partial class Koi88Context : DbContext
                 .HasMaxLength(1000)
                 .HasColumnName("comments");
             entity.Property(e => e.CustomerId).HasColumnName("customer_id");
+            entity.Property(e => e.Feedbackdate).HasColumnName("feedbackdate");
             entity.Property(e => e.Rating).HasColumnName("rating");
+            entity.Property(e => e.Status)
+                .HasMaxLength(100)
+                .HasColumnName("status");
 
             entity.HasOne(d => d.Customer).WithMany(p => p.Feedbacks)
                 .HasForeignKey(d => d.CustomerId)
@@ -368,6 +372,7 @@ public partial class Koi88Context : DbContext
                 .HasMaxLength(100)
                 .HasColumnName("imageUrl");
             entity.Property(e => e.KoiId).HasColumnName("koi_id");
+            entity.Property(e => e.Note).HasColumnName("note");
             entity.Property(e => e.PoId).HasColumnName("po_id");
             entity.Property(e => e.Quantity).HasColumnName("quantity");
             entity.Property(e => e.RemainingPrice)
@@ -398,7 +403,12 @@ public partial class Koi88Context : DbContext
 
             entity.Property(e => e.PoPaymentId).HasColumnName("po_payment_id");
             entity.Property(e => e.PaymentDate).HasColumnName("payment_date");
+            entity.Property(e => e.PaymentMethodId).HasColumnName("payment_method_id");
             entity.Property(e => e.PoId).HasColumnName("po_id");
+
+            entity.HasOne(d => d.PaymentMethod).WithMany(p => p.Popayments)
+                .HasForeignKey(d => d.PaymentMethodId)
+                .HasConstraintName("FK_POPayment_PO_PaymentMethod");
 
             entity.HasOne(d => d.Po).WithMany(p => p.Popayments)
                 .HasForeignKey(d => d.PoId)
@@ -466,6 +476,7 @@ public partial class Koi88Context : DbContext
             entity.ToTable("TripDetail");
 
             entity.Property(e => e.TripDetailId).HasColumnName("trip_detail_id");
+            entity.Property(e => e.FarmId).HasColumnName("farm_id");
             entity.Property(e => e.MainTopic)
                 .HasMaxLength(200)
                 .HasColumnName("main_topic");
@@ -474,6 +485,10 @@ public partial class Koi88Context : DbContext
                 .HasColumnName("note_price");
             entity.Property(e => e.SubTopic).HasColumnName("sub_topic");
             entity.Property(e => e.TripId).HasColumnName("trip_id");
+
+            entity.HasOne(d => d.KoiFarm).WithMany(p => p.TripDetails)
+                .HasForeignKey(d => d.FarmId)
+                .HasConstraintName("FK_KoiFarm");
 
             entity.HasOne(d => d.Trip).WithMany(p => p.TripDetails)
                 .HasForeignKey(d => d.TripId)

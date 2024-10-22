@@ -13,6 +13,10 @@ public partial class Feedback
 
     public int? CustomerId { get; set; }
 
+    public string? Status { get; set; }
+
+    public DateOnly? Feedbackdate { get; set; }
+
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
     public virtual Customer? Customer { get; set; }

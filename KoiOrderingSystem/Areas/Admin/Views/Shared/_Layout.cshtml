@@ -15,10 +15,6 @@
     <meta name="description" content="Admin Dashboard" />
     <meta name="author" content="Koi88" />
     <title>Dashboard - Admin</title>
-    <!-- Custom styles for this template -->
-    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
-    <link href="/Assets/admin/css/styles.css" rel="stylesheet" />
-    <!-- FontAwesome -->
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 </head>
 <body class="sb-nav-fixed">
@@ -42,10 +38,7 @@
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="userDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="fas fa-user fa-fw"></i>
-                    <!-- Hiển thị Lastname -->
-                    @if (ViewBag.Lastname != null)
                     {
-                        <span>@ViewBag.Lastname</span>
                     }
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
@@ -101,7 +94,7 @@
                             </a>
 
                         
-                        <div class="collapse" id="collapseProduct" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                            <div class="collapse" id="collapseProduct" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav">
                                     <a class="nav-link" href="/Admin/Manager/KoiFarmList">Koi Farm List</a>
                                     <a class="nav-link" href="/Admin/Manager/KoiVarietyList">Variety List</a>
@@ -109,18 +102,15 @@
                                 </nav>
                             </div>
 
-                        
-
-                        <!-- Hiển thị tất cả mục cho RoleId 2 (Admin) -->
-                      
-                            <!-- Account Information Link -->
-                            <a class="nav-link" href="@Url.Action("Index", "Account")">
                                 <div class="sb-nav-link-icon"><i class="fas fa-user"></i></div>
-                                Account Information
                             </a>
+                            <div class="collapse" id="collapseAccount" aria-labelledby="headingThree" data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="/Admin/Manager/Account">Employee Card</a>
+                                    <a class="nav-link" href="/Admin/Manager/Account">User Information</a>
+                                </nav>
+                            </div>
 
-                            <!-- Feedback Link -->
-                            <a class="nav-link" href="@Url.Action("Index", "Feedback")">
                                 <div class="sb-nav-link-icon"><i class="fas fa-comments"></i></div>
                                 Feedback
                             </a>

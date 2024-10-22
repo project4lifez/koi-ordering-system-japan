@@ -107,6 +107,8 @@
         }
 
         <!-- Form Inline (Same Row) -->
+        <a class="btn btn-primary mb-2" href="/Admin/PoDetail/PoDetail?bookingId=@Model.BookingId" style="margin-top: 8px">Update Koi Order</a>
+
         <form action="/Admin/Consulting/UpdateStatus" method="post">
             <input type="hidden" name="bookingId" value="@Model.BookingId" />
 
@@ -136,7 +138,7 @@
             <div class="modal-content">
                 <span class="close">&times;</span>
                 <h4>Update Koi Order</h4>
-
+       
                 <!-- Form Fields -->
                 <div class="form-group">
                     <label for="day-selection">Select Day:</label>
@@ -207,14 +209,7 @@
                         <p><strong>Delivery Time:</strong> <span id="updated-time">@Model.Po?.KoiDeliveryTime</span></p>
                         <p><strong>Delivery Date:</strong> <span id="updated-date">@Model.Po?.KoiDeliveryDate</span></p>
                         <p><strong>Delivery Location:</strong> <span id="updated-location">@Model.Po?.DeliveryLocation</span></p>
-                        <p><strong>Koi Price:</strong> <span id="updated-price">@Model.Po?.TotalAmount?.ToString()</span></p>
                         <p>
-                            <strong>Deposit:</strong>
-                            <span id="updated-deposit">
-                                @(Model.Po?.Podetails?.FirstOrDefault()?.Deposit.HasValue == true
-                                    ? Model.Po.Podetails.FirstOrDefault().Deposit.Value.ToString("N0") + "$"
-                                    : "")
-                            </span>
                         </p>
                     </div>
                 </div>
@@ -263,7 +258,7 @@
                                                value="@detail.Deposit" step="0.01" />
                                     </div>
                                 }
-
+                           
                                 <button type="submit" class="btn btn-primary mt-3"
                                 @(Model.Status != "Checked in" && Model.Status != "Checked out" ? "disabled" : "")>
                                     Update Delivery
@@ -282,19 +277,14 @@
                     <div class="card-header">
                     </div>
                     <div class="card-body">
-                        <h5> @Model.Trip?.TripName</h5>
                         <div class="d-flex flex-column">
-                            <p style="text-align: right;"><strong>Koi Price:</strong>@Model.Po?.TotalAmount$</p>
                             <p style="text-align: right;">
-                                <strong>Deposit:</strong>
-                                @Model.Po?.Podetails?.FirstOrDefault()?.Deposit$
                             </p>
                         </div>
                         <div class="d-flex flex-column">
                             <p style="text-align: right;">
                                 <strong>Remaining Payment:</strong>
-                                @((Model.Po?.TotalAmount ?? 0) - (Model.Po?.Podetails?.FirstOrDefault()?.Deposit ?? 0))$
-                            </p>                            
+                            </p>
                             <p class="text-danger" style="text-align: right;"><strong>Status:</strong> @Model?.Status</p>
                         </div>
                     </div>

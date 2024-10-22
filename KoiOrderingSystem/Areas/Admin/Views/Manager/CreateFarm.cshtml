@@ -181,83 +181,30 @@
                 <h2 class="section-title">Additional Information</h2>
             </div>
             <div class="form-content">
-                <div id="general-info" class="form-sections">
-                    <div class="form-group">
-                        <label for="name" class="form-label">Name Farm:</label>
-                        <input type="text" class="form-control" id="name" name="name" required>
+                <form method="post" action="/Admin/Manager/AddKoiFarm" enctype="multipart/form-data">
+                    <div id="general-info" class="form-sections">
+                        <div class="form-group">
+                        </div>
+                        <div class="form-group">
+                        </div>
+                        <div class="form-group">
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="description" class="form-label">Location:</label>
-                        <input type="text" class="form-control" id="location" name="location" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="description" class="form-label">Description:</label>
-                        <input type="text" class="form-control" id="description" name="description" required>
-                    </div>
-                </div>
-                <div id="more-info" class="form-sections">
-                    <div class="form-group">
-                        <label class="form-label dropdown-label">Special Variety:</label>
-                        <div class="checkbox-group">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="kohaku" name="variety" value="kohaku">
-                                <label class="form-check-label" for="kohaku">Kohaku</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="sanke" name="variety" value="sanke">
-                                <label class="form-check-label" for="sanke">Sanke</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="showa" name="variety" value="showa">
-                                <label class="form-check-label" for="showa">Showa</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="utsuri" name="variety" value="utsuri">
-                                <label class="form-check-label" for="utsuri">Utsuri</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="shusui" name="variety" value="shusui">
-                                <label class="form-check-label" for="shusui">Shusui</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="asagi" name="variety" value="asagi">
-                                <label class="form-check-label" for="asagi">Asagi</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="kohaku_sanke" name="variety" value="kohaku_sanke">
-                                <label class="form-check-label" for="kohaku_sanke">Goromo</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="kujaku" name="variety" value="kujaku">
-                                <label class="form-check-label" for="kujaku">Kujaku</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="goshiki" name="variety" value="goshiki">
-                                <label class="form-check-label" for="goshiki">Goshiki</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="hikari_muji" name="variety" value="hikari_muji">
-                                <label class="form-check-label" for="hikari_muji">Hikari Muji</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="taisho" name="variety" value="taisho">
-                                <label class="form-check-label" for="taisho">Taisho</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="kawarimono" name="variety" value="kawarimono">
-                                <label class="form-check-label" for="kawarimono">Kawarimono</label>
+
+                    <div id="more-info" class="form-sections">
+                        <div class="form-group">
+                            <div class="checkbox-group">
+                                    <div class="form-check">
+                                    </div>
+                                }
                             </div>
                         </div>
                     </div>
-                </div>
 
 
-                <div class="form-group">
-                    <label for="koiImage" class="form-label">Upload Koi Image</label>
-                    <input type="file" class="form-control" id="koiImage" name="Image" accept="image/*" required>
-                </div>
-                <img id="previewImage" src="" alt="Koi Image Preview">
-                <button class="btn-next" onclick="submitForm()">Submit</button>
+                    <div class="form-group">
+                    </div>
+                    <img id="previewImage" src="" alt="Koi Image Preview">
             </div>
         </div>
     </div>

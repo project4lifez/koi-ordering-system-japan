@@ -25,6 +25,8 @@ public partial class Podetail
 
     public DateOnly? Day { get; set; }
 
+    public string? Note { get; set; }
+
     public virtual KoiFarm? Farm { get; set; }
 
     public virtual KoiFish? Koi { get; set; }

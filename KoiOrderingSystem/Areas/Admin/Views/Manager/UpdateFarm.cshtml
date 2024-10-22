@@ -1,5 +1,4 @@
 ﻿@{
-    ViewData["Title"] = "Koi Fish Information";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 <head>
@@ -14,6 +13,7 @@
     <style>
         body {
             padding: 20px;
+            background-color: #f8f9fa; /* Màu nền sáng */
         }
 
         .form-container {
@@ -42,6 +42,7 @@
 
         .form-control {
             height: calc(2.25rem + 2px);
+            border-radius: 0.25rem; /* Làm tròn các góc của input */
         }
 
         .btn-next {
@@ -73,42 +74,19 @@
                 padding-right: 15px;
                 font-size: 18px;
                 font-weight: bold;
+                color: #333; /* Màu chữ sidebar */
             }
 
             .layout .form-content {
                 width: 75%;
             }
 
-        .section-title {
-            margin-top: 153px;
-            font-size: 18px;
-            font-weight: bold;
-            color: #333;
-            display: block;
-            margin-left: 0;
         }
 
-        .form-group .form-label, .form-group select {
-            display: block;
-            width: 100%;
-        }
-        /* Custom style for Select2 dropdown */
-        .select2-container .select2-selection--single {
-            height: calc(2.25rem + 2px);
-            padding: 0.375rem 0.75rem;
-            border: 1px solid #ced4da;
-            border-radius: 0.25rem;
-            font-size: 1rem;
-            background-color: #fff;
             display: flex;
             align-items: center;
         }
 
-        .select2-container--default .select2-selection--single:focus,
-        .select2-container--default .select2-selection--single:hover {
-            border-color: #80bdff;
-            outline: 0;
-            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
         }
 
         .select2-container--default .select2-search--dropdown .select2-search__field {
@@ -148,28 +126,11 @@
 
         /* Điều chỉnh chiều rộng Select2 để tự động co giãn */
         .select2-container {
-            width: 17% !important;
         }
 
             .select2-container .select2-selection--single {
                 width: 100%;
             }
-
-
-        .checkbox-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 30px; /* Khoảng cách giữa các ô checkbox */
-        }
-
-        .form-check {
-            display: flex;
-            align-items: center;
-        }
-
-        .form-check-input {
-            margin-right: 5px; /* Khoảng cách giữa checkbox và label */
-        }
 
         #farmId {
             background-color: #e9ecef; /* Màu nền xám nhạt */
@@ -185,87 +146,31 @@
                 <p class="general-info-label">Update Information</p>
             </div>
             <div class="form-content">
-                <div id="general-info" class="form-sections">
-                    <div class="form-group">
-                        <label for="farmId" class="form-label">Farm ID:</label>
-                        <input type="text" class="form-control" id="farmId" name="farmId" value="FARM123" readonly style="background-color: #e9ecef; cursor: not-allowed;">
+                <form method="post" id="formUpdateFarm" action="/Admin/Manager/EditKoiFarms/@Model.FarmId" enctype="multipart/form-data">
+                    <div id="general-info" class="form-sections">
+                        <div class="form-group">
+                            <label for="farmId" class="form-label">Farm ID:</label>
+                        </div>
+                        <div class="form-group">
+                        </div>
+                        <div class="form-group">
+                        </div>
+                        <div class="form-group">
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="name" class="form-label">Name Farm:</label>
-                        <input type="text" class="form-control" id="name" name="name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="location" class="form-label">Location:</label>
-                        <input type="text" class="form-control" id="location" name="location" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="description" class="form-label">Description:</label>
-                        <input type="text" class="form-control" id="description" name="description" required>
-                    </div>
-                </div>
-                <div id="more-info" class="form-sections">
-                    <div class="form-group">
-                        <label class="form-label dropdown-label">Variety:</label>
-                        <div class="checkbox-group">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="kohaku" name="variety" value="kohaku">
-                                <label class="form-check-label" for="kohaku">Kohaku</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="sanke" name="variety" value="sanke">
-                                <label class="form-check-label" for="sanke">Sanke</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="showa" name="variety" value="showa">
-                                <label class="form-check-label" for="showa">Showa</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="utsuri" name="variety" value="utsuri">
-                                <label class="form-check-label" for="utsuri">Utsuri</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="shusui" name="variety" value="shusui">
-                                <label class="form-check-label" for="shusui">Shusui</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="asagi" name="variety" value="asagi">
-                                <label class="form-check-label" for="asagi">Asagi</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="kohaku_sanke" name="variety" value="kohaku_sanke">
-                                <label class="form-check-label" for="kohaku_sanke">Goromo</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="kujaku" name="variety" value="kujaku">
-                                <label class="form-check-label" for="kujaku">Kujaku</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="goshiki" name="variety" value="goshiki">
-                                <label class="form-check-label" for="goshiki">Goshiki</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="hikari_muji" name="variety" value="hikari_muji">
-                                <label class="form-check-label" for="hikari_muji">Hikari Muji</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="taisho" name="variety" value="taisho">
-                                <label class="form-check-label" for="taisho">Taisho</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="kawarimono" name="variety" value="kawarimono">
-                                <label class="form-check-label" for="kawarimono">Kawarimono</label>
+                    <div id="more-info" class="form-sections">
+                        <div class="form-group">
+                            <div class="checkbox-group">
+                                    <div class="form-check">
+                                    </div>
+                                }
                             </div>
                         </div>
                     </div>
-                </div>
 
 
-                <div class="form-group">
-                    <label for="koiImage" class="form-label">Upload Koi Image</label>
-                    <input type="file" class="form-control" id="koiImage" name="Image" accept="image/*" required>
-                </div>
-                <img id="previewImage" src="" alt="Koi Image Preview">
-                <button class="btn-next" onclick="submitForm()">Submit</button>
+                    <div class="form-group">
+                    </div>
             </div>
         </div>
     </div>

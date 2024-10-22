@@ -23,8 +23,10 @@ namespace KoiOrderingSystem.Controllers
         }
 
         // Action to display the list of bookings
-        public async Task<IActionResult> YourBooking()
         {
+            // Define the number of records per page
+            int pageSize = 10;
+
             // Check if the user is logged in
             if (HttpContext.Session.GetString("Username") == null)
             {
@@ -40,14 +42,57 @@ namespace KoiOrderingSystem.Controllers
             }
 
             // Get the list of bookings for the current user
-            var bookings = await _db.Bookings
-                             .Include(b => b.Trip) // Include the related Trip entity to access TripName
-                             .Where(b => b.CustomerId == customerId.Value &&
-                                         b.Status != "Canceled" &&
-                                         b.Status != "Delivered")
-                             .ToListAsync();
+                .Where(b => b.CustomerId == customerId.Value &&
+                            b.Status != "Canceled" &&
+                .ToListAsync();
 
-            return View(bookings); // Pass the booking list to the view
+        }
+
+
+      
+
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> SubmitFeedback(int bookingId, int rating, string comments)
+        {
+            // Kiểm tra xem người dùng đã đăng nhập hay chưa
+            if (HttpContext.Session.GetString("Username") == null)
+            {
+                return RedirectToAction("", "Login");
+            }
+
+            // Lấy CustomerId từ session để kiểm tra người dùng hiện tại
+            var customerId = HttpContext.Session.GetInt32("CustomerId");
+
+            if (customerId == null)
+            {
+                return RedirectToAction("", "Login");
+            }
+
+            // Tìm booking dựa trên bookingId và kiểm tra tồn tại
+            var booking = await _db.Bookings
+                            .Include(b => b.Feedback)
+                            .FirstOrDefaultAsync(b => b.BookingId == bookingId && b.CustomerId == customerId.Value);
+
+            // Nếu không tìm thấy booking hoặc không có quyền (CustomerId không khớp), trả về lỗi 404
+            if (booking == null || booking.Feedback == null)
+            {
+                return NotFound("Booking not found or you don't have permission to update this feedback.");
+            }
+
+            // Cập nhật Feedback nếu booking thuộc về đúng khách hàng
+            booking.Feedback.Rating = rating;
+            booking.Feedback.Comments = comments;
+            booking.Feedback.Status = "Completed"; // Cập nhật trạng thái feedback thành 'Completed'
+            booking.Feedback.Feedbackdate = DateOnly.FromDateTime(DateTime.Now);
+
+            // Lưu thay đổi vào cơ sở dữ liệu
+            await _db.SaveChangesAsync();
+
+            // Điều hướng lại về trang "YourBooking"
+            return RedirectToAction("YourBooking");
         }
 
         // Payment Action to display the payment form for a specific booking
@@ -424,8 +469,10 @@ namespace KoiOrderingSystem.Controllers
 
             return RedirectToAction("YourBooking");
         }
-        public async Task<IActionResult> BookingHistory()
         {
+            // Define the number of records per page
+            int pageSize = 10;
+
             // Check if the user is logged in
             if (HttpContext.Session.GetString("Username") == null)
             {
@@ -444,18 +491,11 @@ namespace KoiOrderingSystem.Controllers
             var activeBookingsCount = await _db.Bookings
                                                .Where(b => b.CustomerId == customerId.Value && b.Status != "Canceled" && b.Status != "Delivered")
                                                .CountAsync();
+           
+                .Where(b => b.CustomerId == customerId.Value &&
+                .ToListAsync();
 
-            // Get the list of bookings with status "Canceled" or "Delivered" for the current user
-            var orderHistory = await _db.Bookings
-                                        .Include(b => b.Trip) // Include the related Trip entity so you can access TripName
-                                        .Where(b => b.CustomerId == customerId.Value &&
-                                                    (b.Status == "Canceled" || b.Status == "Delivered"))
-                                        .ToListAsync();
 
-            // Pass the active bookings count and order history to the view using ViewData
-            ViewData["ActiveBookingsCount"] = activeBookingsCount;
-
-            return View(orderHistory); // Pass the filtered booking list to the view
         }
 
         public IActionResult TripDetail(int bookingId)
@@ -471,9 +511,8 @@ namespace KoiOrderingSystem.Controllers
 
             // Truy xuất thông tin booking từ database và kiểm tra customerId
             var booking = _db.Bookings
-                             .Include(b => b.Trip) // Bao gồm thông tin Trip liên kết với booking
-                             .ThenInclude(t => t.TripDetails) // Bao gồm cả TripDetails của Trip
-                             .FirstOrDefault(b => b.BookingId == bookingId && b.CustomerId == customerId);
+        .Include(b => b.Trip) // Bao gồm thông tin Trip liên kết với booking
+        .FirstOrDefault(b => b.BookingId == bookingId && b.CustomerId == customerId);
 
             // Kiểm tra nếu booking không tồn tại hoặc không có chuyến đi liên quan
             if (booking == null || booking.Trip == null)
@@ -482,10 +521,9 @@ namespace KoiOrderingSystem.Controllers
             }
 
             // Kiểm tra trạng thái booking
-            if (booking.Status != "Confirmed")
             {
-                return NotFound("You do not have access to this page because the booking is not Payment Completed.");
             }
+          
 
             // Trả về view với thông tin của Trip
             return View(booking);

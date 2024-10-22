@@ -12,4 +12,6 @@ public partial class PaymentMethod
     public string? Description { get; set; }
 
     public virtual ICollection<BookingPayment> BookingPayments { get; set; } = new List<BookingPayment>();
+
+    public virtual ICollection<Popayment> Popayments { get; set; } = new List<Popayment>();
 }

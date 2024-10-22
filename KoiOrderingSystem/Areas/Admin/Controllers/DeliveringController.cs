@@ -29,9 +29,8 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
 
             // Load Booking with related PO and PODetails
             var booking = _context.Bookings
-                .Include(b => b.Po)                  // Include the related PO
-                .ThenInclude(po => po.Podetails)     // Include the related PODetails
-                .FirstOrDefault(b => b.BookingId == id);
+      .Include(b => b.Po)                  // Include the related PO
+      .FirstOrDefault(b => b.BookingId == id);
 
             if (booking == null)
             {
@@ -48,7 +47,6 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
         public IActionResult UpdateStatusDelivering(int id, string status)
         {
             // Find the booking by ID
-            var booking = _context.Bookings.FirstOrDefault(b => b.BookingId == id);
 
             if (booking != null)
             {
@@ -69,6 +67,24 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
                     // Update the new status
                     booking.Status = status;
 
+                    // If status is set to 'Delivered', create a new Feedback record
+                    if (status.Equals("Delivered", StringComparison.OrdinalIgnoreCase))
+                    {
+                        // Create a new Feedback object
+                        var feedback = new Feedback
+                        {
+                            CustomerId = booking.CustomerId, // Assign the CustomerId from the Booking
+                            Status = "Pending" // Set Feedback status to 'Pending'
+                        };
+
+                        // Add the new Feedback to the context
+                        _context.Feedbacks.Add(feedback);
+                        _context.SaveChanges(); // Save to get the new Feedback ID
+
+                        // Now associate the newly created Feedback ID with the Booking
+                        booking.FeedbackId = feedback.FeedbackId; // Assuming Booking has a FeedbackId property
+                    }
+
                     // Save changes to the database
                     _context.SaveChanges();
 
@@ -80,6 +96,48 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
             // Redirect back to the 'Delivering' page after successful update
             return Redirect("Delivering?id=" + id);
         }
+
+
+
+        [HttpPost]
+        public IActionResult SetStatusToPaid(int id)
+        {
+            // Tìm booking dựa trên bookingId
+            var booking = _context.Bookings
+                                  .Include(b => b.Po)
+                                  .FirstOrDefault(b => b.BookingId == id);
+
+            if (booking != null)
+            {
+                // Chỉ cho phép cập nhật trạng thái nếu trạng thái hiện tại là "Checked in"
+                if (!booking.Status.Equals("Delivering"))
+                {
+                    // Thêm thông báo lỗi vào ModelState nếu trạng thái không phải là "Checked in"
+                    ModelState.AddModelError("StatusError", "The booking must be in 'Delivering' status before updating to 'Paid'.");
+
+                    // Tải lại trang với thông báo lỗi
+                    return View("Delivering", booking);
+                }
+
+                // Kiểm tra nếu trạng thái hiện tại chưa phải là "Paid"
+                if (!booking.Po.Status.Equals("Paid"))
+                {
+                    // Cập nhật trạng thái thành "Paid"
+                    booking.Po.Status = "Paid";
+
+                    // Lưu thay đổi vào cơ sở dữ liệu
+                    _context.SaveChanges();
+
+                    // Đặt thông báo thành công
+                    TempData["SuccessMessage"] = $"Po status updated to 'Paid' successfully.";
+                }
+            }
+
+            // Chuyển hướng người dùng về trang 'Delivering' sau khi cập nhật thành công
+            return Redirect("Delivering?id=" + id);
+        }
+
+
     }
 
 }
