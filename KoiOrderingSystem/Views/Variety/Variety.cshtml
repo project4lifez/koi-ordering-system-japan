@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KOI88 - Nishikigoi Ordering Service</title>
+    <h2>KOI88 - Nishikigoi Ordering Service</h2>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -72,19 +72,29 @@
             overflow: hidden;
             text-overflow: ellipsis;
             display: -webkit-box;
-            -webkit-line-clamp: 3; /* Limit the text to 3 lines */
+            -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
         }
 
-        .pagination {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
+        .pagination .page-item a {
+            background-color: #5BB2F1; /* Màu nền cho các trang */
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
         }
 
-        .page-item {
-            margin: 0 5px;
+            .pagination .page-item a:hover {
+                background-color: #4A9ED4; /* Màu khi hover */
+            }
+
+        .pagination .page-item.active a {
+            background-color: #5BB2F1; /* Màu cho trang hiện tại */
+            color: white;
         }
+
+       
     </style>
 </head>
 <body>
@@ -93,7 +103,7 @@
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-12 text-center mb-3">
-                    <h4 class="text-danger">Search All Koi Available In Farm</h4>
+                    <h4 class="text-danger">Search All Koi Breeds Available In Farm</h4>
                 </div>
                 <div class="col-lg-10">
                     <form method="get" action="@Url.Action("Search", "Variety")" class="row g-2 justify-content-center">
@@ -119,7 +129,7 @@
                             </select>
                         </div>
                         <div class="col-md-2 col-12" style="margin-top:12px">
-                            <button type="submit" class="btn btn-primary w-100">
+                            <button type="submit" class="btn btn-primary w-100" style="margin-top: -4px; background-color: #5BB2F1;">
                                 <i class="fas fa-search"></i> Filter
                             </button>
                         </div>
@@ -128,6 +138,7 @@
             </div>
         </div>
     </section>
+
     <!-- Koi Fish Breeds Section -->
     <section class="koi-fish-breeds-section my-5">
         <h2 class="text-center mb-4">Koi Fish Breeds</h2>
@@ -151,7 +162,38 @@
                         </div>
                     </div>
                 }
-                @* You can add pagination here if needed *@
+            </div>
+        </div>
+
+        <!-- Pagination Section -->
+        <div class="pagination-container text-center mt-4">
+            <div class="d-inline-block">
+                <ul class="pagination justify-content-center">
+                    @if (ViewBag.CurrentPage > 1)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" href="@Url.Action("Variety", new { page = ViewBag.CurrentPage - 1 })">
+                                &laquo; Previous
+                            </a>
+                        </li>
+                    }
+
+                    @for (var i = 1; i <= ViewBag.TotalPages; i++)
+                    {
+                        <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                            <a class="page-link" href="@Url.Action("Variety", new { page = i })">@i</a>
+                        </li>
+                    }
+
+                    @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" href="@Url.Action("Variety", new { page = ViewBag.CurrentPage + 1 })">
+                                Next &raquo;
+                            </a>
+                        </li>
+                    }
+                </ul>
             </div>
         </div>
     </section>

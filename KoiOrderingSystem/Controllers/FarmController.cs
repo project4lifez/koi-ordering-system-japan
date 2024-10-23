@@ -13,22 +13,45 @@ namespace KoiOrderingSystem.Controllers
         {
             _db = db;
         }
-        public async Task<IActionResult> Farm()
+
+        private async Task<(List<KoiFarm>, int, int)> GetPagedFarms(IQueryable<KoiFarm> query, int page, int pageSize)
         {
-            var farms = await _db.KoiFarms
-             .Include(f => f.SpecialVarieties)
-                 .ThenInclude(sv => sv.Variety)
-             .ToListAsync();
-            foreach (var farm in farms)
-            {
-              
-                if (farm.ImageUrl == null || farm.FarmName == null || farm.Location == null)
-                {
-                   
-                }
-            }
-            return View(farms);
+            // Tính tổng số farms
+            int totalFarms = await query.CountAsync();
+
+            // Tính tổng số trang
+            int totalPages = (int)Math.Ceiling(totalFarms / (double)pageSize);
+
+            // Lấy danh sách farms cho trang hiện tại
+            var farmsOnPage = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Include(f => f.SpecialVarieties)
+                .ThenInclude(sv => sv.Variety)
+                .ToListAsync();
+
+            return (farmsOnPage, totalPages, totalFarms);
         }
+
+
+
+        public async Task<IActionResult> Farm(int page = 1)
+        {
+            int pageSize = 8;
+
+            // Query lấy tất cả các farms
+            var query = _db.KoiFarms.AsQueryable();
+
+            // Gọi phương thức chung để lấy danh sách phân trang
+            var (farmsOnPage, totalPages, totalFarms) = await GetPagedFarms(query, page, pageSize);
+
+            // Truyền thông tin về trang hiện tại và tổng số trang vào ViewBag
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = totalPages;
+
+            return View(farmsOnPage);
+        }
+
 
         public async Task<IActionResult> FarmDetail(int id) // Nhận FarmId từ URL
         {
@@ -46,8 +69,11 @@ namespace KoiOrderingSystem.Controllers
             return View(farm);
         }
 
-        public async Task<IActionResult> Search(string farmName, string location, string koiType)
+        public async Task<IActionResult> Search(string farmName, string location, string koiType, int page = 1)
         {
+            int pageSize = 8;
+
+            // Tạo query cơ bản
             var query = _db.KoiFarms.AsQueryable();
 
             // Tìm kiếm theo tên farm
@@ -69,18 +95,18 @@ namespace KoiOrderingSystem.Controllers
                     .Any(sv => sv.Variety.VarietyName.Contains(koiType) && sv.FarmId == f.FarmId));
             }
 
+            // Gọi phương thức chung để lấy danh sách phân trang
+            var (farmsOnPage, totalPages, totalFarms) = await GetPagedFarms(query, page, pageSize);
 
-            var farms = await query
-              .Include(f => f.SpecialVarieties)
-                  .ThenInclude(sv => sv.Variety)
-              .ToListAsync();
+            // Truyền thông tin về trang hiện tại và tổng số trang vào ViewBag
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = totalPages;
 
-            var koiTypes = await _db.Varieties.Select(v => v.VarietyName).Distinct().ToListAsync();
-            return View("Farm", farms);
+            return View("Farm", farmsOnPage);
         }
 
-       
-       
+
+
 
     }
 }
