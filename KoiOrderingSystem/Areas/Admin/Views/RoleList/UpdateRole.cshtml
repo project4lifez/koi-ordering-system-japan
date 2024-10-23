@@ -1,4 +1,5 @@
-﻿@{
+﻿@model KoiOrderingSystem.Models.Role
+@{
     ViewData["Title"] = "Role Information";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
@@ -74,15 +75,16 @@
                 <p class="general-info-label">Update Role Information</p>
             </div>
             <div class="form-content">
-                <form id="formUpdateRole" onsubmit="return validateForm()">
+                <form id="formUpdateRole" method="post" action="/Admin/RoleList/UpdateRole/@Model.RoleId" onsubmit="return validateForm()">
+                    <input type="hidden" name="roleId" value="@Model.RoleId" />
                     <div id="general-info" class="form-sections">
                         <div class="form-group">
                             <label for="RoleId" class="form-label">Role ID:</label>
-                            <input type="text" class="form-control" id="RoleId" name="RoleId" value="123" readonly>
+                            <input type="text" class="form-control" id="RoleId" name="RoleId" value="@Model.RoleId" readonly>
                         </div>
                         <div class="form-group">
                             <label for="RoleName" class="form-label">Role Name:</label>
-                            <input type="text" class="form-control" id="RoleName" name="RoleName" value="Admin" required>
+                            <input type="text" class="form-control" id="RoleName" name="Name" value="@Model.Name" required>
                         </div>
                     </div>
 
