@@ -181,7 +181,7 @@
                 <h2 class="section-title">Additional Information</h2>
             </div>
             <div class="form-content">
-                <form method="post" action="/Admin/Manager/AddKoiFarm" enctype="multipart/form-data">
+                <form method="post" action="/Admin/Manager/AddKoiFarm" enctype="multipart/form-data" onsubmit="return validateForm()">
                     <div id="general-info" class="form-sections">
                         <div class="form-group">
                             <label for="FarmName" class="form-label">Name Farm:</label>
@@ -257,6 +257,12 @@
                 previewImage.style.display = 'none';
             }
         });
+
+        function validateForm() {
+            // If everything is valid, show the success message
+            alert("Create New Farm Successfully!!!");
+            return true;
+        }
     </script>
 
 

@@ -114,7 +114,7 @@
                 <p class="general-info-label">Update Information</p>
             </div>
             <div class="form-content">
-                <form method="post" id="formUpdateFarm" action="/Admin/Manager/EditKoiFarms/@Model.FarmId" enctype="multipart/form-data">
+                <form method="post" id="formUpdateFarm" action="/Admin/Manager/EditKoiFarms/@Model.FarmId" enctype="multipart/form-data" onsubmit="return validateForm()">
                     <div id="general-info" class="form-sections">
                         <div class="form-group">
                             <label for="farmId" class="form-label">Farm ID:</label>
@@ -199,5 +199,11 @@
                 previewImage.style.display = 'none';
             }
         });
+
+        function validateForm() {
+            // If everything is valid, show the success message
+            alert("Update Farm Successfully!!!");
+            return true;
+        }
     </script>
 </body>

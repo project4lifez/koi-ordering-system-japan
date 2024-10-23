@@ -119,7 +119,7 @@
     <div class="container form-account-container">
         <h2>Create New Account</h2>
 
-        <form method="post" action="/Admin/CreateAccount/CreateAccount" enctype="multipart/form-data">
+        <form method="post" action="/Admin/CreateAccount/CreateAccount" enctype="multipart/form-data" onsubmit="return validateForm()">
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <div class="form-floating">
@@ -138,8 +138,9 @@
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <div class="form-floating">
-                        <input asp-for="Phone" class="form-control" id="PhoneNumber" name="Phone" placeholder="Enter your phone number" />
+                        <input asp-for="Phone" class="form-control" id="PhoneNumber" name="Phone" placeholder="Enter your phone number" oninput="validatePhone()" />
                         <label for="Phone">Phone Number</label>
+                        <span id="phoneError" class="text-danger" style="display:none;">Phone number must be 9-10 digits</span>
                     </div>
                 </div>
                 <div class="col-md-6 mb-3">
@@ -205,7 +206,7 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-submit">Create Account</button>
+            <button type="submit" class="btn btn-submit" id="submitBtn" disabled>Create Account</button>
         </form>
     </div>
 
@@ -222,6 +223,28 @@
                 };
                 reader.readAsDataURL(file);
             }
+        }
+
+        function validatePhone() {
+            const phoneInput = document.getElementById('PhoneNumber').value;
+            const phoneError = document.getElementById('phoneError');
+            const submitBtn = document.getElementById('submitBtn');
+
+            const phonePattern = /^\d{9,10}$/;  // Validates if the phone has 9 or 10 digits
+
+            if (!phonePattern.test(phoneInput)) {
+                phoneError.style.display = 'block';  // Show error message
+                submitBtn.disabled = true;           // Disable submit button
+            } else {
+                phoneError.style.display = 'none';   // Hide error message
+                submitBtn.disabled = false;          // Enable submit button
+            }
+        }
+
+        function validateForm() {
+            // If everything is valid, show the success message
+            alert("Create Account Successfully!!!");
+            return true;
         }
     </script>
 </body>
