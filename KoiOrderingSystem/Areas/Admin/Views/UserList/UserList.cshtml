@@ -171,20 +171,20 @@
                 {
                     <tr>
                         <td>
-                            <!-- Display User Image or Default Image -->
+                        
                             <img src="@(string.IsNullOrEmpty(user.ImageUrl) ? "/images/default.png" : user.ImageUrl)"
                                  alt="User" class="user-img" />
                             <div class="user-info">
-                                <!-- Display Firstname and Lastname -->
+                             
                                  @user.Lastname<br>
 
-                                <!-- Display CustomerId (First or Default customer) -->
+                               
                                 <span>Customer ID: @(user.Customers.FirstOrDefault()?.CustomerId.ToString() ?? "No Customer")</span>
                             </div>
                         </td>
                         <td>@user.Email</td>
                         <td>
-                            <!-- Display User Status (Active or Inactive) -->
+                            
                             <span class="user-status @(user.Status == true ? "active" : "inactive")">
                                 @(user.Status == true ? "Active" : "Inactive")
                             </span>
