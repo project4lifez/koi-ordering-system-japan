@@ -38,7 +38,7 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
 
             var staffList = await staffQuery.ToListAsync();
             ViewBag.SelectedRoleId = roleId;
-            return View(staffList); // Pass the filtered staffList to the view
+            return View(staffList); 
         }
     }
 }
