@@ -98,6 +98,10 @@ namespace KoiOrderingSystem
                name: "Farm_default",
                pattern: "{controller=Farm}/{action=Farm}/{id?}");
 
+            app.MapControllerRoute(
+              name: "Farm_default",
+              pattern: "{controller=Variety}/{action=Variety}/{id?}");
+
             // Add a specific route for PaymentExecuted
             app.MapControllerRoute(
                 name: "YourBookingPaymentExecuted",

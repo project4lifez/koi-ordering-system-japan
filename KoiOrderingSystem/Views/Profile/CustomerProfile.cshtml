@@ -354,8 +354,8 @@
 
                     <form id="customerUpdate" method="post" action="/Profile/UpdateProfile">
                         <input type="hidden" name="CustomerId" value="@Model.CustomerId" />
-                        <label for="bjl">Email</label>
-                        <input type="email" id="email" name="email" value="@Model.Account?.Email" disabled>
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" value="@Model.Account?.Email">
 
                         <label for="first-name">First Name</label>
                         <input type="text" id="first-name" name="firstname" value="@Model.Account?.Firstname" required>

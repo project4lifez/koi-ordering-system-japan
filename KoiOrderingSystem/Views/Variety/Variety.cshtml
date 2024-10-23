@@ -56,7 +56,7 @@
             }
 
         .img-container {
-            height: 430px;
+            height: 300px;
             overflow: hidden;
             border-radius: 10px;
         }
@@ -67,6 +67,14 @@
                 object-fit: cover;
                 transition: transform 0.4s ease;
             }
+
+        .card-text {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 3; /* Limit the text to 3 lines */
+            -webkit-box-orient: vertical;
+        }
 
         .pagination {
             display: flex;
@@ -95,33 +103,18 @@
                         <div class="col-md-3 col-12">
                             <select name="variety" class="form-select">
                                 <option value="" selected>Search by variety</option>
-                                @{
-                                    var uniqueVarieties = new HashSet<string>();
-                                    foreach (var variety in Model)
-                                    {
-                                        if (uniqueVarieties.Add(variety.VarietyName))
-                                        {
-                                            <option value="@variety.VarietyName">@variety.VarietyName</option>
-                                        }
-                                    }
+                                @foreach (var variety in Model.Select(v => v.VarietyName).Distinct())
+                                {
+                                    <option value="@variety">@variety</option>
                                 }
                             </select>
                         </div>
                         <div class="col-md-3 col-12">
                             <select name="breeder" class="form-select">
                                 <option value="" selected>Search by breeder</option>
-                                @{
-                                    var uniqueBreeders = new HashSet<string>();
-                                    foreach (var variety in Model)
-                                    {
-                                        foreach (var specialVariety in variety.SpecialVarieties)
-                                        {
-                                            if (uniqueBreeders.Add(specialVariety.Farm.FarmName))
-                                            {
-                                                <option value="@specialVariety.Farm.FarmName">@specialVariety.Farm.FarmName</option>
-                                            }
-                                        }
-                                    }
+                                @foreach (var breeder in Model.SelectMany(v => v.SpecialVarieties.Select(s => s.Farm.FarmName)).Distinct())
+                                {
+                                    <option value="@breeder">@breeder</option>
                                 }
                             </select>
                         </div>
@@ -152,15 +145,13 @@
                                 <p class="card-text">@variety.Description</p>
                             </div>
                             <div class="card-footer text-center border-0 bg-transparent d-flex justify-content-between">
-                                <a href="/Variety/VarietyDetail?id=@variety.VarietyId " class="btn btn-sm btn-outline-primary detail-link">Detail</a>
+                                <a href="/Variety/VarietyDetail?id=@variety.VarietyId" class="btn btn-sm btn-outline-primary detail-link">Detail</a>
                                 <a href="#" class="btn btn-sm btn-outline-success contact-link">Contact</a>
                             </div>
                         </div>
                     </div>
                 }
-            </div>
-            <div class="pagination">
-                <!-- Pagination buttons can be added here if needed -->
+                @* You can add pagination here if needed *@
             </div>
         </div>
     </section>

@@ -45,7 +45,7 @@ namespace KoiOrderingSystem.Controllers
 
                 if (user != null)
                 {
-                    // Check if the account is disabled
+                    // Check if the account is disabled (Status == 0 means disabled)
                     if (user.Status == false)
                     {
                         ViewBag.Error = "Your account has been disabled. Please contact support.";
@@ -55,21 +55,16 @@ namespace KoiOrderingSystem.Controllers
                     // Store information in session
                     HttpContext.Session.SetString("Username", user.Username);
                     HttpContext.Session.SetString("Lastname", user.Lastname);
-                    HttpContext.Session.SetInt32("Status", user.Status == true ? 1 : 0);
+                    HttpContext.Session.SetInt32("Status", user.Status == true ? 1 : 0);  // Store status (1 = active, 0 = disabled)
+
                     HttpContext.Session.SetInt32("RoleId", user.RoleId ?? 0);
 
                     // Check for specific roles and store admin session if applicable
                     if (user.RoleId >= 2 && user.RoleId <= 5) // Admin/Staff
                     {
                         HttpContext.Session.SetString("AdminSession", user.Username);
-                        
                         HttpContext.Session.SetInt32("AdminRoleId", user.RoleId ?? 0);
-                        
                         HttpContext.Session.SetString("AdminLastname", user.Lastname);
-
-
-
-                        // Store AdminRoleId
                     }
                     else if (user.RoleId == 1) // Customer
                     {
@@ -85,7 +80,7 @@ namespace KoiOrderingSystem.Controllers
                         HttpContext.Session.SetInt32("CustomerId", customer.CustomerId);
                         HttpContext.Session.SetString("CustomerLastName", user.Lastname);
                         HttpContext.Session.SetString("CustomerSession", user.Username);
-                        HttpContext.Session.SetInt32("CustomerRoleId",user.RoleId ?? 0);
+                        HttpContext.Session.SetInt32("CustomerRoleId", user.RoleId ?? 0);
                     }
 
                     // Redirect based on RoleId
@@ -147,7 +142,7 @@ namespace KoiOrderingSystem.Controllers
                         Email = email,
                         Firstname = firstName ?? string.Empty,
                         Lastname = lastName ?? string.Empty,
-                        Status = true, // Mặc định tài khoản mới được kích hoạt
+                        Status = true, // Mặc định tài khoản mới được kích hoạt (Status = true)
                         RoleId = 1 // Chỉ cho phép RoleId là 1 (Customer) đăng nhập qua Google
                     };
 
@@ -193,7 +188,7 @@ namespace KoiOrderingSystem.Controllers
                 // Lưu thông tin người dùng vào session
                 HttpContext.Session.SetString("Username", existingUser.Username ?? string.Empty);
                 HttpContext.Session.SetString("Lastname", existingUser.Lastname ?? string.Empty);
-                HttpContext.Session.SetInt32("Status", existingUser.Status == true ? 1 : 0);
+                HttpContext.Session.SetInt32("Status", existingUser.Status == true ? 1 : 0);  // Store status (1 = active, 0 = disabled)
                 HttpContext.Session.SetInt32("RoleId", existingUser.RoleId ?? 0);
 
                 // Chỉ khách hàng (RoleId = 1) mới được phép login qua Google
@@ -211,7 +206,6 @@ namespace KoiOrderingSystem.Controllers
             return RedirectToAction("", "Login");
         }
 
-
         public IActionResult Logout()
         {
             // Kiểm tra RoleId trong session để xác định loại người dùng
@@ -226,9 +220,6 @@ namespace KoiOrderingSystem.Controllers
                 HttpContext.Session.Remove("Status");
                 HttpContext.Session.Remove("Username");
                 HttpContext.Session.Remove("Lastname");
-
-
-
             }
             else if (roleId >= 2 && roleId <= 5) // Admin hoặc Staff
             {
@@ -239,10 +230,7 @@ namespace KoiOrderingSystem.Controllers
                 HttpContext.Session.Remove("Username");
                 HttpContext.Session.Remove("Lastname");
                 HttpContext.Session.Remove("AdminLastname");
-
-
             }
-
 
             // Redirect đến trang đăng nhập
             return RedirectToAction("", "Login");

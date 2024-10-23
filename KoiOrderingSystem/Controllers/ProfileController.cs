@@ -46,7 +46,7 @@ namespace KoiOrderingSystem.Controllers
 
 
         [HttpPost]
-        public IActionResult UpdateProfile(string firstname, string lastname, string gender, string phone)
+        public IActionResult UpdateProfile(string firstname, string lastname, string gender, string phone, string email)
         {
             // Retrieve CustomerId from the session (instead of from the form)
             var customerId = HttpContext.Session.GetInt32("CustomerId");
@@ -62,6 +62,11 @@ namespace KoiOrderingSystem.Controllers
 
             if (customer != null)
             {
+
+                if(!string.IsNullOrWhiteSpace(email))
+                {
+                    customer.Account.Email = email;
+                }
                 // Update fields only if they are provided
                 if (!string.IsNullOrWhiteSpace(firstname))
                 {

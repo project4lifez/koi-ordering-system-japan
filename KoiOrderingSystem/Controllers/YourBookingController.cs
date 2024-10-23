@@ -69,6 +69,8 @@ namespace KoiOrderingSystem.Controllers
                     b.Status.ToLower().Contains(searchKeyword) || // Tìm kiếm trong Status
                     (parsedDate != null && b.BookingDate == parsedDate.Value)); // Tìm kiếm trong Booking Date
             }
+            bookingsQuery = bookingsQuery.OrderByDescending(b => b.BookingDate);
+
 
             // Đếm tổng số bản ghi
             int totalRecords = await bookingsQuery.CountAsync();
@@ -556,6 +558,9 @@ namespace KoiOrderingSystem.Controllers
                     b.Status.ToLower().Contains(searchKeywords) || // Tìm kiếm trong Status
                     (parsedDate != null && b.BookingDate == parsedDate.Value)); // Tìm kiếm trong Booking Date
             }
+
+            orderHistory = orderHistory.OrderByDescending(b => b.BookingDate);
+
 
 
 
