@@ -13,17 +13,17 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
         {
             _db = db;
         }
-        public IActionResult ProfileDetailCus(int accountId)
+        public IActionResult ProfileDetailCus(int customerId)
         {
-            // Lấy thông tin tài khoản từ cơ sở dữ liệu, bao gồm thông tin khách hàng
+          
             var account = _db.Accounts
-                              .Include(a => a.Customers) 
-                              .Include(a => a.Role) 
-                              .FirstOrDefault(a => a.AccountId == accountId);
+                             .Include(a => a.Customers) 
+                             .Include(a => a.Role)    
+                             .FirstOrDefault(a => a.Customers.Any(c => c.CustomerId == customerId));
 
             if (account == null)
             {
-                return NotFound(); 
+                return NotFound();
             }
 
             return View(account);

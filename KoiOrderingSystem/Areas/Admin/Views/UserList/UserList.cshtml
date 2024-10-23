@@ -228,7 +228,7 @@
                 {
                     <tr>
                         <td>
-                            <!-- Display User Image or Default Image -->
+                        
                             <img src="@(string.IsNullOrEmpty(user.ImageUrl) ? "/images/default.png" : user.ImageUrl)"
                                  alt="User" class="user-img" />
                             <div class="user-info">
@@ -239,12 +239,12 @@
                         </td>
                         <td>@user.Email</td>
                         <td>
-                            <!-- Display User Status (Active or Inactive) -->
+                            
                             <span class="user-status @(user.Status == true ? "active" : "inactive")">
                                 @(user.Status == true ? "Active" : "Inactive")
                             </span>
                         </td>
-                        <td><button class="user-details-btn" onclick="window.location.href='/Admin/ProfileDetailCus?accountId=@user.AccountId'">Details</button></td>
+                        <td><button class="user-details-btn" onclick="window.location.href='/Admin/ProfileDetailCus?customerId=@user.Customers.FirstOrDefault()?.CustomerId'">Details</button></td>
                     </tr>
                 }
             </tbody>
