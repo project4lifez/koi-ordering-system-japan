@@ -1,4 +1,5 @@
-﻿@{
+﻿@model IEnumerable<KoiOrderingSystem.Models.PaymentMethod>
+@{
     ViewData["Title"] = "List of Payment Methods";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml"; // Use the shared layout
 }
@@ -117,7 +118,7 @@
 
         <!-- Create button -->
         <div class="d-flex justify-content-end mb-4">
-            <a href="/Admin/Manager/CreatePaymentMethod" class="btn btn-create-payment">Create New Payment Method</a>
+            <a href="/Admin/PaymentMethod/CreatePayment" class="btn btn-create-payment">Create New Payment Method</a>
         </div>
 
         <!-- Payment Methods List -->
@@ -132,42 +133,26 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @* Example Data Rows, replace with real Model data *@
-                        <tr>
-                            <td>1</td>
-                            <td>Credit Card</td>
-                            <td>
-                                <a href="/Admin/Manager/UpdatePaymentMethod/1" class="btn btn-payment btn-outline-success-payment">
-                                    <i class="fas fa-edit"></i> Edit
-                                </a>
-                                <form id="deletePaymentMethodForm_1" method="post" action="/Admin/Manager/DeletePaymentMethod" style="display:inline;">
-                                    <input type="hidden" name="id" value="1" />
-                                    <a href="#" class="btn btn-payment btn-outline-danger-payment"
-                                       onclick="if (confirm('Do you want to delete Payment Method ID = 1?')) { document.getElementById('deletePaymentMethodForm_1').submit(); } return false;"
-                                       title="Delete Payment Method">
-                                        <i class="fas fa-trash-alt"></i> Delete
+                        @foreach (var paymentMethod in Model)
+                        {
+                            <tr>
+                                <td>@paymentMethod.PaymentMethodId</td>
+                                <td>@paymentMethod.MethodName</td>
+                                <td>
+                                    <a href="/Admin/PaymentMethod/UpdatePayment/@paymentMethod.PaymentMethodId" class="btn btn-payment btn-outline-success-payment">
+                                        <i class="fas fa-edit"></i> Edit
                                     </a>
-                                </form>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>PayPal</td>
-                            <td>
-                                <a href="/Admin/PaymentMethod/UpdatePaymentMethod/2" class="btn btn-payment btn-outline-success-payment">
-                                    <i class="fas fa-edit"></i> Edit
-                                </a>
-                                <form id="deletePaymentMethodForm_2" method="post" action="/Admin/PaymentMethod/DeletePaymentMethod" style="display:inline;">
-                                    <input type="hidden" name="id" value="2" />
-                                    <a href="#" class="btn btn-payment btn-outline-danger-payment"
-                                       onclick="if (confirm('Do you want to delete Payment Method ID = 2?')) { document.getElementById('deletePaymentMethodForm_2').submit(); } return false;"
-                                       title="Delete Payment Method">
-                                        <i class="fas fa-trash-alt"></i> Delete
-                                    </a>
-                                </form>
-                            </td>
-                        </tr>
-                        @* Add more rows here *@
+                                    <form id="deletePaymentMethodForm_@paymentMethod.PaymentMethodId" method="post" action="/Admin/PaymentMethod/DeletePaymentMethod" style="display:inline;">
+                                        <input type="hidden" name="id" value="@paymentMethod.PaymentMethodId" />
+                                        <a href="#" class="btn btn-payment btn-outline-danger-payment"
+                                           onclick="if (confirm('Do you want to delete Payment Method ID = @paymentMethod.PaymentMethodId?')) { document.getElementById('deletePaymentMethodForm_@paymentMethod.PaymentMethodId').submit(); } return false;"
+                                           title="Delete Payment Method">
+                                            <i class="fas fa-trash-alt"></i> Delete
+                                        </a>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
                     </tbody>
                 </table>
             </div>

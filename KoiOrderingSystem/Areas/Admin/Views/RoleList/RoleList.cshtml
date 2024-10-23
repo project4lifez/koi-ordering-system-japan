@@ -1,4 +1,5 @@
-﻿@{
+﻿@model IEnumerable<KoiOrderingSystem.Models.Role>
+@{
     ViewData["Title"] = "List of Roles";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml"; // Use the shared layout
 }
@@ -117,7 +118,7 @@
 
         <!-- Create button -->
         <div class="d-flex justify-content-end mb-4">
-            <a href="/Admin/Manager/CreateRole" class="btn btn-create-role">Create New Role</a>
+            <a href="/Admin/RoleList/CreateRole" class="btn btn-create-role">Create New Role</a>
         </div>
 
         <!-- Roles List -->
@@ -132,42 +133,26 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @* Example Data Rows, replace with real Model data *@
-                        <tr>
-                            <td>1</td>
-                            <td>Admin</td>
-                            <td>
-                                <a href="/Admin/Manager/UpdateRole/1" class="btn btn-role btn-outline-success-role">
-                                    <i class="fas fa-edit"></i> Edit
-                                </a>
-                                <form id="deleteRoleForm_1" method="post" action="/Admin/Manager/DeleteRole" style="display:inline;">
-                                    <input type="hidden" name="id" value="1" />
-                                    <a href="#" class="btn btn-role btn-outline-danger-role"
-                                       onclick="if (confirm('Do you want to delete Role ID = 1?')) { document.getElementById('deleteRoleForm_1').submit(); } return false;"
-                                       title="Delete Role">
-                                        <i class="fas fa-trash-alt"></i> Delete
+                        @foreach (var role in Model)
+                        {
+                            <tr>
+                                <td>@role.RoleId</td>
+                                <td>@role.Name</td>
+                                <td>
+                                    <a href="/Admin/RoleList/UpdateRole/@role.RoleId" class="btn btn-role btn-outline-success-role">
+                                        <i class="fas fa-edit"></i> Edit
                                     </a>
-                                </form>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>User</td>
-                            <td>
-                                <a href="/Admin/Manager/UpdateRole/2" class="btn btn-role btn-outline-success-role">
-                                    <i class="fas fa-edit"></i> Edit
-                                </a>
-                                <form id="deleteRoleForm_2" method="post" action="/Admin/RoleList/DeleteRole" style="display:inline;">
-                                    <input type="hidden" name="id" value="2" />
-                                    <a href="#" class="btn btn-role btn-outline-danger-role"
-                                       onclick="if (confirm('Do you want to delete Role ID = ?')) { document.getElementById('deleteRoleForm_2').submit(); } return false;"
-                                       title="Delete Role">
-                                        <i class="fas fa-trash-alt"></i> Delete
-                                    </a>
-                                </form>
-                            </td>
-                        </tr>
-                        @* Add more rows here *@
+                                    <form id="deleteRoleForm_@role.RoleId" method="post" action="/Admin/RoleList/DeleteRole" style="display:inline;">
+                                        <input type="hidden" name="id" value="@role.RoleId" />
+                                        <a href="#" class="btn btn-role btn-outline-danger-role"
+                                           onclick="if (confirm('Do you want to delete Role ID = @role.RoleId?')) { document.getElementById('deleteRoleForm_@role.RoleId').submit(); } return false;"
+                                           title="Delete Role">
+                                            <i class="fas fa-trash-alt"></i> Delete
+                                        </a>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
                     </tbody>
                 </table>
             </div>

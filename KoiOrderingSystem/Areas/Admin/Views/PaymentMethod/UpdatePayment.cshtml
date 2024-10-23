@@ -1,4 +1,5 @@
-﻿@{
+﻿@model KoiOrderingSystem.Models.PaymentMethod
+@{
     ViewData["Title"] = "Payment Method Information";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
@@ -79,19 +80,20 @@
                 <p class="general-info-label">Update Payment Method Information</p>
             </div>
             <div class="form-content">
-                <form id="formUpdatePaymentMethod" onsubmit="return validateForm()">
+                <form id="formUpdatePaymentMethod" method="post" action="/Admin/PaymentMethod/UpdatePayment/@Model.PaymentMethodId" onsubmit="return validateForm()">
+                    <input type="hidden" name="PaymentMethodId" value="@Model.PaymentMethodId" />
                     <div id="general-info" class="form-sections">
                         <div class="form-group">
                             <label for="PaymentMethodId" class="form-label">Payment Method ID:</label>
-                            <input type="text" class="form-control" id="PaymentMethodId" name="PaymentMethodId" value="PM001" readonly>
+                            <input type="text" class="form-control" id="PaymentMethodId" name="PaymentMethodId" value="@Model.PaymentMethodId" readonly>
                         </div>
                         <div class="form-group">
                             <label for="MethodName" class="form-label">Method Name:</label>
-                            <input type="text" class="form-control" id="MethodName" name="MethodName" value="Credit Card" required>
+                            <input type="text" class="form-control" id="MethodName" name="MethodName" value="@Model.MethodName" required>
                         </div>
                         <div class="form-group">
                             <label for="Description" class="form-label">Description:</label>
-                            <textarea class="form-control form-textarea" id="Description" name="Description" required>This is the description for Credit Card payment method.</textarea>
+                            <textarea class="form-control form-textarea" id="Description" name="Description" required>@Model.Description</textarea>
                         </div>
                     </div>
 

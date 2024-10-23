@@ -14,37 +14,49 @@ namespace KoiOrderingSystem.Controllers
         {
             _db = db;
         }
-        public async Task<IActionResult> Variety()
+
+        private async Task<(List<Variety>, int, int)> GetPagedVarieties(IQueryable<Variety> query, int page, int pageSize)
         {
-            var varieties = await _db.Varieties.ToListAsync();
-            foreach (var variety in varieties)
-            {
+            // Tính tổng số lượng giống cá
+            int totalVarieties = await query.CountAsync();
 
-                if (variety.ImageUrl == null || variety.VarietyName == null || variety.Description == null)
-                {
+            // Tính tổng số trang
+            int totalPages = (int)Math.Ceiling(totalVarieties / (double)pageSize);
 
-                }
-            }
-            return View(varieties);
+            // Lấy danh sách giống cá cho trang hiện tại
+            var varietiesOnPage = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Include(v => v.SpecialVarieties)
+                    .ThenInclude(sv => sv.Farm)
+                .ToListAsync();
+
+            return (varietiesOnPage, totalPages, totalVarieties);
         }
 
-        public async Task<IActionResult> VarietyDetail(int id)
+        public async Task<IActionResult> Variety(int page = 1)
         {
-            
-            var variety = await _db.Varieties
-                .Include(v => v.KoiFishes) 
-                .FirstOrDefaultAsync(v => v.VarietyId == id);
+            int pageSize = 8;
 
-            if (variety == null)
-            {
-                return NotFound(); 
-            }
+            // Query lấy tất cả các varieties
+            var query = _db.Varieties.AsQueryable();
 
-            return View(variety); 
+            // Gọi phương thức chung để lấy danh sách phân trang
+            var (varietiesOnPage, totalPages, totalVarieties) = await GetPagedVarieties(query, page, pageSize);
+
+            // Truyền thông tin về trang hiện tại và tổng số trang vào ViewBag
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = totalPages;
+
+            return View(varietiesOnPage);
         }
 
-        public async Task<IActionResult> Search(string title, string variety, string breeder)
+
+        public async Task<IActionResult> Search(string title, string variety, string breeder, int page = 1)
         {
+            int pageSize = 8;
+
+            // Tạo query cơ bản
             var query = _db.Varieties.AsQueryable();
 
             // Tìm kiếm theo tiêu đề (VarietyName)
@@ -66,16 +78,29 @@ namespace KoiOrderingSystem.Controllers
                     .Any(sv => sv.Farm.FarmName.Contains(breeder)));
             }
 
-            var varieties = await query
-                .Include(v => v.SpecialVarieties)
-                    .ThenInclude(sv => sv.Farm)
-                .ToListAsync();
+            // Gọi phương thức chung để lấy danh sách phân trang
+            var (varietiesOnPage, totalPages, totalVarieties) = await GetPagedVarieties(query, page, pageSize);
 
-            // Lấy danh sách tất cả các FarmName
-            var breeders = await _db.KoiFarms.Select(f => f.FarmName).Distinct().ToListAsync();
-            var allVarieties = await _db.Varieties.Select(v => v.VarietyName).Distinct().ToListAsync();
-            // Trả về view với cả varieties và breeders
-            return View("Variety", varieties);
+            // Truyền thông tin về trang hiện tại và tổng số trang vào ViewBag
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = totalPages;
+
+            return View("Variety", varietiesOnPage);
+        }
+
+        public async Task<IActionResult> VarietyDetail(int id)
+        {
+
+            var variety = await _db.Varieties
+                .Include(v => v.KoiFishes)
+                .FirstOrDefaultAsync(v => v.VarietyId == id);
+
+            if (variety == null)
+            {
+                return NotFound();
+            }
+
+            return View(variety);
         }
     }
 }
