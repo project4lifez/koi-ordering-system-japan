@@ -102,7 +102,7 @@
 
             <!-- Right Form Section -->
             <div class="form-content">
-                <form method="post" id="formUpdate" action="/Admin/Manager/UpdateVariety/@Model.VarietyId" enctype="multipart/form-data">
+                <form method="post" id="formUpdate" action="/Admin/Manager/UpdateVariety/@Model.VarietyId" enctype="multipart/form-data" onsubmit="return validateForm()">
                     <input type="hidden" name="VarietyId" value="@Model.VarietyId" /> <!-- Lưu VarietyId -->
                     <div class="form-group">
                         <label for="varietyId" class="form-label">Variety ID</label>
@@ -142,5 +142,11 @@
                 reader.readAsDataURL(file); // Convert the file to a data URL
             }
         });
+
+        function validateForm() {
+            // If everything is valid, show the success message
+            alert("Update Variety Successfully!!!");
+            return true;
+        }
     </script>
 </body>

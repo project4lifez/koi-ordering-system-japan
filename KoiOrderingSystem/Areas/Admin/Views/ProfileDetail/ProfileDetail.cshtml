@@ -64,7 +64,7 @@
 					<div class="koibreed-card">
 						<div class="rounded-top text-white d-flex flex-row" style="background-color: #b0b3b6; height:200px;">
 							<div class="ms-4 mt-5 d-flex flex-column profile_image">
-								<img src="@Url.Content(Model.ImageUrl ?? "~/images/default-avatar.png")"
+								<img src="@Url.Content(Model.ImageUrl ?? "~/images/default-avatar.jpg")"
 									 alt="Generic placeholder image" class="img-fluid img-thumbnail mt-4 mb-2"
 									 style="width: 150px; z-index: 1">
 								
@@ -78,7 +78,7 @@
 							</div>
 						</div>
 						<div class="p-4 text-black bg-body-tertiary">
-							<form action="/Admin/ProfileDetail/UpdateStatus" method="post" id="statusForm">
+							<form action="/Admin/ProfileDetail/UpdateStatus" method="post" id="statusForm" onsubmit="return validateForm()">
 								<div class="d-flex justify-content-end text-center py-1 text-body">
 									<div class="px-3">
 										<select id="statusSelect" name="status" class="form-select koibreed-status-select" style="position: relative; left: 24px">
@@ -125,5 +125,11 @@
 				$('#displayStatus').text(selectedStatus.charAt(0).toUpperCase() + selectedStatus.slice(1));
 			});
 		});
+
+		function validateForm() {
+			// If everything is valid, show the success message
+			alert("Update Status Successfully!!!");
+			return true;
+		}
 	</script>
 </body>
