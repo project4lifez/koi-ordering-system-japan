@@ -17,16 +17,16 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
         {
             // Lấy thông tin tài khoản từ cơ sở dữ liệu, bao gồm thông tin khách hàng
             var account = _db.Accounts
-                              .Include(a => a.Customers) // Nạp thông tin khách hàng
-                              .Include(a => a.Role) // Nạp thông tin vai trò nếu cần
+                              .Include(a => a.Customers) 
+                              .Include(a => a.Role) 
                               .FirstOrDefault(a => a.AccountId == accountId);
 
             if (account == null)
             {
-                return NotFound(); // Trả về lỗi nếu không tìm thấy tài khoản
+                return NotFound(); 
             }
 
-            return View(account); // Truyền model vào View
+            return View(account);
         }
 
         [HttpPost]
