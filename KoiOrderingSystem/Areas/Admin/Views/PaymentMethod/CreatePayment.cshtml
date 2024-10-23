@@ -1,0 +1,133 @@
+﻿@{
+    ViewData["Title"] = "Create Payment Method";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <h1 class="text-center">Create Payment Method</h1>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+    <style>
+        body {
+            padding: 20px;
+        }
+
+        .form-container {
+            width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .form-control {
+            height: calc(2.25rem + 2px);
+        }
+
+        .btn-submit {
+            background-color: #007bff;
+            border-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            float: right;
+        }
+
+        .layout {
+            display: flex;
+        }
+
+            .layout .sidebar {
+                width: 25%;
+                padding-right: 15px;
+                font-size: 18px;
+                font-weight: bold;
+            }
+
+            .layout .form-content {
+                width: 75%;
+            }
+
+        .section-title {
+            margin-top: 153px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            display: block;
+            margin-left: 0;
+        }
+
+        .form-group .form-label, .form-group select {
+            display: block;
+            width: 100%;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px; /* Khoảng cách giữa các ô checkbox */
+        }
+
+        .form-check {
+            display: flex;
+            align-items: center;
+        }
+
+        .form-check-input {
+            margin-right: 5px; /* Khoảng cách giữa checkbox và label */
+        }
+
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <div class="layout">
+            <div class="sidebar">
+                <p class="general-info-label">Payment Method Information</p>
+            </div>
+            <div class="form-content">
+                <form method="post" action="/Admin/PaymentMethod/AddPaymentMethod" enctype="multipart/form-data" onsubmit="return validateForm()">
+                    <div id="general-info" class="form-sections">
+                        <div class="form-group">
+                            <label for="MethodName" class="form-label">Payment Method Name:</label>
+                            <input type="text" class="form-control" id="MethodName" name="MethodName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="Description" class="form-label">Description:</label>
+                            <textarea class="form-control" id="Description" name="Description" rows="4" required></textarea>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-submit">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function validateForm() {
+            // If everything is valid, show the success message
+            alert("Create Payment Method Successfully!!!");
+            return true;
+        }
+    </script>
+</body>

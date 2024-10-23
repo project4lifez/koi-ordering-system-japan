@@ -167,7 +167,14 @@ namespace KoiOrderingSystem
             app.MapControllerRoute(
             name: "ProfileDetailCus_default",
             pattern: "{area:exists}/{controller=ProfileDetailCus}/{action=ProfileDetailCus}/{id?}");
-            
+
+            app.MapControllerRoute(
+           name: "RoleList_default",
+           pattern: "{area:exists}/{controller=RoleList}/{action=RoleList}/{id?}");
+
+            app.MapControllerRoute(
+          name: "Payment_default",
+          pattern: "{area:exists}/{controller=PaymentMethod}/{action=PaymentMethod}/{id?}");
             app.Run();
         }
     }
