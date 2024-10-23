@@ -176,7 +176,7 @@
                                  alt="User" class="user-img" />
                             <div class="user-info">
                                 <!-- Display Firstname and Lastname -->
-                                @user.Firstname @user.Lastname<br>
+                                 @user.Lastname<br>
 
                                 <!-- Display CustomerId (First or Default customer) -->
                                 <span>Customer ID: @(user.Customers.FirstOrDefault()?.CustomerId.ToString() ?? "No Customer")</span>
