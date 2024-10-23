@@ -1,0 +1,128 @@
+﻿@model KoiOrderingSystem.Models.Account
+@{
+    ViewData["Title"] = "Koi Fish Information";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Detail</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+    <style>
+        body {
+            background-color: #f4f4f4; /* Background color */
+        }
+
+        .koibreed-column {
+            border-radius: 8px; /* Rounded corners */
+            padding: 10px; /* Inner padding */
+            background-color: #f8f9fa; /* Background color of the box */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Shadow effect */
+            min-width: 90%; /* Added minimum width */
+        }
+
+        .koibreed-divider {
+            border-top: 2px solid; /* Divider line */
+            margin: 20px 0; /* Margin above and below the divider */
+        }
+
+        .koibreed-title {
+            font-weight: bold; /* Bold text */
+            font-size: 1.5rem; /* Larger font size */
+            color: #1070FD; /* Blue color */
+        }
+
+        .koibreed-edit-button {
+            background-color: #1070FD; /* Blue background color */
+            color: white; /* White text */
+            border: none; /* No border */
+        }
+
+            .koibreed-edit-button:hover {
+                background-color: #0d63c2; /* Darker blue on hover */
+                color: white; /* Keep white text */
+                transition: background-color 0.3s ease; /* Smooth transition */
+            }
+
+        .profile_image {
+            width: 150px;
+            position: relative;
+            top: 45px;
+        }
+
+    </style>
+</head>
+<body>
+    <section>
+        <div class="container py-5 h-100">
+            <div class="row d-flex justify-content-center">
+                <div class="col col-lg-9 col-xl-8 koibreed-column">
+                    <div class="koibreed-card">
+                        <div class="rounded-top text-white d-flex flex-row" style="background-color: #b0b3b6; height:200px;">
+                            <div class="ms-4 mt-5 d-flex flex-column profile_image">
+                                <img src="@Url.Content(Model.ImageUrl ?? "~/images/default-avatar.png")"
+                                     alt="Generic placeholder image" class="img-fluid img-thumbnail mt-4 mb-2"
+                                     style="width: 150px; z-index: 1">
+                            </div>
+                            <div class="ms-3" style="margin-top: 207px; color: black">
+                                <h5>
+                                    <span class="koibreed-last-name">@Model.Lastname</span> <!-- Last Name -->
+                                    <span class="koibreed-first-name">@Model.Firstname</span> <!-- First Name -->
+                                </h5>
+                                <p>Customer ID: @Model.Customers.FirstOrDefault()?.CustomerId</p>
+                            </div>
+                        </div>
+                        <div class="p-4 text-black bg-body-tertiary">
+                            <form action="/Admin/ProfileDetailCus/UpdateStatus" method="post" id="statusForm">
+                                <input type="hidden" name="AccountId" value="@Model.AccountId" />
+                                <div class="d-flex justify-content-end text-center py-1 text-body">
+                                    <div class="px-3">
+                                        <select id="statusSelect" name="status" class="form-select koibreed-status-select" style="position: relative; left: 24px">
+                                            <option value="active" @(Model.Status == true ? "selected" : "")>Active</option>
+                                            <option value="disabled" @(Model.Status == false ? "selected" : "")>Disabled</option>
+                                        </select>
+                                    </div>
+                                    <div class="px-3">
+                                        <button class="koibreed-confirm-button btn btn-primary" type="submit">Confirm</button>
+                                    </div>
+                                </div>
+                            </form>
+
+                        </div>
+
+                        <div class="koibreed-about-section card-body p-4 text-black">
+                            <div class="mb-5 text-body">
+                                <div class="koibreed-divider"></div>
+                                <p class="koibreed-title mb-1">About</p>
+                                <div class="p-4 bg-body-tertiary">
+                                    <p class="font-italic mb-1"><strong>First Name:</strong>@Model.Firstname </p>
+                                    <p class="font-italic mb-1"><strong>Last Name:</strong>@Model.Firstname </p>
+                                    <p class="font-italic mb-1"><strong>Gender:</strong>@Model.Gender</p>
+                                    <p class="font-italic mb-1"><strong>Email:</strong> @Model.Email</p>
+                                    <p class="font-italic mb-1"><strong>Phone:</strong> @Model.Phone</p>
+                                    <p class="font-italic mb-1"><strong>Status:</strong> <span id="displayStatus">@((Model.Status == true) ? "Active" : "Disabled")</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        $(document).ready(function () {
+            $('.koibreed-confirm-button').click(function () {
+                // Get the selected status from the dropdown
+                var selectedStatus = $('#statusSelect').val();
+
+                // Update the displayed status
+                $('#displayStatus').text(selectedStatus.charAt(0).toUpperCase() + selectedStatus.slice(1));
+            });
+        });
+    </script>
+</body>
