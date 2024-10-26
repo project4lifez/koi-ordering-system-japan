@@ -355,9 +355,8 @@
                 <tbody>
                     @if (Model != null && Model.Any())
                     {
-                        int currentPage = ViewBag.CurrentPages ?? 1; // Nếu ViewBag.CurrentPage là null, đặt giá trị mặc định là 1
-                        int pageSize = ViewBag.PageSizes ?? 10;      // Nếu ViewBag.PageSize là null, đặt giá trị mặc định là 10
-
+                        int currentPage = ViewBag.CurrentPages ?? 1; 
+                        int pageSize = ViewBag.PageSizes ?? 10;      
                         int index = 1 + (currentPage - 1) * pageSize; // Tính toán chỉ số bắt đầu
                         foreach (var booking in Model)
                         {
