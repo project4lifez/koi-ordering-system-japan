@@ -357,7 +357,7 @@
                     {
                         int currentPage = ViewBag.CurrentPages ?? 1; 
                         int pageSize = ViewBag.PageSizes ?? 10;      
-                        int index = 1 + (currentPage - 1) * pageSize; // Tính toán chỉ số bắt đầu
+                        int index = 1 + (currentPage - 1) * pageSize; 
                         foreach (var booking in Model)
                         {
                             <tr>
@@ -425,7 +425,7 @@
                                     }
                                 </td>
                             </tr>
-                            index++; // Increment counter
+                            index++; 
                         }
                     }
                     else
