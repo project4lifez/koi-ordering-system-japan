@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using KoiOrderingSystem.Controllers.Admin;
+using PayPal.Api;
 
 namespace KoiOrderingSystem.Areas.Admin.Controllers
 {
@@ -27,18 +28,26 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
                 return NotFound("You do not have permission to access this page.");
             }
 
-            // Load Booking with related PO and PODetails
+            // Load Booking with related PO, PODetails and Payment Method
             var booking = _context.Bookings
-      .Include(b => b.Po)              
-      .ThenInclude(po => po.Podetails)     
-      .ThenInclude(podetail => podetail.Koi)
-      .Include(t => t.Trip)
-      .FirstOrDefault(b => b.BookingId == id);
+                                  .Include(b => b.Po)
+                                  .ThenInclude(po => po.Podetails)
+                                  .ThenInclude(podetail => podetail.Koi)
+                                  .Include(b => b.Po)
+                                  .ThenInclude(po => po.Popayments)
+                                  .ThenInclude(poPayment => poPayment.PaymentMethod)
+                                  .FirstOrDefault(b => b.BookingId == id);
 
             if (booking == null)
             {
                 return NotFound($"Booking with ID {id} not found.");
             }
+
+            // Truy vấn danh sách PaymentMethods
+            var paymentMethods = _context.PaymentMethods.ToList();
+
+            // Tạo một đối tượng ViewBag để truyền dữ liệu vào View
+            ViewBag.PaymentMethods = paymentMethods;
 
             // Pass the booking data to the view
             return View(booking);
@@ -49,56 +58,50 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult UpdateStatusDelivering(int id, string status)
         {
-            // Find the booking by ID
-            var booking = _context.Bookings
-                                  .FirstOrDefault(b => b.BookingId == id);
+            // Tìm booking theo ID
+            var booking = _context.Bookings.FirstOrDefault(b => b.BookingId == id);
 
             if (booking != null)
             {
-                // Prevent changing status if it is not 'Delivering' when trying to set it to 'Delivered'
-                if (status.Equals("Delivered", StringComparison.OrdinalIgnoreCase) &&
-                    !booking.Status.Equals("Delivering", StringComparison.OrdinalIgnoreCase))
+                // Chặn thay đổi trạng thái nếu nó đã là 'Delivered' hoặc 'Failed'
+                if (booking.Status.Equals("Delivered", StringComparison.OrdinalIgnoreCase) ||
+                    booking.Status.Equals("Failed", StringComparison.OrdinalIgnoreCase))
                 {
-                    // Add an error message to ModelState if trying to set 'Delivered' without 'Delivering'
-                    ModelState.AddModelError("StatusError", "The booking must be in 'Delivering' status before updating to 'Delivered'.");
-
-                    // Reload the view with the error message
+                    ModelState.AddModelError("StatusError", "Cannot update status once it is set to 'Delivered' or 'Failed'.");
                     return View("Delivering", booking);
                 }
 
-                // Prevent changing status if it is already 'Delivered'
-                if (!booking.Status.Equals("Delivered", StringComparison.OrdinalIgnoreCase))
+                // Nếu cập nhật thành 'Delivered' thì booking phải đang là 'Delivering'
+                if (status.Equals("Delivered", StringComparison.OrdinalIgnoreCase) &&
+                    !booking.Status.Equals("Delivering", StringComparison.OrdinalIgnoreCase))
                 {
-                    // Update the new status
-                    booking.Status = status;
+                    ModelState.AddModelError("StatusError", "The booking must be in 'Delivering' status before updating to 'Delivered'.");
+                    return View("Delivering", booking);
+                }
 
-                    // If status is set to 'Delivered', create a new Feedback record
-                    if (status.Equals("Delivered", StringComparison.OrdinalIgnoreCase))
+                // Cập nhật trạng thái mới
+                booking.Status = status;
+
+                // Nếu trạng thái là 'Delivered', tạo Feedback
+                if (status.Equals("Delivered", StringComparison.OrdinalIgnoreCase))
+                {
+                    var feedback = new Feedback
                     {
-                        // Create a new Feedback object
-                        var feedback = new Feedback
-                        {
-                            CustomerId = booking.CustomerId, // Assign the CustomerId from the Booking
-                            Status = "Pending" // Set Feedback status to 'Pending'
-                        };
-
-                        // Add the new Feedback to the context
-                        _context.Feedbacks.Add(feedback);
-                        _context.SaveChanges(); // Save to get the new Feedback ID
-
-                        // Now associate the newly created Feedback ID with the Booking
-                        booking.FeedbackId = feedback.FeedbackId; // Assuming Booking has a FeedbackId property
-                    }
-
-                    // Save changes to the database
+                        CustomerId = booking.CustomerId,
+                        Status = "Pending"
+                    };
+                    _context.Feedbacks.Add(feedback);
                     _context.SaveChanges();
 
-                    // Set success message
-                    TempData["SuccessMessage"] = $"Booking status updated to '{status}' successfully.";
+                    booking.FeedbackId = feedback.FeedbackId;
                 }
+
+                // Lưu thay đổi vào database
+                _context.SaveChanges();
+
+                TempData["SuccessMessage"] = $"Booking status updated to '{status}' successfully.";
             }
 
-            // Redirect back to the 'Delivering' page after successful update
             return Redirect("Delivering?id=" + id);
         }
 
@@ -141,6 +144,72 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
             // Chuyển hướng người dùng về trang 'Delivering' sau khi cập nhật thành công
             return Redirect("Delivering?id=" + id);
         }
+
+        [HttpPost]
+        public IActionResult UpdatePaymentMethod(int id, int paymentMethodId)
+        {
+            // Lấy Booking với liên kết đến Po và Popayment
+            var booking = _context.Bookings
+                                  .Include(b => b.Po)
+                                  .ThenInclude(po => po.Popayments)
+                                  .FirstOrDefault(b => b.BookingId == id);
+
+            if (booking == null || booking.Po == null)
+            {
+                return NotFound($"Booking with ID {id} not found or missing PO.");
+            }
+
+            // Kiểm tra nếu đã có Popayment tồn tại hay chưa
+            var popayment = booking.Po.Popayments.FirstOrDefault();
+
+            // Nếu chưa có Popayment, tạo mới
+            if (popayment == null)
+            {
+                popayment = new Popayment
+                {
+                    PoId = booking.Po.PoId,  // Gán giá trị PoId
+                    PaymentMethodId = paymentMethodId,  // Gán giá trị PaymentMethodId
+                    PaymentDate = DateOnly.FromDateTime(DateTime.Now)  // Lấy ngày hiện tại
+                };
+                _context.Popayments.Add(popayment);  // Thêm mới Popayment vào database
+            }
+            else
+            {
+                // Nếu Popayment đã tồn tại, cập nhật PaymentMethodId và PaymentDate
+                popayment.PaymentMethodId = paymentMethodId;
+                popayment.PaymentDate = DateOnly.FromDateTime(DateTime.Now);  // Lấy ngày hiện tại
+            }
+
+            // Lưu thay đổi vào database
+            _context.SaveChanges();
+
+            // Thông báo thành công
+            TempData["SuccessMessage"] = "Payment method updated successfully.";
+
+            // Quay lại trang Delivering
+            return Redirect("Delivering?id=" + id);
+        }
+
+        [HttpPost]
+        public IActionResult UpdateNote(int id, string note)
+        {
+            // Tìm booking bằng ID
+            var booking = _context.Bookings.Include(b => b.Po).FirstOrDefault(b => b.BookingId == id);
+            if (booking?.Po != null)
+            {
+                // Cập nhật Note trong Po
+                booking.Po.Note = note;
+
+                // Lưu thay đổi vào database
+                _context.SaveChanges();
+
+                // Thông báo thành công
+                TempData["SuccessMessage"] = "Note updated successfully.";
+            }
+
+            return Redirect("Delivering?id=" + id);
+        }
+
 
 
     }

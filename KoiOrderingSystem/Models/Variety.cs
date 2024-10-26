@@ -7,8 +7,6 @@ public partial class Variety
 {
     public int VarietyId { get; set; }
 
-    public int? PackageId { get; set; }
-
     public string? VarietyName { get; set; }
 
     public string? Description { get; set; }

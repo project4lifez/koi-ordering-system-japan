@@ -51,6 +51,7 @@
                             string.Equals(Model.Status, "Accepted", StringComparison.OrdinalIgnoreCase) ||
                             string.Equals(Model.Status, "Canceled", StringComparison.OrdinalIgnoreCase) ||
                             string.Equals(Model.Status, "Checked in", StringComparison.OrdinalIgnoreCase) ||
+                            string.Equals(Model.Status, "Failed", StringComparison.OrdinalIgnoreCase) ||
                             string.Equals(Model.Status, "Checked out", StringComparison.OrdinalIgnoreCase) ||
                             string.Equals(Model.Status, "Delivering", StringComparison.OrdinalIgnoreCase) ||
                             string.Equals(Model.Status, "Delivered", StringComparison.OrdinalIgnoreCase) ||
@@ -82,6 +83,18 @@
             </div>
         </div>
     </div>
+    <script>
+        document.getElementById('formUpdate').onsubmit = function (e) {
+            const status = "@Model.Status"; // Lấy giá trị của trạng thái hiện tại từ Model
+            if (status !== "Processing") {
+                const confirmMessage = "Are you sure you want to set the status to 'Processing'? This action cannot be undone.";
+                if (!confirm(confirmMessage)) {
+                    e.preventDefault(); // Hủy việc gửi form nếu người dùng chọn Cancel
+                }
+            }
+        };
+    </script>
+
 </main>
 
 <style>

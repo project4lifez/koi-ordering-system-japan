@@ -71,32 +71,65 @@
                         }
                     </ul>
                     <p><strong>Delivery Location:</strong> @Model?.Po?.DeliveryLocation</p>
-                    <!-- Po Status and Set to Paid Button -->
-                    <div style="display: flex; align-items: center;">
-                        <strong>Po Status: </strong>
-                        <span id="po-status" style="margin-right: 10px;"> @Model?.Po?.Status</span>
 
-                        <!-- Button to set status to 'Paid' -->
-                        <form action="/Admin/Delivering/SetStatusToPaid" method="post" style="display: inline-block;">
+
+                    @* Kiểm tra nếu trạng thái không phải là một trong các trạng thái sau: 'Failed', 'Lost Deposit', 'Refunding', hoặc 'Refunded' *@
+                    @if (Model?.Status != "Failed" && Model?.Status != "Lost Deposit" && Model?.Status != "Refunding" && Model?.Status != "Refunded")
+                    {
+                        <!-- Display all elements on the same line using Flexbox -->
+                        <form action="/Admin/Delivering/UpdatePaymentMethod" method="post" style="display: flex; align-items: center;">
+                            <label for="paymentMethodId" style="margin-right: 10px;"><strong>Payment Method:</strong></label>
+
                             <input type="hidden" name="id" value="@Model.BookingId" />
-                            <input type="hidden" name="poId" value="@Model.Po?.PoId" />
-                            <button type="submit" class="btn btn-success btn-sm" style="margin-left: 10px;"
-                            @(Model.Status != "Delivering" || Model.Po?.Status == "Paid" ? "disabled" : "")>
-                                Set to Paid
-                            </button>
+
+                            <!-- Dropdown for Payment Methods with fixed width -->
+                            <select class="form-select" name="paymentMethodId" id="paymentMethodId"
+                                    style="margin-right: 10px; width: 220px;"
+                            @(Model?.Po?.Status == "Paid" ? "disabled" : "")>
+                                <!-- First option as "Select Method Payment" -->
+                                <option value="" disabled @(Model?.Po?.Popayments?.FirstOrDefault()?.PaymentMethod == null ? "selected" : "")>Select Method Payment</option>
+                                @foreach (var method in ViewBag.PaymentMethods)
+                                {
+                                    <option value="@method.PaymentMethodId"
+                                    @(Model?.Po?.Popayments?.FirstOrDefault()?.PaymentMethod?.PaymentMethodId == method.PaymentMethodId ? "selected" : "")>
+                                        @method.MethodName
+                                    </option>
+                                }
+                            </select>
+
+                            <!-- Button for updating the payment method -->
+                            @if (Model?.Status == "Delivering" && Model?.Po?.Status != "Paid")
+                            {
+                                <button type="submit" class="btn btn-primary" style="background-color: #198754">Update</button>
+                            }
                         </form>
-                    </div>
 
+                        <!-- Po Status and Set to Paid Button -->
+                        <div style="display: flex; align-items: center;">
+                            <strong style="margin-top: 20px;">Po Status: </strong>
+                            <span id="po-status" style="margin-right: 10px; margin-top: 21px; margin-left: 4px;"> @Model?.Po?.Status</span>
 
-
+                            <!-- Button to set status to 'Paid' -->
+                            <form action="/Admin/Delivering/SetStatusToPaid" method="post" style="display: inline-block;">
+                                <input type="hidden" name="id" value="@Model.BookingId" />
+                                <input type="hidden" name="poId" value="@Model.Po?.PoId" />
+                                <button type="submit" class="btn btn-success btn-sm" style="margin-left: 4px; margin-top: 20px;"
+                                @(Model?.Po?.Popayments?.FirstOrDefault() == null || Model?.Po?.Status == "Paid" ? "disabled" : "")>
+                                    Set to Paid
+                                </button>
+                            </form>
+                        </div>
+                    }
 
                     <!-- Status update form -->
                     <form id="formUpdate" action="/Admin/Delivering/UpdateStatusDelivering" method="post">
                         <input type="hidden" name="id" value="@Model?.BookingId" />
                         <select class="form-select" name="status" id="status" style="width: 150px; margin-top: 8px"
-                        @(string.Equals(Model?.Status, "Delivered", StringComparison.OrdinalIgnoreCase) ? "disabled" : "")>
+                        @(string.Equals(Model?.Status, "Delivered", StringComparison.OrdinalIgnoreCase) ||
+                            string.Equals(Model?.Status, "Failed", StringComparison.OrdinalIgnoreCase) ? "disabled" : "")>
                             <option value="Delivering" @(Model?.Status == "Delivering" ? "selected" : "")>Delivering</option>
                             <option value="Delivered" @(Model?.Status == "Delivered" ? "selected" : "")>Delivered</option>
+                            <option value="Failed" @(Model?.Status == "Failed" ? "selected" : "")>Failed</option>
                         </select>
                         <button type="submit" class="btn btn-success ml-2 mt-2"
                         @(Model?.Status != null &&
@@ -107,10 +140,24 @@
                             string.Equals(Model.Status, "Rejected", StringComparison.OrdinalIgnoreCase) ||
                             string.Equals(Model.Status, "Canceled", StringComparison.OrdinalIgnoreCase) ||
                             string.Equals(Model.Status, "Processing", StringComparison.OrdinalIgnoreCase) ||
+                            string.Equals(Model.Status, "Failed", StringComparison.OrdinalIgnoreCase) ||
                             string.Equals(Model.Status, "Requested", StringComparison.OrdinalIgnoreCase)) ? "disabled" : "")>
                             Update
                         </button>
                     </form>
+                    <!-- Note update form -->
+                    @if (Model?.Status == "Failed" || Model?.Status == "Lost Deposit" || Model?.Status == "Refunding" || Model?.Status == "Refunded")
+                    {
+                        <form id="formUpdateNote" action="/Admin/Delivering/UpdateNote" method="post" style="margin-top: 15px;">
+                            <input type="hidden" name="id" value="@Model?.BookingId" />
+                            <label for="note"><strong>Note:</strong></label>
+                            <textarea name="note" id="note" class="form-control" rows="3" placeholder="What happened with the order?" style="width: 100%; margin-top: 8px;">@Model?.Po?.Note</textarea>
+                            @if (Model?.Status == "Failed")
+                            {
+                                <button type="submit" style="background-color: #198754" class="btn btn-primary mt-2">Update</button>
+                            }
+                        </form>
+                    }
                 </div>
             </div>
         </div>
@@ -153,4 +200,16 @@
             </div>
         </div>
     </div>
+    <script>
+        document.getElementById('formUpdate').onsubmit = function (e) {
+            const status = document.getElementById('status').value;
+            if (status === 'Delivered' || status === 'Failed') {
+                const confirmMessage = `Are you sure you want to set the status to '${status}'? This action cannot be undone.`;
+                if (!confirm(confirmMessage)) {
+                    e.preventDefault();
+                }
+            }
+        };
+    </script>
+
 </main>

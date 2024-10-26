@@ -31,7 +31,8 @@
             position: relative;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-
+        
+       
             .form-order-container:hover {
                 transform: translateY(-5px);
                 box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
@@ -196,7 +197,8 @@
                     <div class="col-md-6 form-floating-label">
 
                         <!-- Input field to display or enter the selected farm -->
-                        <input asp-for="Favoritefarm" id="SelectedFarmInput" placeholder=" " class="form-control" />                        <label asp-for="Favoritefarm">The farm you want to come</label>
+                        <input asp-for="Favoritefarm" id="SelectedFarmInput" placeholder=" " class="form-control" />                        
+                        <label asp-for="Favoritefarm">The farm you want to come</label>
                         <span asp-validation-for="Favoritefarm" class="text-danger"></span>
 
 
@@ -354,6 +356,14 @@
                 // Nếu form không hợp lệ, ngăn việc submit
                 if (!valid) {
                     e.preventDefault(); // Ngăn chặn form nếu không hợp lệ
+                } else {
+                   
+
+                    // Hiển thị thông báo thành công
+                    alert("Request Booking Successfully!!");
+
+                    // Tùy chọn: Bạn có thể gửi form bằng AJAX hoặc tiếp tục gửi form
+                    // form.submit(); // Bỏ chú thích nếu muốn gửi form sau khi thông báo thành công
                 }
             });
 

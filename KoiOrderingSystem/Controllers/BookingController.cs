@@ -40,7 +40,13 @@ namespace KoiOrderingSystem.Controllers
             // Only logged-in users can access the booking form
             if (HttpContext.Session.GetString("Username") == null)
             {
-                // Redirect to login page if the user is not logged in
+                return RedirectToAction("", "Login");
+            }
+
+            var customerId = HttpContext.Session.GetInt32("CustomerId");
+
+            if (customerId == null)
+            {
                 return RedirectToAction("", "Login");
             }
 

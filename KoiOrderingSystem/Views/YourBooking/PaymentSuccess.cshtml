@@ -1,0 +1,79 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Successful</title>
+    <link rel="stylesheet" href="~/css/SuccessfulPayment.css" />
+
+</head>
+<body>
+    <div class="success-container">
+        <div class="success-icon">
+            <div class="circle"></div>
+            <svg class="checkmark" viewBox="0 0 100 100">
+                <path d="M20,50 L40,70 L80,30" />
+            </svg>
+        </div>
+        <h1 class="title">Payment Successful!</h1>
+        <div class="success-details">
+            <div class="amount">@ViewBag.Amount USD</div> <!-- Amount from the backend -->
+            <div class="date">@ViewBag.PaymentDate</div> <!-- Payment Date from the backend -->
+        </div>
+        <div class="booking-id">
+            Booking ID: <strong>#@ViewBag.BookingId</strong> <!-- Booking ID from the backend -->
+
+        </div>
+        <p class="redirect-text">Redirecting to Your Booking in <span id="countdown">8</span> seconds...</p>
+        <a href="/YourBooking" class="btn">Your Booking</a>
+    </div>
+
+    <script>
+        // Countdown timer
+        let timeLeft = 8;
+        const countdownElement = document.getElementById('countdown');
+
+        const timer = setInterval(() => {
+            timeLeft--;
+            countdownElement.textContent = timeLeft;
+
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                window.location.href = '/YourBooking';
+            }
+        }, 1000);
+
+        document.querySelector('.btn').addEventListener('click', (e) => {
+            clearInterval(timer);
+        });
+
+        // Create confetti effect
+        function createConfetti() {
+            const confettiColors = ['#25d366', '#4CAF50', '#8BC34A', '#CDDC39'];
+
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                confetti.style.background = confettiColors[Math.floor(Math.random() * confettiColors.length)];
+                document.body.appendChild(confetti);
+
+                // Remove confetti after animation
+                confetti.addEventListener('animationend', () => {
+                    confetti.remove();
+                });
+            }
+        }
+
+        // Create initial confetti
+        createConfetti();
+
+        // Create new confetti every 5 seconds
+        setInterval(createConfetti, 8000);
+    </script>
+</body>
+</html>

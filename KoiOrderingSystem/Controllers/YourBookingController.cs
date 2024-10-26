@@ -46,9 +46,11 @@ namespace KoiOrderingSystem.Controllers
             var bookingsQuery = _db.Bookings
                 .Include(b => b.Trip)        // Include the related Trip entity to access TripName
                 .Include(b => b.Feedback)    // Include the related Feedback entity
-                .Where(b => b.CustomerId == customerId.Value &&
-                            b.Status != "Canceled" &&
-                            (b.Feedback == null || b.Feedback.Status != "Completed"));
+               .Where(b => b.CustomerId == customerId.Value &&
+             b.Status != "Canceled" &&
+             b.Status != "Lost Deposit" &&
+             b.Status != "Refunded" &&
+             (b.Feedback == null || b.Feedback.Status != "Completed"));
 
             // Nếu có từ khóa tìm kiếm
             if (!string.IsNullOrEmpty(searchKeyword))
@@ -90,7 +92,7 @@ namespace KoiOrderingSystem.Controllers
         }
 
 
-      
+
 
 
 
@@ -284,7 +286,7 @@ namespace KoiOrderingSystem.Controllers
         { "mode", _configuration["PayPal:Mode"] }
     };
 
-            // Lấy bookingId từ session
+            // Get bookingId from session
             var bookingId = HttpContext.Session.GetInt32("BookingId");
             if (bookingId == null)
             {
@@ -294,7 +296,7 @@ namespace KoiOrderingSystem.Controllers
             var customerId = HttpContext.Session.GetInt32("CustomerId");
             if (customerId == null)
             {
-                return RedirectToAction("", "Login");
+                return RedirectToAction("Login", "Account");
             }
 
             try
@@ -307,7 +309,7 @@ namespace KoiOrderingSystem.Controllers
                 // Check if payment was successful
                 if (executedPayment.state.ToLower() == "approved")
                 {
-                    // Update the booking and payment information in the database
+                    // Retrieve the booking details from the database
                     var booking = await _db.Bookings
                         .Include(b => b.Trip) // Include related Trip entity
                         .Include(b => b.BookingPayments) // Include BookingPayments
@@ -318,6 +320,9 @@ namespace KoiOrderingSystem.Controllers
                         return NotFound("Booking not found.");
                     }
 
+                    // Retrieve the quoted amount from the booking
+                    var quotedAmount = booking.QuotedAmount;  // Get the amount from Booking.QuotedAmount
+
                     // Check for an existing BookingPayment
                     var existingPayment = booking.BookingPayments.FirstOrDefault();
 
@@ -326,7 +331,7 @@ namespace KoiOrderingSystem.Controllers
                         // Update the existing payment entry
                         existingPayment.Status = "Completed";
                         existingPayment.PaymentDate = DateTime.UtcNow;
-                        existingPayment.PaymentMethodId = 1; // Assuming PayPal is ID 1
+                        existingPayment.PaymentMethodId = 1; // Assuming PayPal is PaymentMethodId 1
 
                         // Assign the existing BookingPaymentId to the booking
                         booking.BookingPaymentId = existingPayment.BookingPaymentId;
@@ -339,7 +344,7 @@ namespace KoiOrderingSystem.Controllers
                             Status = "Completed",
                             PaymentDate = DateTime.UtcNow,
                             BookingId = booking.BookingId,
-                            PaymentMethodId = 1 // Assuming PayPal is ID 1
+                            PaymentMethodId = 1 // Assuming PayPal is PaymentMethodId 1
                         };
 
                         // Add the new payment entry to the database
@@ -352,28 +357,75 @@ namespace KoiOrderingSystem.Controllers
                         booking.BookingPaymentId = bookingPayment.BookingPaymentId;
                     }
 
-                    // Update the booking status
+                    // Update the booking status to confirmed
                     booking.Status = "Confirmed";
 
-                    // Save all changes to the Booking entity
+                    // Save all changes to the booking
                     await _db.SaveChangesAsync();
 
+                    // Remove the BookingId from session after successful payment
                     HttpContext.Session.Remove("BookingId");
 
+                    var totalWithTax = quotedAmount.GetValueOrDefault() * 1.05m; // Adding 5% tax
 
-                    // Redirect to success or booking details
-                    return RedirectToAction("YourBooking");
+                    // Pass the quoted amount, booking ID, and payment date to the view
+                    ViewBag.BookingId = booking.BookingId;
+                    ViewBag.PaymentDate = DateTime.UtcNow.ToString("MMMM dd, yyyy - HH:mm");
+                    ViewBag.Amount = totalWithTax.ToString("F2");  // Format the amount as currency
+
+                    // Show payment success view
+                    return View("PaymentSuccess");
                 }
             }
             catch (Exception ex)
             {
-                // Log the exception (using a logging framework) for further diagnosis
+                // Log the exception (using a logging framework)
                 Console.WriteLine(ex.Message); // Replace with proper logging
                 return RedirectToAction("PaymentCancelled");
             }
 
             return RedirectToAction("PaymentCancelled");
         }
+
+        public async Task<IActionResult> PaymentSuccess()
+        {
+            // Check if CustomerId exists in session
+            var customerId = HttpContext.Session.GetInt32("CustomerId");
+            if (customerId == null)
+            {
+                // Redirect to login if the customer is not logged in
+                return RedirectToAction("", "Login");
+            }
+
+            // Retrieve the latest booking for the customer from the database
+            var booking = await _db.Bookings
+                .Include(b => b.Trip) // Include related Trip entity if needed
+                .Include(b => b.BookingPayments) // Include BookingPayments if needed
+                .Where(b => b.CustomerId == customerId.Value && b.Status == "Confirmed")
+                .OrderByDescending(b => b.BookingDate) // Assuming BookingDate or another field to find the latest booking
+                .FirstOrDefaultAsync();
+
+            if (booking == null)
+            {
+                // If no confirmed booking is found, return an error or redirect as appropriate
+                return NotFound("No confirmed booking found for this customer.");
+            }
+
+            // Extract the quoted amount and payment date from the booking
+            var quotedAmount = booking.QuotedAmount;
+            var totalWithTax = quotedAmount.GetValueOrDefault() * 1.05m; // Adding 5% tax
+
+            var paymentDate = booking.BookingPayments.FirstOrDefault()?.PaymentDate ?? DateTime.UtcNow;
+
+            // Pass booking details to the view using ViewBag
+            ViewBag.BookingId = booking.BookingId;
+            ViewBag.PaymentDate = paymentDate.ToString("MMMM dd, yyyy - HH:mm"); // Format the payment date
+            ViewBag.Amount = totalWithTax.ToString("F2"); // Format the quoted amount as currency
+
+            // Render the PaymentSuccess view
+            return View();
+        }
+
 
 
         // Payment cancellation handler (nếu canceled thì)
@@ -529,14 +581,16 @@ namespace KoiOrderingSystem.Controllers
                 return RedirectToAction("", "Login");
             }
 
-           
+
             // Get the list of bookings for the current user
             var orderHistory = _db.Bookings
                 .Include(b => b.Trip)        // Include the related Trip entity so you can access TripName
                 .Include(b => b.Feedback)    // Include the related Feedback entity
-                .Where(b => b.CustomerId == customerId.Value &&
-                            (b.Status == "Canceled" ||
-                             (b.Status == "Delivered" && (b.Feedback == null || b.Feedback.Status == "Completed"))));
+               .Where(b => b.CustomerId == customerId.Value &&
+             (b.Status == "Canceled" ||
+              b.Status == "Refunded" ||
+              b.Status == "Lost Deposit" ||
+              (b.Status == "Delivered" && (b.Feedback == null || b.Feedback.Status == "Completed"))));
 
 
             // If search keywords are provided
@@ -643,6 +697,10 @@ namespace KoiOrderingSystem.Controllers
                 booking.Status != "Checked in" &&
                 booking.Status != "Checked out" &&
                 booking.Status != "Delivering" &&
+                booking.Status != "Failed" &&
+                booking.Status != "Refunding" &&
+                booking.Status != "Refunded" &&
+                booking.Status != "Lost Deposit" &&
                 booking.Status != "Delivered")
             {
                 return NotFound("You do not have access to this page because the booking is not in a valid status.");
@@ -655,7 +713,7 @@ namespace KoiOrderingSystem.Controllers
                 var poDetails = booking.Po.Podetails.ToList();
                 ViewBag.PoDetails = poDetails; // Pass it to the view
             }
-          
+
 
             // Trả về view với thông tin của Trip
             return View(booking);

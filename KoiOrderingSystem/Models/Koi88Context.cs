@@ -49,7 +49,7 @@ public partial class Koi88Context : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=MSI;Initial Catalog=Koi88;Persist Security Info=True;User ID=sa;Password=12345;Trust Server Certificate=True;");
+        => optionsBuilder.UseSqlServer("Data Source=MSI;Initial Catalog=Koi88;Persist Security Info=True;User ID=sa;Password=12345;Trust Server Certificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -238,14 +238,9 @@ public partial class Koi88Context : DbContext
             entity.Property(e => e.ImageUrl)
                 .HasMaxLength(100)
                 .HasColumnName("imageUrl");
-            entity.Property(e => e.KoiId).HasColumnName("koi_id");
             entity.Property(e => e.Location)
                 .HasMaxLength(200)
                 .HasColumnName("location");
-
-            entity.HasOne(d => d.Koi).WithMany(p => p.KoiFarms)
-                .HasForeignKey(d => d.KoiId)
-                .HasConstraintName("FK__KoiFarm__koi_id__797309D9");
         });
 
         modelBuilder.Entity<KoiFish>(entity =>
@@ -296,6 +291,7 @@ public partial class Koi88Context : DbContext
                 .HasColumnName("Delivery_Location");
             entity.Property(e => e.KoiDeliveryDate).HasColumnName("koi_delivery_date");
             entity.Property(e => e.KoiDeliveryTime).HasColumnName("koi_delivery_time");
+            entity.Property(e => e.Note).HasColumnName("note");
             entity.Property(e => e.Status)
                 .HasMaxLength(100)
                 .HasColumnName("status");
@@ -439,7 +435,6 @@ public partial class Koi88Context : DbContext
             entity.Property(e => e.ImageUrl)
                 .HasMaxLength(100)
                 .HasColumnName("imageUrl");
-            entity.Property(e => e.PackageId).HasColumnName("package_id");
             entity.Property(e => e.VarietyName)
                 .HasMaxLength(100)
                 .HasColumnName("variety_name");

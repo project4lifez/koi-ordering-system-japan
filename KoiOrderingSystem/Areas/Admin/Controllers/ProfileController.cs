@@ -153,5 +153,69 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
             return RedirectToAction("Profile", "Admin", new { area = "" });
         }
 
+
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(string currentPassword, string newPassword, string confirmPassword)
+        {
+            try
+            {
+                // Retrieve CustomerId from the session
+                var adminRoleId = HttpContext.Session.GetInt32("AdminRoleId");
+
+                if (adminRoleId == null)
+                {
+                    return RedirectToAction("", "Login");
+                }
+
+                // Fetch the existing admin data based on the RoleId
+                var admin = _db.Accounts.Include(a => a.Role)
+                                         .FirstOrDefault(a => a.RoleId == adminRoleId);
+
+                if (admin == null)
+                {
+                    return Json(new { errors = new List<string> { "Admin not found." } });
+                }
+
+                var errors = new List<string>();
+
+                // Validate the current password
+                if (currentPassword != admin.Password) // Assuming Password is stored in plaintext
+                {
+                    errors.Add("Current password is incorrect.");
+                }
+
+                // Check if new password and confirm password match
+                if (newPassword != confirmPassword)
+                {
+                    errors.Add("New password and confirm password do not match.");
+                }
+
+                // Check the length of the new password
+                if (newPassword.Length < 8)
+                {
+                    errors.Add("New password must be at least 8 characters long.");
+                }
+
+                if (errors.Any())
+                {
+                    return Json(new { errors }); // Return errors as JSON
+                }
+
+                // Update the password
+                admin.Password = newPassword; // Update to the new password
+                await _db.SaveChangesAsync();
+
+                return Json(new { success = true }); // Return success response
+            }
+            catch (Exception ex)
+            {
+                // Log the error
+                Console.WriteLine("Error in ChangePassword: " + ex.Message);
+
+                // Return an error response
+                return Json(new { errors = new List<string> { "An unexpected error occurred. Please try again later." } });
+            }
+        }
+
     }
 }

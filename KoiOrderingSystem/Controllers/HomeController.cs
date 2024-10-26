@@ -2,7 +2,18 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Diagnostics;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using KoiOrderingSystem.Models;
+using Microsoft.AspNetCore.Http; // For session management
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Authorization;
+
 namespace KoiOrderingSystem.Controllers
+
 {
     public class HomeController : Controller
     {
@@ -20,8 +31,14 @@ namespace KoiOrderingSystem.Controllers
         }
 
         public ActionResult BookingForm()
-        {
-            ViewBag.Title = "BookingForm";
+        {          
+
+            var customerId = HttpContext.Session.GetInt32("CustomerId");
+
+            if (customerId == null)
+            {
+                return RedirectToAction("", "Login");
+            }
             return View();
         }
         public ActionResult Create()

@@ -374,6 +374,16 @@
                                     {
                                         <span class="custom-canceled">Canceled</span>
                                     }
+                                    else if (booking.Status == "Lost Deposit")
+                                    {
+                                        <span class="custom-canceled">Lost Deposit</span>
+
+                                    }
+                                    else if (booking.Status == "Refunded")
+                                    {
+                                        <span class="custom-delivered">Refunded</span>
+
+                                    }
                                 </td>
                                 <td class="custom-td">
                                     @if (booking.QuotedAmount.HasValue && booking.QuotedAmount > 0)

@@ -10,6 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard (Manager)</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/loading.css" />
     <style>
         .error-overlay {
             position: absolute;
@@ -18,6 +19,48 @@
             width: 100%;
             z-index: 10; /* Ensure it's above the card */
         }
+
+        /* Styles for the notification box */
+        #emailNotification {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            text-align: center;
+            padding: 20px;
+            z-index: 10000;
+            display: none;
+            position: fixed;
+            top: 30%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+            #emailNotification h3 {
+                color: #28a745;
+                margin-bottom: 15px;
+            }
+
+            #emailNotification p {
+                font-size: 16px;
+                color: #333;
+            }
+
+            #emailNotification button {
+                background-color: #28a745;
+                color: white;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                margin-top: 20px;
+            }
+
+                #emailNotification button:hover {
+                    background-color: #218838;
+                }
+
     </style>
 </head>
 <body>
@@ -49,6 +92,40 @@
                     </div>
                     <div class="card-body">
                         <p><strong>Status:</strong> @Model.Status</p>
+                        @* Kiểm tra nếu trạng thái là 'Checked out', 'Delivering', 'Delivered', 'Failed', 'Refunding', 'Refunded', hoặc 'Lost Deposit' *@
+                        @if (Model.Status == "Checked out" || Model.Status == "Delivering" || Model.Status == "Delivered" ||
+                        Model.Status == "Failed" || Model.Status == "Refunding" || Model.Status == "Refunded" || Model.Status == "Lost Deposit")
+                        {
+                            <p><strong>Delivery Date:</strong> @Model?.Po?.KoiDeliveryDate?.ToString("dd/MM/yyyy")</p>
+                            <p><strong>Delivery Time:</strong> @Model?.Po?.KoiDeliveryTime</p>
+                            <p><strong>Koi Fish:</strong></p>
+                            <ul>
+                                @if (Model.Po != null && Model.Po.Podetails != null && Model.Po.Podetails.Any())
+                                {
+                                    foreach (var podetail in Model.Po.Podetails)
+                                    {
+                                        // Kiểm tra nếu có Koi liên kết với Podetail
+                                        if (podetail.Koi != null)
+                                        {
+                                            <li>
+                                                @podetail.Koi.KoiName - Quantity: @podetail.Quantity
+                                            </li>
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    <li>No Koi fish purchased.</li>
+                                }
+                            </ul>
+                            <p><strong>Delivery Location:</strong> @Model?.Po?.DeliveryLocation</p>
+                        }
+                        @* Kiểm tra nếu trạng thái là 'Failed', 'Refunding', 'Refunded', hoặc 'Lost Deposit' *@
+                        @if (Model.Status == "Failed" || Model.Status == "Refunding" || Model.Status == "Refunded" || Model.Status == "Lost Deposit")
+                        {
+                            <p><strong>Incident report:</strong> @Model.Po?.Note</p>
+                        }
+
 
                         <!-- Display model errors here -->
                         @if (TempData["SuccessMessage"] != null)
@@ -68,26 +145,95 @@
                             </div>
                         }
 
-                        <form action="/Admin/Manager/UpdateStatusManager" method="post">
+                        <!-- Form to update status -->
+                        <form action="/Admin/Manager/UpdateStatusManager" method="post" id="statusForm">
                             <input type="hidden" name="bookingId" value="@Model.BookingId" />
+
                             <select class="form-select" name="status" id="status" style="width: 150px; margin-top: 8px"
                             @(Model.Status == "Canceled" ? "disabled" : "")>
-                                <option value="Rejected" @(Model.Status == "Rejected" ? "selected" : "")>Rejected</option>
-                                <option value="Canceled" @(Model.Status == "Canceled" ? "selected" : "")>Canceled</option>
-                                <option value="Accepted" @(Model.Status == "Accepted" ? "selected" : "")>Accepted</option>
+
+                                <!-- Option for Rejected with conditional disabling -->
+                                <option value="Rejected"
+                                @(Model.Status == "Rejected" ? "selected" : "")
+                                @(Model.Status == "Failed" || Model.Status == "Refunding" || Model.Status == "Refunded" || Model.Status == "Lost Deposit" ? "disabled" : "")>
+                                    Rejected
+                                </option>
+
+                                <!-- Option for Canceled with conditional disabling -->
+                                <option value="Canceled"
+                                @(Model.Status == "Canceled" ? "selected" : "")
+                                @(Model.Status == "Failed" || Model.Status == "Refunding" || Model.Status == "Refunded" || Model.Status == "Lost Deposit" ? "disabled" : "")>
+                                    Canceled
+                                </option>
+
+                                <!-- Option for Accepted with conditional disabling -->
+                                <option value="Accepted"
+                                @(Model.Status == "Accepted" ? "selected" : "")
+                                @(Model.Status == "Failed" || Model.Status == "Refunding" || Model.Status == "Refunded" || Model.Status == "Lost Deposit" ? "disabled" : "")>
+                                    Accepted
+                                </option>
+
+                                <!-- Option for Lost Deposit, only enabled if status is 'Failed' -->
+                                <option value="Lost Deposit"
+                                @(Model.Status == "Lost Deposit" ? "selected" : "")
+                                @(Model.Status != "Failed" ? "disabled" : "")>
+                                    Lost Deposit
+                                </option>
+
+                                <!-- Option for Refunding, only enabled if status is 'Failed' -->
+                                <option value="Refunding"
+                                @(Model.Status == "Refunding" ? "selected" : "")
+                                @(Model.Status != "Failed" ? "disabled" : "")>
+                                    Refunding
+                                </option>
+
+                                <!-- Option for Refunded, only enabled if status is 'Refunding' -->
+                                <option value="Refunded"
+                                @(Model.Status == "Refunded" ? "selected" : "")
+                                @(Model.Status != "Refunding" ? "disabled" : "")>
+                                    Refunded
+                                </option>
                             </select>
+
+                            <!-- Update Button -->
                             <button class="btn btn-success ml-2 mt-2" type="submit"
                             @(Model.Status != null &&
                                 (string.Equals(Model.Status, "Confirmed", StringComparison.OrdinalIgnoreCase) ||
                                 string.Equals(Model.Status, "Canceled", StringComparison.OrdinalIgnoreCase) ||
                                 string.Equals(Model.Status, "Checked in", StringComparison.OrdinalIgnoreCase) ||
                                 string.Equals(Model.Status, "Checked out", StringComparison.OrdinalIgnoreCase) ||
+                                string.Equals(Model.Status, "Lost Deposit", StringComparison.OrdinalIgnoreCase) ||
+                                string.Equals(Model.Status, "Refunded", StringComparison.OrdinalIgnoreCase) ||
                                 string.Equals(Model.Status, "Delivering", StringComparison.OrdinalIgnoreCase) ||
                                 string.Equals(Model.Status, "Delivered", StringComparison.OrdinalIgnoreCase)) ? "disabled" : "")>
                                 Update
                             </button>
-
                         </form>
+
+                        <!-- Overlay for loading animation -->
+                        <div id="loadingOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); z-index: 9999; text-align: center;">
+                            <div style="position: relative; top: 50%; transform: translateY(-50%);">
+                                <!-- Gmail style loading animation (Progress bar) -->
+                                <div class="loading-container">
+                                    <div class="loading-bar"></div>
+                                </div>
+                                <!-- Dynamic message for loading overlay -->
+                                <p id="loadingMessage" style="color: white; font-size: 18px; margin-top: 15px;">Loading... Please wait.</p>
+                            </div>
+                        </div>
+
+
+                        <!-- Notification for email sent (Refunding or Lost Deposit) -->
+                        <div id="emailNotification" style="display: none; position: fixed; top: 20%; left: 50%; transform: translateX(-50%); width: 400px; background-color: white; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); z-index: 10000;">
+                            <div style="padding: 20px; text-align: center;">
+                                <h3 style="color: #28a745; margin-bottom: 20px;">Success!</h3>
+                                <p id="notificationMessage" style="font-size: 16px; color: #333;">
+                                    <!-- Nội dung sẽ được cập nhật qua JavaScript -->
+                                </p>
+                                <button onclick="closeNotification()" style="background-color: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin-top: 20px;">Close</button>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -130,5 +276,98 @@
                 </div>
             </div>
         </div>
+        <script>
+            // Function to show loading overlay with dynamic message
+            function showLoadingOverlay(message) {
+                document.getElementById("loadingMessage").textContent = message;
+                document.getElementById("loadingOverlay").style.display = "block";
+            }
+
+            // Function to hide loading overlay
+            function hideLoadingOverlay() {
+                document.getElementById("loadingOverlay").style.display = "none";
+            }
+
+            // Function to show notification with dynamic message
+            function showNotification(message) {
+                document.getElementById("notificationMessage").textContent = message;
+                document.getElementById("emailNotification").style.display = "block";
+            }
+
+            // Function to close the notification
+            function closeNotification() {
+                document.getElementById("emailNotification").style.display = "none";
+            }
+
+            // Attach event listener to the form submit
+            document.getElementById("statusForm").addEventListener("submit", function (event) {
+                event.preventDefault();  // Prevent the default form submission behavior
+
+                const selectedStatus = document.getElementById("status").value;
+
+                // Confirm action for "Refunded" and "Lost Deposit"
+                if (selectedStatus === "Refunded" || selectedStatus === "Lost Deposit") {
+                    const confirmMessage = `Are you sure you want to set the status to '${selectedStatus}'? This action cannot be undone.`;
+                    if (!confirm(confirmMessage)) {
+                        return;
+                    }
+                }
+
+                // Handle special cases for "Refunding" and "Lost Deposit"
+                if (selectedStatus === "Refunding" || selectedStatus === "Lost Deposit") {
+                    const sendMailConfirm = confirm(`Do you want to send a ${selectedStatus === "Lost Deposit" ? "lost deposit" : "refund"} email to the customer?`);
+                    if (!sendMailConfirm) {
+                        return;
+                    }
+
+                    // Show loading overlay with appropriate message
+                    const loadingMessage = selectedStatus === "Lost Deposit"
+                        ? "Sending lost deposit email... Please wait."
+                        : "Sending refund email... Please wait.";
+                    showLoadingOverlay(loadingMessage);
+
+                    document.querySelector('.loading-bar').style.animationPlayState = 'running';
+
+                    const formData = new FormData(this);  // Collect form data
+                    const xhr = new XMLHttpRequest();
+                    xhr.open("POST", this.action, true);
+                    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+
+                    xhr.onload = function () {
+                        hideLoadingOverlay();  // Hide loading overlay once the request is completed
+                        if (xhr.status === 200) {
+                            // Show success message based on status
+                            const message = selectedStatus === "Lost Deposit"
+                                ? "The lost deposit email has been sent successfully to the customer, and the booking status has been set to 'Lost Deposit.'"
+                                : "The refund email has been sent successfully to the customer, and the booking status has been set to 'Refunding.'";
+
+                            showNotification(message);
+
+                            // Reload the page after 10 seconds
+                            setTimeout(function () {
+                                location.reload();
+                            }, 10000);  // Wait 10 seconds before reload
+                        } else {
+                            alert("An error occurred while updating the status.");
+                        }
+                    };
+
+                    xhr.onerror = function () {
+                        alert("A network error occurred.");
+                        hideLoadingOverlay();
+                    };
+
+                    xhr.send(formData);  // Send the form data via AJAX
+                } else {
+                    // Submit the form normally for other statuses
+                    this.submit();
+                }
+            });
+
+
+
+
+
+        </script>
     </main>
 </body>
