@@ -48,7 +48,7 @@ namespace KoiOrderingSystem
             {
                 googleOptions.ClientId = "#"; // Replace with your ClientId
                 googleOptions.ClientSecret = "#"; // Replace with your ClientSecret
-                googleOptions.CallbackPath = "/signin-google"; // Path where Google redirects after authentication
+                googleOptions.CallbackPath = "/signin-google"; 
             });
 
             // Register controllers with views
