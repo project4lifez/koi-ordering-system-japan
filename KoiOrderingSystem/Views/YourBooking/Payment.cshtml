@@ -147,6 +147,125 @@
             .badge.completed {
                 background-color: green; /* Màu xanh lá cây cho Completed */
             }
+        /* Popup and overlay styling */
+        .policy-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            width: 90%;
+            max-width: 700px;
+            max-height: 500px; /* Limit height for scroll */
+            overflow-y: auto; /* Enable vertical scrolling */
+            padding: 30px;
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            color: var(--dark-bg);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+            .policy-popup .close-btn {
+                position: absolute;
+                top: 15px;
+                right: 15px;
+                background: transparent;
+                border: none;
+                font-size: 1.5rem;
+                color: var(--dark-bg);
+                cursor: pointer;
+            }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 999;
+        }
+
+        .policy-popup h3 {
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .policy-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 15px 0;
+        }
+
+            .policy-item h4 {
+                color: var(--primary-color);
+                font-size: 1.2rem;
+                font-weight: 600;
+                margin: 0;
+                flex-basis: 25%;
+            }
+
+            .policy-item p {
+                margin: 0;
+                font-size: 1rem;
+                flex-basis: 50%;
+                text-align: justify;
+                padding-right: 10px;
+            }
+
+        .see-more-btn {
+            padding: 8px 15px;
+            background-color: var(--primary-color);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: background-color 0.3s ease;
+            flex-basis: 20%;
+        }
+
+            .see-more-btn:hover {
+                background-color: #0056b3;
+            }
+
+        .more-content {
+            display: none;
+            margin-top: 10px;
+            background-color: #f1f1f1;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        /* Back to booking button styling */
+        .back-to-booking-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #5BB2F1;
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+        }
+
+            .back-to-booking-btn:hover {
+                background-color: #4DA7E1;
+                transform: scale(1.02);
+            }
+
+
     </style>
 </head>
 <body>
@@ -161,7 +280,7 @@
             <div class="form-check">
                 <input type="radio" class="form-check-input" name="payment-method" id="paypal" value="paypal" checked>
                 <label class="form-check-label" for="paypal">
-                    <img src="https://canhme.com/wp-content/uploads/2016/01/Paypal.png" alt="PayPal Logo" width="100" />
+                    <img src="/images/Paypal.png" alt="PayPal Logo" width="100" />
                 </label>
             </div>
         </div>
@@ -186,9 +305,19 @@
                     <span>Total</span>
                     <span>@total.ToString("F2") USD</span>
                 </div>
+               
+
                 if (Model.BookingPayments.LastOrDefault()?.Status == "Pending")
                 {
-                    <form method="post" action="/YourBooking/ConfirmPayment?bookingId=@Model.BookingId">
+                    <!-- Checkbox for agreement to terms and policies -->
+                    <div class="form-check mt-3">
+                        <input type="checkbox" class="form-check-input" id="policyCheck" style="margin-top: 4px!important; border: 1px solid" required>
+                        <label for="policyCheck" class="form-check-label">
+                            I agree to the <a href="javascript:void(0);" onclick="showPolicyPopup()" style="color: var(--primary-color); text-decoration: underline;">terms and policies</a>
+                        </label>
+                    </div>
+                    
+                    <form method="post" action="/YourBooking/ConfirmPayment?bookingId=@Model.BookingId" onsubmit="return checkPolicyAgreement()">
                         <input type="hidden" name="paymentMethod" id="paymentMethod" value="paypal" />
                         <button type="submit" class="checkout-btn">Checkout</button>
                     </form>
@@ -238,9 +367,66 @@
         </div>
     </div>
 
+    <!-- Overlay and Popup for Terms and Policies -->
+    <div class="overlay" id="overlay" onclick="hidePolicyPopup()"></div>
+    <div class="policy-popup" id="policyPopup">
+        <button class="close-btn" onclick="hidePolicyPopup()">&times;</button>
+        <h3>Terms and Policies</h3>
+
+        <!-- Payment Policy -->
+        <div class="policy-item">
+            <h4>Payment Policy</h4>
+            <p>Once payment is completed, the trip cannot be canceled and is non-refundable.</p>
+            <button class="see-more-btn" onclick="toggleMoreContent('payment')">See more...</button>
+        </div>
+        <div class="more-content" id="payment-more-content">
+            <p>Payments are accepted only via PayPal credit card.</p>
+        </div>
+
+        <!-- Deposit Policy -->
+        <div class="policy-item">
+            <h4>Deposit Policy</h4>
+            <p>A minimum deposit of 50% of the fish order value must be made on the same day as the booking.</p>
+            <button class="see-more-btn" onclick="toggleMoreContent('deposit')">See more...</button>
+        </div>
+        <div class="more-content" id="deposit-more-content">
+            <p>This is a requirement from the farm.</p>
+        </div>
+
+        <!-- Warranty Policy -->
+        <div class="policy-item">
+            <h4>Warranty Policy</h4>
+            <p>If the fish are not of quality or are dead upon arrival...</p>
+            <button class="see-more-btn" onclick="toggleMoreContent('warranty')">See more...</button>
+        </div>
+        <div class="more-content" id="warranty-more-content">
+            <p>The company will refund 100% of the deposit to the farms and provide additional compensation of 25% of the koi order value, managed by Koi88. If, during transportation, even one koi or multiple koi arrive in poor condition or are no longer alive, customers will receive a full refund of their deposit paid to the farms for the entire shipment. Additionally, Koi88 will take responsibility for providing compensation equivalent to 25% of the total koi order value, ensuring the highest level of customer satisfaction and security throughout the process.</p>
+        </div>
+
+        <!-- Shipping Policy -->
+        <div class="policy-item">
+            <h4>Shipping Policy</h4>
+            <p>On the agreed delivery day, customers are responsible for receiving the goods...</p>
+            <button class="see-more-btn" onclick="toggleMoreContent('shipping')">See more...</button>
+        </div>
+        <div class="more-content" id="shipping-more-content">
+            <p>The company guarantees fish quality for 6 hours from the delivery time. If the customer has not received the fish within this period, we are not responsible for the quality of the fish. If the customer refuses to receive the goods, under policy BR-05, we reserve the right to retain the deposit made for the fish with the farms.</p>
+        </div>
+    </div>
+
+
     <!-- PayPal SDK -->
     <script src="https://www.paypal.com/sdk/js?client-id=YOUR_CLIENT_ID"></script>
     <script>
+
+        function checkPolicyAgreement() {
+            const policyCheck = document.getElementById("policyCheck");
+            if (!policyCheck.checked) {
+                alert("Please agree to the terms and policies before checkout.");
+                return false; // Ngăn chặn submit form nếu checkbox chưa được chọn
+            }
+            return true; // Cho phép submit form nếu checkbox đã được chọn
+        }
         document.addEventListener("DOMContentLoaded", function () {
             const paymentMethodInput = document.querySelector('#paymentMethod'); // Hidden input for PaymentMethodId
 
@@ -263,6 +449,28 @@
                 }
             }).render('#paypal-button-container'); // Render the PayPal button
         });
+
+        function showPolicyPopup() {
+            document.getElementById("policyPopup").style.display = "block";
+            document.getElementById("overlay").style.display = "block";
+        }
+        function hidePolicyPopup() {
+            document.getElementById("policyPopup").style.display = "none";
+            document.getElementById("overlay").style.display = "none";
+        }
+        function toggleMoreContent(policyId) {
+            const content = document.getElementById(policyId + "-more-content");
+            const button = event.target;
+
+            if (content.style.display === "none" || content.style.display === "") {
+                content.style.display = "block";
+                button.textContent = "See less...";
+            } else {
+                content.style.display = "none";
+                button.textContent = "See more...";
+            }
+        }
+
     </script>
 </body>
 </html>

@@ -215,7 +215,6 @@
             border: none;
             cursor: pointer;
             padding: 10px;
-            font-weight: bold;
             color: #000;
         }
 
@@ -276,6 +275,34 @@
             color: #000000;
         }
 
+        .dropdown-menu li {
+            margin-left: 0 !important;
+        }
+
+        .service-dropdown .dropdown-menu {
+            min-width: 150px;
+        }
+
+        .service-dropdown .dropdown-item {
+            padding: 10px 20px;
+            color: #333;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+            .service-dropdown .dropdown-item i {
+                margin-right: 8px;
+                width: 20px;
+                text-align: center;
+            }
+
+            .service-dropdown .dropdown-item:hover {
+                background-color: #f0f0f0;
+                color: #7ec0ee;
+            }
+
     </style>
 </head>
 <body>
@@ -289,7 +316,17 @@
         </div>
         <ul>
             <li><a href="/home">Home</a></li>
-            <li><a href="#services">Services</a></li>
+            <li class="dropdown service-dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="serviceDropdown" role="button">
+                    <i class="fas fa-concierge-bell"></i> <strong>Services</strong>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="serviceDropdown">
+                    <li><a class="dropdown-item" href="/Variety"><i class="fas fa-fish"></i> Variety</a></li>
+                    <li><a class="dropdown-item" href="/Farm"><i class="fas fa-warehouse"></i> Farm</a></li>
+                    <li><a class="dropdown-item" href="/YourBooking"><i class="fa-solid fa-book"></i> Booking Form</a></li>
+
+                </ul>
+            </li>
             <li><a href="#about">About</a></li>
             <li><a href="#blog">Blog</a></li>
 
@@ -416,23 +453,29 @@
             }
         }
 
-        // Toggle dropdown menu
+        // Cập nhật JavaScript để xử lý cả hai dropdown
         document.addEventListener('DOMContentLoaded', function () {
-            var dropdownToggle = document.querySelector('.dropdown-toggle');
-            var dropdownMenu = document.querySelector('.dropdown-menu');
+            // Xử lý cho tất cả các dropdown trên trang
+            var dropdowns = document.querySelectorAll('.dropdown-toggle');
 
-            if (dropdownToggle) {
-                dropdownToggle.addEventListener('click', function () {
+            dropdowns.forEach(function (dropdownToggle) {
+                var dropdownMenu = dropdownToggle.nextElementSibling;
+
+                dropdownToggle.addEventListener('click', function (e) {
+                    e.preventDefault();
                     dropdownMenu.classList.toggle('show');
                 });
+            });
 
-                // Hide menu if click outside
-                window.addEventListener('click', function (e) {
+            // Đóng dropdown khi click bên ngoài
+            window.addEventListener('click', function (e) {
+                dropdowns.forEach(function (dropdownToggle) {
+                    var dropdownMenu = dropdownToggle.nextElementSibling;
                     if (!dropdownToggle.contains(e.target) && !dropdownMenu.contains(e.target)) {
                         dropdownMenu.classList.remove('show');
                     }
                 });
-            }
+            });
         });
     </script>
     @await RenderSectionAsync("Scripts", required: false)
