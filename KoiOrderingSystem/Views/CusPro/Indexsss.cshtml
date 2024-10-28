@@ -3133,7 +3133,6 @@
                     }
                 }
 
-                // Validate End Date (phải sau Start Date, cách Start Date ít nhất 2 ngày, và trong vòng 14 ngày)
                 function validateEndDate() {
                     const startDate = document.getElementById('StartDate');
                     const endDate = document.getElementById('EndDate');
@@ -3160,7 +3159,6 @@
                     }
                 }
 
-                // Show error message
                 function showError(field, message) {
                     let errorElement = field.parentNode.querySelector('.error-message');
                     if (!errorElement) {
@@ -3172,7 +3170,7 @@
                     field.classList.add('is-invalid');
                 }
 
-                // Hide error message
+                
                 function hideError(field) {
                     let errorElement = field.parentNode.querySelector('.error-message');
                     if (errorElement) {
