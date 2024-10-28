@@ -97,6 +97,10 @@ namespace KoiOrderingSystem.Controllers
         {
             return View();
         }
+        public IActionResult AboutUs()
+        {
+            return View();
+        }
 
         public async Task<IActionResult> KoiVarieties()
         {
@@ -113,5 +117,6 @@ namespace KoiOrderingSystem.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
     }
 }
