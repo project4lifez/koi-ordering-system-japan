@@ -101,7 +101,7 @@ namespace KoiOrderingSystem.Controllers
         public async Task<IActionResult> KoiVarieties()
         {
             var koiVarieties = await _db.Varieties
-                .OrderByDescending(v => v.VarietyId) // Order by VarietyId descending
+                .OrderByDescending(v => v.VarietyId) 
                 .ToListAsync();
 
             return View(koiVarieties); // Pass the list to the view
