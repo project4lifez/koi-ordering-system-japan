@@ -32,7 +32,7 @@ namespace KoiOrderingSystem.Controllers
        
             var adminRoleId = HttpContext.Session.GetInt32("AdminRoleId");
 
-            // Nếu role từ 2 đến 5, điều hướng đến /Admin
+           
             if (adminRoleId != null && adminRoleId >= 2 && adminRoleId <= 5)
             {
                 return RedirectToAction("Home", "Admin");
