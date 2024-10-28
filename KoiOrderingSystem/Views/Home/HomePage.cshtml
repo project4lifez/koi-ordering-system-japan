@@ -1061,12 +1061,10 @@
         </div>
     </section>
 
-    <!-- Koi Fish Breeds Section -->
-    <section class="koi-fish-breeds-section my-5">
+    <div class="koi-fish-breeds-section my-5">
         <h2 class="text-center mb-4">Koi Fish Breeds</h2>
         <div class="container">
             <div class="row g-4">
-                <!-- Asagi Koi -->
                 @foreach (var variety in ViewBag.KoiVarieties)
                 {
                     <div class="col-lg-3 col-md-6">
@@ -1076,7 +1074,17 @@
                             </div>
                             <div class="card-body text-center d-flex flex-column">
                                 <h5 class="card-title text-danger">@variety.VarietyName</h5>
-                                <p class="card-text">@variety.Description</p>
+                                <p class="card-text">
+                                    @{
+                                        int maxLength = 100; // Set your character limit here
+                                        var description = variety.Description;
+                                        if (description.Length > maxLength)
+                                        {
+                                            description = description.Substring(0, maxLength) + "...";
+                                        }
+                                    }
+                                    @description
+                                </p>
                             </div>
                             <div class="card-footer text-center border-0 bg-transparent d-flex justify-content-between">
                                 <a href="/Variety/VarietyDetail?id=@variety.VarietyId" class="btn btn-sm btn-outline-primary detail-link">Detail</a>
@@ -1085,11 +1093,12 @@
                         </div>
                     </div>
                 }
-                <div class="text-center mt-4">
-                    <a href="/Variety" class="btn btn-primary view-more-btn">View More</a>
-                </div>
             </div>
-    </section>
+            <div class="text-center mt-4">
+                <a href="/Variety" class="btn btn-primary view-more-btn">View More</a>
+            </div>
+        </div>
+    </div>
 
     <!-- Featured Services Section -->
     <section class="featured-service my-5">
@@ -1237,6 +1246,7 @@
             <div class="text-center mt-4">
                 <button class="btn btn-primary view-more-btn">View More</button>
             </div>
+           
 
             <section class="feedback-section">
                 <h2 class="feedback-title">Client Feedback</h2>
@@ -1250,7 +1260,7 @@
                             </div>
                             <div class="feedback-content">
                                 <p class="feedback-text">"@feedback.Comments"</p>
-                                <p class="feedback-name">Customer @feedback.CustomerId</p>
+                                <p class="feedback-name">@feedback.Customer.Account.Lastname</p>
                                 <div class="feedback-rating">
                                     @for (int i = 0; i < feedback.Rating; i++)
                                     {
@@ -1269,7 +1279,7 @@
                     <button class="nav-button" id="next-feedback"><i class="fas fa-chevron-right"></i></button>
                 </div>
             </section>
-
+                
 
 
 
