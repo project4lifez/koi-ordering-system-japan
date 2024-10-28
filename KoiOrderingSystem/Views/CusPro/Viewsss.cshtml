@@ -1180,6 +1180,133 @@
                 chatOptions.classList.add("hidden");
             }
         });
+        //Pagination
+        let thisPage = 1;
+        let limit = 9;
+        let list = document.querySelectorAll(".product .product__item");
+        document.getElementById("num__product").innerHTML = list.length;
+
+        function loadItem() {
+            let beginGet = limit * (thisPage - 1);
+            let endGet = limit * thisPage - 1;
+            for (let i = 0; i < list.length; i++) {
+                if (i >= beginGet && i <= endGet) {
+                    list[i].style.display = "";
+                } else {
+                    list[i].style.display = "none";
+                }
+            }
+            listPage();
+        }
+        loadItem();
+
+        function listPage() {
+            let count = Math.ceil(list.length / limit);
+            document.querySelector(".product__pagination .list").innerHTML = "";
+            for (i = 1; i <= count; i++) {
+                let newPage = document.createElement("a");
+                newPage.classList.add("link");
+                newPage.innerHTML = i;
+                if (i == thisPage) {
+                    newPage.classList.add("active");
+                }
+                newPage.setAttribute("onclick", "activeLink(" + i + ")");
+                document.querySelector(".product__pagination .list").appendChild(newPage);
+            }
+        }
+
+        function activeLink(i) {
+            thisPage = i;
+            loadItem();
+        }
+
+        let link = document.getElementsByClassName("link");
+
+        function backBtn() {
+            if (thisPage > 1) {
+                for (l of link) {
+                    l.classList.remove("active");
+                }
+                thisPage--;
+                link[thisPage - 1].classList.add("active");
+            }
+            loadItem();
+        }
+        function nextBtn() {
+            let count = Math.ceil(list.length / limit);
+            if (thisPage < count) {
+                for (l of link) {
+                    l.classList.remove("active");
+                }
+                thisPage++;
+                link[thisPage - 1].classList.add("active");
+            }
+            loadItem();
+        }
+
+        //Pagination
+        let thisPage = 1;
+        let limit = 9;
+        let list = document.querySelectorAll(".product .product__item");
+        document.getElementById("num__product").innerHTML = list.length;
+
+        function loadItem() {
+            let beginGet = limit * (thisPage - 1);
+            let endGet = limit * thisPage - 1;
+            for (let i = 0; i < list.length; i++) {
+                if (i >= beginGet && i <= endGet) {
+                    list[i].style.display = "";
+                } else {
+                    list[i].style.display = "none";
+                }
+            }
+            listPage();
+        }
+        loadItem();
+
+        function listPage() {
+            let count = Math.ceil(list.length / limit);
+            document.querySelector(".product__pagination .list").innerHTML = "";
+            for (i = 1; i <= count; i++) {
+                let newPage = document.createElement("a");
+                newPage.classList.add("link");
+                newPage.innerHTML = i;
+                if (i == thisPage) {
+                    newPage.classList.add("active");
+                }
+                newPage.setAttribute("onclick", "activeLink(" + i + ")");
+                document.querySelector(".product__pagination .list").appendChild(newPage);
+            }
+        }
+
+        function activeLink(i) {
+            thisPage = i;
+            loadItem();
+        }
+
+        let link = document.getElementsByClassName("link");
+
+        function backBtn() {
+            if (thisPage > 1) {
+                for (l of link) {
+                    l.classList.remove("active");
+                }
+                thisPage--;
+                link[thisPage - 1].classList.add("active");
+            }
+            loadItem();
+        }
+        function nextBtn() {
+            let count = Math.ceil(list.length / limit);
+            if (thisPage < count) {
+                for (l of link) {
+                    l.classList.remove("active");
+                }
+                thisPage++;
+                link[thisPage - 1].classList.add("active");
+            }
+            loadItem();
+        }
 
 
 
