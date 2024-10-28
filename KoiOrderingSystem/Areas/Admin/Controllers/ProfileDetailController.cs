@@ -45,7 +45,7 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
 
 			// Cập nhật trạng thái
 			account.Status = isActive;
-			_db.SaveChanges(); // Lưu thay đổi vào cơ sở dữ liệu
+			_db.SaveChanges(); 
 
 			// Trả về một phản hồi hoặc chuyển hướng về trang nào đó
 			return RedirectToAction("ProfileDetail", "Admin", new { accountId = accountId });
