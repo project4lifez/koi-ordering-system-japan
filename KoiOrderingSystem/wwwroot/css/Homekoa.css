@@ -10200,51 +10200,8 @@ span.flatpickr-weekday {
     line-height: 1 !important;
 }
 
-#slider-fit {
-    padding: 0 1rem;
-}
 
-.noUi-connect {
-    background: var(--primary-color) !important;
-}
 
-.noUi-vertical .noUi-handle {
-    bottom: -0.275rem !important;
-    inset-inline-end: -0.375rem;
-}
 
-#secondary-colored-slider .noUi-connect {
-    background-color: rgb(var(--secondary-rgb)) !important;
-}
 
-#warning-colored-slider .noUi-connect {
-    background-color: rgb(var(--warning-rgb)) !important;
-}
-
-#info-colored-slider .noUi-connect {
-    background-color: rgb(var(--info-rgb)) !important;
-}
-
-#success-colored-slider .noUi-connect {
-    background-color: rgb(var(--success-rgb)) !important;
-}
-
-#danger-colored-slider .noUi-connect {
-    background-color: rgb(var(--danger-rgb)) !important;
-}
-
-#slider-round {
-    height: 0.625rem !important;
-}
-
-    #slider-round .noUi-handle {
-        height: 1.125rem !important;
-        width: 1.125rem !important;
-        inset-block-start: -0.313rem !important;
-        inset-inline-end: -0.563rem;
-        /* half the width */
-        border-radius: 50px !important;
-        background-color: var(--primary-color) !important;
-        border: 1px solid var(--custom-white) !important;
-    }
 
