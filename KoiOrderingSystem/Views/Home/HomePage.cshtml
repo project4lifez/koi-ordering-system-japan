@@ -1250,7 +1250,7 @@
                             </div>
                             <div class="feedback-content">
                                 <p class="feedback-text">"@feedback.Comments"</p>
-                                <p class="feedback-name">Customer @feedback.CustomerId</p>
+                                <p class="feedback-name">@feedback.Customer.Account.Lastname</p>
                                 <div class="feedback-rating">
                                     @for (int i = 0; i < feedback.Rating; i++)
                                     {
