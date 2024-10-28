@@ -6386,28 +6386,3 @@ ol {
     padding: 0.25rem 1.5rem;
     color: #3a3b45;
 }
-
-.btn-group,
-.btn-group-vertical {
-    position: relative;
-    display: inline-flex;
-    vertical-align: middle;
-}
-
-    .btn-group > .btn,
-    .btn-group-vertical > .btn {
-        position: relative;
-        flex: 1 1 auto;
-    }
-
-        .btn-group > .btn:hover,
-        .btn-group-vertical > .btn:hover {
-            z-index: 1;
-        }
-
-        .btn-group > .btn:focus, .btn-group > .btn:active, .btn-group > .btn.active,
-        .btn-group-vertical > .btn:focus,
-        .btn-group-vertical > .btn:active,
-        .btn-group-vertical > .btn.active {
-            z-index: 1;
-        }
