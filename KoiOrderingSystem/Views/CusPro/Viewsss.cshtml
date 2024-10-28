@@ -1048,9 +1048,8 @@
         const farmSections = document.querySelectorAll('.koi-farm-content');
         let currentFarm = 0;  // Currently visible farm
         let startTabIndex = 0;  // Start index of visible tabs
-        const maxVisibleTabs = 4;  // Maximum number of visible tabs
+        const maxVisibleTabs = 4;  
 
-        // Function to display the current farm and hide others
         function showFarm(index) {
             document.querySelectorAll('.koi-farm-tab').forEach((tab, i) => {
                 tab.classList.toggle('active', i === index - startTabIndex);  // Adjusted for the visible tabs
@@ -1060,9 +1059,8 @@
             });
         }
 
-        // Function to render tabs based on the visible range
         function renderTabs() {
-            tabsContainer.innerHTML = '';  // Clear current tabs
+            tabsContainer.innerHTML = ''; 
             const visibleTabs = tabsData.slice(startTabIndex, startTabIndex + maxVisibleTabs);
             visibleTabs.forEach((tabData, index) => {
                 const tabElement = document.createElement('div');
