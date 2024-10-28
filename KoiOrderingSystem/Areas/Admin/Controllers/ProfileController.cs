@@ -22,7 +22,7 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
                 return RedirectToAction("", "Login");
             }
 
-            // Lấy AdminRoleId từ session
+         
             var adminRoleId = HttpContext.Session.GetInt32("AdminRoleId");
 
             if (adminRoleId == null)
@@ -55,7 +55,7 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult UpdateProfile(string firstname, string lastname, string gender, string phone, string email)
         {
-            // Retrieve AdminRoleId from the session (instead of from the form)
+           
             var adminRoleId = HttpContext.Session.GetInt32("AdminRoleId");
 
             if (adminRoleId == null)
