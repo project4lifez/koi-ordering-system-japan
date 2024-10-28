@@ -45,55 +45,7 @@
     font-size: 1.25rem;
 }
 
-.custom-file {
-    position: relative;
-    display: inline-block;
-    width: 100%;
-    height: calc(1.5em + 0.75rem + 2px);
-    margin-bottom: 0;
-}
 
-.custom-file-input {
-    position: relative;
-    z-index: 2;
-    width: 100%;
-    height: calc(1.5em + 0.75rem + 2px);
-    margin: 0;
-    opacity: 0;
-}
-
-    .custom-file-input:focus ~ .custom-file-label {
-        border-color: #ffefb3;
-        box-shadow: none;
-    }
-
-    .custom-file-input[disabled] ~ .custom-file-label,
-    .custom-file-input:disabled ~ .custom-file-label {
-        background-color: #e9ecef;
-    }
-
-    .custom-file-input:lang(en) ~ .custom-file-label::after {
-        content: "Browse";
-    }
-
-    .custom-file-input ~ .custom-file-label[data-browse]::after {
-        content: attr(data-browse);
-    }
-
-.custom-file-label {
-    position: absolute;
-    top: 0;
-    right: 0;
-    left: 0;
-    z-index: 1;
-    height: calc(1.5em + 0.75rem + 2px);
-    padding: 0.375rem 0.75rem;
-    font-weight: 400;
-    line-height: 1.5;
-    color: #495057;
-    background-color: #fff;
-    border: 1px solid #ced4da;
-}
 
     .custom-file-label::after {
         position: absolute;
