@@ -117,12 +117,12 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
 
             // Fetch the existing admin based on AdminRoleId
             var admin = await _db.Accounts
-                                 .Include(a => a.Role) // Include role if necessary
+                                 .Include(a => a.Role) 
                                  .FirstOrDefaultAsync(a => a.RoleId == adminRoleId);
 
             if (admin == null)
             {
-                return NotFound(); // Return a 404 if the admin is not found
+                return NotFound(); 
             }
 
             if (avatar != null && avatar.Length > 0)
@@ -149,7 +149,6 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
                 await _db.SaveChangesAsync();
             }
 
-            // Redirect to the profile page with the updated avatar
             return RedirectToAction("Profile", "Admin", new { area = "" });
         }
 
@@ -159,7 +158,7 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
         {
             try
             {
-                // Retrieve CustomerId from the session
+               
                 var adminRoleId = HttpContext.Session.GetInt32("AdminRoleId");
 
                 if (adminRoleId == null)
@@ -167,7 +166,7 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
                     return RedirectToAction("", "Login");
                 }
 
-                // Fetch the existing admin data based on the RoleId
+                
                 var admin = _db.Accounts.Include(a => a.Role)
                                          .FirstOrDefault(a => a.RoleId == adminRoleId);
 
@@ -209,7 +208,7 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
             }
             catch (Exception ex)
             {
-                // Log the error
+               
                 Console.WriteLine("Error in ChangePassword: " + ex.Message);
 
                 // Return an error response
