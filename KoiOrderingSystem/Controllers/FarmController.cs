@@ -53,7 +53,7 @@ namespace KoiOrderingSystem.Controllers
         }
 
 
-        public async Task<IActionResult> FarmDetail(int id) // Nhận FarmId từ URL
+        public async Task<IActionResult> FarmDetail(int id) 
         {
             // Lấy thông tin farm và các giống Koi liên quan
             var farm = await _db.KoiFarms
