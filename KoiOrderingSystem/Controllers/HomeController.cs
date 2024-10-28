@@ -52,7 +52,7 @@ namespace KoiOrderingSystem.Controllers
         .Take(3) 
         .ToList();
 
-            // Pass the Koi varieties to the view
+            
             ViewBag.KoiVarieties = koiVarieties;
             ViewBag.Feedbacks = feedbacks;
             ViewBag.Title = "KOI88 - Nishikigoi Ordering Service";
