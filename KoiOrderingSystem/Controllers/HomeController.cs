@@ -29,10 +29,10 @@ namespace KoiOrderingSystem.Controllers
 
         public ActionResult Homepage()
         {
-            // Lấy AdminRoleId từ session
+       
             var adminRoleId = HttpContext.Session.GetInt32("AdminRoleId");
 
-            // Nếu role từ 2 đến 5, điều hướng đến /Admin
+           
             if (adminRoleId != null && adminRoleId >= 2 && adminRoleId <= 5)
             {
                 return RedirectToAction("Home", "Admin");
@@ -52,7 +52,7 @@ namespace KoiOrderingSystem.Controllers
         .Take(3) 
         .ToList();
 
-            // Pass the Koi varieties to the view
+            
             ViewBag.KoiVarieties = koiVarieties;
             ViewBag.Feedbacks = feedbacks;
             ViewBag.Title = "KOI88 - Nishikigoi Ordering Service";
@@ -101,10 +101,10 @@ namespace KoiOrderingSystem.Controllers
         public async Task<IActionResult> KoiVarieties()
         {
             var koiVarieties = await _db.Varieties
-                .OrderByDescending(v => v.VarietyId) // Order by VarietyId descending
+                .OrderByDescending(v => v.VarietyId) 
                 .ToListAsync();
 
-            return View(koiVarieties); // Pass the list to the view
+            return View(koiVarieties); 
         }
 
 

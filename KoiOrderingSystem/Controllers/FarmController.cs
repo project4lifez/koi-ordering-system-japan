@@ -45,7 +45,7 @@ namespace KoiOrderingSystem.Controllers
             // Gọi phương thức chung để lấy danh sách phân trang
             var (farmsOnPage, totalPages, totalFarms) = await GetPagedFarms(query, page, pageSize);
 
-            // Truyền thông tin về trang hiện tại và tổng số trang vào ViewBag
+            
             ViewBag.CurrentPage = page;
             ViewBag.TotalPages = totalPages;
 
@@ -53,7 +53,7 @@ namespace KoiOrderingSystem.Controllers
         }
 
 
-        public async Task<IActionResult> FarmDetail(int id) // Nhận FarmId từ URL
+        public async Task<IActionResult> FarmDetail(int id) 
         {
             // Lấy thông tin farm và các giống Koi liên quan
             var farm = await _db.KoiFarms
@@ -98,7 +98,7 @@ namespace KoiOrderingSystem.Controllers
             // Gọi phương thức chung để lấy danh sách phân trang
             var (farmsOnPage, totalPages, totalFarms) = await GetPagedFarms(query, page, pageSize);
 
-            // Truyền thông tin về trang hiện tại và tổng số trang vào ViewBag
+           
             ViewBag.CurrentPage = page;
             ViewBag.TotalPages = totalPages;
 

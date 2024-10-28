@@ -17,17 +17,17 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
 
 		public IActionResult ProfileDetail(int accountId)
 		{
-			// Lấy thông tin tài khoản từ cơ sở dữ liệu, bao gồm thông tin vai trò
+			
 			var account = _db.Accounts
 							 .Include(a => a.Role) // Nạp thông tin vai trò
 							 .FirstOrDefault(a => a.AccountId == accountId);
 
 			if (account == null)
 			{
-				return NotFound(); // Trả về lỗi nếu không tìm thấy tài khoản
+				return NotFound(); 
 			}
 
-			return View(account); // Truyền model vào View
+			return View(account); 
 		}
 
 		[HttpPost]
@@ -40,14 +40,14 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
 			var account = _db.Accounts.FirstOrDefault(a => a.AccountId == accountId);
 			if (account == null)
 			{
-				return NotFound(); // Trả về lỗi nếu không tìm thấy tài khoản
+				return NotFound(); 
 			}
 
 			// Cập nhật trạng thái
 			account.Status = isActive;
-			_db.SaveChanges(); // Lưu thay đổi vào cơ sở dữ liệu
+			_db.SaveChanges(); 
 
-			// Trả về một phản hồi hoặc chuyển hướng về trang nào đó
+			
 			return RedirectToAction("ProfileDetail", "Admin", new { accountId = accountId });
 		}
 
