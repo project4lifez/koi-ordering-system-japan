@@ -59,13 +59,25 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
                 return View("Consulting", booking);
             }
 
-            if (status == "checkout" && booking.Status != "Checked in")
+            // Kiểm tra trạng thái trước khi cho phép "checkout"
+            if (status == "checkout")
             {
-                ModelState.AddModelError("StatusError", "Cannot check out without checking in first.");
-                return View("Consulting", booking);
-            }
+                if (booking.Status != "Checked in")
+                {
+                    ModelState.AddModelError("StatusError", "Cannot check out without checking in first.");
+                    return View("Consulting", booking);
+                }
 
-            if (status == "checkin")
+                // Kiểm tra nếu Po chưa tồn tại hoặc trạng thái của Po không phải là "Deposited"
+                if (booking.Po == null || booking.Po.Status != "Deposited")
+                {
+                    ModelState.AddModelError("StatusError", "Cannot 'check out' without Po status being 'deposited'.");
+                    return View("Consulting", booking);
+                }
+
+                booking.Status = "Checked out";
+            }
+            else if (status == "checkin")
             {
                 booking.Status = "Checked in";
 
@@ -84,16 +96,13 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
                     booking.Po.Status = "Created"; // Cập nhật Po nếu đã tồn tại
                 }
             }
-            else if (status == "checkout")
-            {
-                booking.Status = "Checked out";
-            }
 
             _db.SaveChanges();
 
             TempData["SuccessMessage"] = $"Booking status updated to '{booking.Status}' successfully.";
             return Redirect("Consulting?Bookingid=" + bookingId);
         }
+
 
 
 

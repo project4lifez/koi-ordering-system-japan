@@ -7,8 +7,6 @@ public partial class KoiFarm
 {
     public int FarmId { get; set; }
 
-    public int? KoiId { get; set; }
-
     public string? FarmName { get; set; }
 
     public string? Location { get; set; }
@@ -16,8 +14,6 @@ public partial class KoiFarm
     public string? ContactInfo { get; set; }
 
     public string? ImageUrl { get; set; }
-
-    public virtual KoiFish? Koi { get; set; }
 
     public virtual ICollection<Podetail> Podetails { get; set; } = new List<Podetail>();
 

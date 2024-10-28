@@ -33,12 +33,13 @@
         .detail-item {
             margin: 15px 0;
             padding: 10px;
-            border-left: 4px solid #009688; /* Accent line */
+            border-left: 4px solid #186ff5; /* Accent color for labels matching button color */
+            ; /* Accent line */
             background-color: #f9f9f9; /* Light background for each detail */
         }
 
             .detail-item strong {
-                color: #009688; /* Accent color for labels */
+                color: #186ff5; /* Accent color for labels matching button color */
             }
 
         .rating {
@@ -50,7 +51,7 @@
             display: inline-block;
             margin-top: 20px;
             padding: 12px 25px;
-            background-color: #009688;
+            background-color: #186ff5;
             color: #fff;
             text-decoration: none;
             border-radius: 5px;
@@ -61,8 +62,11 @@
         }
 
             .back-button:hover {
-                background-color: #00796b;
-                color: #e0f7fa; /* Slightly lighter text color on hover */
+                background: linear-gradient(45deg, #4e54c8, #8f94fb);
+                border-color: #8f94fb;
+                color: white;
+                transform: scale(1.05);
+                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
             }
 
             .back-button:active {

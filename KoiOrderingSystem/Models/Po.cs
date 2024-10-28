@@ -17,6 +17,8 @@ public partial class Po
 
     public string? DeliveryLocation { get; set; }
 
+    public string? Note { get; set; }
+
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
     public virtual ICollection<Podetail> Podetails { get; set; } = new List<Podetail>();

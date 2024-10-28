@@ -105,7 +105,7 @@
             <div class="col-md-4">
                 <select id="statusFilter" class="form-select">
                     <option value="">Filter by Status</option>
-                    @if (adminRoleId == 2 || adminRoleId == 3)
+                    @if (adminRoleId == 3)
                     {
                         <option value="Requested">Requested</option>
                         <option value="Processing">Processing</option>
@@ -123,6 +123,18 @@
                         <option value="Checked out">Checked out</option>
                         <option value="Delivering">Delivering</option>
                         <option value="Delivered">Delivered</option>
+                        <option value="Failed">Failed</option>
+
+                    }
+                    @if (adminRoleId == 2)
+                    {
+                        <option value="Requested">Requested</option>
+                        <option value="Processing">Processing</option>
+                        <option value="Rejected">Rejected</option>
+                        <option value="Accepted">Accepted</option>
+                        <option value="Failed">Failed</option>
+                        <option value="Refunding">Refunding</option>
+
                     }
                 </select>
             </div>
@@ -168,7 +180,7 @@
                             bool renderRow = false;
 
                             // Role 2: "Requested", "Processing", "Rejected", "Accepted"
-                            if (adminRoleId == 2 && (booking.Status == "Requested" || booking.Status == "Processing" || booking.Status == "Rejected" || booking.Status == "Accepted"))
+                            if (adminRoleId == 2 && (booking.Status == "Requested" || booking.Status == "Processing" || booking.Status == "Rejected" || booking.Status == "Accepted" || booking.Status == "Failed" || booking.Status == "Refunding" || booking.Status == "Lost Deposit" || booking.Status == "Refunded"))
                             {
                                 renderRow = true;
                             }
@@ -186,7 +198,7 @@
                             }
 
                             // Role 5: "Checked out", "Delivering", "Delivered"
-                            if (adminRoleId == 5 && (booking.Status == "Checked out" || booking.Status == "Delivering" || booking.Status == "Delivered"))
+                            if (adminRoleId == 5 && (booking.Status == "Checked out" || booking.Status == "Delivering" || booking.Status == "Delivered" || booking.Status == "Failed"))
                             {
                                 renderRow = true;
                             }
@@ -214,6 +226,7 @@
                                                 "accepted" => "badge-confirm",
                                                 "delivered" => "badge-confirm",
                                                 "confirmed" => "badge-confirm",
+                                                "failed"     => "badge-cancel",
                                                 _ => "badge-other"
                                             };
                                         }

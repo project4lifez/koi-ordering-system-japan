@@ -355,10 +355,9 @@
                 <tbody>
                     @if (Model != null && Model.Any())
                     {
-                        int currentPage = ViewBag.CurrentPages ?? 1; // Nếu ViewBag.CurrentPage là null, đặt giá trị mặc định là 1
-                        int pageSize = ViewBag.PageSizes ?? 10;      // Nếu ViewBag.PageSize là null, đặt giá trị mặc định là 10
-
-                        int index = 1 + (currentPage - 1) * pageSize; // Tính toán chỉ số bắt đầu
+                        int currentPage = ViewBag.CurrentPages ?? 1; 
+                        int pageSize = ViewBag.PageSizes ?? 10;      
+                        int index = 1 + (currentPage - 1) * pageSize; 
                         foreach (var booking in Model)
                         {
                             <tr>
@@ -373,6 +372,16 @@
                                     else if (booking.Status == "Canceled")
                                     {
                                         <span class="custom-canceled">Canceled</span>
+                                    }
+                                    else if (booking.Status == "Lost Deposit")
+                                    {
+                                        <span class="custom-canceled">Lost Deposit</span>
+
+                                    }
+                                    else if (booking.Status == "Refunded")
+                                    {
+                                        <span class="custom-delivered">Refunded</span>
+
                                     }
                                 </td>
                                 <td class="custom-td">
@@ -416,7 +425,7 @@
                                     }
                                 </td>
                             </tr>
-                            index++; // Increment counter
+                            index++; 
                         }
                     }
                     else
@@ -427,7 +436,7 @@
                     }
                 </tbody>
             </table>
-            <!-- Ensure the pagination controls are directly below the table -->
+           
             <div class="pagination-container" style="margin-top: 20px; text-align: center;">
                 <ul class="pagination justify-content-center">
                     <li class="page-item @(ViewBag.CurrentPages == 1 ? "disabled" : "")">
@@ -447,7 +456,6 @@
       </div>
     </div>
 
-    <!-- Feedback Modal -->
     <div class="modal fade" id="feedbackModal" tabindex="-1" aria-labelledby="feedbackModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">

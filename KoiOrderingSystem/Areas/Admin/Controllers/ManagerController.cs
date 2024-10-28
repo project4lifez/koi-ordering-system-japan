@@ -2,7 +2,12 @@
 using KoiOrderingSystem.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using System;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
+using System.Threading.Tasks;
 
 namespace KoiOrderingSystem.Areas.Admin.Controllers
 {
@@ -10,30 +15,30 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
     public class ManagerController : BaseController
     {
         private readonly Koi88Context _db;
+        private readonly SmtpSettings _smtpSettings;
 
-        public ManagerController(Koi88Context db)
+        public ManagerController(Koi88Context db, IOptions<SmtpSettings> smtpSettings)
         {
             _db = db;
+            _smtpSettings = smtpSettings.Value;
         }
 
         // Action to display the Manager page
         public IActionResult Manager(int id)
         {
-            // Retrieve the RoleId from the session
             var adminRoleId = HttpContext.Session.GetInt32("AdminRoleId");
 
-            // Check if the RoleId is null or not equal to 2
             if (adminRoleId == null || adminRoleId != 2)
             {
                 return NotFound("You do not have permission to access this page.");
             }
 
-            // Fetch the booking along with the related trip using Include
             var booking = _db.Bookings
                 .Include(b => b.Trip)
                 .ThenInclude(t => t.TripDetails)
-                .Include(b => b.Po)                      // Include the related PO
+                .Include(b => b.Po)
                 .ThenInclude(po => po.Podetails)
+                .ThenInclude(podetail => podetail.Koi)
                 .FirstOrDefault(b => b.BookingId == id);
 
             if (booking == null)
@@ -41,67 +46,80 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
                 return NotFound($"Booking with ID {id} not found.");
             }
 
-            // Pass the booking information to the view
             return View(booking);
         }
 
-
         // Action to update status
         [HttpPost]
-        public IActionResult UpdateStatusManager(int bookingId, string status)
+        public async Task<IActionResult> UpdateStatusManager(int bookingId, string status)
         {
-            // Fetch the booking by ID
             var booking = _db.Bookings
-                             .Include(b => b.BookingPayments) // Include BookingPayments to check existing payments
+                             .Include(b => b.BookingPayments)
+                             .Include(b => b.Po).ThenInclude(po => po.Podetails)
+                             .Include(b => b.Trip)
                              .FirstOrDefault(b => b.BookingId == bookingId);
 
             if (booking != null)
             {
-                // Prevent updates if the current status is "Requested"
                 if (booking.Status == "Requested")
                 {
-                    // Set error message in TempData and redirect to Manager page
                     ModelState.AddModelError("", "Cannot update status from 'Requested'.");
                     return View("Manager", booking);
                 }
 
-                // Update the booking status
                 booking.Status = status;
-
-                // Update QuoteSentDate
                 booking.QuoteSentDate = DateOnly.FromDateTime(DateTime.Now);
 
-                // Update QuoteApprovedDate and handle BookingPayment creation
                 if (status == "Accepted")
                 {
                     booking.QuoteApprovedDate = DateOnly.FromDateTime(DateTime.Now);
 
-                    // Check if a BookingPayment already exists for this booking
-                    var existingPayment = booking.BookingPayments.FirstOrDefault();
-                    if (existingPayment == null)
+                    if (!booking.BookingPayments.Any())
                     {
-                        // Create a new BookingPayment if it doesn't exist
                         var bookingPayment = new BookingPayment
                         {
-                            Status = "Pending", // Set the initial status
-                            BookingId = booking.BookingId // Assign the BookingId to the new BookingPayment
+                            Status = "Pending",
+                            BookingId = booking.BookingId
                         };
 
-                        // Add the new BookingPayment to the context
                         _db.BookingPayments.Add(bookingPayment);
                     }
                 }
 
-                // Prevent QuoteApprovedDate from updating if status is "Rejected" or "Canceled"
-                if (status == "Rejected" || status == "Canceled")
+                if (status == "Rejected" || status == "Canceled" || status == "Lost Deposit" || status == "Refunding" || status == "Refunded")
                 {
-                    booking.QuoteApprovedDate = null; // Optionally reset it
+                    booking.QuoteApprovedDate = null;
                 }
 
-                // Save the changes
-                _db.SaveChanges();
+                if (status == "Lost Deposit")
+                {
+                    TempData["InfoMessage"] = "Booking status updated to 'Lost Deposit'.";
+                    await SendLostDepositEmail(booking); // Gửi email khi trạng thái là "Lost Deposit"                }
+                }
+                else if (status == "Refunding")
+                {
+                    TempData["InfoMessage"] = "Booking status updated to 'Refunding'. Processing refund.";
 
-                // Set a success message in TempData with updated status
+
+                    // Calculate Deposit Amount and Compensation
+                    decimal depositAmount = booking.Po?.Podetails?
+                                            .Where(pd => pd.PoId == booking.Po.PoId)
+                                            .GroupBy(pd => pd.FarmId)
+                                            .Sum(group => group.FirstOrDefault()?.Deposit ?? 0) ?? 0;
+
+                    // Điều chỉnh lại công thức để cộng depositAmount vào tổng rồi mới nhân 0.25
+                    decimal compensationAmount = (depositAmount + (booking.Po?.TotalAmount ?? 0)) * 0.25m; 
+                    decimal totalRefundAmount = depositAmount + compensationAmount;
+
+                    await SendRefundNotificationEmail(booking, depositAmount, compensationAmount, totalRefundAmount);
+                }
+                else if (status == "Refunded")
+                {
+                    TempData["InfoMessage"] = "Booking status updated to 'Refunded'. Refund completed.";
+
+                }
+
+                _db.SaveChanges();
                 TempData["SuccessMessage"] = $"Status updated to '{status}' successfully!";
             }
             else
@@ -109,9 +127,300 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
                 TempData["ErrorMessage"] = "Booking not found.";
             }
 
-            // Redirect back to the Manager page with updated status
             return Redirect("Manager?id=" + bookingId);
         }
+
+        // Method to send refund notification email
+        private async Task SendRefundNotificationEmail(Booking booking, decimal depositAmount, decimal compensationAmount, decimal totalRefundAmount)
+        {
+            var email = booking.Email;
+            var tripName = booking.Trip?.TripName ?? "Unknown Trip";
+            var fullname = booking.Fullname;
+            var mailMessage = new MailMessage
+            {
+                From = new MailAddress(_smtpSettings.SmtpUser),
+                Subject = "Refund Notification for Your Koi88 Order",
+                IsBodyHtml = true,
+                Body = $@"
+        <html>
+        <head>
+            <style>
+                body {{
+                    font-family: Arial, sans-serif;
+                    background-color: #f7f9fc !important;
+                    color: #333 !important;
+                    padding: 20px !important;
+                }}
+                .container {{
+                    max-width: 600px !important;
+                    margin: auto !important;
+                    background: #ffffff !important;
+                    padding: 30px !important;
+                    border-radius: 8px !important;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+                    border: 1px solid #e0e0e0 !important;
+                    overflow: visible !important;
+                }}
+                h1 {{
+                    color: #007BFF !important;
+                    font-size: 24px !important;
+                    margin-bottom: 20px !important;
+                    text-align: center !important;
+                }}
+                p {{
+                    font-size: 16px !important;
+                    line-height: 1.6 !important;
+                    color: #555 !important;
+                    margin-bottom: 15px !important;
+                }}
+                .highlight {{
+                    color: #007BFF !important;
+                    font-weight: bold !important;
+                }}
+                .table-container {{
+                    margin: 20px 0 !important;
+                    font-size: 16px !important;
+                }}
+                table {{
+                    width: 100% !important;
+                    border-collapse: collapse !important;
+                    border: 1px solid #e0e0e0 !important;
+                }}
+                th {{
+                    background-color: #007BFF !important;
+                    color: white !important;
+                    padding: 10px !important;
+                    text-align: left !important;
+                }}
+                td {{
+                    padding: 10px !important;
+                    border-bottom: 1px solid #e0e0e0 !important;
+                    color: #333 !important;
+                }}
+                .footer {{
+                    margin-top: 20px !important;
+                    font-size: 14px !important;
+                    color: #777 !important;
+                    text-align: left !important;
+                }}
+            </style>
+        </head>
+        <body>
+            <div class='container'>
+                <h1>Refund Notification for Your Koi88 Order</h1>
+                <p>Dear <span class='highlight'>{booking.Fullname}</span>,</p>
+                <p>I hope this message finds you well. First and foremost, please accept our heartfelt apologies for the issue that occurred during the transportation of your koi order with Koi88. While we strive to ensure the safe delivery of every shipment, unfortunately, there was an incident that led to the loss of some koi.</p>
+                <p>We deeply regret this situation and are committed to making things right to protect your interests. To compensate for this unforeseen issue, we will be refunding the deposit you paid for the affected koi. Additionally, as a gesture of goodwill and to make up for any inconvenience, we will provide additional compensation amounting to <strong>25%</strong> of the total order Koi value.</p>
+                <p>To proceed with the refund and compensation, please provide us with your preferred <strong>payment method</strong> along with any necessary details so we can process this promptly.</p>
+                <div class='table-container'>
+                    <p><strong>Refund and Compensation Statement</strong></p>
+                    <p>BookingID: <span class='highlight'>{booking.BookingId}</span></p>
+                    <p>Trip Name: <span class='highlight'>{tripName}</span></p>
+                    <table>
+                        <tr>
+                            <th>Item</th>
+                            <th>Amount</th>
+                        </tr>
+                        <tr>
+                            <td>Deposit to Farm:</td>
+                            <td>{depositAmount:C} USD</td>
+                        </tr>
+                        <tr>
+                            <td>Compensation for Loss (25%):</td>
+                            <td>{compensationAmount:C} USD</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Total Refund:</strong></td>
+                            <td><strong>{totalRefundAmount:C} USD</strong></td>
+                        </tr>
+                    </table>
+                </div>
+                <p>Once again, we sincerely apologize for any inconvenience this may have caused. We greatly value your business and are dedicated to resolving this situation in a manner that meets your expectations. If you have any further questions, please do not hesitate to reach out.</p>
+                <p>Thank you very much for your understanding, and we look forward to hearing from you.</p>
+                <div class='footer'>
+                    <p>Warm regards,<br>Manager<br>Koi88</p>
+                </div>
+            </div>
+        </body>
+        </html>"
+            };
+
+            mailMessage.To.Add(email);
+
+
+
+            try
+            {
+                using (var smtpClient = new SmtpClient(_smtpSettings.SmtpServer)
+                {
+                    Port = _smtpSettings.SmtpPort,
+                    Credentials = new NetworkCredential(_smtpSettings.SmtpUser, _smtpSettings.SmtpPass),
+                    EnableSsl = _smtpSettings.EnableSsl,
+                })
+                {
+                    await smtpClient.SendMailAsync(mailMessage);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error sending email: {ex.Message}");
+            }
+        }
+
+
+        private async Task SendLostDepositEmail(Booking booking)
+        {
+            // Đảm bảo truy vấn đầy đủ các liên kết từ Booking -> Po -> PoDetails -> Koi -> Farm
+            var bookingData = _db.Bookings
+                .Include(b => b.Po)
+                .ThenInclude(po => po.Podetails)
+                .ThenInclude(pd => pd.Koi)
+                .Include(b => b.Po)
+                .ThenInclude(po => po.Podetails)
+                .ThenInclude(pd => pd.Farm)
+                .FirstOrDefault(b => b.BookingId == booking.BookingId);
+
+            if (bookingData == null) return;
+
+            var email = bookingData.Email;
+            var deliveryLocation = bookingData.Po?.DeliveryLocation ?? "Unknown location";
+            var koiDeliveryDate = bookingData.Po?.KoiDeliveryDate;
+            var koiDeliveryTime = bookingData.Po?.KoiDeliveryTime;
+
+            // Chỉ tính tổng tiền cọc duy nhất một lần cho mỗi farm và ngày
+            var totalDepositOverall = bookingData.Po?.Podetails?
+                .GroupBy(pd => new { pd.Farm, pd.Day }) // Nhóm theo Farm và Ngày
+                .Sum(group => group.FirstOrDefault()?.Deposit ?? 0) ?? 0; // Tính tổng cọc duy nhất
+
+            // Nhóm thông tin theo FarmId và xử lý chi tiết về các Farm và cá Koi
+            var farmDetails = bookingData.Po?.Podetails?
+                .GroupBy(pd => new { pd.Farm, pd.Day }) // Nhóm theo Farm và Ngày đi
+                .Select(farmGroup => new
+                {
+                    FarmName = farmGroup.Key.Farm?.FarmName ?? "Unknown farm",
+                    Day = farmGroup.Key.Day?.ToString("dd/MM/yyyy") ?? "Unknown date", // Ngày đi trang trại từ PoDetail.Day
+                    TotalDeposit = farmGroup.FirstOrDefault()?.Deposit ?? 0, // Lấy tổng cọc một lần cho mỗi farm với .FirstOrDefault()
+                    KoiList = farmGroup.Select(pd => new
+                    {
+                        KoiName = pd.Koi?.KoiName ?? "Unknown Koi",
+                        Quantity = pd.Quantity,
+                        KoiPrice = pd.TotalKoiPrice // Sử dụng TotalKoiPrice
+                    }).ToList()
+                }).ToList();
+
+            // Tạo nội dung bảng hiển thị chi tiết về các Farm, ngày và cá Koi với các cột riêng biệt
+            var koiTableRows = string.Join("", farmDetails?.Select(farm => $@"
+    <tr>
+        <td>{farm.Day}</td> <!-- Cột Ngày đi trang trại -->
+        <td>{farm.FarmName}</td>
+        <td>{farm.TotalDeposit:C}</td> <!-- Hiển thị tổng cọc một lần cho mỗi farm -->
+        <td>
+            <table style='width:100%; border-collapse:collapse;'>
+                <thead>
+                    <tr>
+                        <th style='border: 1px solid #e0e0e0; padding: 10px;'>Koi Fish</th>
+                        <th style='border: 1px solid #e0e0e0; padding: 10px;'>Quantity</th>
+                        <th style='border: 1px solid #e0e0e0; padding: 10px;'>Price (USD)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {string.Join("", farm.KoiList.Select(koi => $@"
+                    <tr>
+                        <td style='border: 1px solid #e0e0e0; padding: 10px;'>{koi.KoiName}</td>
+                        <td style='border: 1px solid #e0e0e0; padding: 10px;'>{koi.Quantity}</td>
+                        <td style='border: 1px solid #e0e0e0; padding: 10px;'>{koi.KoiPrice:C}</td>
+                    </tr>"))}
+                </tbody>
+            </table>
+        </td>
+    </tr>
+") ?? new List<string>());
+
+            // Nội dung email
+            var mailMessage = new MailMessage
+            {
+                From = new MailAddress(_smtpSettings.SmtpUser),
+                Subject = "Notification Regarding the Delivery Status of Koi Order - Koi88 Order",
+                IsBodyHtml = true,
+                Body = $@"
+<html>
+<head>
+    <style>
+        body {{ font-family: Arial, sans-serif; background-color: #f7f9fc; color: #333; padding: 20px; }}
+        .container {{ max-width: 600px; margin: auto; background: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }}
+        h1 {{ color: #007BFF; font-size: 24px; margin-bottom: 20px; text-align: center; }}
+        p {{ font-size: 16px; line-height: 1.6; color: #555; margin-bottom: 15px; }}
+        .highlight {{ color: #007BFF; font-weight: bold; }}
+        .table-container {{ margin: 20px 0; font-size: 16px; }}
+        table {{ width: 100%; border-collapse: collapse; border: 1px solid #e0e0e0; }}
+        th, td {{ padding: 10px; border: 1px solid #e0e0e0; color: #333; text-align: center; }} /* Căn giữa nội dung */
+        .footer {{ margin-top: 20px; font-size: 14px; color: #777; }}
+    </style>
+</head>
+<body>
+    <div class='container'>
+        <h1>Koi Order Delivery Status ID: #{booking.BookingId}</h1>
+        <p>Dear <span class='highlight'>{bookingData.Fullname}</span>,</p>
+        <p>I am a Manager of the Koi transportation department at Koi88. We are writing this letter to inform you about the status of the delivery regarding your order.</p>
+        <p>Per our agreed schedule, we arranged for delivery of the Koi fish to <span class='highlight'>{deliveryLocation}</span> on <span class='highlight'>{koiDeliveryDate}</span> at <span class='highlight'>{koiDeliveryTime}</span>. However, we received notification from our delivery team on the scheduled day that you either declined or refused to accept the delivery.</p>
+        <p>As outlined in our policy, if a customer declines to accept a delivery on the agreed date, we retain the right to withhold 100% of the deposit paid to the farm, and a refund cannot be issued in this case.</p>
+        <p>Please find below the details of your Koi fish purchase, including the purchase date, the farm name, and the total deposit for the order:</p>
+        <div class='table-container'>
+            <p><strong>Koi Purchase Details</strong></p>
+            <p><strong>Trip Name: {booking.Trip?.TripName}</strong></p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Day</th>
+                        <th>Farm</th>
+                        <th>Deposit</th>
+                        <th>Koi Fish Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {koiTableRows}
+                </tbody>
+            </table>
+            <p><strong>Total Deposit:</strong> {totalDepositOverall} USD</p> <!-- Tổng cọc toàn bộ đơn hàng -->
+        </div>
+        <p>We sincerely hope for your cooperation and understanding to ensure that the delivery process proceeds smoothly and as planned. If you have any questions or need further assistance, please feel free to contact us at our hotline: <strong>0123-456-789</strong>.</p>
+        <div class='footer'>
+            <p>Sincerely,<br>Manager<br>Koi88</p>
+        </div>
+    </div>
+</body>
+</html>"
+            };
+
+
+            mailMessage.To.Add(email);
+
+            // Gửi email
+            try
+            {
+                using (var smtpClient = new SmtpClient(_smtpSettings.SmtpServer)
+                {
+                    Port = _smtpSettings.SmtpPort,
+                    Credentials = new NetworkCredential(_smtpSettings.SmtpUser, _smtpSettings.SmtpPass),
+                    EnableSsl = _smtpSettings.EnableSsl,
+                })
+                {
+                    await smtpClient.SendMailAsync(mailMessage);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error sending email: {ex.Message}");
+            }
+        }
+
+
+
+
+
+
+
+
 
 
 

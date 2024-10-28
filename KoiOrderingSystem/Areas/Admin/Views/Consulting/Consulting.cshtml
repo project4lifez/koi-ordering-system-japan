@@ -109,7 +109,7 @@
         <!-- Form Inline (Same Row) -->
         <a class="btn btn-primary mb-2" href="/Admin/PoDetail/PoDetail?bookingId=@Model.BookingId" style="margin-top: 8px">Update Koi Order</a>
 
-        <form action="/Admin/Consulting/UpdateStatus" method="post">
+        <form action="/Admin/Consulting/UpdateStatus" method="post" id="statusForm">
             <input type="hidden" name="bookingId" value="@Model.BookingId" />
 
             <div class="form-inline mb-4">
@@ -117,13 +117,14 @@
                     <option value="checkin" @(Model.Status == "Checked in" ? "selected" : "")>Check in</option>
                     <option value="checkout" @(Model.Status == "Checked out" ? "selected" : "")>Check out</option>
                 </select>
-                <button class="btn btn-success"
+                <button type="submit" class="btn btn-success"
                 @(Model?.Status != null &&
                     (string.Equals(Model.Status, "Delivered", StringComparison.OrdinalIgnoreCase) ||
                     string.Equals(Model.Status, "Delivering", StringComparison.OrdinalIgnoreCase) ||
                     string.Equals(Model.Status, "Checked out", StringComparison.OrdinalIgnoreCase) ||
                     string.Equals(Model.Status, "Accepted", StringComparison.OrdinalIgnoreCase) ||
                     string.Equals(Model.Status, "Rejected", StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(Model.Status, "Failed", StringComparison.OrdinalIgnoreCase) ||
                     string.Equals(Model.Status, "Canceled", StringComparison.OrdinalIgnoreCase) ||
                     string.Equals(Model.Status, "Processing", StringComparison.OrdinalIgnoreCase) ||
                     string.Equals(Model.Status, "Requested", StringComparison.OrdinalIgnoreCase)) ? "disabled" : "")>
@@ -133,7 +134,7 @@
         </form>
 
         <!-- Modal for Update Koi Order -->
-       
+
 
         <div class="row">
             <!-- Left Column: Customer Information and Updated Information -->
@@ -159,7 +160,7 @@
                         <p><strong>Delivery Time:</strong> <span id="updated-time">@Model.Po?.KoiDeliveryTime</span></p>
                         <p><strong>Delivery Date:</strong> <span id="updated-date">@Model.Po?.KoiDeliveryDate</span></p>
                         <p><strong>Delivery Location:</strong> <span id="updated-location">@Model.Po?.DeliveryLocation</span></p>
-                       
+
                         <p>
                             <strong>Status Po:</strong>
                             <span id="updated-status">@Model.Po?.Status</span>
@@ -202,12 +203,12 @@
                     ? Model.Po.KoiDeliveryTime.Value.ToString(@"hh\:mm")
                     : "")" />
                                 </div>
-                          
-                            <div class="form-group">
-                                <label>Delivery Location</label>
-                                <input type="text" name="deliveryLocation" class="form-control" value="@Model.Po?.DeliveryLocation" />                          
-                            </div>
-                           
+
+                                <div class="form-group">
+                                    <label>Delivery Location</label>
+                                    <input type="text" name="deliveryLocation" class="form-control" value="@Model.Po?.DeliveryLocation" />
+                                </div>
+
                                 <button type="submit" class="btn btn-primary mt-3"
                                 @(Model.Status != "Checked in" && Model.Status != "Checked out" ? "disabled" : "")>
                                     Update Delivery
@@ -217,7 +218,7 @@
                 </div>
             </div>
         </div>
-       
+
 
         <!-- Trip Information Section -->
         <div class="row">
@@ -258,6 +259,16 @@
     </main>
 
     <script>
+
+        document.getElementById('statusForm').onsubmit = function (e) {
+            const status = document.getElementById('status').value;
+            if (status == 'checkout') {
+                const confirmMessage = "Are you sure you want to set the status to 'Checked out'? This action cannot be undone.";
+                if (!confirm(confirmMessage)) {
+                    e.preventDefault();
+                }
+            }
+        };
         // Get modal element
         var modal = document.getElementById("updateModal");
 
@@ -283,5 +294,7 @@
                 modal.style.display = "none";
             }
         }
+
+       
     </script>
 </body>

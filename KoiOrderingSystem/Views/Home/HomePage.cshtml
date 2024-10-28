@@ -1067,70 +1067,24 @@
         <div class="container">
             <div class="row g-4">
                 <!-- Asagi Koi -->
-                <div class="col-lg-3 col-md-6">
-                    <div class="card border-0 shadow-sm h-100 koi-card">
-                        <div class="img-container">
-                            <img src="https://i0.wp.com/koitalk.com/wp-content/uploads/2023/12/Asagi.jpg?resize=683%2C1024&ssl=1" class="card-img-top img-fluid" alt="Asagi Koi">
-                        </div>
-                        <div class="card-body text-center d-flex flex-column">
-                            <h5 class="card-title text-danger">Asagi Koi</h5>
-                            <p class="card-text">Gray-green scales, symmetrical pattern</p>
-                        </div>
-                        <div class="card-footer text-center border-0 bg-transparent d-flex justify-content-between">
-                            <a href="#" class="btn btn-sm btn-outline-primary detail-link">Detail</a>
-                            <a href="#" class="btn btn-sm btn-outline-success contact-link">Contact</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Goshiki Koi -->
-                <div class="col-lg-3 col-md-6">
-                    <div class="card border-0 shadow-sm h-100 koi-card">
-                        <div class="img-container">
-                            <img src="https://hanoverkoifarms.com/wp-content/uploads/2017/01/Goshiki-7.jpg" class="card-img-top img-fluid" alt="Goshiki Koi">
-                        </div>
-                        <div class="card-body text-center d-flex flex-column">
-                            <h5 class="card-title text-danger">Goshiki Koi</h5>
-                            <p class="card-text">White background combined with red, blue, black, gray</p>
-                        </div>
-                        <div class="card-footer text-center border-0 bg-transparent d-flex justify-content-between">
-                            <a href="#" class="btn btn-sm btn-outline-primary detail-link">Detail</a>
-                            <a href="#" class="btn btn-sm btn-outline-success contact-link">Contact</a>
+                @foreach (var variety in ViewBag.KoiVarieties)
+                {
+                    <div class="col-lg-3 col-md-6">
+                        <div class="card border-0 shadow-sm h-100 koi-card">
+                            <div class="img-container">
+                                <img src="@variety.ImageUrl" class="card-img-top img-fluid" alt="@variety.VarietyName">
+                            </div>
+                            <div class="card-body text-center d-flex flex-column">
+                                <h5 class="card-title text-danger">@variety.VarietyName</h5>
+                                <p class="card-text">@variety.Description</p>
+                            </div>
+                            <div class="card-footer text-center border-0 bg-transparent d-flex justify-content-between">
+                                <a href="/Variety/VarietyDetail?id=@variety.VarietyId" class="btn btn-sm btn-outline-primary detail-link">Detail</a>
+                                <a href="#" class="btn btn-sm btn-outline-success contact-link">Contact</a>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <!-- Taisho Sanshoku Koi -->
-                <div class="col-lg-3 col-md-6">
-                    <div class="card border-0 shadow-sm h-100 koi-card">
-                        <div class="img-container">
-                            <img src="https://ran.com.vn/wp-content/uploads/2021/02/TAISHO-SANSHOKU-767x1024.jpeg" class="card-img-top img-fluid" alt="Taisho Sanshoku Koi">
-                        </div>
-                        <div class="card-body text-center d-flex flex-column">
-                            <h5 class="card-title text-danger">Taisho Sanshoku Koi</h5>
-                            <p class="card-text">White, red, black colors mixed evenly</p>
-                        </div>
-                        <div class="card-footer text-center border-0 bg-transparent d-flex justify-content-between">
-                            <a href="#" class="btn btn-sm btn-outline-primary detail-link">Detail</a>
-                            <a href="#" class="btn btn-sm btn-outline-success contact-link">Contact</a>
-                        </div>
-                    </div>
-                </div>
-                <!-- Shiro Utsuri Koi -->
-                <div class="col-lg-3 col-md-6">
-                    <div class="card border-0 shadow-sm h-100 koi-card">
-                        <div class="img-container">
-                            <img src="https://www.grandkoi.com/wp-content/uploads/2021/04/6647-2.png" class="card-img-top img-fluid" alt="Shiro Utsuri Koi">
-                        </div>
-                        <div class="card-body text-center d-flex flex-column">
-                            <h5 class="card-title text-danger">Shiro Utsuri Koi</h5>
-                            <p class="card-text">White background color, strong black pattern</p>
-                        </div>
-                        <div class="card-footer text-center border-0 bg-transparent d-flex justify-content-between">
-                            <a href="#" class="btn btn-sm btn-outline-primary detail-link">Detail</a>
-                            <a href="#" class="btn btn-sm btn-outline-success contact-link">Contact</a>
-                        </div>
-                    </div>
-                </div>
+                }
                 <div class="text-center mt-4">
                     <a href="/Variety" class="btn btn-primary view-more-btn">View More</a>
                 </div>
@@ -1288,55 +1242,25 @@
                 <h2 class="feedback-title">Client Feedback</h2>
                 <div class="feedback-carousel">
                     <!-- Feedback 1 -->
-                    <div class="feedback-card">
-                        <div class="feedback-avatar">
-                            <img src="https://via.placeholder.com/80" alt="Avatar">
-                        </div>
-                        <div class="feedback-content">
-                            <p class="feedback-text">"du ma dep vai lon!"</p>
-                            <p class="feedback-name">Khoa Phang</p>
-                            <div class="feedback-rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
+                    @foreach (var feedback in ViewBag.Feedbacks)
+                    {
+                        <div class="feedback-card">
+                            <div class="feedback-avatar">
+                                <img src="@(feedback.Customer.Account.ImageUrl ?? "https://via.placeholder.com/80")" alt="Avatar">
+                            </div>
+                            <div class="feedback-content">
+                                <p class="feedback-text">"@feedback.Comments"</p>
+                                <p class="feedback-name">Customer @feedback.CustomerId</p>
+                                <div class="feedback-rating">
+                                    @for (int i = 0; i < feedback.Rating; i++)
+                                    {
+                                        <i class="fas fa-star"></i>
+                                    }
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <!-- Feedback 2 -->
-                    <div class="feedback-card">
-                        <div class="feedback-avatar">
-                            <img src="https://via.placeholder.com/80" alt="Avatar">
-                        </div>
-                        <div class="feedback-content">
-                            <p class="feedback-text">"Dich vu 10 diem"</p>
-                            <p class="feedback-name">Le Van Viet</p>
-                            <div class="feedback-rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Feedback 3 -->
-                    <div class="feedback-card">
-                        <div class="feedback-avatar">
-                            <img src="https://via.placeholder.com/80" alt="Avatar">
-                        </div>
-                        <div class="feedback-content">
-                            <p class="feedback-text">"Amazing quality and quick response!"</p>
-                            <p class="feedback-name">Tai Con</p>
-                            <div class="feedback-rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                            </div>
-                        </div>
+                    }
+                 
                     </div>
                 </div>
 

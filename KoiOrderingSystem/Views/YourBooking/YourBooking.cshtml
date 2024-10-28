@@ -468,9 +468,17 @@
                                     }
                                     else if (booking.Status == "Delivering")
                                     {
-                                    <span class="custom-payment-available">Delivering</span>
+                                        <span class="custom-payment-available">Delivering</span>
                                     }
-                            </td>
+                                    else if (booking.Status == "Failed")
+                                    {
+                                    <span class="customer-canceled">Failed</span>
+                                    }
+                                    else if (booking.Status == "Refunding")
+                                    {
+                                    <span class="customer-completed">Refunding</span>
+                                    }
+                                </td>
                             <td class="custom-td">
                                     @if (booking.QuotedAmount.HasValue && booking.QuotedAmount > 0)
                                     {
@@ -565,6 +573,7 @@
 
         
     </div>
+    <!-- Modal HTML -->
     <div class="modal fade" id="feedbackModal" tabindex="-1" aria-labelledby="feedbackModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -598,7 +607,6 @@
                             <button type="submit" class="btn btn-primary">Submit Feedback</button>
                         </div>
                     </form>
-
                 </div>
             </div>
         </div>
@@ -642,6 +650,7 @@
                 });
             });
 
+
             // Đánh giá sao
             const stars = document.querySelectorAll('#starRating .fa-star');
             stars.forEach(star => {
@@ -660,6 +669,38 @@
                     }
                 });
             }
+        });
+
+        // Xử lý sự kiện submit của form feedback
+        document.getElementById('feedbackForm').addEventListener('submit', function (e) {
+            e.preventDefault(); // Ngăn hành động gửi form mặc định
+
+            // Lấy dữ liệu từ form
+            const formData = new FormData(this);
+
+            // Gửi yêu cầu AJAX
+            fetch('/YourBooking/SubmitFeedback', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => {
+                    if (response.ok) {
+                        alert("Submit Feedback Successfully!!!");
+
+                        // Ẩn modal sau khi gửi feedback thành công
+                        let feedbackModal = bootstrap.Modal.getInstance(document.getElementById('feedbackModal'));
+                        feedbackModal.hide();
+
+                        // Tải lại trang để cập nhật trạng thái nếu cần thiết
+                        location.reload();
+                    } else {
+                        alert("Failed to submit feedback. Please try again.");
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert("An error occurred. Please try again later.");
+                });
         });
 
           
