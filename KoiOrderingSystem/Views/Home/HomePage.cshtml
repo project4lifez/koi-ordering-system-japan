@@ -1,6 +1,5 @@
 ﻿@{
     ViewBag.Title = "KOI88 - Nishikigoi Ordering Service";
-    var language = Context.Session.GetString("language") ?? "en"; // Lấy ngôn ngữ từ session
 
 }
 
@@ -1091,21 +1090,6 @@
                                 <a href="/Variety/VarietyDetail?id=@variety.VarietyId" class="btn btn-sm btn-outline-primary detail-link">Detail</a>
                                 <a href="#" class="btn btn-sm btn-outline-success contact-link">Contact</a>
                             </div>
-                    </div>
-                </div>
-                <!-- Shiro Utsuri Koi -->
-                <div class="col-lg-3 col-md-6">
-                    <div class="card border-0 shadow-sm h-100 koi-card">
-                        <div class="img-container">
-                            <img src="https://www.grandkoi.com/wp-content/uploads/2021/04/6647-2.png" class="card-img-top img-fluid" alt="Shiro Utsuri Koi">
-                        </div>
-                        <div class="card-body text-center d-flex flex-column">
-                            <h5 class="card-title text-danger">Shiro Utsuri Koi</h5>
-                            <p class="card-text">White background color, strong black pattern</p>
-                        </div>
-                        <div class="card-footer text-center border-0 bg-transparent d-flex justify-content-between">
-                            <a href="#" class="btn btn-sm btn-outline-primary detail-link">Detail</a>
-                            <a href="#" class="btn btn-sm btn-outline-success contact-link">Contact</a>
                         </div>
                     </div>
                 }
@@ -1115,7 +1099,6 @@
             </div>
         </div>
     </div>
-    </section>
 
     <!-- Featured Services Section -->
     <section class="featured-service my-5">
@@ -1263,7 +1246,7 @@
             <div class="text-center mt-4">
                 <button class="btn btn-primary view-more-btn">View More</button>
             </div>
-           
+
 
             <section class="feedback-section">
                 <h2 class="feedback-title">Client Feedback</h2>
@@ -1284,35 +1267,26 @@
                                         <i class="fas fa-star"></i>
                                     }
                                 </div>
-                        <div class="feedback-content">
-                            <p class="feedback-text">"Amazing quality and quick response!"</p>
-                            <p class="feedback-name">Tai Con</p>
-                            <div class="feedback-rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
                             </div>
                         </div>
                     }
-                 
-                    </div>
+
                 </div>
-
-                <div class="feedback-navigation">
-                    <button class="nav-button" id="prev-feedback"><i class="fas fa-chevron-left"></i></button>
-                    <button class="nav-button" id="next-feedback"><i class="fas fa-chevron-right"></i></button>
-                </div>
-            </section>
-                
-
-
-
-
-
-
         </div>
+
+        <div class="feedback-navigation">
+            <button class="nav-button" id="prev-feedback"><i class="fas fa-chevron-left"></i></button>
+            <button class="nav-button" id="next-feedback"><i class="fas fa-chevron-right"></i></button>
+        </div>
+    </section>
+
+
+
+
+
+
+
+    </div>
     </section>
     <button class="back-to-top" onclick="scrollToTop()">↑</button>
 
