@@ -63,7 +63,7 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            // Fetch the existing admin data based on the RoleId
+            
             var admin = _db.Accounts.Include(a => a.Role)
                                      .FirstOrDefault(a => a.RoleId == adminRoleId);
 
@@ -100,14 +100,14 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
                 _db.SaveChanges();
             }
 
-            // Redirect back to the profile page
+           
             return RedirectToAction("Profile", "Admin", new { area = "" });
         }
 
         [HttpPost]
         public async Task<IActionResult> SaveAvatar(IFormFile avatar)
         {
-            // Retrieve AdminRoleId from the session
+           
             var adminRoleId = HttpContext.Session.GetInt32("AdminRoleId");
 
             if (adminRoleId == null)
