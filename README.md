@@ -61,7 +61,7 @@ We use **Bootstrap** for styling, ensuring a sleek and modern user interface wit
 
 We utilize **Bootstrap** for a rich set of UI components, allowing us to create a visually appealing Koi Ordering System. This framework ensures a modern design with responsive layouts. 
 
-For state management, we implement **JavaScript** to maintain a smooth and responsive user experience, enabling dynamic content updates and seamless interactions throughout the application.
+For state management, we implement **JavaScript** to maintain a smooth and responsive user experience, enabling dynamic content updates and seamless interactions throughout the
 
 
 ## 🌍 Future Development
