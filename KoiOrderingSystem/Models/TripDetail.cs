@@ -17,9 +17,9 @@ public partial class TripDetail
 
     public int? TripId { get; set; }
 
-    public virtual ICollection<KoiFarm> KoiFarms { get; set; } = new List<KoiFarm>();
+    public int? FarmId { get; set; }
+
+    public virtual KoiFarm? KoiFarm { get; set; }
 
     public virtual Trip? Trip { get; set; }
-
-    public virtual ICollection<Trip> Trips { get; set; } = new List<Trip>();
 }

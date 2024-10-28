@@ -1,0 +1,120 @@
+[33mcommit cba5b0d0454b976592c873133cbfb02653ee3bc1[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mDev[m[33m, [m[1;31morigin/Dev[m[33m)[m
+Merge: cae55cc 924831f
+Author: HoangViet204 <vietHQSE183402@fpt.edu.vn>
+Date:   Tue Oct 22 18:04:54 2024 +0700
+
+    Merge commit
+
+[33mcommit cae55cc6b5a96859cd180dc38f062980fe30a678[m[33m ([m[1;31morigin/ViewFarmCustomer[m[33m)[m
+Author: HoangViet204 <vietHQSE183402@fpt.edu.vn>
+Date:   Tue Oct 22 17:53:38 2024 +0700
+
+    Customer view farm
+
+[33mcommit 924831f91243bf682be81abc3e8ec26e4b252c41[m
+Author: Project4Life <trungdnse183494@fpt.edu.vn>
+Date:   Tue Oct 22 16:30:21 2024 +0700
+
+    update
+
+[33mcommit 2f65f7de1c94d4b149718a7821eaa79bcf2f7b14[m
+Author: Project4Life <trungdnse183494@fpt.edu.vn>
+Date:   Tue Oct 22 16:19:37 2024 +0700
+
+    Search Koi Fish, Variety, Farm and pagination (admin) and export report to excel (dashboard)
+
+[33mcommit 37f17bb1011cac8aec02a1e1f6b44e0cbcb12af7[m
+Author: Project4Life <trungdnse183494@fpt.edu.vn>
+Date:   Tue Oct 22 14:52:54 2024 +0700
+
+    Search YourBooking, Search BookingHistory, Search OrderList and pagination all that page
+
+[33mcommit 3eb059d8e945c9319c3a48d09d3c62d8a9e0e62b[m
+Author: Project4Life <trungdnse183494@fpt.edu.vn>
+Date:   Mon Oct 21 17:48:28 2024 +0700
+
+    Feedback(customer) and View Feedback(admin) and full functions
+
+[33mcommit 671bdd5d1478332729addac1931cceae39c0714f[m
+Author: Project4Life <trungdnse183494@fpt.edu.vn>
+Date:   Fri Oct 18 00:34:27 2024 +0700
+
+    update Koi Order, view Koi Order, status Po and function
+
+[33mcommit 87eda98fb3825273fccc4762562d3105d9b7774b[m
+Author: Project4Life <trungdnse183494@fpt.edu.vn>
+Date:   Wed Oct 16 17:39:11 2024 +0700
+
+    update crud koi fish, farm, variety, special variety and function
+
+[33mcommit 592b5dc91c387473f6dd251a8299361ce225b356[m
+Author: Project4Life <trungdnse183494@fpt.edu.vn>
+Date:   Wed Oct 16 02:36:50 2024 +0700
+
+    update status and session
+
+[33mcommit bd4f457a476fafa1ef1cd4d0fc68a56471d41168[m
+Author: Project4Life <trungdnse183494@fpt.edu.vn>
+Date:   Tue Oct 15 23:01:35 2024 +0700
+
+    update db
+
+[33mcommit 79cf4f3ff810799e7b5eab43ede2f1e6479c1c24[m
+Author: Project4Life <trungdnse183494@fpt.edu.vn>
+Date:   Tue Oct 15 20:55:50 2024 +0700
+
+    update dashboard, update session
+
+[33mcommit 626141a89410d197bb0bd623f02e29138369c017[m
+Author: Project4Life <trungdnse183494@fpt.edu.vn>
+Date:   Fri Oct 11 00:40:30 2024 +0700
+
+    Update PayPal, TripDetail, ViewPaypal, TinyMCEQuote, dashboard admin (function)
+
+[33mcommit 0fb76751bfcc0e7aff10fd60490f4b142d2913bd[m
+Author: Project4Life <trungdnse183494@fpt.edu.vn>
+Date:   Sun Oct 6 02:02:10 2024 +0700
+
+    Update Status and full Core flow
+
+[33mcommit 74cda9bea114a936fed46e6532279ef34169113f[m[33m ([m[1;31morigin/updatev5[m[33m, [m[1;32mupdatev5[m[33m)[m
+Author: Project4Life <trungdnse183494@fpt.edu.vn>
+Date:   Wed Oct 2 16:13:26 2024 +0700
+
+    phan quyen admin update
+
+[33mcommit 41604f713adfa00559c820c4e6135391ee406e84[m
+Author: Project4Life <trungdnse183494@fpt.edu.vn>
+Date:   Wed Oct 2 14:17:47 2024 +0700
+
+    update form booking view
+
+[33mcommit 2e11a21799fe31095e2a2dc95384fdb649a7e07c[m
+Author: Project4Life <trungdnse183494@fpt.edu.vn>
+Date:   Tue Oct 1 23:45:08 2024 +0700
+
+    update quote (view)
+
+[33mcommit 06457930f4bb26c8ec328bfd7a3e577cb3e84114[m
+Author: Project4Life <trungdnse183494@fpt.edu.vn>
+Date:   Tue Oct 1 22:51:30 2024 +0700
+
+     phan quyen va form booking and update db
+
+[33mcommit 963dd7aef32349ea010110eb01c6835840dc1d3d[m
+Author: Project4Life <trungdnse183494@fpt.edu.vn>
+Date:   Mon Sep 30 10:48:08 2024 +0700
+
+    update admin wed and google
+
+[33mcommit a7209f99b7fd830bbdf5c26d4cf16ac1045f89a6[m
+Author: Project4Life <trungdnse183494@fpt.edu.vn>
+Date:   Sun Sep 29 23:07:33 2024 +0700
+
+    updatev5
+
+[33mcommit 89fee83f118bd2dcaf3d70b2530396d6059d4b2a[m
+Author: Project4Life <trungdnse183494@fpt.edu.vn>
+Date:   Sun Sep 29 23:06:14 2024 +0700
+
+    Initial commit

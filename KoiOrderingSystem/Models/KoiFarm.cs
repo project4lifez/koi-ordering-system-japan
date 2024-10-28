@@ -31,7 +31,5 @@ public partial class KoiFarm
 
     public virtual ICollection<SpecialVariety> SpecialVarieties { get; set; } = new List<SpecialVariety>();
 
-    public virtual SpecialVariety? SpecialVariety { get; set; }
-
-    public virtual TripDetail? TripDetail { get; set; }
+    public virtual ICollection<TripDetail> TripDetails { get; set; } = new List<TripDetail>();
 }

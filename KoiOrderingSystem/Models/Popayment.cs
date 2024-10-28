@@ -11,5 +11,9 @@ public partial class Popayment
 
     public DateOnly? PaymentDate { get; set; }
 
+    public int? PaymentMethodId { get; set; }
+
+    public virtual PaymentMethod? PaymentMethod { get; set; }
+
     public virtual Po? Po { get; set; }
 }

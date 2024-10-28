@@ -28,10 +28,11 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
                 return NotFound("You do not have permission to access this page.");
             }
 
-            // Retrieve booking information from the database, including related Trip and TripDetails
+            // Retrieve booking information from the database, including related Trip, TripDetails, and Koi Farms
             var booking = _db.Bookings
                 .Include(b => b.Trip)
                 .ThenInclude(t => t.TripDetails)
+                .ThenInclude(td => td.KoiFarm)
                 .FirstOrDefault(b => b.BookingId == bookingId);
 
             // Check if booking exists
@@ -40,14 +41,19 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
                 return NotFound($"Booking with ID {bookingId} not found.");
             }
 
-            // Pass booking information to the view for display and editing
+            // Retrieve the list of KoiFarms from the database
+            var farms = _db.KoiFarms.ToList();
+            ViewBag.Farms = farms;
+
+            // Pass booking information, including Koi Farms, to the view for display and editing
             return View(booking);
         }
 
 
+
         // Handle the POST request to create quote information with multiple trip details
         [HttpPost]
-        public IActionResult CreateQuote(int bookingId, string tripName, decimal? quotedAmount, DateTime? startDate, DateTime? endDate, List<DateTime> days, List<string> mainTopics, List<string> subTopics, List<string> notePrices) // notePrices is now List<string>
+        public IActionResult CreateQuote(int bookingId, string tripName, decimal? quotedAmount, DateTime? startDate, DateTime? endDate, List<DateTime> days, List<int> farmIds, List<string> mainTopics, List<string> subTopics, List<string> notePrices)
         {
             // Step 1: Retrieve booking information from the database
             var booking = _db.Bookings.FirstOrDefault(b => b.BookingId == bookingId);
@@ -57,6 +63,9 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
             {
                 return NotFound($"Booking with ID {bookingId} not found.");
             }
+
+            // Ensure lists are of the same size
+         
 
             // Step 3: Create a new Trip
             var trip = new Trip
@@ -68,12 +77,14 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
             // Step 4: Create multiple TripDetails based on the user inputs
             for (int i = 0; i < days.Count; i++)
             {
+                // Step 4.1: Create a new TripDetail and associate it with the farm ID directly
                 var tripDetail = new TripDetail
                 {
                     Day = DateOnly.FromDateTime(days[i]),  // Single day for each TripDetail
                     MainTopic = mainTopics[i],
                     SubTopic = subTopics[i],
-                    NotePrice = notePrices[i], // NotePrice is now a string
+                    NotePrice = notePrices[i],  // NotePrice is now a string
+                    FarmId = farmIds[i],  // Associate TripDetail with the selected farm ID
                     Trip = trip  // Associate TripDetail with the Trip
                 };
                 trip.TripDetails.Add(tripDetail);
@@ -102,23 +113,32 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
             _db.SaveChanges();
 
             // Step 8: Redirect to the quote view after creation
-            return Redirect("Quote?Bookingid=" + bookingId);
+            return Redirect("Quote?BookingId=" + bookingId);
         }
+
+
+
 
         // Handle the POST request to update the quote information with multiple trip details
         [HttpPost]
-        public IActionResult UpdateQuote(int bookingId, string tripName, decimal? quotedAmount, DateTime? startDate, DateTime? endDate, List<DateTime> days, List<string> mainTopics, List<string> subTopics, List<string> notePrices) // notePrices is now List<string>
+        public IActionResult UpdateQuote(int bookingId, string tripName, decimal? quotedAmount, DateTime? startDate, DateTime? endDate, List<DateTime> days, List<int> farmIds, List<string> mainTopics, List<string> subTopics, List<string> notePrices)
         {
             // Step 1: Retrieve booking information, including related Trip and TripDetails
             var booking = _db.Bookings
-                             .Include(b => b.Trip)
-                             .ThenInclude(t => t.TripDetails)
-                             .FirstOrDefault(b => b.BookingId == bookingId);
+                              .Include(b => b.Trip)
+                              .ThenInclude(t => t.TripDetails)
+                              .FirstOrDefault(b => b.BookingId == bookingId);
 
             // Step 2: Check if booking and related data exist
             if (booking == null || booking.Trip == null)
             {
                 return NotFound($"Booking or related Trip with ID {bookingId} not found.");
+            }
+
+            // Ensure lists are of the same size
+            if (days.Count != farmIds.Count || days.Count != mainTopics.Count || days.Count != subTopics.Count || days.Count != notePrices.Count)
+            {
+                return BadRequest("Mismatch between the number of days, farms, main topics, subtopics, and note prices.");
             }
 
             // Step 3: Update booking details
@@ -140,27 +160,45 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
             // Step 4: Update Trip details
             booking.Trip.TripName = tripName;
 
-            // Clear old trip details and add new ones
-            booking.Trip.TripDetails.Clear();
+            // Step 5: Remove all old TripDetails from the database (not just clearing the list in memory)
+            var oldTripDetails = booking.Trip.TripDetails.ToList();
+            _db.TripDetails.RemoveRange(oldTripDetails);  // This will delete the old trip details from the database
+
+            // Step 6: Loop through the lists and create new TripDetails
             for (int i = 0; i < days.Count; i++)
             {
+                // Retrieve the farm using the farmId
+                var farm = _db.KoiFarms.FirstOrDefault(f => f.FarmId == farmIds[i]);
+                if (farm == null)
+                {
+                    return NotFound($"Farm with ID {farmIds[i]} not found.");
+                }
+
+                // Create a new TripDetail and associate it with the farm
                 var tripDetail = new TripDetail
                 {
                     Day = DateOnly.FromDateTime(days[i]),  // Single day for each TripDetail
                     MainTopic = mainTopics[i],
                     SubTopic = subTopics[i],
-                    NotePrice = notePrices[i], // NotePrice is now a string
+                    NotePrice = notePrices[i],  // NotePrice is now a string
+                    KoiFarm = farm,  // Associate TripDetail with the selected farm
                     TripId = booking.Trip.TripId  // Assign the TripId to the TripDetail
                 };
+
+                // Add the new TripDetail to the list
                 booking.Trip.TripDetails.Add(tripDetail);
             }
 
-            // Step 5: Save changes to the database
+            // Step 7: Save changes to the database
             _db.SaveChanges();
 
-            // Step 6: Redirect to the quote view after update
+            // Step 8: Redirect to the quote view after update
             return Redirect("Quote?Bookingid=" + bookingId);
         }
+
+
+
+
 
         // ------------------ Sales Staff Functionality Merged Here ---------------------
 

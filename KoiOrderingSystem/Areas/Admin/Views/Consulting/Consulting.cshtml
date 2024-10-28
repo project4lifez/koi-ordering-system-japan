@@ -107,7 +107,9 @@
         }
 
         <!-- Form Inline (Same Row) -->
-        <form action="/Admin/Consulting/UpdateStatus" method="post">
+        <a class="btn btn-primary mb-2" href="/Admin/PoDetail/PoDetail?bookingId=@Model.BookingId" style="margin-top: 8px">Update Koi Order</a>
+
+        <form action="/Admin/Consulting/UpdateStatus" method="post" id="statusForm">
             <input type="hidden" name="bookingId" value="@Model.BookingId" />
 
             <div class="form-inline mb-4">
@@ -116,13 +118,14 @@
                     <option value="checkin" @(Model.Status == "Checked in" ? "selected" : "")>Check in</option>
                     <option value="checkout" @(Model.Status == "Checked out" ? "selected" : "")>Check out</option>
                 </select>
-                <button class="btn btn-success"
+                <button type="submit" class="btn btn-success"
                 @(Model?.Status != null &&
                     (string.Equals(Model.Status, "Delivered", StringComparison.OrdinalIgnoreCase) ||
                     string.Equals(Model.Status, "Delivering", StringComparison.OrdinalIgnoreCase) ||
                     string.Equals(Model.Status, "Checked out", StringComparison.OrdinalIgnoreCase) ||
                     string.Equals(Model.Status, "Accepted", StringComparison.OrdinalIgnoreCase) ||
                     string.Equals(Model.Status, "Rejected", StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(Model.Status, "Failed", StringComparison.OrdinalIgnoreCase) ||
                     string.Equals(Model.Status, "Canceled", StringComparison.OrdinalIgnoreCase) ||
                     string.Equals(Model.Status, "Processing", StringComparison.OrdinalIgnoreCase) ||
                     string.Equals(Model.Status, "Requested", StringComparison.OrdinalIgnoreCase)) ? "disabled" : "")>
@@ -207,14 +210,20 @@
                         <p><strong>Delivery Time:</strong> <span id="updated-time">@Model.Po?.KoiDeliveryTime</span></p>
                         <p><strong>Delivery Date:</strong> <span id="updated-date">@Model.Po?.KoiDeliveryDate</span></p>
                         <p><strong>Delivery Location:</strong> <span id="updated-location">@Model.Po?.DeliveryLocation</span></p>
-                        <p><strong>Koi Price:</strong> <span id="updated-price">@Model.Po?.TotalAmount?.ToString()</span></p>
+
                         <p>
-                            <strong>Deposit:</strong>
-                            <span id="updated-deposit">
-                                @(Model.Po?.Podetails?.FirstOrDefault()?.Deposit.HasValue == true
-                                    ? Model.Po.Podetails.FirstOrDefault().Deposit.Value.ToString("N0") + "$"
-                                    : "")
-                            </span>
+                            <strong>Status Po:</strong>
+                            <span id="updated-status">@Model.Po?.Status</span>
+
+                            <!-- Button to set status to 'Deposited' -->
+                            <form action="/Admin/Consulting/SetStatusToDeposited" method="post" style="display: inline-block; margin-left: 10px;">
+                                <input type="hidden" name="bookingId" value="@Model.BookingId" />
+                                <input type="hidden" name="poId" value="@Model.Po?.PoId" />
+                                <button type="submit" class="btn btn-warning btn-sm" style="display: inline;"
+                                @(Model.Status != "Checked in" ? "disabled" : "")>
+                                    Set to Deposited
+                                </button>
+                            </form>
                         </p>
                     </div>
                 </div>
@@ -244,11 +253,11 @@
                     ? Model.Po.KoiDeliveryTime.Value.ToString(@"hh\:mm")
                     : "")" />
                                 </div>
-                          
-                            <div class="form-group">
-                                <label>Delivery Location</label>
-                                <input type="text" name="deliveryLocation" class="form-control" value="@Model.Po?.DeliveryLocation" />                          
-                            </div>
+
+                                <div class="form-group">
+                                    <label>Delivery Location</label>
+                                    <input type="text" name="deliveryLocation" class="form-control" value="@Model.Po?.DeliveryLocation" />
+                                </div>
                             <div class="form-group">
                                 <label>Koi Price</label>
                                 <input type="number" name="koiPrice" class="form-control" value="@Model.Po?.TotalAmount" />
@@ -273,7 +282,7 @@
                 </div>
             </div>
         </div>
-       
+
 
         <!-- Trip Information Section -->
         <div class="row">
@@ -282,19 +291,30 @@
                     <div class="card-header">
                     </div>
                     <div class="card-body">
-                        <h5> @Model.Trip?.TripName</h5>
+                        <h5>@Model.Trip?.TripName</h5>
                         <div class="d-flex flex-column">
-                            <p style="text-align: right;"><strong>Koi Price:</strong>@Model.Po?.TotalAmount$</p>
                             <p style="text-align: right;">
-                                <strong>Deposit:</strong>
-                                @Model.Po?.Podetails?.FirstOrDefault()?.Deposit$
+                                <strong>Koi Price:</strong>
+                                @(Model.Po?.Podetails
+                                    ?.Where(pd => pd.PoId == Model.Po.PoId)
+                                    .Sum(pd => pd.TotalKoiPrice) ?? 0) USD
+                            </p>
+                            <p style="text-align: right;">
+                                <strong>Total Deposited:</strong>
+                                @(Model?.Po?.Podetails
+                                    ?.Where(pd => pd.PoId == Model.Po.PoId)
+                                    .GroupBy(pd => pd.FarmId) // Group by FarmId
+                                    .Sum(group => group.FirstOrDefault()?.Deposit ?? 0) ?? 0) USD
                             </p>
                         </div>
                         <div class="d-flex flex-column">
                             <p style="text-align: right;">
                                 <strong>Remaining Payment:</strong>
-                                @((Model.Po?.TotalAmount ?? 0) - (Model.Po?.Podetails?.FirstOrDefault()?.Deposit ?? 0))$
-                            </p>                            
+                                @Model.Po?.TotalAmount USD
+                            </p>
+                            <p class="text-danger" style="text-align: right;">
+                                <strong>Status:</strong> @Model?.Status
+                            </p>
                             <p class="text-danger" style="text-align: right;"><strong>Status:</strong> @Model?.Status</p>
                         </div>
                     </div>
@@ -304,6 +324,16 @@
     </main>
 
     <script>
+
+        document.getElementById('statusForm').onsubmit = function (e) {
+            const status = document.getElementById('status').value;
+            if (status == 'checkout') {
+                const confirmMessage = "Are you sure you want to set the status to 'Checked out'? This action cannot be undone.";
+                if (!confirm(confirmMessage)) {
+                    e.preventDefault();
+                }
+            }
+        };
         // Get modal element
         var modal = document.getElementById("updateModal");
 
@@ -329,5 +359,7 @@
                 modal.style.display = "none";
             }
         }
+
+       
     </script>
 </body>

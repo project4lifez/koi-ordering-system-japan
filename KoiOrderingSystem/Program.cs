@@ -20,14 +20,17 @@ namespace KoiOrderingSystem
             builder.Services.AddDistributedMemoryCache();
             builder.Services.AddSession(options =>
             {
-                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.IdleTimeout = TimeSpan.FromMinutes(30); // Session timeout
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
 
-            // Add PayPal configuration
+            // Register PayPal configuration
             var payPalConfig = builder.Configuration.GetSection("PayPal");
             builder.Services.Configure<PayPalConfig>(payPalConfig);
+
+            // Register SMTP settings for email (OTP)
+            builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("EmailSettings"));
 
             // Add Google authentication
             builder.Services.AddAuthentication(options =>
@@ -45,9 +48,10 @@ namespace KoiOrderingSystem
             {
                 googleOptions.ClientId = "#"; // Replace with your ClientId
                 googleOptions.ClientSecret = "#"; // Replace with your ClientSecret
-                googleOptions.CallbackPath = "/signin-google"; // This is the path Google will redirect to after authentication
+                googleOptions.CallbackPath = "/signin-google"; // Path where Google redirects after authentication
             });
 
+            // Register controllers with views
             builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
@@ -86,6 +90,18 @@ namespace KoiOrderingSystem
             app.MapControllerRoute(
                 name: "YourBooking_default",
                 pattern: "{controller=YourBooking}/{action=YourBooking}/{id?}");
+
+            app.MapControllerRoute(
+               name: "ForgotPasword_default",
+               pattern: "{controller=Account}/{action=ForgotPassword}/{id?}");
+
+            app.MapControllerRoute(
+               name: "Farm_default",
+               pattern: "{controller=Farm}/{action=Farm}/{id?}");
+
+            app.MapControllerRoute(
+              name: "Farm_default",
+              pattern: "{controller=Variety}/{action=Variety}/{id?}");
 
             // Add a specific route for PaymentExecuted
             app.MapControllerRoute(
@@ -126,6 +142,40 @@ namespace KoiOrderingSystem
                 name: "order_management_list",
                 pattern: "{area:exists}/{controller=Home}/{action=OrderList}/{id?}");
 
+            app.MapControllerRoute(
+               name: "podetail_area",
+               pattern: "{area:exists}/{controller=PoDetail}/{action=PoDetail}/{id?}");
+            app.MapControllerRoute(
+               name: "Profile_default",
+               pattern: "{area:exists}/{controller=Profile}/{action=Profile}/{id?}");
+
+            app.MapControllerRoute(
+               name: "StaffList_default",
+               pattern: "{area:exists}/{controller=StaffList}/{action=StaffList}/{id?}");
+
+            app.MapControllerRoute(
+               name: "CreateAccount_default",
+               pattern: "{area:exists}/{controller=CreateAccount}/{action=CreateAccount}/{id?}");
+
+            app.MapControllerRoute(
+              name: "ProfileDetail_default",
+              pattern: "{area:exists}/{controller=ProfileDetail}/{action=ProfileDetail}/{id?}");
+
+            app.MapControllerRoute(
+             name: "UserList_default",
+             pattern: "{area:exists}/{controller=UserList}/{action=UserList}/{id?}");
+
+            app.MapControllerRoute(
+            name: "ProfileDetailCus_default",
+            pattern: "{area:exists}/{controller=ProfileDetailCus}/{action=ProfileDetailCus}/{id?}");
+
+            app.MapControllerRoute(
+           name: "RoleList_default",
+           pattern: "{area:exists}/{controller=RoleList}/{action=RoleList}/{id?}");
+
+            app.MapControllerRoute(
+          name: "Payment_default",
+          pattern: "{area:exists}/{controller=PaymentMethod}/{action=PaymentMethod}/{id?}");
             app.Run();
         }
     }

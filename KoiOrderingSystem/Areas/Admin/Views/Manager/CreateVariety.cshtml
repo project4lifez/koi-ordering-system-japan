@@ -95,7 +95,7 @@
 
             <!-- Right Form Section -->
             <div class="form-content">
-                <form method="post" action="/Admin/Manager/AddVariety" enctype="multipart/form-data">
+                <form method="post" action="/Admin/Manager/AddVariety" enctype="multipart/form-data" onsubmit="return validateForm()">
                     <div class="form-group">
                         <label for="varietyName" class="form-label">Name</label>
                         <input type="text" class="form-control" id="varietyName" name="VarietyName" placeholder="Enter variety name" required>
@@ -130,5 +130,11 @@
                 reader.readAsDataURL(file); // Convert the file to a data URL
             }
         });
+
+        function validateForm() {
+            // If everything is valid, show the success message
+            alert("Create New Variety Successfully!!!");
+            return true;
+        }
     </script>
 </body>

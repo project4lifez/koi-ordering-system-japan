@@ -1,0 +1,398 @@
+﻿@model KoiOrderingSystem.Models.Booking
+
+@{
+    ViewData["Title"] = "Quote";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quote (Detail Trip)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            margin-top: 40px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        .day-content {
+            background-color: #f8f9fa;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 5px;
+        }
+
+        .btn-primary, .btn-success {
+            background-color: #007bff;
+        }
+
+        .btn-success {
+            margin-top: 120px;
+        }
+
+        .form-control {
+            box-shadow: none;
+            border-radius: 0.25rem;
+            border-color: #ced4da;
+        }
+
+            .form-control:focus {
+                border-color: #80bdff;
+                box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+            }
+
+        .text-danger {
+            font-size: 0.875rem;
+        }
+
+        .btn.deleteKoiButton {
+            background-color: #dc3545;
+            color: #fff;
+            font-size: 18px;
+            padding: 9px 10px;
+            border: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+            .btn.deleteKoiButton:hover {
+                background-color: #c82333;
+                transform: scale(1.05);
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            }
+
+            .btn.deleteKoiButton:active {
+                background-color: #bd2130;
+                transform: scale(1);
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <h1 class="text-center">Information Trip</h1>
+
+        <!-- Begin form for updating the order -->
+        <form method="post" id="formUpdate" action="/Admin/PoDetail/UpdatePoOrder">
+            <input type="hidden" name="bookingId" value="@Model.BookingId" />
+
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <label for="bookingID">Booking ID:</label>
+                    <input type="text" class="form-control gray-bg" id="bookingID" value="@Model.BookingId" readonly>
+                </div>
+                <div class="col-md-3">
+                    <label for="customerName">Name Customer:</label>
+                    <input type="text" class="form-control gray-bg" id="customerName" value="@Model.Fullname" readonly>
+                </div>
+                <div class="col-md-3">
+                    <label for="contactPhone">Contact Phone:</label>
+                    <input type="text" class="form-control gray-bg" id="contactPhone" value="@Model.Phone" readonly>
+                </div>
+                <div class="col-md-3">
+                    <label for="contactEmail">Contact Email:</label>
+                    <input type="email" class="form-control gray-bg" id="contactEmail" value="@Model.Email" readonly>
+                </div>
+                <div class="col-md-3">
+                    <label for="tripName">Trip Name:</label>
+                    <input type="text" class="form-control gray-bg" id="tripName" value="@Model.Trip?.TripName" readonly>
+                </div>
+                <div class="col-md-3">
+                    <label for="startDate">Start Date:</label>
+                    <input type="date" class="form-control gray-bg" id="startDate" value="@(Model.StartDate.HasValue ? Model.StartDate.Value.ToString("yyyy-MM-dd") : string.Empty)" readonly>
+                </div>
+                <div class="col-md-3">
+                    <label for="endDate">End Date:</label>
+                    <input type="date" class="form-control gray-bg" id="endDate" value="@(Model.EndDate.HasValue ? Model.EndDate.Value.ToString("yyyy-MM-dd") : string.Empty)" readonly>
+                </div>
+            </div>
+
+            <!-- Koi Purchase Order section -->
+            <div id="daysContainer">
+                @if (Model.Trip != null && Model.Trip.TripDetails.Any())
+                {
+                    int dayCount = 0; // Start from 0 for index purposes
+                    @foreach (var tripDetail in Model.Trip.TripDetails)
+                    {
+                        <div class="day-content" data-day-count="@dayCount">
+                            <h3 class="text-center mb-3">Day @(dayCount + 1)</h3>
+                            <input type="hidden" name="poDetails[@dayCount].Day" value="@tripDetail.Day" />
+
+                            <div class="col-md-3">
+                                <label for="purchaseDate@dayCount">Date:</label>
+                                <input type="date" class="form-control gray-bg" id="purchaseDate@dayCount" value="@(tripDetail.Day.HasValue ? tripDetail.Day.Value.ToString("yyyy-MM-dd") : string.Empty)" readonly>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="farm@dayCount">Farm:</label>
+                                    <input type="text" class="form-control mb-2 gray-bg" id="farm@dayCount" value="@tripDetail.KoiFarm?.FarmName" readonly>
+                                    <input type="hidden" name="poDetails[@dayCount].FarmId" value="@tripDetail.KoiFarm?.FarmId" /> <!-- Farm ID -->
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="deposit@dayCount">Deposit of Farm:</label>
+                                    <input type="number" class="form-control mb-2" name="poDetails[@dayCount].Deposit" value="@(Model.Po?.Podetails.FirstOrDefault(pd => pd.Day == tripDetail.Day)?.Deposit ?? 0)">
+                                </div>
+                            </div>
+
+                            <!-- Koi Purchased section -->
+                            <div class="row mt-3">
+                                <div class="col-md-6">
+                                    <label>Koi Purchased for Day @(dayCount + 1)</label>
+                                    <div class="koiContainer" id="koiContainer@dayCount">
+                                        <ul class="koiList" id="koiList@dayCount" style="display: none;">
+                                            @if (tripDetail.KoiFarm != null && tripDetail.KoiFarm.SpecialVarieties.Any())
+                                            {
+                                                @foreach (var specialVariety in tripDetail.KoiFarm.SpecialVarieties)
+                                                {
+                                                    @if (specialVariety.Variety != null && specialVariety.Variety.KoiFishes.Any())
+                                                    {
+                                                        @foreach (var koi in specialVariety.Variety.KoiFishes)
+                                                        {
+                                                            <li data-koi-id="@koi.KoiId" data-variety="@koi.Variety.VarietyName">@koi.KoiName (@koi.Variety.VarietyName)</li>
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        </ul>
+
+                                        <!-- Displaying selected Koi -->
+                                        @if (Model.Po?.Podetails != null && Model.Po.Podetails.Any(pd => pd.Day == tripDetail.Day))
+                                        {
+                                            foreach (var detail in Model.Po.Podetails.Where(pd => pd.Day == tripDetail.Day))
+                                            {
+                                                <div class="row mb-2">
+                                                    <div class="col-md-5">
+                                                        <select class="form-control koiFishSelect" name="poDetails[@dayCount].KoiId[]">
+                                                            <option value="" disabled selected>Select Koi</option>
+                                                            @foreach (var koi in tripDetail.KoiFarm.SpecialVarieties.SelectMany(sv => sv.Variety.KoiFishes))
+                                                            {
+                                                                <option value="@koi.KoiId" @(koi.KoiId == detail.KoiId ? "selected" : "")>@koi.KoiName (@koi.Variety.VarietyName)</option>
+                                                            }
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <input type="number" class="form-control" name="poDetails[@dayCount].Quantity[]" value="@detail.Quantity" placeholder="Quantity" min="1">
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <input type="text" class="form-control" name="poDetails[@dayCount].TotalKoiPrice[]" value="@detail.TotalKoiPrice" placeholder="Price">
+                                                    </div>
+                                                    <div class="col-md-1 d-flex justify-content-center align-items-center">
+                                                        <button class="btn deleteKoiButton" type="button" onclick="removeKoi(this)">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn btn-success addKoiButton" type="button" onclick="addKoi(this)">+</button>
+                            <div class="row mt-3">
+                                <div class="col-md-12">
+                                    <label for="noteDay@dayCount">Note</label>
+                                    <textarea class="form-control noteTextArea" id="noteDay@dayCount" name="poDetails[@dayCount].Note" rows="3">@Model.Po?.Podetails.FirstOrDefault(pd => pd.Day == tripDetail.Day)?.Note</textarea>
+                                </div>
+                            </div>
+                        </div>
+                        dayCount++;
+                    }
+                }
+            </div>
+            @if (Model.Status == "Checked in" || Model.Status == "Checked out")
+            {
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <button id="Confirm" class="btn btn-primary mt-4" type="submit">Confirm</button>
+                    </div>
+                </div>
+            }
+        </form>
+        <script src="https://cdn.tiny.cloud/1/as08codcfmfm7iyms5ub7ozusoy1f9vkq3xm4a5e7fmyuoyr/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+
+        <script>
+
+            tinymce.init({
+                selector: '.noteTextArea', // Target a specific textarea by ID. Use '.class' if it's a class
+                height: 600, // Set the height to 600px for a spacious editor
+                plugins: [
+                    'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'image', 'link', 'lists', 'media', 'searchreplace',
+                    'table', 'visualblocks', 'wordcount', 'fullscreen', 'code', 'help',
+                    // Premium plugins (if available in the free trial or purchased)
+                    'checklist', 'mediaembed', 'casechange', 'export', 'formatpainter', 'pageembed', 'a11ychecker', 'tinymcespellchecker',
+                    'permanentpen', 'powerpaste', 'advtable', 'advcode', 'editimage', 'advtemplate', 'ai', 'mentions', 'tinycomments',
+                    'tableofcontents', 'footnotes', 'mergetags', 'autocorrect', 'typography', 'inlinecss', 'markdown'
+                ],
+                toolbar: 'undo redo | styleselect | bold italic underline strikethrough | fontfamily fontsize blocks | ' +
+                    'link image media codesample | alignleft aligncenter alignright alignjustify | ' +
+                    'bullist numlist outdent indent checklist | emoticons charmap | table tableofcontents footnotes | ' +
+                    'fullscreen preview code export print | spellcheckdialog a11ycheck formatpainter pageembed | ' +
+                    'removeformat | addcomment showcomments',
+                tinycomments_mode: 'embedded', // Commenting system mode
+                tinycomments_author: 'Author name', // Name displayed for comments
+                mergetags_list: [
+                    { value: 'First.Name', title: 'First Name' },
+                    { value: 'Email', title: 'Email' }
+                ],
+
+                // AI Assistant integration (not functional unless implemented, example provided for future use)
+                ai_request: (request, respondWith) => respondWith.string(() => Promise.reject('AI Assistant not implemented')),
+
+                // Fullscreen and preview options
+                toolbar_mode: 'floating', // Allows the toolbar to be floating
+                branding: false, // Removes TinyMCE branding
+                image_advtab: true, // Adds advanced tab for image editing
+                content_style: "body { font-family: Roboto, sans-serif; font-size: 14px; }",
+
+                // Media options
+                media_live_embeds: true, // Enable live embedding for media
+                mediaembed_service_url: 'https://noembed.com/embed', // Example for embedding URLs
+
+                // Spellcheck and A11Y Checker (accessibility) configurations
+                a11ychecker_allow_decorative_images: true, // Allow images without alt text to pass checker
+                spellchecker_dialog: true, // Enable the spellcheck dialog
+                spellchecker_language: 'en', // Set the spellcheck language
+                spellchecker_active: true, // Turn on spellchecker
+                spellchecker_whitelist: ['TinyMCE', 'HTML', 'CSS'], // Custom whitelist for words
+
+                // Export options (e.g., PDF or Word export)
+                export_formats: [
+                    { title: 'HTML Document', format: 'html' },
+                    { title: 'Word Document', format: 'docx' },
+                    { title: 'PDF Document', format: 'pdf' }
+                ],
+
+                // File and image upload settings (Optional)
+                images_upload_url: '/uploadImage', // Custom upload endpoint
+                automatic_uploads: true, // Automatically upload images
+                file_picker_types: 'file image media', // Types of files to allow
+                file_picker_callback: function (callback, value, meta) {
+                    // Provide custom file picking logic here
+                },
+
+                // Set up content-specific options
+                content_css: '/css/content-style.css', // Link to your content's CSS
+                content_style: 'body { font-family: Roboto; font-size: 14px; }', // Additional inline styling for the editor
+
+                // Other useful configurations
+                menubar: 'file edit view insert format tools table help', // Menubar customization
+                statusbar: true, // Show status bar
+                toolbar_sticky: true, // Sticky toolbar
+                paste_as_text: true, // Paste content as plain text by default
+
+                // Advanced Table features (premium)
+                advtable_sorting: true, // Enable table sorting
+                advtable_sort_by: 'alpha', // Set default table sorting
+
+                // Callbacks for saving content
+                setup: function (editor) {
+                    editor.on('change', function () {
+                        editor.save(); // Automatically save content as it's changed
+                    });
+                },
+            });
+
+           
+            // Khai báo mảng để lưu trữ các Koi đã thêm
+            let koiDetails = [];
+
+            // Cập nhật hàm addKoi
+            function addKoi(button) {
+                const koiContainer = button.previousElementSibling.querySelector('.koiContainer');
+                const dayContent = button.closest('.day-content');
+                const dayCount = dayContent.dataset.dayCount;
+
+                // Tạo chỉ mục koiIndex cho từng con cá
+                const koiIndex = koiContainer.children.length; // Số lượng cá đã có trong container
+
+                const koiHtml = `
+                                <div class="row mb-2">
+                                    <div class="col-md-5">
+                                        <select class="form-control koiFishSelect" name="poDetails[${dayCount}].KoiId[]" onchange="updateKoiDetails(this, ${dayCount}, ${koiIndex})">
+                                            <option value="" disabled selected>Select Koi</option>
+                                            ${getKoiOptions(dayContent)}
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input type="number" class="form-control" name="poDetails[${dayCount}].Quantity[]" placeholder="Quantity" min="1" onchange="updateKoiDetails(this, ${dayCount}, ${koiIndex})">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input type="text" class="form-control" name="poDetails[${dayCount}].TotalKoiPrice[]" placeholder="Price" onchange="updateKoiDetails(this, ${dayCount}, ${koiIndex})">
+                                    </div>
+                                    <div class="col-md-1 d-flex justify-content-center align-items-center">
+                                        <button class="btn deleteKoiButton" type="button" onclick="removeKoi(this, ${dayCount}, ${koiIndex})">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </div>
+                                </div>`;
+
+                koiContainer.insertAdjacentHTML('beforeend', koiHtml);
+            }
+
+            // Cập nhật thông tin Koi vào mảng koiDetails
+            function updateKoiDetails(element, dayCount, koiIndex) {
+                const koiEntry = element.closest('.row');
+                const koiSelect = koiEntry.querySelector('.koiFishSelect');
+                const quantityInput = koiEntry.querySelector(`input[name="poDetails[${dayCount}].Quantity[${koiIndex}]"]`);
+                const priceInput = koiEntry.querySelector(`input[name="poDetails[${dayCount}].TotalKoiPrice[${koiIndex}]"]`);
+
+                const koiId = koiSelect.value;
+                const quantity = quantityInput.value;
+                const totalPrice = priceInput.value;
+
+                // Tìm vị trí trong mảng hoặc thêm mới
+                const existingKoiIndex = koiDetails.findIndex(k => k.dayCount === dayCount && k.koiIndex === koiIndex);
+                if (existingKoiIndex > -1) {
+                    koiDetails[existingKoiIndex].quantity = quantity;
+                    koiDetails[existingKoiIndex].totalPrice = totalPrice;
+                } else {
+                    koiDetails.push({ dayCount, koiIndex, koiId, quantity, totalPrice });
+                }
+            }
+
+            // Hàm xóa Koi
+            function removeKoi(button, dayCount, koiIndex) {
+                const koiEntry = button.closest('.row');
+                const koiSelect = koiEntry.querySelector('.koiFishSelect');
+                const koiId = koiSelect.value;
+
+                // Xóa thông tin Koi khỏi mảng
+                koiDetails = koiDetails.filter(k => !(k.dayCount === dayCount && k.koiId === koiId));
+
+                if (koiEntry) {
+                    koiEntry.remove();
+                }
+            }
+
+            // Hàm lấy tùy chọn Koi
+            function getKoiOptions(dayContent) {
+                const koiList = dayContent.querySelector('.koiList');
+                let optionsHtml = '';
+                koiList.querySelectorAll('li').forEach(koi => {
+                    const koiId = koi.getAttribute('data-koi-id');
+                    const koiName = koi.textContent;
+                    optionsHtml += `<option value="${koiId}">${koiName}</option>`;
+                });
+                return optionsHtml;
+            }
+        </script>
+
+    </div>
+</body>

@@ -2,26 +2,73 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Diagnostics;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using KoiOrderingSystem.Models;
+using Microsoft.AspNetCore.Http; // For session management
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Authorization;
+using DocumentFormat.OpenXml.InkML;
+
 namespace KoiOrderingSystem.Controllers
+
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        private readonly Koi88Context _db;
+        public HomeController(ILogger<HomeController> logger, Koi88Context db)
         {
             _logger = logger;
+            _db = db;
         }
 
         public ActionResult Homepage()
         {
+            // Lấy AdminRoleId từ session
+            var adminRoleId = HttpContext.Session.GetInt32("AdminRoleId");
+
+            // Nếu role từ 2 đến 5, điều hướng đến /Admin
+            if (adminRoleId != null && adminRoleId >= 2 && adminRoleId <= 5)
+            {
+                return RedirectToAction("Home", "Admin");
+            }
+
+            // Fetch Koi varieties from the database
+            var koiVarieties = _db.Varieties
+                .OrderByDescending(v => v.VarietyId)
+                 .Take(4)
+                .ToList();
+
+            var feedbacks = _db.Feedbacks
+        .Where(f => f.Rating == 5) 
+        .Include(f => f.Customer) 
+            .ThenInclude(c => c.Account) 
+        .OrderByDescending(f => f.FeedbackId) 
+        .Take(3) 
+        .ToList();
+
+            // Pass the Koi varieties to the view
+            ViewBag.KoiVarieties = koiVarieties;
+            ViewBag.Feedbacks = feedbacks;
             ViewBag.Title = "KOI88 - Nishikigoi Ordering Service";
+
             return View();
         }
 
         public ActionResult BookingForm()
         {
-            ViewBag.Title = "BookingForm";
+
+            var customerId = HttpContext.Session.GetInt32("CustomerId");
+
+            if (customerId == null)
+            {
+                return RedirectToAction("", "Login");
+            }
             return View();
         }
         public ActionResult Create()
@@ -36,14 +83,28 @@ namespace KoiOrderingSystem.Controllers
             return View();
         }
 
-        public IActionResult Farm ()
+        public IActionResult Farm()
         {
             return View();
         }
 
-        public IActionResult KoiBreed()
+        public IActionResult Variety()
         {
             return View();
+        }
+
+        public IActionResult VarietyDetail()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> KoiVarieties()
+        {
+            var koiVarieties = await _db.Varieties
+                .OrderByDescending(v => v.VarietyId) // Order by VarietyId descending
+                .ToListAsync();
+
+            return View(koiVarieties); // Pass the list to the view
         }
 
 

@@ -51,7 +51,7 @@ public partial class Koi88Context : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=MSI;Initial Catalog=Koi88;Persist Security Info=True;User ID=sa;Password=12345;Trust Server Certificate=True");
+        => optionsBuilder.UseSqlServer("Data Source=MSI;Initial Catalog=Koi88;Persist Security Info=True;User ID=sa;Password=12345;Trust Server Certificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -215,7 +215,11 @@ public partial class Koi88Context : DbContext
                 .HasMaxLength(1000)
                 .HasColumnName("comments");
             entity.Property(e => e.CustomerId).HasColumnName("customer_id");
+            entity.Property(e => e.Feedbackdate).HasColumnName("feedbackdate");
             entity.Property(e => e.Rating).HasColumnName("rating");
+            entity.Property(e => e.Status)
+                .HasMaxLength(100)
+                .HasColumnName("status");
 
             entity.HasOne(d => d.Customer).WithMany(p => p.Feedbacks)
                 .HasForeignKey(d => d.CustomerId)
@@ -336,7 +340,7 @@ public partial class Koi88Context : DbContext
             entity.Property(e => e.FarmId).HasColumnName("farm_id");
             entity.Property(e => e.KoiDeliveryDate).HasColumnName("koi_delivery_date");
             entity.Property(e => e.KoiDeliveryTime).HasColumnName("koi_delivery_time");
-            entity.Property(e => e.PoDetailId).HasColumnName("po_detail_id");
+            entity.Property(e => e.Note).HasColumnName("note");
             entity.Property(e => e.Status)
                 .HasMaxLength(100)
                 .HasColumnName("status");
@@ -368,6 +372,7 @@ public partial class Koi88Context : DbContext
                 .HasMaxLength(100)
                 .HasColumnName("imageUrl");
             entity.Property(e => e.KoiId).HasColumnName("koi_id");
+            entity.Property(e => e.Note).HasColumnName("note");
             entity.Property(e => e.PoId).HasColumnName("po_id");
             entity.Property(e => e.Quantity).HasColumnName("quantity");
             entity.Property(e => e.RemainingPrice)
@@ -398,7 +403,12 @@ public partial class Koi88Context : DbContext
 
             entity.Property(e => e.PoPaymentId).HasColumnName("po_payment_id");
             entity.Property(e => e.PaymentDate).HasColumnName("payment_date");
+            entity.Property(e => e.PaymentMethodId).HasColumnName("payment_method_id");
             entity.Property(e => e.PoId).HasColumnName("po_id");
+
+            entity.HasOne(d => d.PaymentMethod).WithMany(p => p.Popayments)
+                .HasForeignKey(d => d.PaymentMethodId)
+                .HasConstraintName("FK_POPayment_PO_PaymentMethod");
 
             entity.HasOne(d => d.Po).WithMany(p => p.Popayments)
                 .HasForeignKey(d => d.PoId)
@@ -466,6 +476,7 @@ public partial class Koi88Context : DbContext
             entity.ToTable("TripDetail");
 
             entity.Property(e => e.TripDetailId).HasColumnName("trip_detail_id");
+            entity.Property(e => e.FarmId).HasColumnName("farm_id");
             entity.Property(e => e.MainTopic)
                 .HasMaxLength(200)
                 .HasColumnName("main_topic");
@@ -474,6 +485,10 @@ public partial class Koi88Context : DbContext
                 .HasColumnName("note_price");
             entity.Property(e => e.SubTopic).HasColumnName("sub_topic");
             entity.Property(e => e.TripId).HasColumnName("trip_id");
+
+            entity.HasOne(d => d.KoiFarm).WithMany(p => p.TripDetails)
+                .HasForeignKey(d => d.FarmId)
+                .HasConstraintName("FK_KoiFarm");
 
             entity.HasOne(d => d.Trip).WithMany(p => p.TripDetails)
                 .HasForeignKey(d => d.TripId)

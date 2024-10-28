@@ -173,7 +173,7 @@
                 <p class="general-info-label">Update Information</p>
             </div>
             <div class="form-content">
-                <form method="post" id="formUpdateKoiFish" action="/Admin/Manager/EditKoiFish/@Model.KoiId" enctype="multipart/form-data">
+                <form method="post" id="formUpdateKoiFish" action="/Admin/Manager/EditKoiFish/@Model.KoiId" enctype="multipart/form-data" onsubmit="return validateForm()">
                     <input type="hidden" name="KoiId" value="@Model.KoiId" /> <!-- Lưu KoiId -->
                     <div id="general-info" class="form-sections">
                         <div class="form-group">
@@ -242,5 +242,11 @@
                 previewImage.style.display = 'none';
             }
         });
+
+        function validateForm() {
+            // If everything is valid, show the success message
+            alert("Update Koi Successfully!!!");
+            return true;
+        }
     </script>
 </body>

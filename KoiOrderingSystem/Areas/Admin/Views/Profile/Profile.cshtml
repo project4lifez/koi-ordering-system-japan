@@ -1,0 +1,526 @@
+﻿@model KoiOrderingSystem.Models.Account
+
+@{
+    ViewData["Title"] = "StaffProfile";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f5f7;
+            padding-top: 3rem;
+        }
+
+        .custom-container {
+            max-width: 80%;
+            margin: auto;
+            padding: 3rem;
+            background-color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .profile-form {
+            flex: 2;
+            margin-right: 40px;
+        }
+
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-header h2 {
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: #0b5be7;
+        }
+
+        .profile-headers a {
+            color: #007bff !important;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+            .profile-headers a:hover {
+                text-decoration: none !important;
+                color: #007bff !important;
+                transition: color 0.3s ease !important;
+            }
+
+        .profile-form label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .profile-form input,
+        .profile-form select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .profile-form input:focus,
+        .profile-form select:focus {
+            border-color: #0b5be7;
+            box-shadow: 0 0 8px rgba(11, 91, 231, 0.15);
+        }
+
+        .btn-update {
+            background-color: #186ff5;
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            display: block;
+            margin: 1.5rem 0;
+            font-weight: bold;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .btn-update:hover {
+            background-color: #0b5be7;
+            transform: scale(1.05);
+        }
+
+        .profile-avatar {
+            flex: 1;
+            text-align: center;
+        }
+
+        .profile-avatar img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-avatar input {
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .btn-avatar-save {
+            background-color: #186ff5;
+            color: white;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn-avatar-save:hover {
+            background-color: #0b5be7;
+        }
+
+        .file-input-label {
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        /* Custom half-width for Gender and Role */
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .form-row .form-group {
+            width: 48%;
+        }
+
+        /* Disable Role field styling */
+        .profile-form input[disabled] {
+            background-color: #f4f5f7;
+            color: #999;
+        }
+
+        /* Popup styling */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .popup-content {
+            background-color: white;
+            padding: 40px; /* Increased padding */
+            border-radius: 10px;
+            width: 440px; /* Increased width */
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 50px;
+        }
+
+            .popup-content h3 {
+                margin-top: 0;
+                color: #1565c0;
+                font-size: 1.5rem; /* Increased font size */
+                margin-bottom: 30px;
+                text-align: center; /* Centered title */
+            }
+
+            .popup-content input {
+                width: 100%; /* Adjusted width for full responsiveness */
+                padding: 10px;
+                margin-bottom: 10px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                position: relative; /* Added for positioning icon */
+            }
+
+            .popup-content button {
+                width: 100%; /* Make buttons take full width */
+                padding: 10px;
+                background-color: #186ff5;
+                border: none;
+                color: white;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+                margin-top: 10px; /* Margin to separate buttons */
+            }
+
+                .popup-content button:hover {
+                    background-color: #186ff5;
+                }
+
+        .password-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+            .password-container input {
+                width: 100%;
+                padding: 12px;
+                padding-top: 16px; /* Extra top padding to ensure label doesn't overlap input text */
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                font-size: 1rem;
+                background-color: white;
+                outline: none;
+                transition: border-color 0.3s ease;
+            }
+
+            .password-container label {
+                position: absolute;
+                top: 14px; /* Start label in the middle of the input */
+                left: 12px;
+                font-size: 1rem;
+                color: #aaa;
+                transition: all 0.3s ease;
+                pointer-events: none;
+            }
+
+            .password-container input:focus + label,
+            .password-container input:not(:placeholder-shown) + label {
+                top: -20px; /* Move label above the input when focused or filled */
+                left: 12px;
+                font-size: 0.85rem; /* Shrink the label */
+                color: #1565c0;
+            }
+
+            .password-container input:focus {
+                border-color: #1565c0;
+            }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px; /* Adjusted to move the icon slightly left */
+            top: 46%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #aaa;
+        }
+
+            .toggle-password:hover {
+                color: #007bff;
+            }
+
+        .error-message {
+            color: red;
+            margin-bottom: 20px;
+        }
+
+        a:not([href]):not([class]), a:not([href]):not([class]):hover {
+            color: #0d6efd;
+            text-decoration: none;
+        }
+      
+
+           
+    </style>
+</head>
+
+<body>
+    <div class="container custom-container">
+        <div class="profile-form">
+            <div class="profile-header">
+                <h2>My Profile</h2>
+                <a id="change-password-link">Change Password</a>
+            </div>
+
+            <form id="customerUpdate" method="post" action="/Admin/Profile/UpdateProfile">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" value="@ViewBag.Email">
+
+                <label for="first-name">First Name</label>
+                <input type="text" id="first-name" name="firstname" value="@ViewBag.FirstName" placeholder="Enter your first name">
+
+                <label for="last-name">Last Name</label>
+                <input type="text" id="last-name" name="lastname" value="@ViewBag.LastName" placeholder="Enter your last name">
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="gender">Gender</label>
+                        <select id="gender" name="gender">
+                            <option value="" disabled selected>Select your gender</option>
+                            <option value="male" @(ViewBag.Gender == "male" ? "selected" : "")>Male</option>
+                            <option value="female" @(ViewBag.Gender == "female" ? "selected" : "")>Female</option>
+                            <option value="other" @(ViewBag.Gender == "other" ? "selected" : "")>Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="role">Role</label>
+                        <input type="text" id="role" name="role" value="@ViewBag.Role" disabled>
+                    </div>
+                </div>
+
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone" value="@ViewBag.PhoneNumber" placeholder="Enter your phone number">
+
+                <button type="submit" class="btn-update">Update</button>
+            </form>
+        </div>
+
+        <div class="profile-avatar">
+            <img id="avatar-preview" src="@(!string.IsNullOrEmpty(ViewBag.ImageUrl) ? ViewBag.ImageUrl : "https://via.placeholder.com/150")" alt="Avatar" class="avatar-img">
+            <form method="post" action="/Admin/Profile/SaveAvatar" enctype="multipart/form-data" class="avatar-form">
+                <div class="file-input-label">
+                    <label for="avatar" class="file-label">Chọn tệp</label>
+                    <input type="file" id="avatar" name="avatar" accept="image/*" onchange="saveAvatar()" class="file-input">
+                </div>
+                <button type="submit" class="btn-avatar-save">Save Avatar</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="popup-overlay" id="popup-overlay">
+        <div class="popup-content">
+            <h3>Change Password</h3>
+            <!-- Display error message -->
+            <div class="error-message" id="error-message" style="color: red; display: none; text-align: center;"></div>
+
+            <form id="change-password-form" method="post" action="Admin/Profile/ChangePassword" onsubmit="return submitForm(event)">
+                <div class="password-container">
+                    <input type="password" name="currentPassword" required placeholder=" " id="currentPassword">
+                    <label for="currentPassword">Current Password</label>
+                    <span class="toggle-password" onclick="togglePasswordVisibility('currentPassword')">
+                        <i class="fas fa-eye" id="currentPassword-eye"></i>
+                    </span>
+                </div>
+
+                <div class="password-container">
+                    <input type="password" name="newPassword" id="newPassword" required placeholder=" ">
+                    <label for="newPassword">New Password</label>
+                    <span class="toggle-password" onclick="togglePasswordVisibility('newPassword')">
+                        <i class="fas fa-eye" id="newPassword-eye"></i>
+                    </span>
+                </div>
+                <div class="password-container">
+                    <input type="password" name="confirmPassword" id="confirmPassword" required placeholder=" ">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <span class="toggle-password" onclick="togglePasswordVisibility('confirmPassword')">
+                        <i class="fas fa-eye" id="confirmPassword-eye"></i>
+                    </span>
+                </div>
+                <div id="password-error" class="error-message" style="display: none; text-align: center;"></div>
+
+                <button type="submit">Submit</button>
+                <button type="button" onclick="closePopup()">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Preview avatar image when a file is selected
+            const avatarInput = document.getElementById('avatar');
+            const avatarPreview = document.getElementById('avatar-preview');
+
+            if (avatarInput) {
+                avatarInput.addEventListener('change', () => {
+                    if (avatarInput.files && avatarInput.files[0]) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            avatarPreview.src = e.target.result;
+                        };
+                        reader.readAsDataURL(avatarInput.files[0]);
+                    }
+                });
+            }
+        });
+
+        const changePasswordLink = document.getElementById('change-password-link');
+        const popupOverlay = document.getElementById('popup-overlay');
+
+        changePasswordLink.addEventListener('click', () => {
+            popupOverlay.style.display = 'flex';
+            document.getElementById('error-message').style.display = 'none'; // Reset error message
+            document.getElementById('password-error').style.display = 'none'; // Reset password error message
+        });
+
+        function closePopup() {
+            popupOverlay.style.display = 'none';
+            document.getElementById('error-message').style.display = 'none'; // Reset error message
+            document.getElementById('password-error').style.display = 'none'; // Reset password error message
+        }
+
+        // Kiểm tra sự phù hợp giữa mật khẩu mới và xác nhận mật khẩu
+        function validatePasswords() {
+            const currentPassword = document.querySelector('input[name="currentPassword"]').value;
+            const newPassword = document.querySelector('input[name="newPassword"]').value;
+            const confirmPassword = document.querySelector('input[name="confirmPassword"]').value;
+            const passwordErrorDiv = document.getElementById('password-error');
+            const submitButton = document.querySelector('button[type="submit"]');
+
+            let errorMessage = '';
+
+            // Reset error messages
+            passwordErrorDiv.style.display = 'none';
+
+            // Check if New Password or Confirm Password are filled without Current Password
+            if ((newPassword.length > 0 || confirmPassword.length > 0) && currentPassword.length === 0) {
+                errorMessage += "Please enter Current Password first.<br>";
+            }
+
+            // Check if New Password is at least 8 characters long
+            if (newPassword.length < 8 && newPassword.length > 0) {
+                errorMessage += "New password must be at least 8 characters long.<br>";
+            }
+
+            // Check if Confirm Password matches New Password
+            if (newPassword !== confirmPassword && confirmPassword.length > 0) {
+                errorMessage += "Passwords do not match.<br>";
+            }
+
+            // Display error messages if any, and disable submit button
+            if (errorMessage) {
+                passwordErrorDiv.innerHTML = errorMessage;
+                passwordErrorDiv.style.display = 'block';
+                submitButton.disabled = true;
+            } else {
+                passwordErrorDiv.style.display = 'none';
+                submitButton.disabled = false;
+            }
+        }
+
+        // Add event listeners to monitor input changes
+        document.querySelector('input[name="newPassword"]').addEventListener('input', validatePasswords);
+        document.querySelector('input[name="confirmPassword"]').addEventListener('input', validatePasswords);
+        document.querySelector('input[name="currentPassword"]').addEventListener('input', validatePasswords);
+
+        async function submitForm(event) {
+            event.preventDefault(); // Ngăn không cho reload trang
+
+            const passwordErrorDiv = document.getElementById('password-error');
+            const newPassword = document.querySelector('input[name="newPassword"]').value;
+            const confirmPassword = document.querySelector('input[name="confirmPassword"]').value;
+
+            // Kiểm tra mật khẩu mới có ít nhất 8 ký tự không
+            if (newPassword.length < 8) {
+                passwordErrorDiv.innerHTML = "New password must be at least 8 characters long.";
+                passwordErrorDiv.style.display = 'block'; // Hiện thông báo lỗi
+                return; // Ngăn không cho gửi form
+            }
+
+            // Kiểm tra sự phù hợp của mật khẩu mới và xác nhận mật khẩu
+            if (newPassword !== confirmPassword) {
+                passwordErrorDiv.innerHTML = "Passwords do not match.";
+                passwordErrorDiv.style.display = 'block'; // Hiện thông báo lỗi
+                return; // Ngăn không cho gửi form
+            }
+
+            const form = document.getElementById('change-password-form');
+            const formData = new FormData(form);
+            const errorMessageDiv = document.getElementById('error-message');
+
+            try {
+                const response = await fetch('/Admin/Profile/ChangePassword', { // Sử dụng URL tĩnh
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    alert("Saved Password Successfully!!");
+                    closePopup();
+
+                    window.location.reload(); // Tải lại trang nếu cần
+                } else {
+                    // Hiển thị lỗi
+                    errorMessageDiv.innerHTML = result.errors.join('<br>'); // Hiển thị lỗi
+                    errorMessageDiv.style.display = 'block'; // Hiện lỗi
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                errorMessageDiv.innerHTML = 'An unexpected error occurred.';
+                errorMessageDiv.style.display = 'block'; // Hiện lỗi
+            }
+        }
+
+        function togglePasswordVisibility(field) {
+            const passwordInput = document.querySelector(`input[name="${field}"]`);
+            const eyeIcon = document.getElementById(`${field}-eye`);
+
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                eyeIcon.classList.remove("fa-eye");
+                eyeIcon.classList.add("fa-eye-slash");
+            } else {
+                passwordInput.type = "password";
+                eyeIcon.classList.remove("fa-eye-slash");
+                eyeIcon.classList.add("fa-eye");
+            }
+        }
+
+        window.addEventListener('load', () => {
+            document.querySelectorAll('.password-container input').forEach(input => {
+                if (input.value) {
+                    input.dispatchEvent(new Event('input'));
+                }
+            });
+        });
+
+    </script>
+</body>
+
+</html>

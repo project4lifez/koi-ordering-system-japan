@@ -167,7 +167,7 @@
                 <h2 class="section-title">Additional Information</h2>
             </div>
             <div class="form-content">
-                <form method="post" action="/Admin/Manager/AddKoiFish" enctype="multipart/form-data">
+                <form method="post" action="/Admin/Manager/AddKoiFish" enctype="multipart/form-data" onsubmit="return validateForm()">
                     <div id="general-info" class="form-sections">
                         <div class="form-group">
                             <label for="KoiName" class="form-label">Koi Name:</label>
@@ -230,5 +230,11 @@
                 previewImage.style.display = 'none';
             }
         });
+
+        function validateForm() {
+            // If everything is valid, show the success message
+            alert("Create New Koi Successfully!!!");
+            return true;
+        }
     </script>
 </body>
