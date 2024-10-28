@@ -44,7 +44,7 @@ namespace KoiOrderingSystem.Controllers
             // Gọi phương thức chung để lấy danh sách phân trang
             var (varietiesOnPage, totalPages, totalVarieties) = await GetPagedVarieties(query, page, pageSize);
 
-            // Truyền thông tin về trang hiện tại và tổng số trang vào ViewBag
+            
             ViewBag.CurrentPage = page;
             ViewBag.TotalPages = totalPages;
 
@@ -81,7 +81,7 @@ namespace KoiOrderingSystem.Controllers
             // Gọi phương thức chung để lấy danh sách phân trang
             var (varietiesOnPage, totalPages, totalVarieties) = await GetPagedVarieties(query, page, pageSize);
 
-            // Truyền thông tin về trang hiện tại và tổng số trang vào ViewBag
+            
             ViewBag.CurrentPage = page;
             ViewBag.TotalPages = totalPages;
 
