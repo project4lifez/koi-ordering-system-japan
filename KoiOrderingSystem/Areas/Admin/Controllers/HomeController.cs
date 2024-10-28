@@ -220,14 +220,77 @@ namespace KoiAdmin.Areas.Admin.Controllers
 
 
         // Updated OrderManagement action
-        public async Task<IActionResult> OrderManagement()
+        public async Task<IActionResult> OrderManagement(string searchQuery, string statusFilter, int page = 1, int pageSize = 15)
         {
-            // Fetch the list of bookings from the database, including the related Trip entity
-            var bookings = await _db.Bookings
-                .Include(b => b.Trip) // Include the related Trip entity so you can access TripName
+            // Get adminRoleId from the session
+            var adminRoleId = HttpContext.Session.GetInt32("AdminRoleId");
+
+            // Initialize query
+            var bookingsQuery = _db.Bookings.Include(b => b.Trip).AsQueryable();
+
+            DateOnly? parsedDate = null;
+
+            if (DateOnly.TryParseExact(searchQuery, "M/d/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateOnly dateValue))
+            {
+                parsedDate = dateValue;
+            }
+
+            // Perform search
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                bookingsQuery = bookingsQuery.Where(b =>
+                    (b.BookingId.ToString().Contains(searchQuery)) ||
+                    (b.Fullname != null && b.Fullname.ToLower().Contains(searchQuery.ToLower())) ||
+                    (b.Trip != null && b.Trip.TripName != null && b.Trip.TripName.ToLower().Contains(searchQuery.ToLower())) ||
+                    (b.QuotedAmount != null && b.QuotedAmount.ToString().Contains(searchQuery)) ||
+                    (parsedDate != null && b.BookingDate == parsedDate)
+                );
+            }
+
+            // Apply role-based status filtering
+            if (adminRoleId.HasValue)
+            {
+                switch (adminRoleId.Value)
+                {
+                    case 2:
+                        bookingsQuery = bookingsQuery.Where(b => new[] { "Requested", "Processing", "Rejected", "Accepted", "Failed", "Refunding" }.Contains(b.Status));
+                        break;
+                    case 3:
+                        bookingsQuery = bookingsQuery.Where(b => new[] { "Requested", "Processing", "Rejected", "Accepted" }.Contains(b.Status));
+                        break;
+                    case 4:
+                        bookingsQuery = bookingsQuery.Where(b => new[] { "Confirmed", "Checked in", "Checked out" }.Contains(b.Status));
+                        break;
+                    case 5:
+                        bookingsQuery = bookingsQuery.Where(b => new[] { "Checked out", "Delivering", "Failed" }.Contains(b.Status));
+                        break;
+                }
+            }
+
+            // Apply status filter if provided
+            if (!string.IsNullOrEmpty(statusFilter))
+            {
+                bookingsQuery = bookingsQuery.Where(b => b.Status.ToLower() == statusFilter.ToLower());
+            }
+
+            // Count total filtered bookings
+            var totalBookings = await bookingsQuery.CountAsync();
+
+            // Get paginated bookings
+            var bookings = await bookingsQuery
+                .OrderByDescending(b => b.BookingId)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
 
-            // Pass the list of bookings to the view
+            // Pass data to View
+            ViewBag.TotalBookings1 = totalBookings;
+            ViewBag.Page1 = page;
+            ViewBag.PageSize = pageSize;
+            ViewBag.TotalPages = (int)Math.Ceiling((double)totalBookings / pageSize);
+            ViewBag.SearchQuery = searchQuery;
+            ViewBag.StatusFilter = statusFilter;
+
             return View(bookings);
         }
 
@@ -251,7 +314,6 @@ namespace KoiAdmin.Areas.Admin.Controllers
                     (b.Trip != null && b.Trip.TripName != null && b.Trip.TripName.ToLower().Contains(searchQuery.ToLower())) ||
                     (b.QuotedAmount != null && b.QuotedAmount.ToString().Contains(searchQuery)) ||
                     (parsedDate != null && b.BookingDate == parsedDate) // Tìm kiếm trong Booking Date
-
                 );
             }
 
@@ -264,9 +326,9 @@ namespace KoiAdmin.Areas.Admin.Controllers
             // Tổng số lượng đơn hàng sau khi tìm kiếm và lọc
             var totalBookings = await bookingsQuery.CountAsync();
 
-            // Lấy danh sách đơn hàng với phân trang
+            // Lấy danh sách đơn hàng với phân trang, sắp xếp theo BookingId giảm dần
             var bookings = await bookingsQuery
-                .OrderBy(b => b.BookingId)
+                .OrderByDescending(b => b.BookingId) // Sắp xếp theo BookingId giảm dần
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
@@ -281,6 +343,7 @@ namespace KoiAdmin.Areas.Admin.Controllers
 
             return View(bookings);
         }
+
 
 
 

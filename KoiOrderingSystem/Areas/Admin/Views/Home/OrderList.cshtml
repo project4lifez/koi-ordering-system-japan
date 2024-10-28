@@ -131,6 +131,11 @@
                             <option value="Confirmed" @(ViewBag.StatusFilter == "Confirmed" ? "selected" : "")>Confirmed</option>
                             <option value="Delivering" @(ViewBag.StatusFilter == "Delivering" ? "selected" : "")>Delivering</option>
                             <option value="Delivered" @(ViewBag.StatusFilter == "Delivered" ? "selected" : "")>Delivered</option>
+                            <option value="Failed" @(ViewBag.StatusFilter == "Failed" ? "selected" : "")>Failed</option>
+                            <option value="Lost Deposit" @(ViewBag.StatusFilter == "Lost Deposit" ? "selected" : "")>Lost Deposit</option>
+                            <option value="Refunding" @(ViewBag.StatusFilter == "Refunding" ? "selected" : "")>Refunding</option>
+                            <option value="Refunded" @(ViewBag.StatusFilter == "Refunded" ? "selected" : "")>Refunded</option>
+
                         </select>
                     </div>
                     <div class="col-md-4">
@@ -180,6 +185,8 @@
                                                 "accepted" => "badge-confirm",
                                                 "delivered" => "badge-confirm",
                                                 "confirmed" => "badge-confirm",
+                                                "lost deposit" => "badge-cancel",
+                                                "refunded"  => "badge-confirm",
                                                 _ => "badge-other"
                                             };
                                         }
