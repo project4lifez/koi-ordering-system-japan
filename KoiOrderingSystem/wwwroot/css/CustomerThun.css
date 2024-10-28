@@ -1676,22 +1676,6 @@ body {
             color: #333;
         }
 
-/* Utility Class for Mobile Layout */
-.mobile .koi-farm-content {
-    flex-direction: column;
-    align-items: center;
-}
-
-.mobile .image-wrapper {
-    width: 100%;
-    max-width: 300px;
-}
-
-.mobile .koi-farm-description .detail-link {
-    position: static;
-    margin-top: 10px;
-    text-align: center;
-}
 
 /* Card Hover Effect */
 .koi-card {
