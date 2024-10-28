@@ -2032,33 +2032,82 @@ body {
     }
 
 /* Navigation Buttons for Featured Services */
-.nav-buttons {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
+.tagify__tag img {
     width: 100%;
-    display: flex;
-    justify-content: space-between;
-    pointer-events: none;
+    vertical-align: top;
 }
 
-.nav-button {
-    background-color: rgba(0, 0, 0, 0.5);
-    border: none;
-    color: white;
-    padding: 10px 20px;
-    cursor: pointer;
-    pointer-events: auto;
-    font-size: 18px;
-    border-radius: 5px;
-    transition: background-color 0.3s, transform 0.3s;
+.tagify__dropdown.users-list .tagify__dropdown__item {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0 1em;
+    grid-template-areas: "avatar name" "avatar email";
 }
 
-    .nav-button:hover {
-        background-color: rgba(0, 0, 0, 0.8);
-        transform: scale(1.1);
+.tagify__dropdown.users-list header.tagify__dropdown__item {
+    grid-template-areas: "add remove-tags" "remaning .";
+}
+
+.tagify__dropdown.users-list .tagify__dropdown__item:hover .tagify__dropdown__item__avatar-wrap {
+    transform: scale(1.2);
+}
+
+.tagify__dropdown.users-list .tagify__dropdown__item__avatar-wrap {
+    grid-area: avatar;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: rgb(var(--light-rgb));
+    transition: 0.1s ease-out;
+}
+
+.tagify__dropdown.users-list img {
+    width: 100%;
+    vertical-align: top;
+}
+
+.tagify__dropdown.users-list header.tagify__dropdown__item > div,
+.tagify__dropdown.users-list .tagify__dropdown__item strong {
+    grid-area: name;
+    width: 100%;
+    align-self: center;
+}
+
+.tagify__dropdown.users-list span {
+    grid-area: email;
+    width: 100%;
+    font-size: 0.9em;
+    opacity: 0.6;
+}
+
+.tagify__dropdown.users-list .tagify__dropdown__item__addAll {
+    border-bottom: 1px solid var(--default-border);
+    gap: 0;
+}
+
+.tagify__dropdown.users-list .remove-all-tags {
+    grid-area: remove-tags;
+    justify-self: self-end;
+    font-size: 0.8em;
+    padding: 0.2em 0.3em;
+    border-radius: 3px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+}
+
+    .tagify__dropdown.users-list .remove-all-tags:hover {
+        color: #fff;
+        background: rgb(var(--orange-rgb));
     }
+/* Tags items */
+#users-list .tagify__tag {
+    white-space: nowrap;
+}
 
-    .nav-button:focus {
-        outline: none;
+    #users-list .tagify__tag img {
+        width: 100%;
+        vertical-align: top;
+        pointer-events: none;
     }
