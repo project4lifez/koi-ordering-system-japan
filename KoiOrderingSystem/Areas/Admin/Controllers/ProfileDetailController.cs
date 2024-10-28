@@ -24,7 +24,7 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
 
 			if (account == null)
 			{
-				return NotFound(); // Trả về lỗi nếu không tìm thấy tài khoản
+				return NotFound(); 
 			}
 
 			return View(account); // Truyền model vào View
