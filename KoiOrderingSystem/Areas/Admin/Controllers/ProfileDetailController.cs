@@ -17,7 +17,7 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
 
 		public IActionResult ProfileDetail(int accountId)
 		{
-			// Lấy thông tin tài khoản từ cơ sở dữ liệu, bao gồm thông tin vai trò
+			
 			var account = _db.Accounts
 							 .Include(a => a.Role) // Nạp thông tin vai trò
 							 .FirstOrDefault(a => a.AccountId == accountId);
