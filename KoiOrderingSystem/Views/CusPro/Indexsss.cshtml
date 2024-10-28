@@ -3400,29 +3400,7 @@
                     field.classList.remove('is-invalid');
                 }
 
-                // Progress bar update logic
-                function updateProgress() {
-                    let validElements = 0;
-
-                    formElements.forEach(function (element) {
-                        if (element.value.trim() !== "" && (element.classList.contains('is-valid') || !element.classList.contains('is-invalid'))) {  // Only count if the field is valid or not showing an error
-                            validElements++;
-                        }
-                    });
-
-                    // Cập nhật thanh tiến trình
-                    const progressPercentage = (validElements / formElements.length) * 100;
-                    progressBar.style.width = progressPercentage + '%';
-                }
-
-                // Format date as yyyy-mm-dd
-                function formatDate(date) {
-                    const year = date.getFullYear();
-                    const month = String(date.getMonth() + 1).padStart(2, '0'); // Tháng 1-12
-                    const day = String(date.getDate()).padStart(2, '0'); // Ngày 01-31
-                    return `${year}-${month}-${day}`;
-                }
-            });
+               
 
 
 
