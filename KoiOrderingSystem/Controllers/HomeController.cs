@@ -104,7 +104,7 @@ namespace KoiOrderingSystem.Controllers
                 .OrderByDescending(v => v.VarietyId) 
                 .ToListAsync();
 
-            return View(koiVarieties); // Pass the list to the view
+            return View(koiVarieties); 
         }
 
 
