@@ -25,7 +25,7 @@
 
             var customerListQuery = _db.Accounts
                 .Include(a => a.Customers)
-                .Where(a => a.RoleId == 1); // Assuming RoleId 1 is for customers
+                .Where(a => a.RoleId == 1); 
 
             // Filter by status if provided
             if (!string.IsNullOrEmpty(status))
@@ -49,7 +49,7 @@
                 .Take(pageSize)
                 .ToListAsync();
 
-            // Set ViewBag properties for use in the view
+          
             ViewBag.SelectedStatus = status;
             ViewBag.SearchQuery = searchQuery;
             ViewBag.CurrentPage = page;

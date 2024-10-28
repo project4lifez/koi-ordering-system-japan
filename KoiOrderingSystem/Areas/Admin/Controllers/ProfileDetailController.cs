@@ -19,7 +19,7 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
 		{
 			
 			var account = _db.Accounts
-							 .Include(a => a.Role) // Nạp thông tin vai trò
+							 .Include(a => a.Role) 
 							 .FirstOrDefault(a => a.AccountId == accountId);
 
 			if (account == null)
@@ -36,14 +36,14 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
 			// Chuyển đổi string status thành bool
 			bool isActive = status == "active";
 
-			// Tìm tài khoản dựa trên AccountId
+		
 			var account = _db.Accounts.FirstOrDefault(a => a.AccountId == accountId);
 			if (account == null)
 			{
 				return NotFound(); 
 			}
 
-			// Cập nhật trạng thái
+			
 			account.Status = isActive;
 			_db.SaveChanges(); 
 

@@ -1,0 +1,2406 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>SB Admin 2 - Cards</title>
+
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+          rel="stylesheet">
+
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+
+</head>
+
+<body id="page-top">
+    <div id="wrapper">
+
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-laugh-wink"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>
+            </a>
+
+            <hr class="sidebar-divider my-0">
+
+            <li class="nav-item">
+                <a class="nav-link" href="index.html">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+
+            <hr class="sidebar-divider">
+
+            <div class="sidebar-heading">
+                Interface
+            </div>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
+                   aria-expanded="true" aria-controls="collapseTwo">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>Components</span>
+                </a>
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Custom Components:</h6>
+                        <a class="collapse-item" href="buttons.html">Buttons</a>
+                        <a class="collapse-item" href="cards.html">Cards</a>
+                    </div>
+                </div>
+            </li>
+
+           
+
+            <hr class="sidebar-divider">
+
+            <div class="sidebar-heading">
+                Addons
+            </div>
+
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item active">
+                <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true"
+                   aria-controls="collapsePages">
+                    <i class="fas fa-fw fa-folder"></i>
+                    <span>Pages</span>
+                </a>
+                <div id="collapsePages" class="collapse show" aria-labelledby="headingPages"
+                     data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Login Screens:</h6>
+                        <a class="collapse-item" href="login.html">Login</a>
+                        <a class="collapse-item" href="register.html">Register</a>
+                        <a class="collapse-item" href="forgot-password.html">Forgot Password</a>
+                        <div class="collapse-divider"></div>
+                        <h6 class="collapse-header">Other Pages:</h6>
+                        <a class="collapse-item active" href="404.html">404 Page</a>
+                        <a class="collapse-item" href="blank.html">Blank Page</a>
+                    </div>
+                </div>
+            </li>
+
+            <!-- Nav Item - Charts -->
+            <li class="nav-item">
+                <a class="nav-link" href="charts.html">
+                    <i class="fas fa-fw fa-chart-area"></i>
+                    <span>Charts</span>
+                </a>
+            </li>
+
+            <!-- Nav Item - Tables -->
+            <li class="nav-item">
+                <a class="nav-link" href="tables.html">
+                    <i class="fas fa-fw fa-table"></i>
+                    <span>Tables</span>
+                </a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider d-none d-md-block">
+
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+
+        </ul>
+        <!-- End of Sidebar -->
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+                    <!-- Sidebar Toggle (Topbar) -->
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                        <i class="fa fa-bars"></i>
+                    </button>
+
+                    <!-- Topbar Search -->
+                    <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                        <div class="input-group">
+                            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
+                                   aria-label="Search" aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="button">
+                                    <i class="fas fa-search fa-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
+
+                        <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+                        <li class="nav-item dropdown no-arrow d-sm-none">
+                            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-search fa-fw"></i>
+                            </a>
+                            <!-- Dropdown - Messages -->
+                            <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
+                                 aria-labelledby="searchDropdown">
+                                <form class="form-inline mr-auto w-100 navbar-search">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control bg-light border-0 small"
+                                               placeholder="Search for..." aria-label="Search"
+                                               aria-describedby="basic-addon2">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-primary" type="button">
+                                                <i class="fas fa-search fa-sm"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </li>
+
+                        <!-- Nav Item - Alerts -->
+                        <li class="nav-item dropdown no-arrow mx-1">
+                            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-bell fa-fw"></i>
+                                <!-- Counter - Alerts -->
+                                <span class="badge badge-danger badge-counter">3+</span>
+                            </a>
+                            <!-- Dropdown - Alerts -->
+                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                 aria-labelledby="alertsDropdown">
+                                <h6 class="dropdown-header">
+                                    Alerts Center
+                                </h6>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="mr-3">
+                                        <div class="icon-circle bg-primary">
+                                            <i class="fas fa-file-alt text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="small text-gray-500">December 12, 2019</div>
+                                        <span class="font-weight-bold">A new monthly report is ready to download!</span>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="mr-3">
+                                        <div class="icon-circle bg-success">
+                                            <i class="fas fa-donate text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="small text-gray-500">December 7, 2019</div>
+                                        $290.29 has been deposited into your account!
+                                    </div>
+                                </a>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="mr-3">
+                                        <div class="icon-circle bg-warning">
+                                            <i class="fas fa-exclamation-triangle text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="small text-gray-500">December 2, 2019</div>
+                                        Spending Alert: We've noticed unusually high spending for your account.
+                                    </div>
+                                </a>
+                                <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+                            </div>
+                        </li>
+
+                        <!-- Nav Item - Messages -->
+                        <li class="nav-item dropdown no-arrow mx-1">
+                            <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-envelope fa-fw"></i>
+                                <!-- Counter - Messages -->
+                                <span class="badge badge-danger badge-counter">7</span>
+                            </a>
+                            <!-- Dropdown - Messages -->
+                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                 aria-labelledby="messagesDropdown">
+                                <h6 class="dropdown-header">
+                                    Message Center
+                                </h6>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="dropdown-list-image mr-3">
+                                        <img class="rounded-circle" src="img/undraw_profile_1.svg"
+                                             alt="...">
+                                        <div class="status-indicator bg-success"></div>
+                                    </div>
+                                    <div class="font-weight-bold">
+                                        <div class="text-truncate">
+                                            Hi there! I am wondering if you can help me with a
+                                            problem I've been having.
+                                        </div>
+                                        <div class="small text-gray-500">Emily Fowler · 58m</div>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="dropdown-list-image mr-3">
+                                        <img class="rounded-circle" src="img/undraw_profile_2.svg"
+                                             alt="...">
+                                        <div class="status-indicator"></div>
+                                    </div>
+                                    <div>
+                                        <div class="text-truncate">
+                                            I have the photos that you ordered last month, how
+                                            would you like them sent to you?
+                                        </div>
+                                        <div class="small text-gray-500">Jae Chun · 1d</div>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="dropdown-list-image mr-3">
+                                        <img class="rounded-circle" src="img/undraw_profile_3.svg"
+                                             alt="...">
+                                        <div class="status-indicator bg-warning"></div>
+                                    </div>
+                                    <div>
+                                        <div class="text-truncate">
+                                            Last month's report looks great, I am very happy with
+                                            the progress so far, keep up the good work!
+                                        </div>
+                                        <div class="small text-gray-500">Morgan Alvarez · 2d</div>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="dropdown-list-image mr-3">
+                                        <img class="rounded-circle" src="https://source.unsplash.com/Mv9hjnEUHR4/60x60"
+                                             alt="...">
+                                        <div class="status-indicator bg-success"></div>
+                                    </div>
+                                    <div>
+                                        <div class="text-truncate">
+                                            Am I a good boy? The reason I ask is because someone
+                                            told me that people say this to all dogs, even if they aren't good...
+                                        </div>
+                                        <div class="small text-gray-500">Chicken the Dog · 2w</div>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item text-center small text-gray-500" href="#">Read More Messages</a>
+                            </div>
+                        </li>
+
+                        <div class="topbar-divider d-none d-sm-block"></div>
+
+                        <!-- Nav Item - User Information -->
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
+                                <img class="img-profile rounded-circle"
+                                     src="img/undraw_profile.svg">
+                            </a>
+                            <!-- Dropdown - User Information -->
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                 aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Profile
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Settings
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Activity Log
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Logout
+                                </a>
+                            </div>
+                        </li>
+
+                    </ul>
+
+                </nav>
+                <!-- End of Topbar -->
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- 404 Error Text -->
+                    <div class="text-center">
+                        <div class="error mx-auto" data-text="404">404</div>
+                        <p class="lead text-gray-800 mb-5">Page Not Found</p>
+                        <p class="text-gray-500 mb-0">It looks like you found a glitch in the matrix...</p>
+                        <a href="index.html">&larr; Back to Dashboard</a>
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; Your Website 2020</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="login.html">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-laugh-wink"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>
+            </a>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item">
+                <a class="nav-link" href="index.html">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Interface
+            </div>
+
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item active">
+                <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true"
+                   aria-controls="collapseTwo">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>Components</span>
+                </a>
+                <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo"
+                     data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Custom Components:</h6>
+                        <a class="collapse-item" href="buttons.html">Buttons</a>
+                        <a class="collapse-item active" href="cards.html">Cards</a>
+                    </div>
+                </div>
+            </li>
+
+            <!-- Nav Item - Utilities Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
+                   aria-expanded="true" aria-controls="collapseUtilities">
+                    <i class="fas fa-fw fa-wrench"></i>
+                    <span>Utilities</span>
+                </a>
+                <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
+                     data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Custom Utilities:</h6>
+                        <a class="collapse-item" href="utilities-color.html">Colors</a>
+                        <a class="collapse-item" href="utilities-border.html">Borders</a>
+                        <a class="collapse-item" href="utilities-animation.html">Animations</a>
+                        <a class="collapse-item" href="utilities-other.html">Other</a>
+                    </div>
+                </div>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Addons
+            </div>
+
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+                   aria-expanded="true" aria-controls="collapsePages">
+                    <i class="fas fa-fw fa-folder"></i>
+                    <span>Pages</span>
+                </a>
+                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Login Screens:</h6>
+                        <a class="collapse-item" href="login.html">Login</a>
+                        <a class="collapse-item" href="register.html">Register</a>
+                        <a class="collapse-item" href="forgot-password.html">Forgot Password</a>
+                        <div class="collapse-divider"></div>
+                        <h6 class="collapse-header">Other Pages:</h6>
+                        <a class="collapse-item" href="404.html">404 Page</a>
+                        <a class="collapse-item" href="blank.html">Blank Page</a>
+                    </div>
+                </div>
+            </li>
+
+            <!-- Nav Item - Charts -->
+            <li class="nav-item">
+                <a class="nav-link" href="charts.html">
+                    <i class="fas fa-fw fa-chart-area"></i>
+                    <span>Charts</span>
+                </a>
+            </li>
+
+            <!-- Nav Item - Tables -->
+            <li class="nav-item">
+                <a class="nav-link" href="tables.html">
+                    <i class="fas fa-fw fa-table"></i>
+                    <span>Tables</span>
+                </a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider d-none d-md-block">
+
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+
+        </ul>
+        <!-- End of Sidebar -->
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+                    <!-- Sidebar Toggle (Topbar) -->
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                        <i class="fa fa-bars"></i>
+                    </button>
+
+                    <!-- Topbar Search -->
+                    <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                        <div class="input-group">
+                            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
+                                   aria-label="Search" aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="button">
+                                    <i class="fas fa-search fa-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
+
+                        <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+                        <li class="nav-item dropdown no-arrow d-sm-none">
+                            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-search fa-fw"></i>
+                            </a>
+                            <!-- Dropdown - Messages -->
+                            <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
+                                 aria-labelledby="searchDropdown">
+                                <form class="form-inline mr-auto w-100 navbar-search">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control bg-light border-0 small"
+                                               placeholder="Search for..." aria-label="Search"
+                                               aria-describedby="basic-addon2">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-primary" type="button">
+                                                <i class="fas fa-search fa-sm"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </li>
+
+                        <!-- Nav Item - Alerts -->
+                        <li class="nav-item dropdown no-arrow mx-1">
+                            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-bell fa-fw"></i>
+                                <!-- Counter - Alerts -->
+                                <span class="badge badge-danger badge-counter">3+</span>
+                            </a>
+                            <!-- Dropdown - Alerts -->
+                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                 aria-labelledby="alertsDropdown">
+                                <h6 class="dropdown-header">
+                                    Alerts Center
+                                </h6>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="mr-3">
+                                        <div class="icon-circle bg-primary">
+                                            <i class="fas fa-file-alt text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="small text-gray-500">December 12, 2019</div>
+                                        <span class="font-weight-bold">A new monthly report is ready to download!</span>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="mr-3">
+                                        <div class="icon-circle bg-success">
+                                            <i class="fas fa-donate text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="small text-gray-500">December 7, 2019</div>
+                                        $290.29 has been deposited into your account!
+                                    </div>
+                                </a>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="mr-3">
+                                        <div class="icon-circle bg-warning">
+                                            <i class="fas fa-exclamation-triangle text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="small text-gray-500">December 2, 2019</div>
+                                        Spending Alert: We've noticed unusually high spending for your account.
+                                    </div>
+                                </a>
+                                <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+                            </div>
+                        </li>
+
+                        <!-- Nav Item - Messages -->
+                        <li class="nav-item dropdown no-arrow mx-1">
+                            <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-envelope fa-fw"></i>
+                                <!-- Counter - Messages -->
+                                <span class="badge badge-danger badge-counter">7</span>
+                            </a>
+                            <!-- Dropdown - Messages -->
+                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                 aria-labelledby="messagesDropdown">
+                                <h6 class="dropdown-header">
+                                    Message Center
+                                </h6>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="dropdown-list-image mr-3">
+                                        <img class="rounded-circle" src="img/undraw_profile_1.svg"
+                                             alt="...">
+                                        <div class="status-indicator bg-success"></div>
+                                    </div>
+                                    <div class="font-weight-bold">
+                                        <div class="text-truncate">
+                                            Hi there! I am wondering if you can help me with a
+                                            problem I've been having.
+                                        </div>
+                                        <div class="small text-gray-500">Emily Fowler · 58m</div>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="dropdown-list-image mr-3">
+                                        <img class="rounded-circle" src="img/undraw_profile_2.svg"
+                                             alt="...">
+                                        <div class="status-indicator"></div>
+                                    </div>
+                                    <div>
+                                        <div class="text-truncate">
+                                            I have the photos that you ordered last month, how
+                                            would you like them sent to you?
+                                        </div>
+                                        <div class="small text-gray-500">Jae Chun · 1d</div>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="dropdown-list-image mr-3">
+                                        <img class="rounded-circle" src="img/undraw_profile_3.svg"
+                                             alt="...">
+                                        <div class="status-indicator bg-warning"></div>
+                                    </div>
+                                    <div>
+                                        <div class="text-truncate">
+                                            Last month's report looks great, I am very happy with
+                                            the progress so far, keep up the good work!
+                                        </div>
+                                        <div class="small text-gray-500">Morgan Alvarez · 2d</div>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="dropdown-list-image mr-3">
+                                        <img class="rounded-circle" src="https://source.unsplash.com/Mv9hjnEUHR4/60x60"
+                                             alt="...">
+                                        <div class="status-indicator bg-success"></div>
+                                    </div>
+                                    <div>
+                                        <div class="text-truncate">
+                                            Am I a good boy? The reason I ask is because someone
+                                            told me that people say this to all dogs, even if they aren't good...
+                                        </div>
+                                        <div class="small text-gray-500">Chicken the Dog · 2w</div>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item text-center small text-gray-500" href="#">Read More Messages</a>
+                            </div>
+                        </li>
+
+                        <div class="topbar-divider d-none d-sm-block"></div>
+
+                        <!-- Nav Item - User Information -->
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
+                                <img class="img-profile rounded-circle"
+                                     src="img/undraw_profile.svg">
+                            </a>
+                            <!-- Dropdown - User Information -->
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                 aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Profile
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Settings
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Activity Log
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Logout
+                                </a>
+                            </div>
+                        </li>
+
+                    </ul>
+
+                </nav>
+                <!-- End of Topbar -->
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">Cards</h1>
+                    </div>
+
+                    <div class="row">
+
+                        <!-- Earnings (Monthly) Card Example -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-primary shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                Earnings (Monthly)
+                                            </div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Earnings (Annual) Card Example -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-success shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                                Earnings (Annual)
+                                            </div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tasks Card Example -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-info shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                                Tasks
+                                            </div>
+                                            <div class="row no-gutters align-items-center">
+                                                <div class="col-auto">
+                                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%</div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="progress progress-sm mr-2">
+                                                        <div class="progress-bar bg-info" role="progressbar"
+                                                             style="width: 50%" aria-valuenow="50" aria-valuemin="0"
+                                                             aria-valuemax="100"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pending Requests Card Example -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-warning shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                Pending Requests
+                                            </div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-comments fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-lg-6">
+
+                            <!-- Default Card Example -->
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    Default Card Example
+                                </div>
+                                <div class="card-body">
+                                    This card uses Bootstrap's default styling with no utility classes added. Global
+                                    styles are the only things modifying the look and feel of this default card example.
+                                </div>
+                            </div>
+
+                            <!-- Basic Card Example -->
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">Basic Card Example</h6>
+                                </div>
+                                <div class="card-body">
+                                    The styling for this basic card example is created by using default Bootstrap
+                                    utility classes. By using utility classes, the style of the card component can be
+                                    easily modified with no need for any custom CSS!
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="col-lg-6">
+
+                            <!-- Dropdown Card Example -->
+                            <div class="card shadow mb-4">
+                                <!-- Card Header - Dropdown -->
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-primary">Dropdown Card Example</h6>
+                                    <div class="dropdown no-arrow">
+                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                             aria-labelledby="dropdownMenuLink">
+                                            <div class="dropdown-header">Dropdown Header:</div>
+                                            <a class="dropdown-item" href="#">Action</a>
+                                            <a class="dropdown-item" href="#">Another action</a>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item" href="#">Something else here</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Card Body -->
+                                <div class="card-body">
+                                    Dropdown menus can be placed in the card header in order to extend the functionality
+                                    of a basic card. In this dropdown card example, the Font Awesome vertical ellipsis
+                                    icon in the card header can be clicked on in order to toggle a dropdown menu.
+                                </div>
+                            </div>
+
+                            <!-- Collapsable Card Example -->
+                            <div class="card shadow mb-4">
+                                <!-- Card Header - Accordion -->
+                                <a href="#collapseCardExample" class="d-block card-header py-3" data-toggle="collapse"
+                                   role="button" aria-expanded="true" aria-controls="collapseCardExample">
+                                    <h6 class="m-0 font-weight-bold text-primary">Collapsable Card Example</h6>
+                                </a>
+                                <!-- Card Content - Collapse -->
+                                <div class="collapse show" id="collapseCardExample">
+                                    <div class="card-body">
+                                        This is a collapsable card example using Bootstrap's built in collapse
+                                        functionality. <strong>Click on the card header</strong> to see the card body
+                                        collapse and expand!
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; Your Website 2020</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="login.html">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="hero-container mt-2 pt-2">
+        <div class="hero-slider">
+            <!-- Hero Section 1 -->
+            <section class="hero" id="home1">
+                <h1>錦鯉</h1>
+                <p>We guide you to the Japanese nishikigoi of your dreams</p>
+                <button onclick="location.href='/Home/BookingForm'">Start Your Journey</button>
+            </section>
+            <!-- Hero Section 2 -->
+            <section class="hero" id="home2">
+                <h1>Find Your Koi</h1>
+                <p>Discover beautiful koi fish from top Japanese breeders</p>
+                <button>Explore Now</button>
+            </section>
+            <!-- Hero Section 3 -->
+            <section class="hero" id="home3">
+                <h1>Quality You Can Trust</h1>
+                <p>We ensure only the best quality and care for your koi fish</p>
+                <button>Learn More</button>
+            </section>
+        </div>
+        <!-- Navigation Buttons -->
+        <div class="nav-buttons">
+            <button class="nav-button" onclick="prevSlide()">&#10094; </button>
+            <button class="nav-button" onclick="nextSlide()"> &#10095;</button>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <section class="features" id="services">
+        <div class="feature">
+            <i class="fas fa-fish"></i>
+            <h3>Quality Koi</h3>
+            <p>We source the finest Koi from top farms in Japan.</p>
+        </div>
+        <div class="feature">
+            <i class="fas fa-map-marked-alt"></i>
+            <h3>Personalized Trips</h3>
+            <p>Experience custom trips to Koi farms with expert guides.</p>
+        </div>
+        <div class="feature">
+            <i class="fas fa-truck"></i>
+            <h3>Seamless Delivery</h3>
+            <p>We ensure safe and reliable delivery of your Koi.</p>
+        </div>
+    </section>
+
+    <!-- About Us Section -->
+    <section class="about" id="about">
+        <h2>About Us</h2>
+        <p>Welcome to our Nishikigoi Ordering Service in Japan – your trusted partner in finding your favorite Koi fish from Japan. We connect you with the finest Koi farms, offer personalized trips, and provide expert guidance throughout your journey. From selecting the perfect Koi to ensuring a seamless delivery, we handle every step with care and professionalism. Experience the best of Japan’s Koi culture with us!</p>
+    </section>
+
+    <!-- Koi Farms Section -->
+    <section class="koi-farm-section" id="koi-farms">
+        <h2>Koi Farms</h2>
+
+        <div class="koi-farm-tabs">
+            <!-- Previous Button -->
+            <button class="nav-button" id="prev-tabs-button"><i class="fas fa-chevron-left"></i></button>
+
+            <!-- Tabs Container -->
+            <div class="koi-farm-tab-container" id="tab-container">
+                <!-- Tabs will be dynamically added here -->
+            </div>
+
+            <!-- Next Button -->
+            <button class="nav-button" id="next-tabs-button"><i class="fas fa-chevron-right"></i></button>
+        </div>
+
+        <!-- Farm Content for Dainichi Koi Farm -->
+        <div class="koi-farm-content" id="dainichi" style="display: flex;">
+            <div class="image-wrapper">
+                <img src="https://www.kodamakoifarm.com/wp-content/uploads/2022/03/Dainichi-and-Isa-Auction-Banner.jpg" alt="Dainichi Koi Farm">
+            </div>
+            <div class="koi-farm-description">
+                <h3>Dainichi Koi Farm</h3>
+                <p>As one of the most famous Koi farms in Japan, Dainichi Koi Farm boasts an extensive system of pristine mud ponds and clean, well-maintained fish breeding pools that meet high standards. They provide a wide variety of Koi, from baby Koi for breeding to medium-sized and even Jumbo Koi. Dainichi Koi Farms' Koi are renowned worldwide for their beauty, superior care conditions, and excellent breeding techniques. Famous varieties include Showa, Kohaku, and more.</p>
+                <a href="/Farm" class="detail-link">detail..</a>
+            </div>
+        </div>
+
+        <!-- Farm Content for Otsuka Koi Farm -->
+        <div class="koi-farm-content" id="otsuka" style="display: none;">
+            <div class="image-wrapper">
+                <img src="https://onkoi.vn/wp-content/uploads/2020/05/Otsuka-koi-farm.jpg" alt="Otsuka Koi Farm">
+            </div>
+            <div class="koi-farm-description">
+                <h3>Otsuka Koi Farm</h3>
+                <p>Otsuka Koi Farm is known for its exceptional bloodlines and exquisite Koi varieties. Established by a family passionate about Nishikigoi breeding, Otsuka Koi Farm focuses on quality over quantity, raising Koi that are healthy and aesthetically superior. They are particularly known for their beautiful Sanke and Showa Koi.</p>
+                <a href="/Farm" class="detail-link">detail..</a>
+            </div>
+        </div>
+
+        <!-- Farm Content for Fukasawa Koi Farm -->
+        <div class="koi-farm-content" id="fukasawa" style="display: none;">
+            <div class="image-wrapper">
+                <img src="https://i.ytimg.com/vi/ej92zg2xYBM/maxresdefault.jpg" alt="Fukasawa Koi Farm">
+            </div>
+            <div class="koi-farm-description">
+                <h3>Fukasawa Koi Farm</h3>
+                <p>Fukasawa Koi Farm is a smaller, family-owned farm specializing in unique, high-quality Koi with excellent conformation and vibrant color patterns. They are known for their Kohaku and Sanke Koi, and they take pride in the careful hand-selection and breeding of their fish, ensuring that only the best Koi are available to enthusiasts.</p>
+                <a href="/Farm" class="detail-link">detail..</a>
+            </div>
+        </div>
+
+        <!-- Farm Content for Hosokai Koi Farm -->
+        <div class="koi-farm-content" id="hosokai" style="display: none;">
+            <div class="image-wrapper">
+                <img src="https://i.ytimg.com/vi/VcsCDDoPsIA/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLAcd1I5PRDLSM-Gucjo-jVgKw8lNg" alt="Hosokai Koi Farm">
+            </div>
+            <div class="koi-farm-description">
+                <h3>Hosokai Koi Farm</h3>
+                <p>Hosokai Koi Farm is famous for its award-winning Koi, especially in the variety of Kohaku and Shiro Utsuri. With a focus on both tradition and innovation in breeding techniques, Hosokai Koi Farm has consistently produced top-tier Koi that have won numerous prizes in Japan and abroad.</p>
+                <a href="/Farm" class="detail-link">detail..</a>
+            </div>
+        </div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="js/sb-admin-2.min.js"></script>
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.hero');
+        const totalSlides = slides.length;
+
+        function showSlide(index) {
+            const slider = document.querySelector('.hero-slider');
+            slider.style.transform = `translateX(-${index * 100}%)`;
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            showSlide(currentSlide);
+        }
+
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            showSlide(currentSlide);
+        }
+
+        setInterval(nextSlide, 5000); // Change slide every 5 seconds
+
+        function searchFunction() {
+            var input = document.getElementById('searchInput').value.toLowerCase();
+            if (input === 'koi' || input === 'nishikigoi') {
+                alert('Koi information found!');
+            } else if (input === '') {
+                alert('Please enter a search term.');
+            } else {
+                alert('No results found for: ' + input);
+            }
+        }
+
+        function toggleMenu() {
+            const menu = document.querySelector('.mobile-menu');
+            menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function scrollToTop() {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+        }
+
+        window.onscroll = function () {
+            document.querySelector('.back-to-top').style.display = document.body.scrollTop > 20 || document.documentElement.scrollTop > 20 ? 'block' : 'none';
+        };
+
+        const tabsData = [
+            { name: 'Dainichi', id: 'dainichi' },
+            { name: 'Otsuka', id: 'otsuka' },
+            { name: 'Fukasawa', id: 'fukasawa' },
+            { name: 'Hosokai', id: 'hosokai' },
+            { name: 'Shinoda', id: 'additional1' },
+            { name: 'Farm 2', id: 'additional2' }
+        ];
+
+        const tabsContainer = document.getElementById('tab-container');
+        const farmSections = document.querySelectorAll('.koi-farm-content');
+        let currentFarm = 0;  // Currently visible farm
+        let startTabIndex = 0;  // Start index of visible tabs
+        const maxVisibleTabs = 4;  
+
+        function showFarm(index) {
+            document.querySelectorAll('.koi-farm-tab').forEach((tab, i) => {
+                tab.classList.toggle('active', i === index - startTabIndex);  // Adjusted for the visible tabs
+            });
+            farmSections.forEach((section, i) => {
+                section.style.display = i === index ? 'flex' : 'none';
+            });
+        }
+
+        function renderTabs() {
+            tabsContainer.innerHTML = ''; 
+            const visibleTabs = tabsData.slice(startTabIndex, startTabIndex + maxVisibleTabs);
+            visibleTabs.forEach((tabData, index) => {
+                const tabElement = document.createElement('div');
+                tabElement.classList.add('koi-farm-tab');
+                if (startTabIndex + index === currentFarm) {
+                    tabElement.classList.add('active');
+                }
+                tabElement.innerText = tabData.name;
+                tabElement.addEventListener('click', () => {
+                    currentFarm = startTabIndex + index;
+                    showFarm(currentFarm);
+                    renderTabs();
+                });
+                tabsContainer.appendChild(tabElement);
+            });
+        }
+
+        // Event listeners for Previous and Next tab buttons
+        document.getElementById('prev-tabs-button').addEventListener('click', () => {
+            if (currentFarm > 0) {
+                currentFarm--;
+                if (currentFarm < startTabIndex) {
+                    startTabIndex--;
+                }
+                showFarm(currentFarm);
+                renderTabs();
+            }
+        });
+
+        document.getElementById('next-tabs-button').addEventListener('click', () => {
+            if (currentFarm < tabsData.length - 1) {
+                currentFarm++;
+                if (currentFarm >= startTabIndex + maxVisibleTabs) {
+                    startTabIndex++; // Shift visible tabs to the right
+                }
+                showFarm(currentFarm);
+                renderTabs();
+            }
+        });
+
+        // Initial render of tabs and farms
+        renderTabs();
+        showFarm(currentFarm);
+
+        let currentService = 0;
+        const services = document.querySelectorAll('.service');
+        const totalServices = services.length;
+
+        function showService(index) {
+            const serviceSlider = document.querySelector('.service-slider');
+            serviceSlider.style.transform = `translateX(-${index * 100}%)`;
+        }
+
+        function nextService() {
+            currentService = (currentService + 1) % totalServices;
+            showService(currentService);
+        }
+
+        function prevService() {
+            currentService = (currentService - 1 + totalServices) % totalServices;
+            showService(currentService);
+        }
+
+        setInterval(nextService, 15000); // Change service every 15 seconds
+
+        const feedbackCards = document.querySelectorAll('.feedback-card');
+        let currentFeedback = 0;
+
+        function showFeedback(index) {
+            feedbackCards.forEach((card, i) => {
+                card.classList.remove('active');
+                if (i === index) {
+                    card.classList.add('active');
+                }
+            });
+        }
+
+        document.getElementById('prev-feedback').addEventListener('click', () => {
+            currentFeedback = (currentFeedback - 1 + feedbackCards.length) % feedbackCards.length;
+            showFeedback(currentFeedback);
+        });
+
+        document.getElementById('next-feedback').addEventListener('click', () => {
+            currentFeedback = (currentFeedback + 1) % feedbackCards.length;
+            showFeedback(currentFeedback);
+        });
+
+        showFeedback(currentFeedback);
+
+        const feedbackCarousel = document.querySelector('.feedback-carousel');
+        const nextButton = document.getElementById('next-feedback');
+        const prevButton = document.getElementById('prev-feedback');
+
+        nextButton.addEventListener('click', () => {
+            feedbackCarousel.scrollBy({
+                left: 300, // Scroll khoảng cách tương đương với chiều rộng của feedback card
+                behavior: 'smooth'
+            });
+        });
+
+        prevButton.addEventListener('click', () => {
+            feedbackCarousel.scrollBy({
+                left: -300,
+                behavior: 'smooth'
+            });
+        });
+        // bong bóng
+        document.getElementById("main-chat-icon").addEventListener("click", function () {
+            const chatOptions = document.getElementById("chat-options");
+
+            // Kiểm tra trạng thái hiện tại của chatOptions
+            if (chatOptions.classList.contains("hidden")) {
+                chatOptions.classList.remove("hidden");
+                chatOptions.classList.add("visible");
+            } else {
+                chatOptions.classList.remove("visible");
+                chatOptions.classList.add("hidden");
+            }
+        });
+        //Pagination
+        let thisPage = 1;
+        let limit = 9;
+        let list = document.querySelectorAll(".product .product__item");
+        document.getElementById("num__product").innerHTML = list.length;
+
+        function loadItem() {
+            let beginGet = limit * (thisPage - 1);
+            let endGet = limit * thisPage - 1;
+            for (let i = 0; i < list.length; i++) {
+                if (i >= beginGet && i <= endGet) {
+                    list[i].style.display = "";
+                } else {
+                    list[i].style.display = "none";
+                }
+            }
+            listPage();
+        }
+        loadItem();
+
+        function listPage() {
+            let count = Math.ceil(list.length / limit);
+            document.querySelector(".product__pagination .list").innerHTML = "";
+            for (i = 1; i <= count; i++) {
+                let newPage = document.createElement("a");
+                newPage.classList.add("link");
+                newPage.innerHTML = i;
+                if (i == thisPage) {
+                    newPage.classList.add("active");
+                }
+                newPage.setAttribute("onclick", "activeLink(" + i + ")");
+                document.querySelector(".product__pagination .list").appendChild(newPage);
+            }
+        }
+
+        function activeLink(i) {
+            thisPage = i;
+            loadItem();
+        }
+
+        let link = document.getElementsByClassName("link");
+
+        function backBtn() {
+            if (thisPage > 1) {
+                for (l of link) {
+                    l.classList.remove("active");
+                }
+                thisPage--;
+                link[thisPage - 1].classList.add("active");
+            }
+            loadItem();
+        }
+        function nextBtn() {
+            let count = Math.ceil(list.length / limit);
+            if (thisPage < count) {
+                for (l of link) {
+                    l.classList.remove("active");
+                }
+                thisPage++;
+                link[thisPage - 1].classList.add("active");
+            }
+            loadItem();
+        }
+
+        //Pagination
+        let thisPage = 1;
+        let limit = 9;
+        let list = document.querySelectorAll(".product .product__item");
+        document.getElementById("num__product").innerHTML = list.length;
+
+        function loadItem() {
+            let beginGet = limit * (thisPage - 1);
+            let endGet = limit * thisPage - 1;
+            for (let i = 0; i < list.length; i++) {
+                if (i >= beginGet && i <= endGet) {
+                    list[i].style.display = "";
+                } else {
+                    list[i].style.display = "none";
+                }
+            }
+            listPage();
+        }
+        loadItem();
+
+        function listPage() {
+            let count = Math.ceil(list.length / limit);
+            document.querySelector(".product__pagination .list").innerHTML = "";
+            for (i = 1; i <= count; i++) {
+                let newPage = document.createElement("a");
+                newPage.classList.add("link");
+                newPage.innerHTML = i;
+                if (i == thisPage) {
+                    newPage.classList.add("active");
+                }
+                newPage.setAttribute("onclick", "activeLink(" + i + ")");
+                document.querySelector(".product__pagination .list").appendChild(newPage);
+            }
+        }
+
+        function activeLink(i) {
+            thisPage = i;
+            loadItem();
+        }
+
+        let link = document.getElementsByClassName("link");
+
+        function backBtn() {
+            if (thisPage > 1) {
+                for (l of link) {
+                    l.classList.remove("active");
+                }
+                thisPage--;
+                link[thisPage - 1].classList.add("active");
+            }
+            loadItem();
+        }
+        function nextBtn() {
+            let count = Math.ceil(list.length / limit);
+            if (thisPage < count) {
+                for (l of link) {
+                    l.classList.remove("active");
+                }
+                thisPage++;
+                link[thisPage - 1].classList.add("active");
+            }
+            loadItem();
+        }
+            let currentSlide = 0;
+            const slides = document.querySelectorAll('.hero');
+            const totalSlides = slides.length;
+
+            function showSlide(index) {
+                const slider = document.querySelector('.hero-slider');
+                slider.style.transform = `translateX(-${index * 100}%)`;
+            }
+
+            function nextSlide() {
+                currentSlide = (currentSlide + 1) % totalSlides;
+                showSlide(currentSlide);
+            }
+
+            function prevSlide() {
+                currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+                showSlide(currentSlide);
+            }
+
+            setInterval(nextSlide, 5000); // Change slide every 5 seconds
+
+            function searchFunction() {
+                var input = document.getElementById('searchInput').value.toLowerCase();
+                if (input === 'koi' || input === 'nishikigoi') {
+                    alert('Koi information found!');
+                } else if (input === '') {
+                    alert('Please enter a search term.');
+                } else {
+                    alert('No results found for: ' + input);
+                }
+            }
+
+            function toggleMenu() {
+                const menu = document.querySelector('.mobile-menu');
+                menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+            }
+
+            function scrollToTop() {
+                document.body.scrollTop = 0;
+                document.documentElement.scrollTop = 0;
+            }
+
+            window.onscroll = function () {
+                document.querySelector('.back-to-top').style.display = document.body.scrollTop > 20 || document.documentElement.scrollTop > 20 ? 'block' : 'none';
+            };
+
+            const tabsData = [
+                { name: 'Dainichi', id: 'dainichi' },
+                { name: 'Otsuka', id: 'otsuka' },
+                { name: 'Fukasawa', id: 'fukasawa' },
+                { name: 'Hosokai', id: 'hosokai' },
+                { name: 'Shinoda', id: 'additional1' },
+                { name: 'Farm 2', id: 'additional2' }
+            ];
+
+            const tabsContainer = document.getElementById('tab-container');
+            const farmSections = document.querySelectorAll('.koi-farm-content');
+            let currentFarm = 0;  // Currently visible farm
+            let startTabIndex = 0;  // Start index of visible tabs
+            const maxVisibleTabs = 4;
+
+            function showFarm(index) {
+                document.querySelectorAll('.koi-farm-tab').forEach((tab, i) => {
+                    tab.classList.toggle('active', i === index - startTabIndex);  // Adjusted for the visible tabs
+                });
+                farmSections.forEach((section, i) => {
+                    section.style.display = i === index ? 'flex' : 'none';
+                });
+            }
+
+            function renderTabs() {
+                tabsContainer.innerHTML = '';
+                const visibleTabs = tabsData.slice(startTabIndex, startTabIndex + maxVisibleTabs);
+                visibleTabs.forEach((tabData, index) => {
+                    const tabElement = document.createElement('div');
+                    tabElement.classList.add('koi-farm-tab');
+                    if (startTabIndex + index === currentFarm) {
+                        tabElement.classList.add('active');
+                    }
+                    tabElement.innerText = tabData.name;
+                    tabElement.addEventListener('click', () => {
+                        currentFarm = startTabIndex + index;
+                        showFarm(currentFarm);
+                        renderTabs();
+                    });
+                    tabsContainer.appendChild(tabElement);
+                });
+            }
+
+            // Event listeners for Previous and Next tab buttons
+            document.getElementById('prev-tabs-button').addEventListener('click', () => {
+                if (currentFarm > 0) {
+                    currentFarm--;
+                    if (currentFarm < startTabIndex) {
+                        startTabIndex--;
+                    }
+                    showFarm(currentFarm);
+                    renderTabs();
+                }
+            });
+
+            document.getElementById('next-tabs-button').addEventListener('click', () => {
+                if (currentFarm < tabsData.length - 1) {
+                    currentFarm++;
+                    if (currentFarm >= startTabIndex + maxVisibleTabs) {
+                        startTabIndex++; // Shift visible tabs to the right
+                    }
+                    showFarm(currentFarm);
+                    renderTabs();
+                }
+            });
+
+            // Initial render of tabs and farms
+            renderTabs();
+            showFarm(currentFarm);
+
+            let currentService = 0;
+            const services = document.querySelectorAll('.service');
+            const totalServices = services.length;
+
+            function showService(index) {
+                const serviceSlider = document.querySelector('.service-slider');
+                serviceSlider.style.transform = `translateX(-${index * 100}%)`;
+            }
+
+            function nextService() {
+                currentService = (currentService + 1) % totalServices;
+                showService(currentService);
+            }
+
+            function prevService() {
+                currentService = (currentService - 1 + totalServices) % totalServices;
+                showService(currentService);
+            }
+
+            setInterval(nextService, 15000); // Change service every 15 seconds
+
+            const feedbackCards = document.querySelectorAll('.feedback-card');
+            let currentFeedback = 0;
+
+            function showFeedback(index) {
+                feedbackCards.forEach((card, i) => {
+                    card.classList.remove('active');
+                    if (i === index) {
+                        card.classList.add('active');
+                    }
+                });
+            }
+
+            document.getElementById('prev-feedback').addEventListener('click', () => {
+                currentFeedback = (currentFeedback - 1 + feedbackCards.length) % feedbackCards.length;
+                showFeedback(currentFeedback);
+            });
+
+            document.getElementById('next-feedback').addEventListener('click', () => {
+                currentFeedback = (currentFeedback + 1) % feedbackCards.length;
+                showFeedback(currentFeedback);
+            });
+
+            showFeedback(currentFeedback);
+
+            const feedbackCarousel = document.querySelector('.feedback-carousel');
+            const nextButton = document.getElementById('next-feedback');
+            const prevButton = document.getElementById('prev-feedback');
+
+            nextButton.addEventListener('click', () => {
+                feedbackCarousel.scrollBy({
+                    left: 300, // Scroll khoảng cách tương đương với chiều rộng của feedback card
+                    behavior: 'smooth'
+                });
+            });
+
+            prevButton.addEventListener('click', () => {
+                feedbackCarousel.scrollBy({
+                    left: -300,
+                    behavior: 'smooth'
+                });
+            });
+            let currentSlide = 0;
+            const slides = document.querySelectorAll('.hero');
+            const totalSlides = slides.length;
+
+            function showSlide(index) {
+                const slider = document.querySelector('.hero-slider');
+                slider.style.transform = `translateX(-${index * 100}%)`;
+            }
+
+            function nextSlide() {
+                currentSlide = (currentSlide + 1) % totalSlides;
+                showSlide(currentSlide);
+            }
+
+            function prevSlide() {
+                currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+                showSlide(currentSlide);
+            }
+
+            setInterval(nextSlide, 5000); // Change slide every 5 seconds
+
+            function searchFunction() {
+                var input = document.getElementById('searchInput').value.toLowerCase();
+                if (input === 'koi' || input === 'nishikigoi') {
+                    alert('Koi information found!');
+                } else if (input === '') {
+                    alert('Please enter a search term.');
+                } else {
+                    alert('No results found for: ' + input);
+                }
+            }
+
+            function toggleMenu() {
+                const menu = document.querySelector('.mobile-menu');
+                menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+            }
+
+            function scrollToTop() {
+                document.body.scrollTop = 0;
+                document.documentElement.scrollTop = 0;
+            }
+
+            window.onscroll = function () {
+                document.querySelector('.back-to-top').style.display = document.body.scrollTop > 20 || document.documentElement.scrollTop > 20 ? 'block' : 'none';
+            };
+
+            const tabsData = [
+                { name: 'Dainichi', id: 'dainichi' },
+                { name: 'Otsuka', id: 'otsuka' },
+                { name: 'Fukasawa', id: 'fukasawa' },
+                { name: 'Hosokai', id: 'hosokai' },
+                { name: 'Shinoda', id: 'additional1' },
+                { name: 'Farm 2', id: 'additional2' }
+            ];
+
+            const tabsContainer = document.getElementById('tab-container');
+            const farmSections = document.querySelectorAll('.koi-farm-content');
+            let currentFarm = 0;  // Currently visible farm
+            let startTabIndex = 0;  // Start index of visible tabs
+            const maxVisibleTabs = 4;
+
+            function showFarm(index) {
+                document.querySelectorAll('.koi-farm-tab').forEach((tab, i) => {
+                    tab.classList.toggle('active', i === index - startTabIndex);  // Adjusted for the visible tabs
+                });
+                farmSections.forEach((section, i) => {
+                    section.style.display = i === index ? 'flex' : 'none';
+                });
+            }
+
+            function renderTabs() {
+                tabsContainer.innerHTML = '';
+                const visibleTabs = tabsData.slice(startTabIndex, startTabIndex + maxVisibleTabs);
+                visibleTabs.forEach((tabData, index) => {
+                    const tabElement = document.createElement('div');
+                    tabElement.classList.add('koi-farm-tab');
+                    if (startTabIndex + index === currentFarm) {
+                        tabElement.classList.add('active');
+                    }
+                    tabElement.innerText = tabData.name;
+                    tabElement.addEventListener('click', () => {
+                        currentFarm = startTabIndex + index;
+                        showFarm(currentFarm);
+                        renderTabs();
+                    });
+                    tabsContainer.appendChild(tabElement);
+                });
+            }
+
+            // Event listeners for Previous and Next tab buttons
+            document.getElementById('prev-tabs-button').addEventListener('click', () => {
+                if (currentFarm > 0) {
+                    currentFarm--;
+                    if (currentFarm < startTabIndex) {
+                        startTabIndex--;
+                    }
+                    showFarm(currentFarm);
+                    renderTabs();
+                }
+            });
+
+            document.getElementById('next-tabs-button').addEventListener('click', () => {
+                if (currentFarm < tabsData.length - 1) {
+                    currentFarm++;
+                    if (currentFarm >= startTabIndex + maxVisibleTabs) {
+                        startTabIndex++; // Shift visible tabs to the right
+                    }
+                    showFarm(currentFarm);
+                    renderTabs();
+                }
+            });
+
+            // Initial render of tabs and farms
+            renderTabs();
+            showFarm(currentFarm);
+
+            let currentService = 0;
+            const services = document.querySelectorAll('.service');
+            const totalServices = services.length;
+
+            function showService(index) {
+                const serviceSlider = document.querySelector('.service-slider');
+                serviceSlider.style.transform = `translateX(-${index * 100}%)`;
+            }
+
+            function nextService() {
+                currentService = (currentService + 1) % totalServices;
+                showService(currentService);
+            }
+
+            function prevService() {
+                currentService = (currentService - 1 + totalServices) % totalServices;
+                showService(currentService);
+            }
+
+            setInterval(nextService, 15000); // Change service every 15 seconds
+
+            const feedbackCards = document.querySelectorAll('.feedback-card');
+            let currentFeedback = 0;
+
+            function showFeedback(index) {
+                feedbackCards.forEach((card, i) => {
+                    card.classList.remove('active');
+                    if (i === index) {
+                        card.classList.add('active');
+                    }
+                });
+            }
+
+            document.getElementById('prev-feedback').addEventListener('click', () => {
+                currentFeedback = (currentFeedback - 1 + feedbackCards.length) % feedbackCards.length;
+                showFeedback(currentFeedback);
+            });
+
+            document.getElementById('next-feedback').addEventListener('click', () => {
+                currentFeedback = (currentFeedback + 1) % feedbackCards.length;
+                showFeedback(currentFeedback);
+            });
+
+            showFeedback(currentFeedback);
+
+            const feedbackCarousel = document.querySelector('.feedback-carousel');
+            const nextButton = document.getElementById('next-feedback');
+            const prevButton = document.getElementById('prev-feedback');
+
+            nextButton.addEventListener('click', () => {
+                feedbackCarousel.scrollBy({
+                    left: 300, // Scroll khoảng cách tương đương với chiều rộng của feedback card
+                    behavior: 'smooth'
+                });
+            });
+
+            prevButton.addEventListener('click', () => {
+                feedbackCarousel.scrollBy({
+                    left: -300,
+                    behavior: 'smooth'
+                });
+            });
+            let currentSlide = 0;
+            const slides = document.querySelectorAll('.hero');
+            const totalSlides = slides.length;
+
+            function showSlide(index) {
+                const slider = document.querySelector('.hero-slider');
+                slider.style.transform = `translateX(-${index * 100}%)`;
+            }
+
+            function nextSlide() {
+                currentSlide = (currentSlide + 1) % totalSlides;
+                showSlide(currentSlide);
+            }
+
+            function prevSlide() {
+                currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+                showSlide(currentSlide);
+            }
+
+            setInterval(nextSlide, 5000); // Change slide every 5 seconds
+
+            function searchFunction() {
+                var input = document.getElementById('searchInput').value.toLowerCase();
+                if (input === 'koi' || input === 'nishikigoi') {
+                    alert('Koi information found!');
+                } else if (input === '') {
+                    alert('Please enter a search term.');
+                } else {
+                    alert('No results found for: ' + input);
+                }
+            }
+
+            function toggleMenu() {
+                const menu = document.querySelector('.mobile-menu');
+                menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+            }
+
+            function scrollToTop() {
+                document.body.scrollTop = 0;
+                document.documentElement.scrollTop = 0;
+            }
+
+            window.onscroll = function () {
+                document.querySelector('.back-to-top').style.display = document.body.scrollTop > 20 || document.documentElement.scrollTop > 20 ? 'block' : 'none';
+            };
+
+            const tabsData = [
+                { name: 'Dainichi', id: 'dainichi' },
+                { name: 'Otsuka', id: 'otsuka' },
+                { name: 'Fukasawa', id: 'fukasawa' },
+                { name: 'Hosokai', id: 'hosokai' },
+                { name: 'Shinoda', id: 'additional1' },
+                { name: 'Farm 2', id: 'additional2' }
+            ];
+
+            const tabsContainer = document.getElementById('tab-container');
+            const farmSections = document.querySelectorAll('.koi-farm-content');
+            let currentFarm = 0;  // Currently visible farm
+            let startTabIndex = 0;  // Start index of visible tabs
+            const maxVisibleTabs = 4;
+
+            function showFarm(index) {
+                document.querySelectorAll('.koi-farm-tab').forEach((tab, i) => {
+                    tab.classList.toggle('active', i === index - startTabIndex);  // Adjusted for the visible tabs
+                });
+                farmSections.forEach((section, i) => {
+                    section.style.display = i === index ? 'flex' : 'none';
+                });
+            }
+
+            function renderTabs() {
+                tabsContainer.innerHTML = '';
+                const visibleTabs = tabsData.slice(startTabIndex, startTabIndex + maxVisibleTabs);
+                visibleTabs.forEach((tabData, index) => {
+                    const tabElement = document.createElement('div');
+                    tabElement.classList.add('koi-farm-tab');
+                    if (startTabIndex + index === currentFarm) {
+                        tabElement.classList.add('active');
+                    }
+                    tabElement.innerText = tabData.name;
+                    tabElement.addEventListener('click', () => {
+                        currentFarm = startTabIndex + index;
+                        showFarm(currentFarm);
+                        renderTabs();
+                    });
+                    tabsContainer.appendChild(tabElement);
+                });
+            }
+
+            // Event listeners for Previous and Next tab buttons
+            document.getElementById('prev-tabs-button').addEventListener('click', () => {
+                if (currentFarm > 0) {
+                    currentFarm--;
+                    if (currentFarm < startTabIndex) {
+                        startTabIndex--;
+                    }
+                    showFarm(currentFarm);
+                    renderTabs();
+                }
+            });
+
+            document.getElementById('next-tabs-button').addEventListener('click', () => {
+                if (currentFarm < tabsData.length - 1) {
+                    currentFarm++;
+                    if (currentFarm >= startTabIndex + maxVisibleTabs) {
+                        startTabIndex++; // Shift visible tabs to the right
+                    }
+                    showFarm(currentFarm);
+                    renderTabs();
+                }
+            });
+
+            // Initial render of tabs and farms
+            renderTabs();
+            showFarm(currentFarm);
+
+            let currentService = 0;
+            const services = document.querySelectorAll('.service');
+            const totalServices = services.length;
+
+            function showService(index) {
+                const serviceSlider = document.querySelector('.service-slider');
+                serviceSlider.style.transform = `translateX(-${index * 100}%)`;
+            }
+
+            function nextService() {
+                currentService = (currentService + 1) % totalServices;
+                showService(currentService);
+            }
+
+            function prevService() {
+                currentService = (currentService - 1 + totalServices) % totalServices;
+                showService(currentService);
+            }
+
+            setInterval(nextService, 15000); // Change service every 15 seconds
+
+            const feedbackCards = document.querySelectorAll('.feedback-card');
+            let currentFeedback = 0;
+
+            function showFeedback(index) {
+                feedbackCards.forEach((card, i) => {
+                    card.classList.remove('active');
+                    if (i === index) {
+                        card.classList.add('active');
+                    }
+                });
+            }
+
+            document.getElementById('prev-feedback').addEventListener('click', () => {
+                currentFeedback = (currentFeedback - 1 + feedbackCards.length) % feedbackCards.length;
+                showFeedback(currentFeedback);
+            });
+
+            document.getElementById('next-feedback').addEventListener('click', () => {
+                currentFeedback = (currentFeedback + 1) % feedbackCards.length;
+                showFeedback(currentFeedback);
+            });
+
+            showFeedback(currentFeedback);
+
+            const feedbackCarousel = document.querySelector('.feedback-carousel');
+            const nextButton = document.getElementById('next-feedback');
+            const prevButton = document.getElementById('prev-feedback');
+
+            nextButton.addEventListener('click', () => {
+                feedbackCarousel.scrollBy({
+                    left: 300, // Scroll khoảng cách tương đương với chiều rộng của feedback card
+                    behavior: 'smooth'
+                });
+            });
+
+            prevButton.addEventListener('click', () => {
+                feedbackCarousel.scrollBy({
+                    left: -300,
+                    behavior: 'smooth'
+                });
+            });
+            let currentSlide = 0;
+            const slides = document.querySelectorAll('.hero');
+            const totalSlides = slides.length;
+
+            function showSlide(index) {
+                const slider = document.querySelector('.hero-slider');
+                slider.style.transform = `translateX(-${index * 100}%)`;
+            }
+
+            function nextSlide() {
+                currentSlide = (currentSlide + 1) % totalSlides;
+                showSlide(currentSlide);
+            }
+
+            function prevSlide() {
+                currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+                showSlide(currentSlide);
+            }
+
+            setInterval(nextSlide, 5000); // Change slide every 5 seconds
+
+            function searchFunction() {
+                var input = document.getElementById('searchInput').value.toLowerCase();
+                if (input === 'koi' || input === 'nishikigoi') {
+                    alert('Koi information found!');
+                } else if (input === '') {
+                    alert('Please enter a search term.');
+                } else {
+                    alert('No results found for: ' + input);
+                }
+            }
+
+            function toggleMenu() {
+                const menu = document.querySelector('.mobile-menu');
+                menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+            }
+
+            function scrollToTop() {
+                document.body.scrollTop = 0;
+                document.documentElement.scrollTop = 0;
+            }
+
+            window.onscroll = function () {
+                document.querySelector('.back-to-top').style.display = document.body.scrollTop > 20 || document.documentElement.scrollTop > 20 ? 'block' : 'none';
+            };
+
+            const tabsData = [
+                { name: 'Dainichi', id: 'dainichi' },
+                { name: 'Otsuka', id: 'otsuka' },
+                { name: 'Fukasawa', id: 'fukasawa' },
+                { name: 'Hosokai', id: 'hosokai' },
+                { name: 'Shinoda', id: 'additional1' },
+                { name: 'Farm 2', id: 'additional2' }
+            ];
+
+            const tabsContainer = document.getElementById('tab-container');
+            const farmSections = document.querySelectorAll('.koi-farm-content');
+            let currentFarm = 0;  // Currently visible farm
+            let startTabIndex = 0;  // Start index of visible tabs
+            const maxVisibleTabs = 4;
+
+            function showFarm(index) {
+                document.querySelectorAll('.koi-farm-tab').forEach((tab, i) => {
+                    tab.classList.toggle('active', i === index - startTabIndex);  // Adjusted for the visible tabs
+                });
+                farmSections.forEach((section, i) => {
+                    section.style.display = i === index ? 'flex' : 'none';
+                });
+            }
+
+            function renderTabs() {
+                tabsContainer.innerHTML = '';
+                const visibleTabs = tabsData.slice(startTabIndex, startTabIndex + maxVisibleTabs);
+                visibleTabs.forEach((tabData, index) => {
+                    const tabElement = document.createElement('div');
+                    tabElement.classList.add('koi-farm-tab');
+                    if (startTabIndex + index === currentFarm) {
+                        tabElement.classList.add('active');
+                    }
+                    tabElement.innerText = tabData.name;
+                    tabElement.addEventListener('click', () => {
+                        currentFarm = startTabIndex + index;
+                        showFarm(currentFarm);
+                        renderTabs();
+                    });
+                    tabsContainer.appendChild(tabElement);
+                });
+            }
+
+            // Event listeners for Previous and Next tab buttons
+            document.getElementById('prev-tabs-button').addEventListener('click', () => {
+                if (currentFarm > 0) {
+                    currentFarm--;
+                    if (currentFarm < startTabIndex) {
+                        startTabIndex--;
+                    }
+                    showFarm(currentFarm);
+                    renderTabs();
+                }
+            });
+
+            document.getElementById('next-tabs-button').addEventListener('click', () => {
+                if (currentFarm < tabsData.length - 1) {
+                    currentFarm++;
+                    if (currentFarm >= startTabIndex + maxVisibleTabs) {
+                        startTabIndex++; // Shift visible tabs to the right
+                    }
+                    showFarm(currentFarm);
+                    renderTabs();
+                }
+            });
+
+            // Initial render of tabs and farms
+            renderTabs();
+            showFarm(currentFarm);
+
+            let currentService = 0;
+            const services = document.querySelectorAll('.service');
+            const totalServices = services.length;
+
+            function showService(index) {
+                const serviceSlider = document.querySelector('.service-slider');
+                serviceSlider.style.transform = `translateX(-${index * 100}%)`;
+            }
+
+            function nextService() {
+                currentService = (currentService + 1) % totalServices;
+                showService(currentService);
+            }
+
+            function prevService() {
+                currentService = (currentService - 1 + totalServices) % totalServices;
+                showService(currentService);
+            }
+
+            setInterval(nextService, 15000); // Change service every 15 seconds
+
+            const feedbackCards = document.querySelectorAll('.feedback-card');
+            let currentFeedback = 0;
+
+            function showFeedback(index) {
+                feedbackCards.forEach((card, i) => {
+                    card.classList.remove('active');
+                    if (i === index) {
+                        card.classList.add('active');
+                    }
+                });
+            }
+
+            document.getElementById('prev-feedback').addEventListener('click', () => {
+                currentFeedback = (currentFeedback - 1 + feedbackCards.length) % feedbackCards.length;
+                showFeedback(currentFeedback);
+            });
+
+            document.getElementById('next-feedback').addEventListener('click', () => {
+                currentFeedback = (currentFeedback + 1) % feedbackCards.length;
+                showFeedback(currentFeedback);
+            });
+
+            showFeedback(currentFeedback);
+
+            const feedbackCarousel = document.querySelector('.feedback-carousel');
+            const nextButton = document.getElementById('next-feedback');
+            const prevButton = document.getElementById('prev-feedback');
+
+            nextButton.addEventListener('click', () => {
+                feedbackCarousel.scrollBy({
+                    left: 300, // Scroll khoảng cách tương đương với chiều rộng của feedback card
+                    behavior: 'smooth'
+                });
+            });
+
+            prevButton.addEventListener('click', () => {
+                feedbackCarousel.scrollBy({
+                    left: -300,
+                    behavior: 'smooth'
+                });
+            });
+
+            let currentSlide = 0;
+            const slides = document.querySelectorAll('.hero');
+            const totalSlides = slides.length;
+
+            function showSlide(index) {
+                const slider = document.querySelector('.hero-slider');
+                slider.style.transform = `translateX(-${index * 100}%)`;
+            }
+
+            function nextSlide() {
+                currentSlide = (currentSlide + 1) % totalSlides;
+                showSlide(currentSlide);
+            }
+
+            function prevSlide() {
+                currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+                showSlide(currentSlide);
+            }
+
+            setInterval(nextSlide, 5000); // Change slide every 5 seconds
+
+            function searchFunction() {
+                var input = document.getElementById('searchInput').value.toLowerCase();
+                if (input === 'koi' || input === 'nishikigoi') {
+                    alert('Koi information found!');
+                } else if (input === '') {
+                    alert('Please enter a search term.');
+                } else {
+                    alert('No results found for: ' + input);
+                }
+            }
+
+            function toggleMenu() {
+                const menu = document.querySelector('.mobile-menu');
+                menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+            }
+
+            function scrollToTop() {
+                document.body.scrollTop = 0;
+                document.documentElement.scrollTop = 0;
+            }
+
+            window.onscroll = function () {
+                document.querySelector('.back-to-top').style.display = document.body.scrollTop > 20 || document.documentElement.scrollTop > 20 ? 'block' : 'none';
+            };
+
+            const tabsData = [
+                { name: 'Dainichi', id: 'dainichi' },
+                { name: 'Otsuka', id: 'otsuka' },
+                { name: 'Fukasawa', id: 'fukasawa' },
+                { name: 'Hosokai', id: 'hosokai' },
+                { name: 'Shinoda', id: 'additional1' },
+                { name: 'Farm 2', id: 'additional2' }
+            ];
+
+            const tabsContainer = document.getElementById('tab-container');
+            const farmSections = document.querySelectorAll('.koi-farm-content');
+            let currentFarm = 0;  // Currently visible farm
+            let startTabIndex = 0;  // Start index of visible tabs
+            const maxVisibleTabs = 4;
+
+            function showFarm(index) {
+                document.querySelectorAll('.koi-farm-tab').forEach((tab, i) => {
+                    tab.classList.toggle('active', i === index - startTabIndex);  // Adjusted for the visible tabs
+                });
+                farmSections.forEach((section, i) => {
+                    section.style.display = i === index ? 'flex' : 'none';
+                });
+            }
+
+            function renderTabs() {
+                tabsContainer.innerHTML = '';
+                const visibleTabs = tabsData.slice(startTabIndex, startTabIndex + maxVisibleTabs);
+                visibleTabs.forEach((tabData, index) => {
+                    const tabElement = document.createElement('div');
+                    tabElement.classList.add('koi-farm-tab');
+                    if (startTabIndex + index === currentFarm) {
+                        tabElement.classList.add('active');
+                    }
+                    tabElement.innerText = tabData.name;
+                    tabElement.addEventListener('click', () => {
+                        currentFarm = startTabIndex + index;
+                        showFarm(currentFarm);
+                        renderTabs();
+                    });
+                    tabsContainer.appendChild(tabElement);
+                });
+            }
+
+            // Event listeners for Previous and Next tab buttons
+            document.getElementById('prev-tabs-button').addEventListener('click', () => {
+                if (currentFarm > 0) {
+                    currentFarm--;
+                    if (currentFarm < startTabIndex) {
+                        startTabIndex--;
+                    }
+                    showFarm(currentFarm);
+                    renderTabs();
+                }
+            });
+
+            document.getElementById('next-tabs-button').addEventListener('click', () => {
+                if (currentFarm < tabsData.length - 1) {
+                    currentFarm++;
+                    if (currentFarm >= startTabIndex + maxVisibleTabs) {
+                        startTabIndex++; // Shift visible tabs to the right
+                    }
+                    showFarm(currentFarm);
+                    renderTabs();
+                }
+            });
+
+            // Initial render of tabs and farms
+            renderTabs();
+            showFarm(currentFarm);
+
+            let currentService = 0;
+            const services = document.querySelectorAll('.service');
+            const totalServices = services.length;
+
+            function showService(index) {
+                const serviceSlider = document.querySelector('.service-slider');
+                serviceSlider.style.transform = `translateX(-${index * 100}%)`;
+            }
+
+            function nextService() {
+                currentService = (currentService + 1) % totalServices;
+                showService(currentService);
+            }
+
+            function prevService() {
+                currentService = (currentService - 1 + totalServices) % totalServices;
+                showService(currentService);
+            }
+
+            setInterval(nextService, 15000); // Change service every 15 seconds
+
+            const feedbackCards = document.querySelectorAll('.feedback-card');
+            let currentFeedback = 0;
+
+            function showFeedback(index) {
+                feedbackCards.forEach((card, i) => {
+                    card.classList.remove('active');
+                    if (i === index) {
+                        card.classList.add('active');
+                    }
+                });
+            }
+
+            document.getElementById('prev-feedback').addEventListener('click', () => {
+                currentFeedback = (currentFeedback - 1 + feedbackCards.length) % feedbackCards.length;
+                showFeedback(currentFeedback);
+            });
+
+            document.getElementById('next-feedback').addEventListener('click', () => {
+                currentFeedback = (currentFeedback + 1) % feedbackCards.length;
+                showFeedback(currentFeedback);
+            });
+
+            showFeedback(currentFeedback);
+
+            const feedbackCarousel = document.querySelector('.feedback-carousel');
+            const nextButton = document.getElementById('next-feedback');
+            const prevButton = document.getElementById('prev-feedback');
+
+            nextButton.addEventListener('click', () => {
+                feedbackCarousel.scrollBy({
+                    left: 300, // Scroll khoảng cách tương đương với chiều rộng của feedback card
+                    behavior: 'smooth'
+                });
+            });
+
+            prevButton.addEventListener('click', () => {
+                feedbackCarousel.scrollBy({
+                    left: -300,
+                    behavior: 'smooth'
+                });
+            });
+            function toggleMenu() {
+                const menu = document.querySelector('.mobile-menu');
+                menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+            }
+
+            function scrollToTop() {
+                document.body.scrollTop = 0;
+                document.documentElement.scrollTop = 0;
+            }
+
+            window.onscroll = function () {
+                document.querySelector('.back-to-top').style.display = document.body.scrollTop > 20 || document.documentElement.scrollTop > 20 ? 'block' : 'none';
+            };
+
+            const tabsData = [
+                { name: 'Dainichi', id: 'dainichi' },
+                { name: 'Otsuka', id: 'otsuka' },
+                { name: 'Fukasawa', id: 'fukasawa' },
+                { name: 'Hosokai', id: 'hosokai' },
+                { name: 'Shinoda', id: 'additional1' },
+                { name: 'Farm 2', id: 'additional2' }
+            ];
+
+            const tabsContainer = document.getElementById('tab-container');
+            const farmSections = document.querySelectorAll('.koi-farm-content');
+            let currentFarm = 0;  // Currently visible farm
+            let startTabIndex = 0;  // Start index of visible tabs
+            const maxVisibleTabs = 4;
+
+            function showFarm(index) {
+                document.querySelectorAll('.koi-farm-tab').forEach((tab, i) => {
+                    tab.classList.toggle('active', i === index - startTabIndex);  // Adjusted for the visible tabs
+                });
+                farmSections.forEach((section, i) => {
+                    section.style.display = i === index ? 'flex' : 'none';
+                });
+            }
+
+            function renderTabs() {
+                tabsContainer.innerHTML = '';
+                const visibleTabs = tabsData.slice(startTabIndex, startTabIndex + maxVisibleTabs);
+                visibleTabs.forEach((tabData, index) => {
+                    const tabElement = document.createElement('div');
+                    tabElement.classList.add('koi-farm-tab');
+                    if (startTabIndex + index === currentFarm) {
+                        tabElement.classList.add('active');
+                    }
+                    tabElement.innerText = tabData.name;
+                    tabElement.addEventListener('click', () => {
+                        currentFarm = startTabIndex + index;
+                        showFarm(currentFarm);
+                        renderTabs();
+                    });
+                    tabsContainer.appendChild(tabElement);
+                });
+            } function toggleMenu() {
+                const menu = document.querySelector('.mobile-menu');
+                menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+            }
+
+            function scrollToTop() {
+                document.body.scrollTop = 0;
+                document.documentElement.scrollTop = 0;
+            }
+
+            window.onscroll = function () {
+                document.querySelector('.back-to-top').style.display = document.body.scrollTop > 20 || document.documentElement.scrollTop > 20 ? 'block' : 'none';
+            };
+
+            const tabsData = [
+                { name: 'Dainichi', id: 'dainichi' },
+                { name: 'Otsuka', id: 'otsuka' },
+                { name: 'Fukasawa', id: 'fukasawa' },
+                { name: 'Hosokai', id: 'hosokai' },
+                { name: 'Shinoda', id: 'additional1' },
+                { name: 'Farm 2', id: 'additional2' }
+            ];
+
+            const tabsContainer = document.getElementById('tab-container');
+            const farmSections = document.querySelectorAll('.koi-farm-content');
+            let currentFarm = 0;  // Currently visible farm
+            let startTabIndex = 0;  // Start index of visible tabs
+            const maxVisibleTabs = 4;
+
+            function showFarm(index) {
+                document.querySelectorAll('.koi-farm-tab').forEach((tab, i) => {
+                    tab.classList.toggle('active', i === index - startTabIndex);  // Adjusted for the visible tabs
+                });
+                farmSections.forEach((section, i) => {
+                    section.style.display = i === index ? 'flex' : 'none';
+                });
+            }
+
+            function renderTabs() {
+                tabsContainer.innerHTML = '';
+                const visibleTabs = tabsData.slice(startTabIndex, startTabIndex + maxVisibleTabs);
+                visibleTabs.forEach((tabData, index) => {
+                    const tabElement = document.createElement('div');
+                    tabElement.classList.add('koi-farm-tab');
+                    if (startTabIndex + index === currentFarm) {
+                        tabElement.classList.add('active');
+                    }
+                    tabElement.innerText = tabData.name;
+                    tabElement.addEventListener('click', () => {
+                        currentFarm = startTabIndex + index;
+                        showFarm(currentFarm);
+                        renderTabs();
+                    });
+                    tabsContainer.appendChild(tabElement);
+                });
+            }
+
+    </script>
+</body>
+
+</html>
