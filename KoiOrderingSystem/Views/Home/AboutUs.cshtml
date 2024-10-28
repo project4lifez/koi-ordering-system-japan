@@ -389,7 +389,7 @@
             let currentY = parseFloat(fish.style.top);
 
             function swim() {
-                if (!draggedFish || draggedFish !== fish) {  // Chỉ dừng cá bị kéo
+                if (!draggedFish || draggedFish !== fish) {  
                     if (Math.abs(targetX - currentX) < 1 && Math.abs(targetY - currentY) < 1) {
                         targetX = Math.random() * 80;
                         targetY = Math.random() * 60 + 20;
