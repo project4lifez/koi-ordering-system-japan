@@ -40,7 +40,7 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
 			var account = _db.Accounts.FirstOrDefault(a => a.AccountId == accountId);
 			if (account == null)
 			{
-				return NotFound(); // Trả về lỗi nếu không tìm thấy tài khoản
+				return NotFound(); 
 			}
 
 			// Cập nhật trạng thái
