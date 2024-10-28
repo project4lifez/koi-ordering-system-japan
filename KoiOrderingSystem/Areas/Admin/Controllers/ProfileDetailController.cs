@@ -27,7 +27,7 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
 				return NotFound(); 
 			}
 
-			return View(account); // Truyền model vào View
+			return View(account); 
 		}
 
 		[HttpPost]
