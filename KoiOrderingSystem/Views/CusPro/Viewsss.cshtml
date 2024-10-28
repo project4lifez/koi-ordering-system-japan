@@ -2138,7 +2138,184 @@
                 });
             });
 
+            let currentSlide = 0;
+            const slides = document.querySelectorAll('.hero');
+            const totalSlides = slides.length;
 
+            function showSlide(index) {
+                const slider = document.querySelector('.hero-slider');
+                slider.style.transform = `translateX(-${index * 100}%)`;
+            }
+
+            function nextSlide() {
+                currentSlide = (currentSlide + 1) % totalSlides;
+                showSlide(currentSlide);
+            }
+
+            function prevSlide() {
+                currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+                showSlide(currentSlide);
+            }
+
+            setInterval(nextSlide, 5000); // Change slide every 5 seconds
+
+            function searchFunction() {
+                var input = document.getElementById('searchInput').value.toLowerCase();
+                if (input === 'koi' || input === 'nishikigoi') {
+                    alert('Koi information found!');
+                } else if (input === '') {
+                    alert('Please enter a search term.');
+                } else {
+                    alert('No results found for: ' + input);
+                }
+            }
+
+            function toggleMenu() {
+                const menu = document.querySelector('.mobile-menu');
+                menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+            }
+
+            function scrollToTop() {
+                document.body.scrollTop = 0;
+                document.documentElement.scrollTop = 0;
+            }
+
+            window.onscroll = function () {
+                document.querySelector('.back-to-top').style.display = document.body.scrollTop > 20 || document.documentElement.scrollTop > 20 ? 'block' : 'none';
+            };
+
+            const tabsData = [
+                { name: 'Dainichi', id: 'dainichi' },
+                { name: 'Otsuka', id: 'otsuka' },
+                { name: 'Fukasawa', id: 'fukasawa' },
+                { name: 'Hosokai', id: 'hosokai' },
+                { name: 'Shinoda', id: 'additional1' },
+                { name: 'Farm 2', id: 'additional2' }
+            ];
+
+            const tabsContainer = document.getElementById('tab-container');
+            const farmSections = document.querySelectorAll('.koi-farm-content');
+            let currentFarm = 0;  // Currently visible farm
+            let startTabIndex = 0;  // Start index of visible tabs
+            const maxVisibleTabs = 4;
+
+            function showFarm(index) {
+                document.querySelectorAll('.koi-farm-tab').forEach((tab, i) => {
+                    tab.classList.toggle('active', i === index - startTabIndex);  // Adjusted for the visible tabs
+                });
+                farmSections.forEach((section, i) => {
+                    section.style.display = i === index ? 'flex' : 'none';
+                });
+            }
+
+            function renderTabs() {
+                tabsContainer.innerHTML = '';
+                const visibleTabs = tabsData.slice(startTabIndex, startTabIndex + maxVisibleTabs);
+                visibleTabs.forEach((tabData, index) => {
+                    const tabElement = document.createElement('div');
+                    tabElement.classList.add('koi-farm-tab');
+                    if (startTabIndex + index === currentFarm) {
+                        tabElement.classList.add('active');
+                    }
+                    tabElement.innerText = tabData.name;
+                    tabElement.addEventListener('click', () => {
+                        currentFarm = startTabIndex + index;
+                        showFarm(currentFarm);
+                        renderTabs();
+                    });
+                    tabsContainer.appendChild(tabElement);
+                });
+            }
+
+            // Event listeners for Previous and Next tab buttons
+            document.getElementById('prev-tabs-button').addEventListener('click', () => {
+                if (currentFarm > 0) {
+                    currentFarm--;
+                    if (currentFarm < startTabIndex) {
+                        startTabIndex--;
+                    }
+                    showFarm(currentFarm);
+                    renderTabs();
+                }
+            });
+
+            document.getElementById('next-tabs-button').addEventListener('click', () => {
+                if (currentFarm < tabsData.length - 1) {
+                    currentFarm++;
+                    if (currentFarm >= startTabIndex + maxVisibleTabs) {
+                        startTabIndex++; // Shift visible tabs to the right
+                    }
+                    showFarm(currentFarm);
+                    renderTabs();
+                }
+            });
+
+            // Initial render of tabs and farms
+            renderTabs();
+            showFarm(currentFarm);
+
+            let currentService = 0;
+            const services = document.querySelectorAll('.service');
+            const totalServices = services.length;
+
+            function showService(index) {
+                const serviceSlider = document.querySelector('.service-slider');
+                serviceSlider.style.transform = `translateX(-${index * 100}%)`;
+            }
+
+            function nextService() {
+                currentService = (currentService + 1) % totalServices;
+                showService(currentService);
+            }
+
+            function prevService() {
+                currentService = (currentService - 1 + totalServices) % totalServices;
+                showService(currentService);
+            }
+
+            setInterval(nextService, 15000); // Change service every 15 seconds
+
+            const feedbackCards = document.querySelectorAll('.feedback-card');
+            let currentFeedback = 0;
+
+            function showFeedback(index) {
+                feedbackCards.forEach((card, i) => {
+                    card.classList.remove('active');
+                    if (i === index) {
+                        card.classList.add('active');
+                    }
+                });
+            }
+
+            document.getElementById('prev-feedback').addEventListener('click', () => {
+                currentFeedback = (currentFeedback - 1 + feedbackCards.length) % feedbackCards.length;
+                showFeedback(currentFeedback);
+            });
+
+            document.getElementById('next-feedback').addEventListener('click', () => {
+                currentFeedback = (currentFeedback + 1) % feedbackCards.length;
+                showFeedback(currentFeedback);
+            });
+
+            showFeedback(currentFeedback);
+
+            const feedbackCarousel = document.querySelector('.feedback-carousel');
+            const nextButton = document.getElementById('next-feedback');
+            const prevButton = document.getElementById('prev-feedback');
+
+            nextButton.addEventListener('click', () => {
+                feedbackCarousel.scrollBy({
+                    left: 300, // Scroll khoảng cách tương đương với chiều rộng của feedback card
+                    behavior: 'smooth'
+                });
+            });
+
+            prevButton.addEventListener('click', () => {
+                feedbackCarousel.scrollBy({
+                    left: -300,
+                    behavior: 'smooth'
+                });
+            });
 
     </script>
 </body>
