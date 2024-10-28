@@ -6350,3 +6350,64 @@ ol {
     .btnOnTop:hover {
         background-color: rgba(0, 0, 0, 0.6);
     }
+.dropdown-item:hover, .dropdown-item:focus {
+    color: #2e2f37;
+    text-decoration: none;
+    background-color: #eaecf4;
+}
+
+.dropdown-item.active, .dropdown-item:active {
+    color: #fff;
+    text-decoration: none;
+    background-color: #4e73df;
+}
+
+.dropdown-item.disabled, .dropdown-item:disabled {
+    color: #b7b9cc;
+    pointer-events: none;
+    background-color: transparent;
+}
+
+.dropdown-menu.show {
+    display: block;
+}
+
+.dropdown-header {
+    display: block;
+    padding: 0.5rem 1.5rem;
+    margin-bottom: 0;
+    font-size: 0.875rem;
+    color: #858796;
+    white-space: nowrap;
+}
+
+.dropdown-item-text {
+    display: block;
+    padding: 0.25rem 1.5rem;
+    color: #3a3b45;
+}
+
+.btn-group,
+.btn-group-vertical {
+    position: relative;
+    display: inline-flex;
+    vertical-align: middle;
+}
+
+    .btn-group > .btn,
+    .btn-group-vertical > .btn {
+        position: relative;
+        flex: 1 1 auto;
+    }
+
+        .btn-group > .btn:hover,
+        .btn-group-vertical > .btn:hover {
+            z-index: 1;
+        }
+
+        .btn-group > .btn:focus, .btn-group > .btn:active, .btn-group > .btn.active,
+        .btn-group-vertical > .btn:focus,
+        .btn-group-vertical > .btn:active,
+        .btn-group-vertical > .btn.active {
+            z-index: 1;
+        }
