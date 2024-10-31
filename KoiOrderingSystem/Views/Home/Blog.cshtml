@@ -7,25 +7,31 @@
     <style>
         /* Root Colors */
         :root {
-            --primary: #b91c1c;
+            --primary: #5BB2F1;
             --secondary: #1e293b;
             --white: #ffffff;
+            --gray-50: #f8fafc;
             --gray-100: #f1f5f9;
             --gray-200: #e2e8f0;
             --gray-900: #0f172a;
         }
 
         body {
-            font-family: 'Montserrat', sans-serif;
-            background-color: var(--gray-100);
+            font-family: 'Inter', sans-serif;
+            background-color: var(--gray-50);
             color: var(--gray-900);
             line-height: 1.6;
             margin: 0;
         }
 
         a {
-            color: var(--primary);
+            color: var(--gray-900);
             text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--primary);
         }
 
         /* Container */
@@ -33,29 +39,30 @@
             display: flex;
             max-width: 1200px;
             margin: 2rem auto;
-            gap: 2rem;
+            gap: 2.5rem;
+            padding: 0 1rem;
         }
 
         /* Main Featured Blog */
         .main-featured {
             flex: 2;
             position: relative;
-            border-radius: 10px;
+            border-radius: 1rem;
             overflow: hidden;
-            background-color: var(--gray-200);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background-color: var(--white);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
         }
 
         .main-featured:hover {
-            transform: scale(1.02);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            transform: translateY(-4px);
         }
 
         .main-featured img {
             width: 100%;
-            height: auto;
-            border-radius: 10px;
-            cursor: pointer;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 1rem 1rem 0 0;
         }
 
         .main-featured .overlay {
@@ -63,173 +70,202 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 1rem;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+            padding: 2rem;
             color: var(--white);
-            text-align: left;
         }
 
         .main-featured .overlay h3 {
             font-size: 1.8rem;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.75rem;
+            line-height: 1.3;
         }
 
         .main-featured .overlay p {
-            font-size: 1rem;
+            font-size: 1.1rem;
             margin: 0;
+            opacity: 0.9;
         }
 
         .main-featured .overlay .meta {
             margin-top: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
             font-size: 0.9rem;
+            opacity: 0.8;
         }
 
         /* Side Blogs */
         .side-blogs {
             flex: 1;
             display: grid;
-            gap: 1rem;
+            gap: 1.5rem;
         }
 
         .side-blog {
-            display: flex;
-            gap: 1rem;
             background-color: var(--white);
-            padding: 1rem;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            cursor: pointer;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
         }
 
         .side-blog:hover {
-            transform: scale(1.02);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            transform: translateY(-4px);
         }
 
         .side-blog img {
-            width: 100px;
-            height: auto;
-            border-radius: 10px;
+            width: 100%;
+            height: 160px;
             object-fit: cover;
         }
 
         .side-blog-content {
-            flex: 1;
+            padding: 1.25rem;
         }
 
         .side-blog h4 {
             font-size: 1.2rem;
-            margin: 0 0 0.5rem 0;
+            margin: 0 0 0.75rem 0;
             color: var(--primary);
+            line-height: 1.4;
         }
 
         .side-blog p {
             margin: 0;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
+            color: var(--gray-900);
+            opacity: 0.8;
         }
 
         .side-blog .meta {
-            font-size: 0.8rem;
-            margin-top: 0.5rem;
+            margin-top: 1rem;
+            font-size: 0.85rem;
             color: var(--gray-900);
+            opacity: 0.6;
         }
 
         /* Week Trending Section */
         .trending {
-            margin: 3rem auto 0 auto;
             max-width: 1200px;
+            margin: 4rem auto;
+            padding: 0 1rem;
         }
 
         .trending h2 {
             font-size: 1.8rem;
             color: var(--primary);
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .trending h2::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background-color: var(--primary);
+            border-radius: 2px;
         }
 
         .trending ul {
             list-style: none;
             padding: 0;
+            background: var(--white);
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
         }
 
         .trending li {
-            padding: 0.8rem;
-            border-bottom: 1px solid var(--gray-200);
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--gray-100);
             display: flex;
             justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s ease;
         }
 
-        .trending a {
-            color: var(--gray-900);
-            font-weight: 500;
+        .trending li:last-child {
+            border-bottom: none;
+        }
+
+        .trending li:hover {
+            background-color: var(--gray-50);
         }
 
         .trending li span {
-            color: var(--gray-800);
+            color: var(--gray-900);
+            opacity: 0.6;
+            font-size: 0.9rem;
         }
 
-       
+        @@media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .main-featured img {
+                height: 300px;
+            }
+
+            .trending li {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+        }
     </style>
 </head>
 <body>
+	
     <div class="container">
-        <!-- Main Featured Blog -->
         <div class="main-featured">
             <a href="blog-detail.html">
                 <img src="https://baobariavungtau.com.vn/dataimages/201808/original/images1454316_ca_koi_4.jpg" alt="Koi fish after heavy rain">
-            </a>
-            <div class="overlay">
-                <h3>Koi fish come to the yard to roam after heavy rain</h3>
-                <p>Heavy rains caused the pond water level to rise, so the Koi fish took advantage of the opportunity to go to the yard...</p>
-                <div class="meta">
-                    <span>Jun 4, 2015</span>
+                <div class="overlay">
+                    <h3>Koi fish come to the yard to roam after heavy rain</h3>
+                    <p>Heavy rains caused the pond water level to rise, so the Koi fish took advantage of the opportunity to go to the yard...</p>
+                    <div class="meta">Jun 4, 2015</div>
                 </div>
-            </div>
+            </a>
         </div>
 
         <!-- Side Blogs -->
         <div class="side-blogs">
-            <a href="blog-detail.html">
-                <div class="side-blog">
+            <div class="side-blog">
+                <a href="blog-detail.html">
                     <img src="https://baobariavungtau.com.vn/dataimages/201808/original/images1454316_ca_koi_4.jpg" alt="Koi swimming in lake">
                     <div class="side-blog-content">
                         <h4>The lake is famous for its picturesque appearance</h4>
                         <p>Many people didn't believe the photo of Lake Namonaki was real until they saw...</p>
-                        <div class="meta">
-                            <span>Dec 20, 2024</span>
-                        </div>
+                        <div class="meta">Dec 20, 2024</div>
                     </div>
-                </div>
-            </a>
+                </a>
+            </div>
 
-            <a href="blog-detail.html">
-                <div class="side-blog">
+            <div class="side-blog">
+                <a href="blog-detail.html">
                     <img src="https://yokokoi.com/wp-content/uploads/2023/02/sakura-boost-koi-growth-muscle-protein-38-tang-truong-co-bap-1-5-6-kg_02.jpg" alt="Koi fish feeding process">
                     <div class="side-blog-content">
                         <h4>Koi fish feeding process at the farm</h4>
                         <p>Feeding Koi fish at the farm is an essential part of their care, ensuring they grow healthy and vibrant...</p>
-                        <div class="meta">
-                            <span>Jan 18, 2024</span>
-                        </div>
+                        <div class="meta">Jan 18, 2024</div>
                     </div>
-                </div>
-            </a>
+                </a>
+            </div>
 
-            <a href="blog-detail.html">
-                <div class="side-blog">
+            <div class="side-blog">
+                <a href="blog-detail.html">
                     <img src="https://i.pinimg.com/736x/cf/46/c7/cf46c72e26a66cef29413b75dc6cd052.jpg" alt="Standard Koi fish price in Japan">
                     <div class="side-blog-content">
                         <h4>Standard Koi fish price in Japan</h4>
                         <p>Koi fish, known for their vibrant colors and elegant beauty, are prized by hobbyists and collectors around the world...</p>
-                        <div class="meta">
-                            <span>May 12, 2024</span>
-                        </div>
+                        <div class="meta">May 12, 2024</div>
                     </div>
-                </div>
-            </a>
+                </a>
+            </div>
         </div>
     </div>
 
@@ -237,15 +273,12 @@
     <section class="trending">
         <h2>Week Trending</h2>
         <ul>
-            <li><a href="blog-detail.html">"The Power of Perseverance: How Koi Fish Symbolize Strength"</a><span> Dec 12, 2024</span></li>
-            <li><a href="blog-detail.html">"Koi Fish Varieties Explained: Understanding the Colors and Patterns"</a><span> Dec 13, 2024</span></li>
-            <li><a href="blog-detail.html">"Building the Perfect Koi Pond: Essential Tips"</a><span> Dec 14, 2024</span></li>
-            <li><a href="blog-detail.html">"The History of Koi Fish Breeding: From Ancient Ponds"</a><span> Dec 13, 2024</li>
-            <li><a href="blog-detail.html">"The History of Koi Fish Breeding: From Ancient Ponds"</a><span> Dec 13, 2024</span></li>
-            <li><a href="blog-detail.html">"Koi Fish In Pop Culture: How These Iconic Fish Have Inspired"</a><span> Dec 13, 2024</span></li>
+            <li><a href="blog-detail.html">"The Power of Perseverance: How Koi Fish Symbolize Strength"</a><span>Dec 12, 2024</span></li>
+            <li><a href="blog-detail.html">"Koi Fish Varieties Explained: Understanding the Colors and Patterns"</a><span>Dec 13, 2024</span></li>
+            <li><a href="blog-detail.html">"Building the Perfect Koi Pond: Essential Tips"</a><span>Dec 14, 2024</span></li>
+            <li><a href="blog-detail.html">"The History of Koi Fish Breeding: From Ancient Ponds"</a><span>Dec 13, 2024</span></li>
+            <li><a href="blog-detail.html">"Koi Fish In Pop Culture: How These Iconic Fish Have Inspired"</a><span>Dec 13, 2024</span></li>
         </ul>
     </section>
-
-  
 </body>
 </html>
