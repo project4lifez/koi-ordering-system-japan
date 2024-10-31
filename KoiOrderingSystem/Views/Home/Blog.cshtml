@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@model BlogViewModel
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -229,7 +231,7 @@
             font-size: 0.9rem;
         }
 
-        media (max-width: 768px)
+        @@media (max-width: 768px) {
             .container {
                 flex-direction: column;
             }
@@ -243,7 +245,7 @@
                 align-items: flex-start;
                 gap: 0.5rem;
             }
-        
+        }
 
         .nav-container {
             margin: -10px auto !important;
@@ -263,51 +265,36 @@
     <div class="blog-title">Koi Master’s Log</div>
 
     <div class="container">
-        <div class="main-featured">
-            <a href="blog-detail.html">
-                <img src="https://baobariavungtau.com.vn/dataimages/201808/original/images1454316_ca_koi_4.jpg" alt="Koi fish after heavy rain">
-                <div class="overlay">
-                    <h3>Koi fish come to the yard to roam after heavy rain</h3>
-                    <p>Heavy rains caused the pond water level to rise, so the Koi fish took advantage of the opportunity to go to the yard...</p>
-                    <div class="meta">Jun 4, 2015</div>
-                </div>
-            </a>
-        </div>
+        <!-- Main Featured Blog -->
+        @if (Model.MainFeaturedBlog != null)
+        {
+            <div class="main-featured">
+                <a href="@Url.Action("BlogDetail", "Home", new { id = Model.MainFeaturedBlog.BlogId })">
+                    <img src="@Model.MainFeaturedBlog.Image" alt="@Model.MainFeaturedBlog.Heading">
+                    <div class="overlay">
+                        <h3>@Model.MainFeaturedBlog.Heading</h3>
+                        <p>@Html.Raw(Model.MainFeaturedBlog.Link.Length > 80 ? Model.MainFeaturedBlog.Link.Substring(0, 80) + "..." : Model.MainFeaturedBlog.Link)</p>
+                        <div class="meta">@Model.MainFeaturedBlog.CreateAt?.ToString("MMM d, yyyy")</div>
+                    </div>
+                </a>
+            </div>
+        }
 
         <!-- Side Blogs -->
         <div class="side-blogs">
-            <div class="side-blog">
-                <a href="blog-detail.html">
-                    <img src="https://baobariavungtau.com.vn/dataimages/201808/original/images1454316_ca_koi_4.jpg" alt="Koi swimming in lake">
-                    <div class="side-blog-content">
-                        <h4>The lake is famous for its picturesque appearance</h4>
-                        <p>Many people didn't believe the photo of Lake Namonaki was real until they saw...</p>
-                        <div class="meta">Dec 20, 2024</div>
-                    </div>
-                </a>
-            </div>
-
-            <div class="side-blog">
-                <a href="blog-detail.html">
-                    <img src="https://yokokoi.com/wp-content/uploads/2023/02/sakura-boost-koi-growth-muscle-protein-38-tang-truong-co-bap-1-5-6-kg_02.jpg" alt="Koi fish feeding process">
-                    <div class="side-blog-content">
-                        <h4>Koi fish feeding process at the farm</h4>
-                        <p>Feeding Koi fish at the farm is an essential part of their care, ensuring they grow healthy and vibrant...</p>
-                        <div class="meta">Jan 18, 2024</div>
-                    </div>
-                </a>
-            </div>
-
-            <div class="side-blog">
-                <a href="blog-detail.html">
-                    <img src="https://i.pinimg.com/736x/cf/46/c7/cf46c72e26a66cef29413b75dc6cd052.jpg" alt="Standard Koi fish price in Japan">
-                    <div class="side-blog-content">
-                        <h4>Standard Koi fish price in Japan</h4>
-                        <p>Koi fish, known for their vibrant colors and elegant beauty, are prized by hobbyists and collectors around the world...</p>
-                        <div class="meta">May 12, 2024</div>
-                    </div>
-                </a>
-            </div>
+            @foreach (var sideBlog in Model.SideBlogs)
+            {
+                <div class="side-blog">
+                    <a href="@Url.Action("BlogDetail", "Home", new { id = sideBlog.BlogId })">
+                        <img src="@sideBlog.Image" alt="@sideBlog.Heading">
+                        <div class="side-blog-content">
+                            <h4>@sideBlog.Heading</h4>
+                            <p>@Html.Raw(sideBlog.Link.Length > 80 ? sideBlog.Link.Substring(0, 80) + "..." : sideBlog.Link)</p>
+                            <div class="meta">@sideBlog.CreateAt?.ToString("MMM d, yyyy")</div>
+                        </div>
+                    </a>
+                </div>
+            }
         </div>
     </div>
 
@@ -315,11 +302,13 @@
     <section class="trending">
         <h2>Week Trending</h2>
         <ul>
-            <li><a href="blog-detail.html">"The Power of Perseverance: How Koi Fish Symbolize Strength"</a><span>Dec 12, 2024</span></li>
-            <li><a href="blog-detail.html">"Koi Fish Varieties Explained: Understanding the Colors and Patterns"</a><span>Dec 13, 2024</span></li>
-            <li><a href="blog-detail.html">"Building the Perfect Koi Pond: Essential Tips"</a><span>Dec 14, 2024</span></li>
-            <li><a href="blog-detail.html">"The History of Koi Fish Breeding: From Ancient Ponds"</a><span>Dec 13, 2024</span></li>
-            <li><a href="blog-detail.html">"Koi Fish In Pop Culture: How These Iconic Fish Have Inspired"</a><span>Dec 13, 2024</span></li>
+            @foreach (var trendingBlog in Model.TrendingBlogs)
+            {
+                <li>
+                    <a href="@Url.Action("BlogDetail", "Home", new { id = trendingBlog.BlogId })">@trendingBlog.Heading</a>
+                    <span>@trendingBlog.CreateAt?.ToString("MMM d, yyyy")</span>
+                </li>
+            }
         </ul>
     </section>
 </body>

@@ -18,6 +18,7 @@
     <Folder Include="wwwroot\images\KoiFish\" />
     <Folder Include="wwwroot\images\Icon\" />
     <Folder Include="wwwroot\images\KoiFarm\" />
+    <Folder Include="wwwroot\images\Blog\" />
   </ItemGroup>
 
   <ItemGroup>

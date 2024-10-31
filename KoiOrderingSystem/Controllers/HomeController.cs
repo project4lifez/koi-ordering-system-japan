@@ -91,12 +91,42 @@ namespace KoiOrderingSystem.Controllers
 
         public ActionResult Blog()
         {
-            return View();
+            // Fetch blogs based on their Position from the database
+            var mainFeaturedBlog = _db.Blogs.FirstOrDefault(b => b.Position == 1);
+            var sideBlogs = _db.Blogs.Where(b => b.Position >= 2 && b.Position <= 4).ToList();
+            var trendingBlogs = _db.Blogs.Where(b => b.Position == 0).ToList();
+
+            // Create the ViewModel and pass the data
+            var model = new BlogViewModel
+            {
+                MainFeaturedBlog = mainFeaturedBlog,
+                SideBlogs = sideBlogs,
+                TrendingBlogs = trendingBlogs
+            };
+
+            return View(model);
         }
 
-        public ActionResult BlogDetail()
+        // GET: /Home/BlogDetail/{id}
+        public async Task<IActionResult> BlogDetail(int id)
         {
-            return View();
+            // Fetch the blog using the provided id
+            var blog = await _db.Blogs.FindAsync(id);
+            if (blog == null)
+            {
+                return NotFound(); // Return 404 if the blog doesn't exist
+            }
+
+            // Create a BlogViewModel and populate it with the blog data
+            var viewModel = new BlogViewModel
+            {
+                Blog = blog,
+                SideBlogs = await _db.Blogs.Where(b => b.Position > 0).ToListAsync(),
+                TrendingBlogs = await _db.Blogs.OrderByDescending(b => b.CreateAt).Take(5).ToListAsync(),
+                MainFeaturedBlog = await _db.Blogs.FirstOrDefaultAsync(b => b.Position == 1)
+            };
+
+            return View(viewModel); // Pass the view model to the view
         }
 
 
