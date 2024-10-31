@@ -1,5 +1,155 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Curious Behavior of Koi Fish During Heavy Rain</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bl-primary: #3498DB;
+            --bl-secondary: #E67E22;
+            --bl-text-dark: #34495E;
+            --bl-text-muted: #7F8C8D;
+            --bl-bg-light: #ECF0F1;
+            --bl-white: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bl-bg-light);
+            color: var(--bl-text-dark);
+            line-height: 1.6;
+            margin-top:  110px;
+        }
+
+        .bl-wrapper {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        .bl-header {
+            background-color: var(--bl-white);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .bl-header h1 {
+            font-size: 2rem;
+            color: var(--bl-primary);
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .bl-meta {
+            color: var(--bl-text-muted);
+            font-size: 0.9rem;
+        }
+
+        .bl-image-container {
+            margin: 20px 0;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+
+        .bl-image {
+            width: 100%;
+            max-height: 350px;
+            object-fit: cover;
+            transition: all 0.3s ease;
+        }
+
+        .bl-image:hover {
+            transform: scale(1.03);
+        }
+
+        .bl-content {
+            background-color: var(--bl-white);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .bl-content h2 {
+            font-size: 1.5rem;
+            color: var(--bl-secondary);
+            margin-bottom: 15px;
+            border-left: 4px solid var(--bl-secondary);
+            padding-left: 10px;
+        }
+
+        .bl-content p {
+            margin-bottom: 1.2rem;
+            color: var(--bl-text-dark);
+        }
+
+        .bl-quote {
+            background-color: var(--bl-bg-light);
+            border-left: 4px solid var(--bl-primary);
+            padding: 15px;
+            margin: 20px 0;
+            font-style: italic;
+            color: var(--bl-text-muted);
+            border-radius: 8px;
+        }
+
+        .bl-author {
+            text-align: right;
+            color: var(--bl-primary);
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        media (max-width: 768px) {
+            .bl-wrapper {
+                padding: 0 15px;
+            }
+
+            .bl-header h1 {
+                font-size: 1.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bl-wrapper">
+        <div class="bl-header">
+            <h1>The Curious Behavior of Koi Fish During Heavy Rain</h1>
+            <div class="bl-meta">
+                <span>🕒 Published on: 15/10/2024</span>
+                <span>👤 Author: Koi Fish Expert</span>
+            </div>
+        </div>
+
+        <div class="bl-image-container">
+            <img src="https://baobariavungtau.com.vn/dataimages/201808/original/images1454316_ca_koi_4.jpg" alt="Koi Fish after a heavy rain" class="bl-image">
+        </div>
+
+        <div class="bl-content">
+            <h2>Exploring the Interesting Behavior of Koi Fish</h2>
+            <p>The heavy rain has caused the water level in the pond to rise, creating an opportunity for koi fish to "explore" the outside world. It's not uncommon for fish to swim out to the yard or even onto the streets after heavy rains, but this kind of "migration" by koi fish is truly unique.</p>
+
+            <div class="bl-quote">
+                "It was an amazing sight – hundreds of colorful koi fish swimming in puddles around the yard. They seemed to be celebrating the rain."
+            </div>
+
+            <p>Although it may look amusing, this kind of movement can be dangerous for the fish. Koi are very curious, and they can wander into unsafe areas or become prey to predators.</p>
+
+            <h2>How to Protect Koi Fish During the Rainy Season</h2>
+            <p>Make sure your pond is securely enclosed and has no exits for the koi fish. A well-maintained pond with strong pond walls is extremely important. You can also install nets or covers during heavy rains to ensure the koi fish remain safe inside their pond.</p>
+
+            <p class="bl-author">- Koi Fish Expert</p>
+        </div>
+    </div>
+</body>
+</html>
