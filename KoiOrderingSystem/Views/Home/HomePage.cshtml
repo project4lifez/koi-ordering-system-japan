@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Imperial Koi | Premium Japanese Koi Farm</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="~/css/HomePage.css" />
     <style>
         .header {
@@ -67,6 +70,12 @@
                 margin-left: 5px;
             }
 
+        .navigation-menu {
+            margin-top: 16px !important;
+        }
+
+     
+
     </style>
 </head>
 
@@ -106,51 +115,56 @@
     <section id="about" class="about">
         <div class="about-grid">
             <div class="about-content" data-aos="fade-right">
-                <p class="section-subtitle">Our Heritage</p>
-                <h2 class="section-title">Premium Japanese Koi Breeding</h2>
+                <p class="section-subtitle">Our Journey Together</p>
+                <h2 class="section-title">Comprehensive Koi Ordering Service</h2>
                 <p class="about-text">
-                    With over two decades of experience in Koi breeding, we maintain the highest standards of Japanese
-                    tradition while embracing modern technology. Our facility specializes in raising award-winning Koi
-                    varieties, ensuring each fish reaches its full potential.
+                    Our Koi Ordering System is designed to offer a seamless and personalized experience, from choosing the
+                    perfect Koi to ensuring a safe and reliable delivery to your doorstep. With a team dedicated to guiding
+                    you through each step, we make Koi ownership easier and more enjoyable.
                 </p>
                 <div class="about-features">
+
                     <div class="feature-card">
-                        <i class="fas fa-award feature-icon"></i>
-                        <h3 class="feature-title">Premium Quality</h3>
-                        <p class="feature-text">Champion bloodlines from Japan's top breeders</p>
+                        <i class="fas fa-file-invoice feature-icon"></i>
+                        <h3 class="feature-title">Detailed Quotations</h3>
+                        <p class="feature-text">Transparent pricing and management-approved quotations</p>
                     </div>
                     <div class="feature-card">
-                        <i class="fas fa-water feature-icon"></i>
-                        <h3 class="feature-title">Advanced Facility</h3>
-                        <p class="feature-text">State-of-the-art water management systems</p>
+                        <i class="fas fa-plane-departure feature-icon"></i>
+                        <h3 class="feature-title">On-site Assistance</h3>
+                        <p class="feature-text">Guided check-in and dedicated support during your Koi journey</p>
                     </div>
                     <div class="feature-card">
-                        <i class="fas fa-certificate feature-icon"></i>
-                        <h3 class="feature-title">Certified</h3>
-                        <p class="feature-text">International breeding certifications</p>
+                        <i class="fas fa-fish feature-icon"></i>
+                        <h3 class="feature-title">Exclusive Japanese Koi Selection</h3>
+                        <p class="feature-text">Sourcing premium Koi from Japan's top breeders</p>
                     </div>
                     <div class="feature-card">
-                        <i class="fas fa-shipping-fast feature-icon"></i>
-                        <h3 class="feature-title">Global Shipping</h3>
-                        <p class="feature-text">Worldwide delivery with care</p>
+                        <i class="fas fa-truck feature-icon"></i>
+                        <h3 class="feature-title">Safe Delivery</h3>
+                        <p class="feature-text">Careful delivery of your Koi to your location</p>
                     </div>
                 </div>
             </div>
             <div class="about-image" data-aos="fade-left">
-                <img src="/api/placeholder/600/800" alt="Premium Koi Facility">
+                <img src="https://images.unsplash.com/photo-1641374446184-45be9cce898c?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" style="
+                     max-height: 710px;
+                     width: 600px;
+                     margin-top: 60px;
+                     border-radius:20px;" alt="Professional Koi Ordering Service">
             </div>
         </div>
     </section>
 
    <!-- Our Partner Farm Section -->
-<section id="partner-farms" class="partner-farms">
-    <div class="container">
-        <div class="text-center" data-aos="fade-up">
-            <p class="section-subtitle">Our Partners</p>
-            <h2 class="section-title">Partner Farms</h2>
-        </div>
+    <section id="partner-farms" class="partner-farms">
+        <div class="container">
+            <div class="text-center" data-aos="fade-up">
+                <p class="section-subtitle">Our Partners</p>
+                <h2 class="section-title">Partner Farms</h2>
+            </div>
 
-        <div class="farm-gallery" data-aos="fade-up">
+            <div class="farm-gallery" data-aos="fade-up">
                 @foreach (var farm in ViewBag.KoiFarms)
                 {
                     <div class="farm-card">
@@ -161,10 +175,11 @@
                         </div>
                     </div>
                 }
-            <!-- Additional farms can be added here -->
+                <!-- Additional farms can be added here -->
+            </div>
         </div>
-    </div>
-</section>
+    </section>
+
 
     <!-- Koi Varieties Section -->
     <section id="varieties" class="varieties">
@@ -490,9 +505,11 @@
         }
 
       
+   
+    </script>
 
      
-   </script>
+   
 </body>
 </html>
 

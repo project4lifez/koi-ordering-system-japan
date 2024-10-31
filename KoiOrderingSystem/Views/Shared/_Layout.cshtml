@@ -79,7 +79,7 @@
     <!-- Header -->
     <header class="header">
         <div class="nav-container">
-            <a href="#" class="logo">
+            <a href="/" class="logo">
                 <div>
                     <div class="logo-text">Koi88</div>
                     <div class="logo-japanese">帝国錦鯉</div>
@@ -90,9 +90,9 @@
                 <ul class="navigation-menu">
                     <li><a href="/" class="navigation-link">Home</a></li>
                     <li><a href="#service" class="navigation-link">Service</a></li>
-                    <li><a href="#farm" class="navigation-link">Farm</a></li>
-                    <li><a href="#varieties" class="navigation-link">Variety</a></li>
-                    <li><a href="#blog" class="navigation-link">Blog</a></li>
+                    <li><a href="/Farm/Farm" class="navigation-link">Farm</a></li>
+                    <li><a href="/Variety/Variety" class="navigation-link">Variety</a></li>
+                    <li><a href="/Home/Blog" class="navigation-link">Blog</a></li>
 
                     <!-- Kiểm tra trạng thái đăng nhập của người dùng -->
                     @if (Context.Session.GetString("CustomerSession") != null && Context.Session.GetInt32("CustomerRoleId") == 1)
