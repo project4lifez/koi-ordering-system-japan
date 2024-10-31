@@ -720,10 +720,32 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
                 existingKoiFish.KoiName = model.KoiName;
             }
 
+            if (!string.IsNullOrWhiteSpace(model.Koinamejp))
+            {
+                existingKoiFish.Koinamejp = model.Koinamejp;
+            }
+
             if (!string.IsNullOrWhiteSpace(model.Description))
             {
                 existingKoiFish.Description = model.Description;
             }
+
+            if (!string.IsNullOrWhiteSpace(model.Size))
+            {
+                existingKoiFish.Size = model.Size;
+            }
+
+            if (!string.IsNullOrWhiteSpace(model.Age))
+            {
+                existingKoiFish.Age = model.Age;
+            }
+
+            if (!string.IsNullOrWhiteSpace(model.Price))
+            {
+                existingKoiFish.Price = model.Price;
+            }
+
+
 
             // Cập nhật VarietyId và VarietyName
             if (model.VarietyId != 0)

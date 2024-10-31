@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@model List<KoiOrderingSystem.Models.KoiFish>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -173,120 +174,44 @@
                 <p class="section-subtitle">Our Collection</p>
                 <h2 class="section-title">Premium Koi Varieties</h2>
             </div>
-            
+
             <div class="filter-buttons" data-aos="fade-up">
                 <button class="filter-btn active" data-filter="all">All Varieties</button>
-                <button class="filter-btn" data-filter="kohaku">Kohaku</button>
-                <button class="filter-btn" data-filter="sanke">Sanke</button>
-                <button class="filter-btn" data-filter="showa">Showa</button>
-                <button class="filter-btn" data-filter="metallic">Metallic</button>
-                <button class="filter-btn" data-filter="premium">Premium Selection</button>
+                @foreach (var variety in ViewBag.KoiVarieties)
+                {
+                    <button class="filter-btn" data-filter="@variety.VarietyName">@variety.VarietyName</button>
+                }
             </div>
 
             <div class="varieties-grid">
-                <!-- Kohaku -->
-                <div class="variety-card" data-category="kohaku" data-aos="fade-up">
-                    <img src="https://koilover.vn/uploads/images/nguon-goc-kohaku.jpg" alt="Kohaku Koi" class="variety-image">
-                    <div class="variety-content">
-                        <div class="variety-title">
-                            <span>Kohaku</span>
-                            <span class="variety-japanese">紅白</span>
+                @foreach (var koi in ViewBag.KoiFishes)
+                {
+                    <div class="variety-card" data-category="@koi.Variety.VarietyName" data-aos="fade-up">
+                        <img src="@koi.ImageUrl" alt="@koi.KoiName" class="variety-image">
+                        <div class="variety-content">
+                            <div class="variety-title">
+                                <span>@koi.KoiName</span>
+                                <span class="variety-japanese">@koi.Koinamejp</span>
+                            </div>
+                            <div class="variety-details">
+                                <div class="variety-detail">
+                                    <i class="fas fa-ruler"></i>
+                                    <span>Size: @koi.Size</span>
+                                </div>
+                                <div class="variety-detail">
+                                    <i class="fas fa-calendar"></i>
+                                    <span>Age: @koi.Age</span>
+                                </div>
+                                <div class="variety-detail">
+                                    <i class="fas fa-trophy"></i>
+                                    <span>Variety: @koi.Variety.VarietyName</span>
+                                </div>
+                            </div>
+                            <div class="variety-price">Starting from: @koi.Price</div>
+                            <button class="btn btn-primary">View Details</button>
                         </div>
-                        <div class="variety-details">
-                            <div class="variety-detail">
-                                <i class="fas fa-ruler"></i>
-                                <span>Size: 65-75 cm</span>
-                            </div>
-                            <div class="variety-detail">
-                                <i class="fas fa-calendar"></i>
-                                <span>Age: 3-4 years</span>
-                            </div>
-                            <div class="variety-detail">
-                                <i class="fas fa-trophy"></i>
-                                <span>Award Winning Bloodline</span>
-                            </div>
-                        </div>
-                        <div class="variety-price">Starting from $2,500</div>
-                        <button class="btn btn-primary">View Details</button>
                     </div>
-                </div>
-                <div class="variety-card" data-category="kohaku" data-aos="fade-up">
-                    <img src="https://koilover.vn/uploads/images/nguon-goc-kohaku.jpg" alt="Kohaku Koi" class="variety-image">
-                    <div class="variety-content">
-                        <div class="variety-title">
-                            <span>Kohaku</span>
-                            <span class="variety-japanese">紅白</span>
-                        </div>
-                        <div class="variety-details">
-                            <div class="variety-detail">
-                                <i class="fas fa-ruler"></i>
-                                <span>Size: 65-75 cm</span>
-                            </div>
-                            <div class="variety-detail">
-                                <i class="fas fa-calendar"></i>
-                                <span>Age: 3-4 years</span>
-                            </div>
-                            <div class="variety-detail">
-                                <i class="fas fa-trophy"></i>
-                                <span>Award Winning Bloodline</span>
-                            </div>
-                        </div>
-                        <div class="variety-price">Starting from $2,500</div>
-                        <button class="btn btn-primary">View Details</button>
-                    </div>
-                </div>
-                <div class="variety-card" data-category="kohaku" data-aos="fade-up">
-                    <img src="https://koilover.vn/uploads/images/nguon-goc-kohaku.jpg" alt="Kohaku Koi" class="variety-image">
-                    <div class="variety-content">
-                        <div class="variety-title">
-                            <span>Kohaku</span>
-                            <span class="variety-japanese">紅白</span>
-                        </div>
-                        <div class="variety-details">
-                            <div class="variety-detail">
-                                <i class="fas fa-ruler"></i>
-                                <span>Size: 65-75 cm</span>
-                            </div>
-                            <div class="variety-detail">
-                                <i class="fas fa-calendar"></i>
-                                <span>Age: 3-4 years</span>
-                            </div>
-                            <div class="variety-detail">
-                                <i class="fas fa-trophy"></i>
-                                <span>Award Winning Bloodline</span>
-                            </div>
-                        </div>
-                        <div class="variety-price">Starting from $2,500</div>
-                        <button class="btn btn-primary">View Details</button>
-                    </div>
-                </div>
-
-                <!-- Sanke -->
-                <div class="variety-card" data-category="sanke" data-aos="fade-up" data-aos-delay="100">
-                    <img src="https://www.cakoi.vn/wp-content/uploads/2018/03/taisho-sanke.jpg" alt="Sanke Koi" class="variety-image">
-                    <div class="variety-content">
-                        <div class="variety-title">
-                            <span>Taisho Sanke</span>
-                            <span class="variety-japanese">大正三色</span>
-                        </div>
-                        <div class="variety-details">
-                            <div class="variety-detail">
-                                <i class="fas fa-ruler"></i>
-                                <span>Size: 60-70 cm</span>
-                            </div>
-                            <div class="variety-detail">
-                                <i class="fas fa-calendar"></i>
-                                <span>Age: 3 years</span>
-                            </div>
-                            <div class="variety-detail">
-                                <i class="fas fa-trophy"></i>
-                                <span>Show Quality</span>
-                            </div>
-                        </div>
-                        <div class="variety-price">Starting from $3,000</div>
-                        <button class="btn btn-primary">View Details</button>
-                    </div>
-                </div>
+                }
                 <!-- Additional Koi varieties can be added here -->
             </div>
         </div>
