@@ -447,10 +447,6 @@ public partial class Koi88Context : DbContext
             entity.Property(e => e.ImageUrl)
                 .HasMaxLength(100)
                 .HasColumnName("imageUrl");
-            entity.Property(e => e.Maintopic)
-                .HasMaxLength(255)
-                .HasColumnName("maintopic");
-            entity.Property(e => e.Subtopic).HasColumnName("subtopic");
             entity.Property(e => e.VarietyName)
                 .HasMaxLength(100)
                 .HasColumnName("variety_name");

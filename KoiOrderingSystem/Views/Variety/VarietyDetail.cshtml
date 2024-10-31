@@ -12,12 +12,11 @@
     <style>
         body {
             font-family: "Arial", sans-serif;
-            background-color: #f4f4f9; /* Sử dụng màu nền nhẹ nhàng */
-            color: #444; /* Màu chữ giảm độ tương phản để dễ đọc hơn */
+            background-color: #f4f4f9;
+            color: #444;
             margin: 0;
             padding: 0;
             margin-top: 10px;
-            
         }
 
         .container-s {
@@ -93,8 +92,6 @@
 
         }
 
-        
-
         /* Card Styling */
         .koi-card {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -145,8 +142,6 @@
             margin: 0 5px;
         }
 
-       
-
         .breadcrumb {
             background-color: transparent;
             margin-bottom: 15px;
@@ -186,8 +181,8 @@
             .footer-text-s p {
                 font-size: 18px;
                 font-weight: bold;
-                color: #555;
-                background-color: #e0e5ec;
+                color: #0b51a6;
+                background-color: #E9F3FD;
                 padding: 15px;
                 border: none;
                 border-radius: 10px;
@@ -197,60 +192,41 @@
                 margin: 0 auto;
             }
 
-        .card-body {
-            margin-top: -17px!important;
-        }
-
-        .nav-container {
-            margin: -8px auto !important;
-        }
-
-        .navigation-menu {
-            margin-top: 16px !important;
-        }
-
-        /* Accordion Section */
         .accordion-section {
-            background-color: #e0e5ec;
+            background-color: #E9F3FD;
             border-radius: 10px;
             padding: 15px;
             margin-bottom: 15px;
             cursor: pointer;
-            color: #333333;
+            color: #0b51a6;
             font-weight: bold;
             max-width: 800px;
             margin: 0 auto;
-            margin-bottom: 10px;
             display: flex;
             align-items: center;
-            justify-content: space-between; /* Thêm thuộc tính này */
+            justify-content: space-between;
+            margin-bottom: 10px;
         }
 
             .accordion-section .icon {
-                margin-left: auto; /* Đảm bảo thuộc tính này vẫn có */
+                margin-left: auto;
                 font-weight: bold;
                 font-size: 20px;
-            }
-
-            .accordion-section.active {
-                border-bottom-left-radius: 0;
-                border-bottom-right-radius: 0;
             }
 
         .accordion-content {
             display: none;
             padding: 15px;
             border-top: 0;
-            background-color: #e0e5ec;
+            background-color: #f9f9f9; /* Change background for visibility */
             color: #333333;
             font-size: 16px;
             max-width: 800px;
             margin: 0 auto;
-            margin-bottom: 10px;
-            margin-top: -30px;
-            border-top-left-radius: 0;
-            border-top-right-radius: 0;
             border-radius: 10px;
+            white-space: pre-line; /* Preserve line breaks */
+            margin-top: -10px;
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -265,62 +241,43 @@
             </ol>
         </div>
     </div>
-    <div class="container-s" style="margin-top:-50px">
-        <div class="container-s">
-            <div class="text-content-s">
-                <h3 style="font-size: 28px;
-            color: #dc3545;
-            margin-top: 20px;
-            font-weight: bold;
-            border-bottom: 2px solid #f8f9fa;
-            padding-bottom: 10px;">
-                    @Model.VarietyName
-                </h3>
-                <p>@Model.Description</p>
-            </div>
+    <div class="container-s">
+        <div class="text-content-s">
+            <h3 style="font-size: 28px; color: #dc3545;">@Model.VarietyName</h3>
+            <p>@Model.Description</p>
+        </div>
 
-            <div class="fish-image-s">
-                <img src="@Model.ImageUrl" alt="@Model.VarietyName" class="img-fluid" style="border-radius: 10px;">
-            </div>
+        <div class="fish-image-s">
+            <img src="@Model.ImageUrl" alt="@Model.VarietyName" class="img-fluid" style="border-radius: 10px;">
         </div>
     </div>
 
-    <!-- Accordion Sections -->
-    <div class="accordion-section">
-        I. Các em Koi dòng ogon – Lịch sử khai sinh
-        <span class="icon">+</span>
+    <!-- Dynamic Accordion Sections for MainTopics and SubTopics -->
+    @{
+        var mainTopics = Model.MainTopics?.Split('|') ?? new string[0];
+        var subTopicsGroups = Model.SubTopics?.Split('|') ?? new string[0];
+    }
 
-    </div>
-    <div class="accordion-content">
-        <h4>1. Lịch sử</h4>
-        <p>Chi tiết lịch sử của các em Koi dòng ogon, bao gồm câu chuyện khởi nguồn và sự phát triển.</p>
-        <h4>2. Ưu điểm của Koi Ogon</h4>
-        <p>Những ưu điểm về tuổi thọ, màu sắc và sức chịu đựng của dòng cá này.</p>
-        <h4>3. Mức độ yêu thích của Koi Ogon hiện nay</h4>
-        <p>Thông tin về sự phổ biến và nhu cầu của dòng cá này trên thị trường.</p>
-    </div>
+   
 
-    <div class="accordion-section">
-        II. Koi Ogon chia thành 5 loại
-        <span class="icon">+</span>
-    </div>
-    <div class="accordion-content">
-        <p>Các loại Koi Ogon phổ biến và đặc điểm của từng loại.</p>
-    </div>
+    @for (int i = 0; i < mainTopics.Length; i++)
+    {
+        var mainTopic = mainTopics[i];
+        var subTopics = i < subTopicsGroups.Length ? subTopicsGroups[i].Replace(",", " ") : string.Empty; // Replace commas with spaces for a single paragraph
 
-    <div class="accordion-section">
-        III. Cá koi Hikari Muji lai tạo và thuần chủng
-        <span class="icon">+</span>
-    </div>
-    <div class="accordion-content">
-        <p>Quá trình lai tạo và các tiêu chuẩn thuần chủng của cá koi Hikari Muji.</p>
-    </div>
-    
+        <div class="accordion-section">
+            @Html.Raw($"{i + 1}. {mainTopic}")
+            <span class="icon">+</span>
+        </div>
+        <div class="accordion-content">
+            <p>@subTopics</p>
+        </div>
+    }
+
     <div class="footer-text-s">
-        <p>
-            Browse our available Koi below. Contact us for personalized advice.
-        </p>
+        <p>Browse our available Koi below. Contact us for personalized advice.</p>
     </div>
+
     <!-- Koi Fish Breeds Section -->
     <section class="koi-fish-breeds-section my-5">
         <div class="container">
@@ -341,9 +298,9 @@
                     </div>
                 }
             </div>
-            
         </div>
     </section>
+
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             document.querySelectorAll(".accordion-section").forEach(section => {
