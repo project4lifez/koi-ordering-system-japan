@@ -21,12 +21,6 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        h2 {
-            font-size: 22px;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-
         .btn-next {
             background-color: #007bff;
             border-color: #007bff;
@@ -49,25 +43,11 @@
             margin-bottom: 10px;
         }
 
-        .form-layout {
-            display: flex;
-        }
-
-        .sidebar {
-            width: 25%;
-            padding-right: 15px;
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        .form-content {
-            width: 75%;
-        }
-
         #previewImage {
             margin-top: 10px;
             max-width: 300px;
             height: auto;
+            display: none;
         }
 
         .topic-container {
@@ -81,6 +61,13 @@
             color: #007bff;
         }
 
+        .btn-remove {
+            font-size: 12px;
+            margin-left: 10px;
+            cursor: pointer;
+            color: #dc3545;
+        }
+
         .topic-block {
             margin-bottom: 20px;
             padding: 10px;
@@ -88,12 +75,6 @@
             border-radius: 5px;
             background-color: #f9f9f9;
         }
-
-            .topic-block label {
-                display: block;
-                margin-bottom: 5px;
-                font-weight: bold;
-            }
     </style>
 </head>
 <body>
@@ -116,6 +97,7 @@
                     <div class="form-group">
                         <label for="varietyImage" class="form-label">Image URL</label>
                         <input type="file" class="form-control" id="varietyImage" name="ImageUrl" accept="image/*" required>
+                        <img id="previewImage" src="" alt="Image Preview">
                     </div>
 
                     <!-- Main Topic and Sub Topic Section -->
@@ -124,15 +106,13 @@
                             <label class="form-label">Main Topic 1</label>
                             <input type="text" class="form-control mb-3" name="mainTopics[]" placeholder="Main Topic Content" required>
 
-                            <label class="form-label">Sub Topics for Main Topic 1</label>
-                            <input type="text" class="form-control mb-2" name="subTopics[0][]" placeholder="Sub Topic Content" required>
-                            <span class="btn-add" onclick="addSubTopic(this)">+ Add Sub Topic</span>
+                            <label class="form-label">Sub Topic for Main Topic 1</label>
+                            <input type="text" class="form-control mb-2" name="subTopics[0]" placeholder="Sub Topic Content" required>
+                            <span class="btn-remove" onclick="removeMainTopic(this)">- Remove Main Topic</span>
                         </div>
                     </div>
                     <span class="btn-add" onclick="addTopic()">+ Add Main Topic</span>
 
-                    <!-- Image Preview -->
-                    <img id="previewImage" src="" alt="Image Preview" style="display:none;">
                     <button type="submit" class="btn btn-next">Create</button>
                 </form>
             </div>
@@ -161,7 +141,7 @@
             return true;
         }
 
-        // Function to add a new Main Topic and its first Sub Topic input fields with incremented labels
+        // Function to add a new Main Topic with a single Sub Topic field
         function addTopic() {
             topicCounter++;
             const topicContainer = document.getElementById("topicContainer");
@@ -184,39 +164,31 @@
 
             const subLabel = document.createElement("label");
             subLabel.className = "form-label";
-            subLabel.innerText = `Sub Topics for Main Topic ${topicCounter}`;
+            subLabel.innerText = `Sub Topic for Main Topic ${topicCounter}`;
             topicBlock.appendChild(subLabel);
 
-            // Initial sub-topic input
             const subInput = document.createElement("input");
             subInput.type = "text";
             subInput.className = "form-control mb-2";
-            subInput.name = `subTopics[${topicCounter - 1}][]`;
+            subInput.name = `subTopics[${topicCounter - 1}]`;
             subInput.placeholder = "Sub Topic Content";
             subInput.required = true;
             topicBlock.appendChild(subInput);
 
-            // Add button to add more subtopics under the same main topic
-            const addSubTopicBtn = document.createElement("span");
-            addSubTopicBtn.className = "btn-add";
-            addSubTopicBtn.innerText = "+ Add Sub Topic";
-            addSubTopicBtn.onclick = function () { addSubTopic(addSubTopicBtn); };
-            topicBlock.appendChild(addSubTopicBtn);
+            // Add button to remove the entire main topic section
+            const removeMainTopicBtn = document.createElement("span");
+            removeMainTopicBtn.className = "btn-remove";
+            removeMainTopicBtn.innerText = "- Remove Main Topic";
+            removeMainTopicBtn.onclick = function () { removeMainTopic(removeMainTopicBtn); };
+            topicBlock.appendChild(removeMainTopicBtn);
 
             topicContainer.appendChild(topicBlock);
         }
 
-        // Function to add another Sub Topic input field under a specific Main Topic
-        function addSubTopic(button) {
+        // Function to remove a specific Main Topic section
+        function removeMainTopic(button) {
             const topicBlock = button.parentElement;
-            const subInput = document.createElement("input");
-            subInput.type = "text";
-            subInput.className = "form-control mb-2";
-            const index = Array.from(document.getElementById("topicContainer").children).indexOf(topicBlock);
-            subInput.name = `subTopics[${index}][]`;
-            subInput.placeholder = "Sub Topic Content";
-            subInput.required = true;
-            topicBlock.insertBefore(subInput, button);
+            topicBlock.remove();
         }
     </script>
 </body>

@@ -64,10 +64,19 @@
             height: auto;
         }
 
-        /* Styling for the disabled Variety ID field */
-        #varietyId {
-            background-color: #e9ecef;
-            cursor: not-allowed;
+        .topic-container {
+            margin-top: 15px;
+        }
+
+        .btn-add, .btn-remove {
+            font-size: 12px;
+            margin-left: 10px;
+            cursor: pointer;
+            color: #007bff;
+        }
+
+        .btn-remove {
+            color: #dc3545;
         }
 
         /* Spacing for topic blocks */
@@ -89,15 +98,13 @@
 <body>
     <div class="form-container">
         <div class="form-layout">
-            <!-- Left Side Panel -->
             <div class="sidebar">
                 <p class="general-info-label">Update Information</p>
             </div>
 
-            <!-- Right Form Section -->
             <div class="form-content">
                 <form method="post" id="formUpdate" action="/Admin/Manager/UpdateVariety/@Model.VarietyId" enctype="multipart/form-data" onsubmit="return validateForm()">
-                    <input type="hidden" name="VarietyId" value="@Model.VarietyId" /> <!-- Lưu VarietyId -->
+                    <input type="hidden" name="VarietyId" value="@Model.VarietyId" />
                     <div class="form-group">
                         <label for="varietyId" class="form-label">Variety ID</label>
                         <input type="text" class="form-control" id="varietyId" name="VarietyId" value="@Model.VarietyId" readonly>
@@ -121,40 +128,29 @@
                         @if (Model.MainTopics != null && Model.SubTopics != null)
                         {
                             var mainTopics = Model.MainTopics.Split('|');
-                            var subTopicsGroups = Model.SubTopics.Split('|');
+                            var subTopics = Model.SubTopics.Split('|');
                             for (int i = 0; i < mainTopics.Length; i++)
                             {
                                 <div class="topic-block">
                                     <label class="form-label">Main Topic @(i + 1)</label>
                                     <input type="text" class="form-control mb-3" name="MainTopic[]" value="@mainTopics[i]" placeholder="Main Topic Content">
-
-                                    <label class="form-label">Sub Topics for Main Topic @(i + 1)</label>
-                                    @if (i < subTopicsGroups.Length)
-                                    {
-                                        var subTopics = subTopicsGroups[i].Split(',');
-                                        foreach (var subTopic in subTopics)
-                                        {
-                                            <input type="text" class="form-control mb-2" name="SubTopic[@i][]" value="@subTopic" placeholder="Sub Topic Content">
-                                        }
-                                    }
-                                    <span class="btn-add" onclick="addSubTopic(this, @i)">+ Add Sub Topic</span>
+                                    <label class="form-label">Sub Topic for Main Topic @(i + 1)</label>
+                                    <textarea class="form-control mb-2" name="SubTopic[]" placeholder="Sub Topic Content">@subTopics[i]</textarea>
+                                    <span class="btn-remove" onclick="removeMainTopic(this)">- Remove Main Topic</span>
                                 </div>
                             }
                         }
                         else
                         {
-                            <!-- Default fields if MainTopics and SubTopics are null or empty -->
                             <div class="topic-block">
                                 <label class="form-label">Main Topic 1</label>
                                 <input type="text" class="form-control mb-3" name="MainTopic[]" placeholder="Main Topic Content" value="Static Main Topic Content">
-
-                                <label class="form-label">Sub Topics for Main Topic 1</label>
-                                <input type="text" class="form-control mb-2" name="SubTopic[0][]" placeholder="Sub Topic Content" value="Static Sub Topic Content">
-                                <span class="btn-add" onclick="addSubTopic(this, 0)">+ Add Sub Topic</span>
+                                <label class="form-label">Sub Topic for Main Topic 1</label>
+                                <textarea class="form-control mb-2" name="SubTopic[]" placeholder="Sub Topic Content">Static Sub Topic Content</textarea>
+                                <span class="btn-remove" onclick="removeMainTopic(this)">- Remove Main Topic</span>
                             </div>
                         }
                     </div>
-                    <!-- Button to Add More Topics -->
                     <span class="btn-add" onclick="addTopic()">+ Add Main Topic</span>
                     <button type="submit" class="btn btn-next">Update</button>
                 </form>
@@ -165,7 +161,6 @@
     <script>
         let topicCounter = @((Model.MainTopics?.Split('|').Length ?? 1));
 
-        // JavaScript to preview the selected image
         document.getElementById('varietyImage').addEventListener('change', function (event) {
             const file = event.target.files[0];
             if (file) {
@@ -184,7 +179,6 @@
             return true;
         }
 
-        // Function to add new Main Topic and Sub Topic input fields with incremented labels
         function addTopic() {
             topicCounter++;
             const topicContainer = document.getElementById("topicContainer");
@@ -202,41 +196,31 @@
             mainInput.className = "form-control mb-3";
             mainInput.name = "MainTopic[]";
             mainInput.placeholder = "Main Topic Content";
-            mainInput.value = "Static Main Topic Content";
             topicBlock.appendChild(mainInput);
 
             const subLabel = document.createElement("label");
             subLabel.className = "form-label";
-            subLabel.innerText = `Sub Topics for Main Topic ${topicCounter}`;
+            subLabel.innerText = `Sub Topic for Main Topic ${topicCounter}`;
             topicBlock.appendChild(subLabel);
 
-            const subInput = document.createElement("input");
-            subInput.type = "text";
+            const subInput = document.createElement("textarea");
             subInput.className = "form-control mb-2";
-            subInput.name = `SubTopic[${topicCounter - 1}][]`;
+            subInput.name = "SubTopic[]";
             subInput.placeholder = "Sub Topic Content";
-            subInput.value = "Static Sub Topic Content";
+            subInput.style.resize = "vertical";
             topicBlock.appendChild(subInput);
 
-            const addSubTopicBtn = document.createElement("span");
-            addSubTopicBtn.className = "btn-add";
-            addSubTopicBtn.innerText = "+ Add Sub Topic";
-            addSubTopicBtn.onclick = function () { addSubTopic(addSubTopicBtn, topicCounter - 1); };
-            topicBlock.appendChild(addSubTopicBtn);
+            const removeMainTopicBtn = document.createElement("span");
+            removeMainTopicBtn.className = "btn-remove";
+            removeMainTopicBtn.innerText = "- Remove Main Topic";
+            removeMainTopicBtn.onclick = function () { removeMainTopic(removeMainTopicBtn); };
+            topicBlock.appendChild(removeMainTopicBtn);
 
             topicContainer.appendChild(topicBlock);
         }
 
-        // Function to add another Sub Topic input field under a specific Main Topic
-        function addSubTopic(button, topicIndex) {
-            const topicBlock = button.parentElement;
-            const subInput = document.createElement("input");
-            subInput.type = "text";
-            subInput.className = "form-control mb-2";
-            subInput.name = `SubTopic[${topicIndex}][]`;
-            subInput.placeholder = "Sub Topic Content";
-            subInput.value = "Static Sub Topic Content";
-            topicBlock.insertBefore(subInput, button);
+        function removeMainTopic(button) {
+            button.parentElement.remove();
         }
     </script>
 </body>
