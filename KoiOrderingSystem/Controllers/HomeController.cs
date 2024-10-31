@@ -55,10 +55,17 @@ namespace KoiOrderingSystem.Controllers
                 ?.Take(3)
                 ?.ToList() ?? new List<KoiFarm>();
 
+            var koiFishes = _db?.KoiFishes
+        .Include(k => k.Variety) // Include the Variety information
+        .OrderByDescending(k => k.KoiId) // Ensure this is a valid property
+        .Take(8)
+        .ToList() ?? new List<KoiFish>();
+
             // Set ViewBag properties, ensuring they are not null
             ViewBag.KoiVarieties = koiVarieties;
             ViewBag.Feedbacks = feedbacks;
             ViewBag.KoiFarms = koiFarms;
+            ViewBag.KoiFishes = koiFishes;
             ViewBag.Title = "KOI88 - Nishikigoi Ordering Service";
 
             return View();
