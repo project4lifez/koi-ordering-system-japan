@@ -1,0 +1,251 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imperial Koi | Blog</title>
+    <style>
+        /* Root Colors */
+        :root {
+            --primary: #b91c1c;
+            --secondary: #1e293b;
+            --white: #ffffff;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-900: #0f172a;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--gray-100);
+            color: var(--gray-900);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        /* Container */
+        .container {
+            display: flex;
+            max-width: 1200px;
+            margin: 2rem auto;
+            gap: 2rem;
+        }
+
+        /* Main Featured Blog */
+        .main-featured {
+            flex: 2;
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            background-color: var(--gray-200);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .main-featured:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .main-featured img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .main-featured .overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 1rem;
+            color: var(--white);
+            text-align: left;
+        }
+
+        .main-featured .overlay h3 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .main-featured .overlay p {
+            font-size: 1rem;
+            margin: 0;
+        }
+
+        .main-featured .overlay .meta {
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        /* Side Blogs */
+        .side-blogs {
+            flex: 1;
+            display: grid;
+            gap: 1rem;
+        }
+
+        .side-blog {
+            display: flex;
+            gap: 1rem;
+            background-color: var(--white);
+            padding: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .side-blog:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .side-blog img {
+            width: 100px;
+            height: auto;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        .side-blog-content {
+            flex: 1;
+        }
+
+        .side-blog h4 {
+            font-size: 1.2rem;
+            margin: 0 0 0.5rem 0;
+            color: var(--primary);
+        }
+
+        .side-blog p {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .side-blog .meta {
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+            color: var(--gray-900);
+        }
+
+        /* Week Trending Section */
+        .trending {
+            margin: 3rem auto 0 auto;
+            max-width: 1200px;
+        }
+
+        .trending h2 {
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .trending ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .trending li {
+            padding: 0.8rem;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .trending a {
+            color: var(--gray-900);
+            font-weight: 500;
+        }
+
+        .trending li span {
+            color: var(--gray-800);
+        }
+
+       
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Main Featured Blog -->
+        <div class="main-featured">
+            <a href="blog-detail.html">
+                <img src="https://baobariavungtau.com.vn/dataimages/201808/original/images1454316_ca_koi_4.jpg" alt="Koi fish after heavy rain">
+            </a>
+            <div class="overlay">
+                <h3>Koi fish come to the yard to roam after heavy rain</h3>
+                <p>Heavy rains caused the pond water level to rise, so the Koi fish took advantage of the opportunity to go to the yard...</p>
+                <div class="meta">
+                    <span>Jun 4, 2015</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Side Blogs -->
+        <div class="side-blogs">
+            <a href="blog-detail.html">
+                <div class="side-blog">
+                    <img src="https://baobariavungtau.com.vn/dataimages/201808/original/images1454316_ca_koi_4.jpg" alt="Koi swimming in lake">
+                    <div class="side-blog-content">
+                        <h4>The lake is famous for its picturesque appearance</h4>
+                        <p>Many people didn't believe the photo of Lake Namonaki was real until they saw...</p>
+                        <div class="meta">
+                            <span>Dec 20, 2024</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <a href="blog-detail.html">
+                <div class="side-blog">
+                    <img src="https://yokokoi.com/wp-content/uploads/2023/02/sakura-boost-koi-growth-muscle-protein-38-tang-truong-co-bap-1-5-6-kg_02.jpg" alt="Koi fish feeding process">
+                    <div class="side-blog-content">
+                        <h4>Koi fish feeding process at the farm</h4>
+                        <p>Feeding Koi fish at the farm is an essential part of their care, ensuring they grow healthy and vibrant...</p>
+                        <div class="meta">
+                            <span>Jan 18, 2024</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <a href="blog-detail.html">
+                <div class="side-blog">
+                    <img src="https://i.pinimg.com/736x/cf/46/c7/cf46c72e26a66cef29413b75dc6cd052.jpg" alt="Standard Koi fish price in Japan">
+                    <div class="side-blog-content">
+                        <h4>Standard Koi fish price in Japan</h4>
+                        <p>Koi fish, known for their vibrant colors and elegant beauty, are prized by hobbyists and collectors around the world...</p>
+                        <div class="meta">
+                            <span>May 12, 2024</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Week Trending Section -->
+    <section class="trending">
+        <h2>Week Trending</h2>
+        <ul>
+            <li><a href="blog-detail.html">"The Power of Perseverance: How Koi Fish Symbolize Strength"</a><span> Dec 12, 2024</span></li>
+            <li><a href="blog-detail.html">"Koi Fish Varieties Explained: Understanding the Colors and Patterns"</a><span> Dec 13, 2024</span></li>
+            <li><a href="blog-detail.html">"Building the Perfect Koi Pond: Essential Tips"</a><span> Dec 14, 2024</span></li>
+            <li><a href="blog-detail.html">"The History of Koi Fish Breeding: From Ancient Ponds"</a><span> Dec 13, 2024</li>
+            <li><a href="blog-detail.html">"The History of Koi Fish Breeding: From Ancient Ponds"</a><span> Dec 13, 2024</span></li>
+            <li><a href="blog-detail.html">"Koi Fish In Pop Culture: How These Iconic Fish Have Inspired"</a><span> Dec 13, 2024</span></li>
+        </ul>
+    </section>
+
+  
+</body>
+</html>

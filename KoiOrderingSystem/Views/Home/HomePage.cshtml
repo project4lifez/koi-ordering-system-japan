@@ -21,6 +21,52 @@
                 background: rgba(15, 23, 42, 0.9) !important;
                 backdrop-filter: blur(10px) !important;
             }
+
+        .feedback-author-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .feedback-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 10px;
+            object-fit: cover;
+        }
+
+        .feedback-author {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .feedback-text {
+            font-size: 1.1rem;
+            color: var(--gray-800);
+            margin-top: 10px;
+            font-style: italic!important; /* Chữ in nghiêng cho phần comment */
+            position: relative;
+            padding: 10px;
+            font-family: 'Georgia', serif; /* Font chữ đẹp hơn cho nội dung feedback */
+        }
+
+            .feedback-text::before, .feedback-text::after {
+                content: '"';
+                font-size: 1.5rem;
+                color: var(--gray-500); /* Màu sắc nhẹ cho dấu ngoặc kép */
+                vertical-align: top;
+            }
+
+            .feedback-text::before {
+                margin-right: 5px;
+            }
+
+            .feedback-text::after {
+                margin-left: 5px;
+            }
+
     </style>
 </head>
 
@@ -314,21 +360,45 @@
     </div>
 </section>
 
-   <!-- Customer Feedback Section -->
-<section id="feedback" class="feedback">
-    <div class="feedback-container">
-        <h2 class="section-title">What Our Customers Say</h2>
-        <div class="feedback-grid">
+    <!-- Customer Feedback Section -->
+    <section id="feedback" class="feedback">
+        <div class="feedback-container">
+            <h2 class="section-title">What Our Customers Say</h2>
+            <div class="feedback-grid">
                 @foreach (var feedback in ViewBag.Feedbacks)
                 {
                     <div class="feedback-card" data-aos="fade-up">
+                        <!-- Avatar -->
+                        <img src="@feedback.Customer.Account.ImageUrl" alt="Avatar of @feedback.Customer.Account.Firstname" class="feedback-avatar">
+
+                        <!-- Name -->
+                        <h4 class="feedback-author">
+                            @feedback.Customer.Account.Firstname @feedback.Customer.Account.Lastname
+                        </h4>
+
+                        <!-- Star Rating -->
+                        <div class="feedback-rating">
+                            @{
+                                for (int i = 0; i < feedback.Rating; i++)
+                                {
+                                    <i class="fas fa-star" style="color: #FFD700;"></i>
+                                }
+                                for (int i = feedback.Rating; i < 5; i++)
+                                {
+                                    <i class="far fa-star" style="color: #FFD700;"></i>
+                                }
+                            }
+                        </div>
+
+                        <!-- Feedback Text -->
                         <p class="feedback-text">@feedback.Comments</p>
-                        <h4 class="feedback-author">- @feedback.Customer.Account.Firstname @feedback.Customer.Account.Lastname</h4>
                     </div>
                 }
+            </div>
         </div>
-    </div>
-</section>
+    </section>
+
+
 
     <!-- Contact Section -->
 <section id="contact" class="contact">
