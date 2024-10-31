@@ -83,6 +83,11 @@ namespace KoiOrderingSystem.Controllers
             return View();
         }
 
+        public IActionResult AboutUs()
+        {
+            return View();
+        }
+
         public IActionResult Farm()
         {
             return View();
@@ -97,10 +102,7 @@ namespace KoiOrderingSystem.Controllers
         {
             return View();
         }
-        public IActionResult AboutUs()
-        {
-            return View();
-        }
+      
 
         public async Task<IActionResult> KoiVarieties()
         {

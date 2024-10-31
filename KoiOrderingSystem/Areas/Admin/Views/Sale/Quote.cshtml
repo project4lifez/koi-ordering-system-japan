@@ -2,13 +2,14 @@
 @{
     ViewData["Title"] = "Quote (Detail Trip)";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
-
     bool isTripExisting = Model?.Trip != null;
 }
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <!-- Include TinyMCE CDN -->
-    <script src="https://cdn.tiny.cloud/1/as08codcfmfm7iyms5ub7ozusoy1f9vkq3xm4a5e7fmyuoyr/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <meta charset="UTF-8">
+    <title>Quote</title>
+    <!-- TinyMCE CDN -->
 </head>
 <body>
     <style>
@@ -144,47 +145,7 @@
                                                 </div>
                                             }
                                         }
-                                        else
-                                        {
-                                            <div class="mb-3 trip-detail p-3 border rounded shadow-sm">
-                                                <div class="form-group mb-3">
-                                                    <label for="days" class="form-label">Date</label>
-                                                    <input type="date" class="form-control tripDetailDate" name="days[]" required />
-                                                    <div class="tripDetailError text-danger"></div>
-                                                </div>
-
-                                                <!-- New Farm Selection -->
-                                                <div class="form-group mb-3">
-                                                    <label for="farmSelect" class="form-label">Farm</label>
-                                                    <select class="form-control" name="farmIds[]" required>
-                                                        <option value="">Select Farm</option>
-                                                        @foreach (var farm in ViewBag.Farms)
-                                                        {
-                                                            <option value="@farm.FarmId">@farm.FarmName</option>
-                                                        }
-                                                    </select>
-                                                </div>
-
-                                                <div class="form-group mb-3">
-                                                    <label for="mainTopics" class="form-label">Main Topic</label>
-                                                    <input type="text" class="form-control" name="mainTopics[]" required placeholder="Enter main topic" />
-                                                </div>
-
-                                                <div class="form-group mb-3">
-                                                    <label for="subTopics" class="form-label">Sub Topic</label>
-                                                    <textarea class="form-control" name="subTopics[]" rows="5" required></textarea>
-                                                </div>
-
-                                                <div class="form-group mb-3">
-                                                    <label for="notePrices" class="form-label">Note Price</label>
-                                                    <input type="text" class="form-control" name="notePrices[]" placeholder="Enter note price" />
-                                                </div>
-
-                                                <button type="button" class="btn btn-danger removeDetailBtn">Remove</button>
-                                            </div>
-                                        }
                                     </div>
-
                                     <button type="button" id="addDetailBtn" class="btn btn-secondary mt-3">Add Trip Detail</button>
                                 </div>
                             </div>
@@ -205,6 +166,7 @@
             </div>
         </div>
     </main>
+    <script src="https://cdn.tiny.cloud/1/kw6x5fktq4eib9zz0o7c5byyhnbdy7674vr2wkm1v6cbvf3d/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
 
     <script>
         // Function to initialize TinyMCE
@@ -235,40 +197,40 @@
             // Add detail button click event
             addDetailBtn.addEventListener('click', function () {
                 var tripDetailHtml = `
-                                                    <div class="mb-3 trip-detail p-3 border rounded shadow-sm">
-                                                        <div class="form-group mb-3">
-                                                            <label for="days" class="form-label">Date</label>
-                                                            <input type="date" class="form-control tripDetailDate" name="days[]" required />
-                                                            <div class="tripDetailError text-danger"></div>
-                                                        </div>
+                                                      <div class="mb-3 trip-detail p-3 border rounded shadow-sm">
+                                                          <div class="form-group mb-3">
+                                                              <label for="days" class="form-label">Date</label>
+                                                              <input type="date" class="form-control tripDetailDate" name="days[]" required />
+                                                              <div class="tripDetailError text-danger"></div>
+                                                          </div>
 
-                                                        <!-- New Farm Selection -->
-                                                        <div class="form-group mb-3">
-                                                            <label for="farmSelect" class="form-label">Farm</label>
-                                                                    <select class="form-control" name="farmIds[]" required>
-                                                                <option value="">Select Farm</option>
+                                                          <!-- New Farm Selection -->
+                                                          <div class="form-group mb-3">
+                                                              <label for="farmSelect" class="form-label">Farm</label>
+                                                                      <select class="form-control" name="farmIds[]" required>
+                                                                  <option value="">Select Farm</option>
         @foreach (var farm in ViewBag.Farms)
         {
-                                                                            <option value="@farm.FarmId">@farm.FarmName</option>
+                                                                                  <option value="@farm.FarmId">@farm.FarmName</option>
         }
-                                                            </select>
-                                                        </div>
+                                                              </select>
+                                                          </div>
 
-                                                        <div class="form-group mb-3">
-                                                            <label for="mainTopics" class="form-label">Main Topic</label>
-                                                            <input type="text" class="form-control" name="mainTopics[]" required placeholder="Enter main topic" />
-                                                        </div>
-                                                        <div class="form-group mb-3">
-                                                            <label for="subTopics" class="form-label">Sub Topic</label>
-                                                            <textarea class="form-control" name="subTopics[]" rows="5" required></textarea>
-                                                        </div>
-                                                        <div class="form-group mb-3">
-                                                            <label for="notePrices" class="form-label">Note Price</label>
-                                                            <input type="text" class="form-control" name="notePrices[]" placeholder="Enter note price" />
-                                                        </div>
-                                                        <button type="button" class="btn btn-danger removeDetailBtn">Remove</button>
-                                                    </div>
-                                                `;
+                                                          <div class="form-group mb-3">
+                                                              <label for="mainTopics" class="form-label">Main Topic</label>
+                                                              <input type="text" class="form-control" name="mainTopics[]" required placeholder="Enter main topic" />
+                                                          </div>
+                                                          <div class="form-group mb-3">
+                                                              <label for="subTopics" class="form-label">Sub Topic</label>
+                                                              <textarea class="form-control" name="subTopics[]" rows="5" required></textarea>
+                                                          </div>
+                                                          <div class="form-group mb-3">
+                                                              <label for="notePrices" class="form-label">Note Price</label>
+                                                              <input type="text" class="form-control" name="notePrices[]" placeholder="Enter note price" />
+                                                          </div>
+                                                          <button type="button" class="btn btn-danger removeDetailBtn">Remove</button>
+                                                      </div>
+                                                  `;
                 tripDetailsContainer.insertAdjacentHTML('beforeend', tripDetailHtml);
                 initializeTinyMCE('textarea[name="subTopics[]"]');
 
