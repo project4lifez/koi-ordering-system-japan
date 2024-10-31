@@ -75,7 +75,61 @@
             margin-top: 16px !important;
         }
 
-     
+        .farm-card img {
+            width: 100%;
+            height: 225px;
+            object-fit: cover;
+            object-position: center;
+            transition: transform 0.3s ease;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .farm-description {
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2; /* Show only two lines */
+            -webkit-box-orient: vertical;
+        }
+
+        .detail-button {
+            background-color: #E9F3FD; /* Soft gray to blend with the theme */
+            color: #5BB2F1; /* Dark text for a subtle look */
+            padding: 5px 10px;
+            border-radius: 5px; /* Rounded corners for a professional look */
+            cursor: pointer;
+            margin-top: 5px;    
+            font-size: 0.9em;
+            transition: background-color 0.3s, border-color 0.3s;
+            border: none;   
+        }
+
+            .detail-button:hover {
+                background-color: #d1e8ff; /* Slightly darker shade on hover */
+                box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Light shadow effect */
+            }
+
+        .view-more-link {
+            font-size: 1.1em;
+            color: #5BB2F1;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            transition: color 0.3s;
+        }
+
+            .view-more-link i {
+                margin-left: 5px;
+                transition: transform 0.3s;
+            }
+
+            .view-more-link:hover {
+                color: #007BFF; /* Change color on hover */
+            }
+
+                .view-more-link:hover i {
+                    transform: translateX(5px); /* Move the arrow to the right on hover */
+                }
 
     </style>
 </head>
@@ -172,11 +226,20 @@
                         <img src="@farm.ImageUrl" alt="@farm.FarmName">
                         <div class="farm-content">
                             <h3 class="farm-name">@farm.FarmName</h3>
-                            <p class="farm-description">@farm.ContactInfo</p>
+                            <p class="farm-description" data-full-text="@farm.ContactInfo">
+                                <!-- Display initial truncated text here -->
+                            </p>
+                            <button class="detail-button" onclick="showFullText(this)">
+                                Detail <i class="fas fa-arrow-right"></i>
+                            </button>
                         </div>
                     </div>
                 }
-                <!-- Additional farms can be added here -->
+            </div>
+            <div class="text-center mt-4" data-aos="fade-up">
+                <a href="/Farm/Farm" class="view-more-link">
+                    View More <i class="fas fa-chevron-right"></i>
+                </a>
             </div>
         </div>
     </section>
@@ -290,10 +353,10 @@
                 </div>
                 <div class="step">
                     <div class="step-icon">
-                        <i class="fas fa-truck"></i>
-                    </div>
-                    <h3 class="step-title">8. Payment and Delivery</h3>
-                    <p class="step-description">After selecting your fish, we will arrange delivery to your hotel or specified address.</p>
+                            <i class="fas fa-comment-dots"></i>
+                        </div>
+                        <h3 class="step-title">8. Feedback</h3>
+                        <p class="step-description">Share your experience with us! Your feedback helps us improve our service.</p>
                 </div>
             </div>
         </div>
@@ -429,7 +492,31 @@
             });
         }
 
-      
+        // Function to truncate text to two lines
+        function truncateText() {
+            const descriptions = document.querySelectorAll('.farm-description');
+            descriptions.forEach(description => {
+                const fullText = description.getAttribute('data-full-text');
+                description.innerText = truncateToTwoLines(fullText);
+            });
+        }
+
+        // Helper function to truncate text to two lines (adjust line length as needed)
+        function truncateToTwoLines(text) {
+            const maxLength = 100; // Adjust based on character count per line for your design
+            return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
+        }
+
+        // Function to show the full text when "Detail" is clicked
+        function showFullText(button) {
+            const description = button.previousElementSibling;
+            const fullText = description.getAttribute('data-full-text');
+            description.innerText = fullText;
+            button.style.display = 'none'; // Hide the "Detail" button after expanding
+        }
+
+        // Initialize text truncation on page load
+        window.onload = truncateText;
    
     </script>
 
