@@ -52,9 +52,15 @@ namespace KoiOrderingSystem.Controllers
         .Take(3) 
         .ToList();
 
-            
+            var koiFarms = _db.KoiFarms
+       .OrderByDescending(f => f.FarmId) // Assuming FarmId indicates recency
+       .Take(3) // Take the top 3 farms
+       .ToList();
+
+
             ViewBag.KoiVarieties = koiVarieties;
             ViewBag.Feedbacks = feedbacks;
+            ViewBag.KoiFarms = koiFarms;
             ViewBag.Title = "KOI88 - Nishikigoi Ordering Service";
 
             return View();
