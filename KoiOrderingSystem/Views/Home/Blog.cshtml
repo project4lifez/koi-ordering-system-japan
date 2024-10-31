@@ -3,227 +3,221 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Imperial Koi | Blog</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        /* Root Colors */
-        :root {
-            --primary: #5BB2F1;
-            --secondary: #1e293b;
-            --white: #ffffff;
-            --gray-50: #f8fafc;
-            --gray-100: #f1f5f9;
-            --gray-200: #e2e8f0;
-            --gray-900: #0f172a;
-        }
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Imperial Koi | Blog</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+	<style>
+		/* Root Colors */
+		:root {
+			--primary: #5BB2F1;
+			--secondary: #1e293b;
+			--white: #ffffff;
+			--gray-50: #f8fafc;
+			--gray-100: #f1f5f9;
+			--gray-200: #e2e8f0;
+			--gray-900: #0f172a;
+		}
 
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: var(--gray-50);
-            color: var(--gray-900);
-            line-height: 1.6;
-            margin: 0;
-            margin-top: 100px;  
-        }
+		body {
+			font-family: 'Roboto', sans-serif;
+			background-color: var(--gray-50);
+			color: var(--gray-900);
+			line-height: 1.6;
+			margin: 0;
+			margin-top: 100px;
+		}
 
-        a {
-            color: var(--gray-900);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
+		
 
-        a:hover {
-            color: var(--primary);
-        }
+		/* Blog Title Section */
+		.blog-title {
+			max-width: 1200px;
+			margin: 0 auto;
+			padding: 1rem 1rem 1.5rem;
+			text-align: left;
+			font-size: 2rem;
+			font-weight: 700;
+			color: var(--primary);
+			border-bottom: 3px solid var(--primary);
+			position: relative;
+		}
 
-        /* Blog Title Section */
-        .blog-title {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 1rem 1rem 1.5rem;
-            text-align: left;
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--primary);
-            border-bottom: 3px solid var(--primary);
-            position: relative;
-        }
+			.blog-title::before {
+				content: "";
+				position: absolute;
+				bottom: -3px;
+				left: 0;
+				width: 80px;
+				height: 5px;
+				background-color: var(--primary);
+				border-radius: 2px;
+			}
 
-        .blog-title::before {
-            content: "";
-            position: absolute;
-            bottom: -3px;
-            left: 0;
-            width: 80px;
-            height: 5px;
-            background-color: var(--primary);
-            border-radius: 2px;
-        }
+		/* Container */
+		.container {
+			display: flex;
+			max-width: 1200px;
+			margin: 2rem auto;
+			gap: 2.5rem;
+			padding: 0 1rem;
+		}
 
-        /* Container */
-        .container {
-            display: flex;
-            max-width: 1200px;
-            margin: 2rem auto;
-            gap: 2.5rem;
-            padding: 0 1rem;
-        }
+		/* Main Featured Blog */
+		.main-featured {
+			flex: 2;
+			position: relative;
+			border-radius: 1rem;
+			overflow: hidden;
+			background-color: var(--white);
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+			transition: transform 0.3s ease;
+		}
 
-        /* Main Featured Blog */
-        .main-featured {
-            flex: 2;
-            position: relative;
-            border-radius: 1rem;
-            overflow: hidden;
-            background-color: var(--white);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease;
-        }
+			.main-featured:hover {
+				transform: translateY(-4px);
+			}
 
-        .main-featured:hover {
-            transform: translateY(-4px);
-        }
+			.main-featured img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+				border-radius: 1rem 1rem 0 0;
+				object-position: top;
+			}
 
-        .main-featured img {
-            width: 100%;
-            height: 400px;
-            object-fit: cover;
-            border-radius: 1rem 1rem 0 0;
-        }
+			.main-featured .overlay {
+				position: absolute;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+				padding: 2rem;
+				color: var(--white);
+			}
 
-        .main-featured .overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
-            padding: 2rem;
-            color: var(--white);
-        }
+				.main-featured .overlay h3 {
+					font-size: 1.8rem;
+					margin-bottom: 0.75rem;
+					line-height: 1.3;
+				}
 
-        .main-featured .overlay h3 {
-            font-size: 1.8rem;
-            margin-bottom: 0.75rem;
-            line-height: 1.3;
-        }
+				.main-featured .overlay p {
+					font-size: 1.1rem;
+					margin: 0;
+					opacity: 0.9;
+				}
 
-        .main-featured .overlay p {
-            font-size: 1.1rem;
-            margin: 0;
-            opacity: 0.9;
-        }
+				.main-featured .overlay .meta {
+					margin-top: 1rem;
+					font-size: 0.9rem;
+					opacity: 0.8;
+				}
 
-        .main-featured .overlay .meta {
-            margin-top: 1rem;
-            font-size: 0.9rem;
-            opacity: 0.8;
-        }
+		/* Side Blogs */
+		.side-blogs {
+			flex: 1;
+			display: grid;
+			gap: 1.5rem;
+		}
 
-        /* Side Blogs */
-        .side-blogs {
-            flex: 1;
-            display: grid;
-            gap: 1.5rem;
-        }
+		.side-blog {
+			background-color: var(--white);
+			border-radius: 1rem;
+			overflow: hidden;
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+			transition: transform 0.3s ease;
+		}
 
-        .side-blog {
-            background-color: var(--white);
-            border-radius: 1rem;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease;
-        }
+			.side-blog:hover {
+				transform: translateY(-4px);
+			}
 
-        .side-blog:hover {
-            transform: translateY(-4px);
-        }
+			.side-blog img {
+				width: 100%;
+				height: 160px;
+				object-fit: cover;
+				object-position: top;
+			}
 
-        .side-blog img {
-            width: 100%;
-            height: 160px;
-            object-fit: cover;
-        }
+		.side-blog-content {
+			padding: 1.25rem;
+		}
 
-        .side-blog-content {
-            padding: 1.25rem;
-        }
+		.side-blog h4 {
+			font-size: 1.2rem;
+			margin: 0 0 0.75rem 0;
+			color: var(--primary);
+			line-height: 1.4;
+		}
 
-        .side-blog h4 {
-            font-size: 1.2rem;
-            margin: 0 0 0.75rem 0;
-            color: var(--primary);
-            line-height: 1.4;
-        }
+		.side-blog p {
+			margin: 0;
+			font-size: 0.95rem;
+			color: var(--gray-900);
+			opacity: 0.8;
+		}
 
-        .side-blog p {
-            margin: 0;
-            font-size: 0.95rem;
-            color: var(--gray-900);
-            opacity: 0.8;
-        }
+		.side-blog .meta {
+			margin-top: 1rem;
+			font-size: 0.85rem;
+			color: var(--gray-900);
+			opacity: 0.6;
+		}
 
-        .side-blog .meta {
-            margin-top: 1rem;
-            font-size: 0.85rem;
-            color: var(--gray-900);
-            opacity: 0.6;
-        }
+		/* Week Trending Section */
+		.trending {
+			max-width: 1200px;
+			margin: 4rem auto;
+			padding: 0 1rem;
+		}
 
-        /* Week Trending Section */
-        .trending {
-            max-width: 1200px;
-            margin: 4rem auto;
-            padding: 0 1rem;
-        }
+			.trending h2 {
+				font-size: 1.8rem;
+				color: var(--primary);
+				margin-bottom: 1.5rem;
+				position: relative;
+				display: inline-block;
+			}
 
-        .trending h2 {
-            font-size: 1.8rem;
-            color: var(--primary);
-            margin-bottom: 1.5rem;
-            position: relative;
-            display: inline-block;
-        }
+				.trending h2::after {
+					content: '';
+					position: absolute;
+					bottom: -8px;
+					left: 0;
+					width: 60px;
+					height: 3px;
+					background-color: var(--primary);
+					border-radius: 2px;
+				}
 
-        .trending h2::after {
-            content: '';
-            position: absolute;
-            bottom: -8px;
-            left: 0;
-            width: 60px;
-            height: 3px;
-            background-color: var(--primary);
-            border-radius: 2px;
-        }
+			.trending ul {
+				list-style: none;
+				padding: 0;
+				background: var(--white);
+				border-radius: 1rem;
+				box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+				overflow: hidden;
+			}
 
-        .trending ul {
-            list-style: none;
-            padding: 0;
-            background: var(--white);
-            border-radius: 1rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            overflow: hidden;
-        }
+			.trending li {
+				padding: 1rem 1.5rem;
+				border-bottom: 1px solid var(--gray-100);
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				transition: background-color 0.3s ease;
+			}
 
-        .trending li {
-            padding: 1rem 1.5rem;
-            border-bottom: 1px solid var(--gray-100);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: background-color 0.3s ease;
-        }
+				.trending li:last-child {
+					border-bottom: none;
+				}
 
-        .trending li:last-child {
-            border-bottom: none;
-        }
-
-        .trending li:hover {
-            background-color: var(--gray-50);
-        }
+				.trending li:hover {
+					background-color: var(--gray-50);
+				}
 
         .trending li span {
             color: var(--gray-900);
@@ -251,18 +245,29 @@
             margin: -10px auto !important;
         }
 
-        .navigation-menu {
-            margin-top: 16px !important;
-        }
+		.navigation-menu {
+			margin-top: 16px !important;
+		}
 
-        *, ::after, ::before {
-            box-sizing: border-box;
-        }
-    </style>
+		*, ::after, ::before {
+			box-sizing: border-box;
+		}
+
+		.link-style {
+			color: var(--gray-900);
+			text-decoration: none;
+			transition: color 0.3s ease;
+		}
+
+			.link-style:hover {
+				color: var(--primary);
+			}
+
+	</style>
 </head>
 <body>
-    <!-- Blog Title -->
-    <div class="blog-title">Koi Master’s Log</div>
+	<!-- Blog Title -->
+	<div class="blog-title">Koi Master’s Log</div>
 
     <div class="container">
         <!-- Main Featured Blog -->
