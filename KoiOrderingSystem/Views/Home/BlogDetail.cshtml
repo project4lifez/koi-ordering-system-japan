@@ -1,5 +1,157 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Detail | Imperial Koi</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Root Colors */
+        :root {
+            --primary: #5BB2F1; /* Màu xanh giống phần blog */
+            --secondary: #1e293b;
+            --white: #ffffff;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-900: #0f172a;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--gray-100);
+            color: var(--gray-900);
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header / Title Section */
+        .header {
+            text-align: center;
+            padding: 2rem 0;
+            border-bottom: 2px solid var(--gray-200);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .header p {
+            font-size: 1rem;
+            color: var(--secondary);
+        }
+
+        /* Main Content Section */
+        .main-content {
+            background-color: var(--white);
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-top: 1.5rem;
+        }
+
+        .main-content img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .main-content img:hover {
+            transform: scale(1.05);
+        }
+
+        .main-content h2 {
+            font-size: 2rem;
+            margin: 1.5rem 0;
+            color: var(--primary);
+        }
+
+        .main-content p {
+            font-size: 1.1rem;
+            color: var(--secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .quote {
+            background-color: var(--gray-200);
+            border-left: 4px solid var(--primary);
+            padding: 1rem;
+            font-style: italic;
+            margin: 2rem 0;
+            border-radius: 5px;
+            color: var(--secondary);
+        }
+
+        .author {
+            text-align: right;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--gray-900);
+            color: var(--white);
+            padding: 2rem 1rem;
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .footer a {
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header">
+            <h1>Koi Fish Come to the Yard to Roam After Heavy Rain</h1>
+            <p>June 4, 2015 | By Koi Expert</p>
+        </div>
+
+        <!-- Main Content Section -->
+        <div class="main-content">
+            <img src="https://baobariavungtau.com.vn/dataimages/201808/original/images1454316_ca_koi_4.jpg" alt="Koi fish in yard after rain">
+            <h2>The Fascinating Behavior of Koi During Heavy Rain</h2>
+            <p>
+                Heavy rains caused the pond water level to rise, so the Koi fish took advantage of the opportunity to go to the yard to play under close ‘protection’.
+                It is not unusual for fish to go to the yard or even spill out onto the street after heavy rains, but a Koi fish ‘migrating’ like this is truly rare.
+            </p>
+
+            <div class="quote">
+                "It was an incredible sight to behold—hundreds of brightly colored koi swimming in the puddles around our yard. It was almost as if the koi were celebrating the rain."
+            </div>
+
+            <p>
+                Although it may seem amusing to some, this kind of migration can be dangerous for the fish. Koi fish are naturally curious, and they may wander into areas where they are unsafe or vulnerable to predators.
+                It’s important for koi pond owners to check the water levels and ensure that there are no escape routes during periods of heavy rainfall.
+            </p>
+
+            <h2>What You Can Do to Protect Your Koi During Rainstorms</h2>
+            <p>
+                Make sure that your pond is secure and that there are no easy exit points for the koi to swim out of. Having a well-maintained pond with strong walls is crucial.
+                You may also want to install a net or cover during heavy rainfall to ensure that the koi remain safe inside their pond.
+            </p>
+
+            <p class="author">- Koi Expert</p>
+        </div>
+    </div>
+    </body>
+   </html>
+
