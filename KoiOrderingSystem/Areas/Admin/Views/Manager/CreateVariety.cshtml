@@ -80,8 +80,38 @@
 
         #previewImage {
             margin-top: 10px;
-            max-width: 300px; /* Set maximum width for the image preview */
+            max-width: 300px;
             height: auto;
+        }
+
+        .topic-container {
+            margin-top: 15px;
+        }
+
+        .btn-add {
+            font-size: 12px;
+            margin-left: 10px;
+            cursor: pointer;
+            color: #007bff;
+        }
+
+        /* Spacing for topic blocks */
+        .topic-block {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+            .topic-block label {
+                display: block;
+                margin-bottom: 5px;
+                font-weight: bold;
+            }
+
+        .input-group {
+            margin-bottom: 15px;
         }
     </style>
 </head>
@@ -108,6 +138,18 @@
                         <label for="varietyImage" class="form-label">Image URL</label>
                         <input type="file" class="form-control" id="varietyImage" name="ImageUrl" accept="image/*" required>
                     </div>
+                    <!-- Main Topic and Sub Topic Section -->
+                    <div class="form-group topic-container" id="topicContainer">
+                        <div class="topic-block">
+                            <label class="form-label">Main Topic 1</label>
+                            <input type="text" class="form-control mb-3" name="MainTopic[]" placeholder="Main Topic Content" value="Static Main Topic Content">
+
+                            <label class="form-label">Sub Topic 1</label>
+                            <input type="text" class="form-control" name="SubTopic[]" placeholder="Sub Topic Content" value="Static Sub Topic Content">
+                        </div>
+                    </div>
+                    <!-- Button to Add More Topics -->
+                    <span class="btn-add" onclick="addTopic()">+ Add Main Topic</span>
                     <!-- Image Preview -->
                     <img id="previewImage" src="" alt="Image Preview" style="display:none;">
                     <button type="submit" class="btn btn-next">Create</button>
@@ -117,6 +159,8 @@
     </div>
 
     <script>
+        let topicCounter = 1;
+
         // JavaScript to preview the selected image
         document.getElementById('varietyImage').addEventListener('change', function (event) {
             const file = event.target.files[0];
@@ -124,17 +168,57 @@
                 const reader = new FileReader();
                 reader.onload = function (e) {
                     const img = document.getElementById('previewImage');
-                    img.src = e.target.result; // Set the source of the image
-                    img.style.display = 'block'; // Show the image
+                    img.src = e.target.result;
+                    img.style.display = 'block';
                 };
-                reader.readAsDataURL(file); // Convert the file to a data URL
+                reader.readAsDataURL(file);
             }
         });
 
         function validateForm() {
-            // If everything is valid, show the success message
             alert("Create New Variety Successfully!!!");
             return true;
+        }
+
+        // Function to add new Main Topic and Sub Topic input fields with incremented labels
+        function addTopic() {
+            topicCounter++;
+            const topicContainer = document.getElementById("topicContainer");
+
+            // Topic block wrapper
+            const topicBlock = document.createElement("div");
+            topicBlock.className = "topic-block";
+
+            // Main Topic label and input
+            const mainLabel = document.createElement("label");
+            mainLabel.className = "form-label";
+            mainLabel.innerText = `Main Topic ${topicCounter}`;
+            topicBlock.appendChild(mainLabel);
+
+            const mainInput = document.createElement("input");
+            mainInput.type = "text";
+            mainInput.className = "form-control mb-3";
+            mainInput.name = "MainTopic[]";
+            mainInput.placeholder = "Main Topic Content";
+            mainInput.value = "Static Main Topic Content";
+            topicBlock.appendChild(mainInput);
+
+            // Sub Topic label and input
+            const subLabel = document.createElement("label");
+            subLabel.className = "form-label";
+            subLabel.innerText = `Sub Topic ${topicCounter}`;
+            topicBlock.appendChild(subLabel);
+
+            const subInput = document.createElement("input");
+            subInput.type = "text";
+            subInput.className = "form-control";
+            subInput.name = "SubTopic[]";
+            subInput.placeholder = "Sub Topic Content";
+            subInput.value = "Static Sub Topic Content";
+            topicBlock.appendChild(subInput);
+
+            // Append the topic block to the container
+            topicContainer.appendChild(topicBlock);
         }
     </script>
 </body>

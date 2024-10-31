@@ -21,6 +21,52 @@
                 background: rgba(15, 23, 42, 0.9) !important;
                 backdrop-filter: blur(10px) !important;
             }
+
+        .feedback-author-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .feedback-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 10px;
+            object-fit: cover;
+        }
+
+        .feedback-author {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .feedback-text {
+            font-size: 1.1rem;
+            color: var(--gray-800);
+            margin-top: 10px;
+            font-style: italic!important; /* Chữ in nghiêng cho phần comment */
+            position: relative;
+            padding: 10px;
+            font-family: 'Georgia', serif; /* Font chữ đẹp hơn cho nội dung feedback */
+        }
+
+            .feedback-text::before, .feedback-text::after {
+                content: '"';
+                font-size: 1.5rem;
+                color: var(--gray-500); /* Màu sắc nhẹ cho dấu ngoặc kép */
+                vertical-align: top;
+            }
+
+            .feedback-text::before {
+                margin-right: 5px;
+            }
+
+            .feedback-text::after {
+                margin-left: 5px;
+            }
+
     </style>
 </head>
 
@@ -105,27 +151,16 @@
         </div>
 
         <div class="farm-gallery" data-aos="fade-up">
-            <div class="farm-card">
-                <img src="/api/placeholder/farm1.jpg" alt="Farm 1">
-                <div class="farm-content">
-                    <h3 class="farm-name">Farm 1</h3>
-                    <p class="farm-description">Specializes in high-quality Koi with a variety of colors and sizes.</p>
-                </div>
-            </div>
-            <div class="farm-card">
-                <img src="/api/placeholder/farm2.jpg" alt="Farm 2">
-                <div class="farm-content">
-                    <h3 class="farm-name">Farm 2</h3>
-                    <p class="farm-description">Renowned for award-winning Koi bred under expert care.</p>
-                </div>
-            </div>
-            <div class="farm-card">
-                <img src="/api/placeholder/farm3.jpg" alt="Farm 3">
-                <div class="farm-content">
-                    <h3 class="farm-name">Farm 3</h3>
-                    <p class="farm-description">A trusted partner focusing on sustainable breeding practices.</p>
-                </div>
-            </div>
+                @foreach (var farm in ViewBag.KoiFarms)
+                {
+                    <div class="farm-card">
+                        <img src="@farm.ImageUrl" alt="@farm.FarmName">
+                        <div class="farm-content">
+                            <h3 class="farm-name">@farm.FarmName</h3>
+                            <p class="farm-description">@farm.ContactInfo</p>
+                        </div>
+                    </div>
+                }
             <!-- Additional farms can be added here -->
         </div>
     </div>
@@ -325,26 +360,45 @@
     </div>
 </section>
 
-   <!-- Customer Feedback Section -->
-<section id="feedback" class="feedback">
-    <div class="feedback-container">
-        <h2 class="section-title">What Our Customers Say</h2>
-        <div class="feedback-grid">
-            <div class="feedback-card" data-aos="fade-up">
-                <p class="feedback-text">"I had an amazing experience visiting the farm! The staff was very knowledgeable and helpful."</p>
-                <h4 class="feedback-author">- John Doe</h4>
-            </div>
-            <div class="feedback-card" data-aos="fade-up" data-aos-delay="100">
-                <p class="feedback-text">"The selection of Koi is impressive, and the booking process was seamless. Highly recommended!"</p>
-                <h4 class="feedback-author">- Jane Smith</h4>
-            </div>
-            <div class="feedback-card" data-aos="fade-up" data-aos-delay="200">
-                <p class="feedback-text">"Fantastic service! I found my dream Koi and had a wonderful time at the farm."</p>
-                <h4 class="feedback-author">- Sarah Johnson</h4>
+    <!-- Customer Feedback Section -->
+    <section id="feedback" class="feedback">
+        <div class="feedback-container">
+            <h2 class="section-title">What Our Customers Say</h2>
+            <div class="feedback-grid">
+                @foreach (var feedback in ViewBag.Feedbacks)
+                {
+                    <div class="feedback-card" data-aos="fade-up">
+                        <!-- Avatar -->
+                        <img src="@feedback.Customer.Account.ImageUrl" alt="Avatar of @feedback.Customer.Account.Firstname" class="feedback-avatar">
+
+                        <!-- Name -->
+                        <h4 class="feedback-author">
+                            @feedback.Customer.Account.Firstname @feedback.Customer.Account.Lastname
+                        </h4>
+
+                        <!-- Star Rating -->
+                        <div class="feedback-rating">
+                            @{
+                                for (int i = 0; i < feedback.Rating; i++)
+                                {
+                                    <i class="fas fa-star" style="color: #FFD700;"></i>
+                                }
+                                for (int i = feedback.Rating; i < 5; i++)
+                                {
+                                    <i class="far fa-star" style="color: #FFD700;"></i>
+                                }
+                            }
+                        </div>
+
+                        <!-- Feedback Text -->
+                        <p class="feedback-text">@feedback.Comments</p>
+                    </div>
+                }
             </div>
         </div>
-    </div>
-</section>
+    </section>
+
+
 
     <!-- Contact Section -->
 <section id="contact" class="contact">

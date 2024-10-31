@@ -26,39 +26,44 @@ namespace KoiOrderingSystem.Controllers
             _logger = logger;
             _db = db;
         }
-
         public ActionResult Homepage()
         {
-       
+            // Check if the session variable is null and handle the default case
             var adminRoleId = HttpContext.Session.GetInt32("AdminRoleId");
 
-           
             if (adminRoleId != null && adminRoleId >= 2 && adminRoleId <= 5)
             {
                 return RedirectToAction("Home", "Admin");
             }
 
-            // Fetch Koi varieties from the database
-            var koiVarieties = _db.Varieties
-                .OrderByDescending(v => v.VarietyId)
-                 .Take(4)
-                .ToList();
+            // Check for null and initialize lists if _db is not properly initialized
+            var koiVarieties = _db?.Varieties
+                ?.OrderByDescending(v => v.VarietyId)
+                ?.Take(4)
+                ?.ToList() ?? new List<Variety>();
 
-            var feedbacks = _db.Feedbacks
-        .Where(f => f.Rating == 5) 
-        .Include(f => f.Customer) 
-            .ThenInclude(c => c.Account) 
-        .OrderByDescending(f => f.FeedbackId) 
-        .Take(3) 
-        .ToList();
+            var feedbacks = _db?.Feedbacks
+                ?.Where(f => f.Rating == 5)
+                ?.Include(f => f.Customer)
+                    ?.ThenInclude(c => c.Account)
+                ?.OrderByDescending(f => f.FeedbackId)
+                ?.Take(3)
+                ?.ToList() ?? new List<Feedback>();
 
-            
+            var koiFarms = _db?.KoiFarms
+                ?.OrderByDescending(f => f.FarmId)
+                ?.Take(3)
+                ?.ToList() ?? new List<KoiFarm>();
+
+            // Set ViewBag properties, ensuring they are not null
             ViewBag.KoiVarieties = koiVarieties;
             ViewBag.Feedbacks = feedbacks;
+            ViewBag.KoiFarms = koiFarms;
             ViewBag.Title = "KOI88 - Nishikigoi Ordering Service";
 
             return View();
         }
+
 
         public ActionResult BookingForm()
         {
@@ -74,6 +79,16 @@ namespace KoiOrderingSystem.Controllers
         public ActionResult Create()
         {
 
+            return View();
+        }
+
+        public ActionResult Blog()
+        {
+            return View();
+        }
+
+        public ActionResult BlogDetail()
+        {
             return View();
         }
 
