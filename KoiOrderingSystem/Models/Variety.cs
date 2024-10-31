@@ -13,6 +13,10 @@ public partial class Variety
 
     public string? ImageUrl { get; set; }
 
+    public string? Maintopic { get; set; }
+
+    public string? Subtopic { get; set; }
+
     public virtual ICollection<KoiFish> KoiFishes { get; set; } = new List<KoiFish>();
 
     public virtual ICollection<SpecialVariety> SpecialVarieties { get; set; } = new List<SpecialVariety>();
