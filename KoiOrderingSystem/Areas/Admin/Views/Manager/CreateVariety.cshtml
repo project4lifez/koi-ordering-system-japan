@@ -27,12 +27,6 @@
             margin-bottom: 20px;
         }
 
-        .form-section-title {
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-
         .btn-next {
             background-color: #007bff;
             border-color: #007bff;
@@ -53,14 +47,6 @@
         .form-label {
             font-weight: bold;
             margin-bottom: 10px;
-        }
-
-        .form-control {
-            height: calc(2.25rem + 2px);
-        }
-
-        textarea.form-control {
-            height: auto;
         }
 
         .form-layout {
@@ -95,7 +81,6 @@
             color: #007bff;
         }
 
-        /* Spacing for topic blocks */
         .topic-block {
             margin-bottom: 20px;
             padding: 10px;
@@ -109,21 +94,15 @@
                 margin-bottom: 5px;
                 font-weight: bold;
             }
-
-        .input-group {
-            margin-bottom: 15px;
-        }
     </style>
 </head>
 <body>
     <div class="form-container">
         <div class="form-layout">
-            <!-- Left Side Panel -->
             <div class="sidebar">
                 <p>Create New Variety</p>
             </div>
 
-            <!-- Right Form Section -->
             <div class="form-content">
                 <form method="post" action="/Admin/Manager/AddVariety" enctype="multipart/form-data" onsubmit="return validateForm()">
                     <div class="form-group">
@@ -138,18 +117,20 @@
                         <label for="varietyImage" class="form-label">Image URL</label>
                         <input type="file" class="form-control" id="varietyImage" name="ImageUrl" accept="image/*" required>
                     </div>
+
                     <!-- Main Topic and Sub Topic Section -->
                     <div class="form-group topic-container" id="topicContainer">
                         <div class="topic-block">
                             <label class="form-label">Main Topic 1</label>
-                            <input type="text" class="form-control mb-3" name="MainTopic[]" placeholder="Main Topic Content" value="Static Main Topic Content">
+                            <input type="text" class="form-control mb-3" name="mainTopics[]" placeholder="Main Topic Content" required>
 
-                            <label class="form-label">Sub Topic 1</label>
-                            <input type="text" class="form-control" name="SubTopic[]" placeholder="Sub Topic Content" value="Static Sub Topic Content">
+                            <label class="form-label">Sub Topics for Main Topic 1</label>
+                            <input type="text" class="form-control mb-2" name="subTopics[0][]" placeholder="Sub Topic Content" required>
+                            <span class="btn-add" onclick="addSubTopic(this)">+ Add Sub Topic</span>
                         </div>
                     </div>
-                    <!-- Button to Add More Topics -->
                     <span class="btn-add" onclick="addTopic()">+ Add Main Topic</span>
+
                     <!-- Image Preview -->
                     <img id="previewImage" src="" alt="Image Preview" style="display:none;">
                     <button type="submit" class="btn btn-next">Create</button>
@@ -180,16 +161,14 @@
             return true;
         }
 
-        // Function to add new Main Topic and Sub Topic input fields with incremented labels
+        // Function to add a new Main Topic and its first Sub Topic input fields with incremented labels
         function addTopic() {
             topicCounter++;
             const topicContainer = document.getElementById("topicContainer");
 
-            // Topic block wrapper
             const topicBlock = document.createElement("div");
             topicBlock.className = "topic-block";
 
-            // Main Topic label and input
             const mainLabel = document.createElement("label");
             mainLabel.className = "form-label";
             mainLabel.innerText = `Main Topic ${topicCounter}`;
@@ -198,27 +177,46 @@
             const mainInput = document.createElement("input");
             mainInput.type = "text";
             mainInput.className = "form-control mb-3";
-            mainInput.name = "MainTopic[]";
+            mainInput.name = "mainTopics[]";
             mainInput.placeholder = "Main Topic Content";
-            mainInput.value = "Static Main Topic Content";
+            mainInput.required = true;
             topicBlock.appendChild(mainInput);
 
-            // Sub Topic label and input
             const subLabel = document.createElement("label");
             subLabel.className = "form-label";
-            subLabel.innerText = `Sub Topic ${topicCounter}`;
+            subLabel.innerText = `Sub Topics for Main Topic ${topicCounter}`;
             topicBlock.appendChild(subLabel);
 
+            // Initial sub-topic input
             const subInput = document.createElement("input");
             subInput.type = "text";
-            subInput.className = "form-control";
-            subInput.name = "SubTopic[]";
+            subInput.className = "form-control mb-2";
+            subInput.name = `subTopics[${topicCounter - 1}][]`;
             subInput.placeholder = "Sub Topic Content";
-            subInput.value = "Static Sub Topic Content";
+            subInput.required = true;
             topicBlock.appendChild(subInput);
 
-            // Append the topic block to the container
+            // Add button to add more subtopics under the same main topic
+            const addSubTopicBtn = document.createElement("span");
+            addSubTopicBtn.className = "btn-add";
+            addSubTopicBtn.innerText = "+ Add Sub Topic";
+            addSubTopicBtn.onclick = function () { addSubTopic(addSubTopicBtn); };
+            topicBlock.appendChild(addSubTopicBtn);
+
             topicContainer.appendChild(topicBlock);
+        }
+
+        // Function to add another Sub Topic input field under a specific Main Topic
+        function addSubTopic(button) {
+            const topicBlock = button.parentElement;
+            const subInput = document.createElement("input");
+            subInput.type = "text";
+            subInput.className = "form-control mb-2";
+            const index = Array.from(document.getElementById("topicContainer").children).indexOf(topicBlock);
+            subInput.name = `subTopics[${index}][]`;
+            subInput.placeholder = "Sub Topic Content";
+            subInput.required = true;
+            topicBlock.insertBefore(subInput, button);
         }
     </script>
 </body>

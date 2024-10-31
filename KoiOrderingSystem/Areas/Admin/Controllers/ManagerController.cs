@@ -469,33 +469,35 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddVariety(Variety model, IFormFile ImageUrl)
+        public IActionResult AddVariety(Variety model, IFormFile ImageUrl, List<string> mainTopics, List<List<string>> subTopics)
         {
             if (ModelState.IsValid)
             {
                 // Handle the image upload
                 if (ImageUrl != null && ImageUrl.Length > 0)
                 {
-                    // Create a unique file name to avoid overwriting files with the same name
                     var fileName = Path.GetFileNameWithoutExtension(ImageUrl.FileName) + "_" + Guid.NewGuid() + Path.GetExtension(ImageUrl.FileName);
                     var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/KoiVarieties");
                     var filePath = Path.Combine(directoryPath, fileName);
 
-                    // Ensure the directory exists
                     if (!Directory.Exists(directoryPath))
                     {
                         Directory.CreateDirectory(directoryPath);
                     }
 
-                    // Save the image file to the specified path
                     using (var stream = new FileStream(filePath, FileMode.Create))
                     {
                         ImageUrl.CopyTo(stream);
                     }
 
-                    // Set the image URL in the model (relative path)
                     model.ImageUrl = "/images/KoiVarieties/" + fileName;
                 }
+
+                // Join the main topics list into a single string with '|' as delimiter
+                model.MainTopics = string.Join("|", mainTopics);
+
+                // Join each sub-topic list into a single string with ',' as delimiter, and join all lists with '|'
+                model.SubTopics = string.Join("|", subTopics.Select(st => string.Join(",", st)));
 
                 // Add the new variety to the database
                 _db.Varieties.Add(model);
@@ -508,6 +510,7 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
             // If model state is not valid, return the view with the current model
             return View(model);
         }
+
 
         [HttpPost]
         public IActionResult DeleteVariety(int id)
@@ -536,9 +539,9 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult UpdateVariety(int id, Variety model, IFormFile ImageUrl)
+        public IActionResult UpdateVariety(int id, Variety model, IFormFile ImageUrl, List<string> MainTopic, List<List<string>> SubTopic)
         {
-            // Tìm variety hiện tại theo ID
+            // Find the existing variety by ID
             var existingVariety = _db.Varieties.FirstOrDefault(v => v.VarietyId == id);
 
             if (existingVariety == null)
@@ -546,41 +549,52 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
                 return NotFound();
             }
 
-
+            // Update the variety fields if provided
             if (!string.IsNullOrWhiteSpace(model.VarietyName))
             {
                 existingVariety.VarietyName = model.VarietyName;
             }
-
 
             if (!string.IsNullOrWhiteSpace(model.Description))
             {
                 existingVariety.Description = model.Description;
             }
 
-            // Xử lý upload ảnh nếu có ảnh mới được cung cấp
+            // Handle image upload if a new image is provided
             if (ImageUrl != null && ImageUrl.Length > 0)
             {
                 var fileName = Path.GetFileNameWithoutExtension(ImageUrl.FileName) + "_" + Guid.NewGuid() + Path.GetExtension(ImageUrl.FileName);
                 var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/KoiVarieties", fileName);
 
-                // Lưu ảnh mới vào server
+                // Save the new image to the server
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
                     ImageUrl.CopyTo(stream);
                 }
 
-                // Cập nhật URL ảnh trong cơ sở dữ liệu với ảnh mới
+                // Update the image URL in the database
                 existingVariety.ImageUrl = "/images/KoiVarieties/" + fileName;
             }
 
+            // Process Main Topics and Sub Topics into delimited strings
+            if (MainTopic != null && MainTopic.Count > 0)
+            {
+                existingVariety.MainTopics = string.Join("|", MainTopic); // Join main topics with '|'
+            }
 
-            // Lưu thay đổi vào cơ sở dữ liệu
+            if (SubTopic != null && SubTopic.Count > 0)
+            {
+                var subTopicStrings = SubTopic.Select(stList => string.Join(",", stList)); // Join each subtopic list with ','
+                existingVariety.SubTopics = string.Join("|", subTopicStrings); // Join all subtopic strings with '|'
+            }
+
+            // Save changes to the database
             _db.SaveChanges();
 
-            // Chuyển hướng đến trang Edits sau khi cập nhật thành công
-            return Redirect($"/Admin/Manager/UpdateKoiVariety?id={id}");
+            // Redirect to the Update Variety page after a successful update
+            return Redirect($"/Admin/Manager/UpdateVariety?id={id}");
         }
+
 
         public IActionResult KoiFishList(string query, int page = 1, int pageSize = 8)
         {

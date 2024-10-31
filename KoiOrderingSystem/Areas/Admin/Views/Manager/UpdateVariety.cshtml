@@ -115,15 +115,44 @@
                         <input type="file" class="form-control" id="varietyImage" name="ImageUrl" accept="image/*">
                         <img id="previewImage" src="@Model?.ImageUrl" alt="Image Preview" style="display:block; margin-top:10px; max-width:100px; height:auto;">
                     </div>
-                    <!-- Main Topic and Sub Topic Section (Static Content) -->
-                    <div class="form-group topic-container" id="topicContainer">
-                        <div class="topic-block">
-                            <label class="form-label">Main Topic 1</label>
-                            <input type="text" class="form-control mb-3" name="MainTopic[]" placeholder="Main Topic Content" value="Static Main Topic Content">
 
-                            <label class="form-label">Sub Topic 1</label>
-                            <input type="text" class="form-control" name="SubTopic[]" placeholder="Sub Topic Content" value="Static Sub Topic Content">
-                        </div>
+                    <!-- Main Topic and Sub Topic Section -->
+                    <div class="form-group topic-container" id="topicContainer">
+                        @if (Model.MainTopics != null && Model.SubTopics != null)
+                        {
+                            var mainTopics = Model.MainTopics.Split('|');
+                            var subTopicsGroups = Model.SubTopics.Split('|');
+                            for (int i = 0; i < mainTopics.Length; i++)
+                            {
+                                <div class="topic-block">
+                                    <label class="form-label">Main Topic @(i + 1)</label>
+                                    <input type="text" class="form-control mb-3" name="MainTopic[]" value="@mainTopics[i]" placeholder="Main Topic Content">
+
+                                    <label class="form-label">Sub Topics for Main Topic @(i + 1)</label>
+                                    @if (i < subTopicsGroups.Length)
+                                    {
+                                        var subTopics = subTopicsGroups[i].Split(',');
+                                        foreach (var subTopic in subTopics)
+                                        {
+                                            <input type="text" class="form-control mb-2" name="SubTopic[@i][]" value="@subTopic" placeholder="Sub Topic Content">
+                                        }
+                                    }
+                                    <span class="btn-add" onclick="addSubTopic(this, @i)">+ Add Sub Topic</span>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <!-- Default fields if MainTopics and SubTopics are null or empty -->
+                            <div class="topic-block">
+                                <label class="form-label">Main Topic 1</label>
+                                <input type="text" class="form-control mb-3" name="MainTopic[]" placeholder="Main Topic Content" value="Static Main Topic Content">
+
+                                <label class="form-label">Sub Topics for Main Topic 1</label>
+                                <input type="text" class="form-control mb-2" name="SubTopic[0][]" placeholder="Sub Topic Content" value="Static Sub Topic Content">
+                                <span class="btn-add" onclick="addSubTopic(this, 0)">+ Add Sub Topic</span>
+                            </div>
+                        }
                     </div>
                     <!-- Button to Add More Topics -->
                     <span class="btn-add" onclick="addTopic()">+ Add Main Topic</span>
@@ -134,7 +163,7 @@
     </div>
 
     <script>
-        let topicCounter = 1;
+        let topicCounter = @((Model.MainTopics?.Split('|').Length ?? 1));
 
         // JavaScript to preview the selected image
         document.getElementById('varietyImage').addEventListener('change', function (event) {
@@ -160,11 +189,9 @@
             topicCounter++;
             const topicContainer = document.getElementById("topicContainer");
 
-            // Topic block wrapper
             const topicBlock = document.createElement("div");
             topicBlock.className = "topic-block";
 
-            // Main Topic label and input
             const mainLabel = document.createElement("label");
             mainLabel.className = "form-label";
             mainLabel.innerText = `Main Topic ${topicCounter}`;
@@ -178,22 +205,38 @@
             mainInput.value = "Static Main Topic Content";
             topicBlock.appendChild(mainInput);
 
-            // Sub Topic label and input
             const subLabel = document.createElement("label");
             subLabel.className = "form-label";
-            subLabel.innerText = `Sub Topic ${topicCounter}`;
+            subLabel.innerText = `Sub Topics for Main Topic ${topicCounter}`;
             topicBlock.appendChild(subLabel);
 
             const subInput = document.createElement("input");
             subInput.type = "text";
-            subInput.className = "form-control";
-            subInput.name = "SubTopic[]";
+            subInput.className = "form-control mb-2";
+            subInput.name = `SubTopic[${topicCounter - 1}][]`;
             subInput.placeholder = "Sub Topic Content";
             subInput.value = "Static Sub Topic Content";
             topicBlock.appendChild(subInput);
 
-            // Append the topic block to the container
+            const addSubTopicBtn = document.createElement("span");
+            addSubTopicBtn.className = "btn-add";
+            addSubTopicBtn.innerText = "+ Add Sub Topic";
+            addSubTopicBtn.onclick = function () { addSubTopic(addSubTopicBtn, topicCounter - 1); };
+            topicBlock.appendChild(addSubTopicBtn);
+
             topicContainer.appendChild(topicBlock);
+        }
+
+        // Function to add another Sub Topic input field under a specific Main Topic
+        function addSubTopic(button, topicIndex) {
+            const topicBlock = button.parentElement;
+            const subInput = document.createElement("input");
+            subInput.type = "text";
+            subInput.className = "form-control mb-2";
+            subInput.name = `SubTopic[${topicIndex}][]`;
+            subInput.placeholder = "Sub Topic Content";
+            subInput.value = "Static Sub Topic Content";
+            topicBlock.insertBefore(subInput, button);
         }
     </script>
 </body>
