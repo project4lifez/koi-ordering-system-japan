@@ -105,15 +105,56 @@
             // Initialize TinyMCE editor
             tinymce.init({
                 selector: '#Link', // Selector for the textarea
-                plugins: 'link image code',
-                toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright | link image | code',
-                height: 300,
+                height: 700, // Set the editor height
+                plugins: [
+                    'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'image', 'link', 'lists', 'media',
+                    'searchreplace', 'table', 'visualblocks', 'wordcount', 'fullscreen', 'code', 'help'
+                ],
+                toolbar: 'undo redo | styleselect | bold italic underline strikethrough | fontfamily fontsize blocks | ' +
+                    'link image media codesample | alignleft aligncenter alignright alignjustify | ' +
+                    'bullist numlist outdent indent | emoticons charmap | table | ' +
+                    'fullscreen preview code print | removeformat',
+
+                tinycomments_mode: 'embedded', // Commenting system mode
+                tinycomments_author: 'Author name', // Name displayed for comments
+
+                // Fullscreen and preview options
+                toolbar_mode: 'floating', // Allows the toolbar to be floating
+                branding: false, // Removes TinyMCE branding
+                image_advtab: true, // Adds advanced tab for image editing
+                content_style: "body { font-family: Roboto, sans-serif; font-size: 14px; }",
+
+                // Spellcheck settings
+                spellchecker_dialog: true, // Enable the spellcheck dialog
+                spellchecker_language: 'en', // Set the spellcheck language
+                spellchecker_active: true, // Turn on spellchecker
+
+                // File and image upload settings (Optional)
+                images_upload_url: '/uploadImage', // Custom upload endpoint
+                automatic_uploads: true, // Automatically upload images
+                file_picker_types: 'file image media', // Types of files to allow
+                file_picker_callback: function (callback, value, meta) {
+                    // Provide custom file picking logic here
+                },
+
+                // Set up content-specific options
+                content_css: '/css/content-style.css', // Link to your content's CSS
+                content_style: 'body { font-family: Roboto; font-size: 14px; }', // Additional inline styling for the editor
+
+                // Other useful configurations
+                menubar: 'file edit view insert format tools table help', // Menubar customization
+                statusbar: true, // Show status bar
+                toolbar_sticky: true, // Sticky toolbar
+                paste_as_text: true, // Paste content as plain text by default
+
+                // Callbacks for saving content
                 setup: function (editor) {
                     editor.on('change', function () {
-                        editor.save(); // Ensures the value is saved when typing
+                        editor.save(); // Automatically save content as it's changed
                     });
-                }
+                },
             });
+
 
             // Image preview functionality
             document.getElementById('Image').addEventListener('change', function (event) {

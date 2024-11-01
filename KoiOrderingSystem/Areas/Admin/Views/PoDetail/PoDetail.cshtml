@@ -231,30 +231,19 @@
         <script>
 
             tinymce.init({
-                selector: '.noteTextArea', // Target a specific textarea by ID. Use '.class' if it's a class
+                selector: '.noteTextArea', // Target specific textarea
                 height: 600, // Set the height to 600px for a spacious editor
                 plugins: [
                     'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'image', 'link', 'lists', 'media', 'searchreplace',
-                    'table', 'visualblocks', 'wordcount', 'fullscreen', 'code', 'help',
-                    // Premium plugins (if available in the free trial or purchased)
-                    'checklist', 'mediaembed', 'casechange', 'export', 'formatpainter', 'pageembed', 'a11ychecker', 'tinymcespellchecker',
-                    'permanentpen', 'powerpaste', 'advtable', 'advcode', 'editimage', 'advtemplate', 'ai', 'mentions', 'tinycomments',
-                    'tableofcontents', 'footnotes', 'mergetags', 'autocorrect', 'typography', 'inlinecss', 'markdown'
+                    'table', 'visualblocks', 'wordcount', 'fullscreen', 'code', 'help'
                 ],
                 toolbar: 'undo redo | styleselect | bold italic underline strikethrough | fontfamily fontsize blocks | ' +
                     'link image media codesample | alignleft aligncenter alignright alignjustify | ' +
-                    'bullist numlist outdent indent checklist | emoticons charmap | table tableofcontents footnotes | ' +
-                    'fullscreen preview code export print | spellcheckdialog a11ycheck formatpainter pageembed | ' +
-                    'removeformat | addcomment showcomments',
+                    'bullist numlist outdent indent | emoticons charmap | table | ' +
+                    'fullscreen preview code print | ' +
+                    'removeformat',
                 tinycomments_mode: 'embedded', // Commenting system mode
                 tinycomments_author: 'Author name', // Name displayed for comments
-                mergetags_list: [
-                    { value: 'First.Name', title: 'First Name' },
-                    { value: 'Email', title: 'Email' }
-                ],
-
-                // AI Assistant integration (not functional unless implemented, example provided for future use)
-                ai_request: (request, respondWith) => respondWith.string(() => Promise.reject('AI Assistant not implemented')),
 
                 // Fullscreen and preview options
                 toolbar_mode: 'floating', // Allows the toolbar to be floating
@@ -262,23 +251,10 @@
                 image_advtab: true, // Adds advanced tab for image editing
                 content_style: "body { font-family: Roboto, sans-serif; font-size: 14px; }",
 
-                // Media options
-                media_live_embeds: true, // Enable live embedding for media
-                mediaembed_service_url: 'https://noembed.com/embed', // Example for embedding URLs
-
-                // Spellcheck and A11Y Checker (accessibility) configurations
-                a11ychecker_allow_decorative_images: true, // Allow images without alt text to pass checker
+                // Spellcheck settings
                 spellchecker_dialog: true, // Enable the spellcheck dialog
                 spellchecker_language: 'en', // Set the spellcheck language
                 spellchecker_active: true, // Turn on spellchecker
-                spellchecker_whitelist: ['TinyMCE', 'HTML', 'CSS'], // Custom whitelist for words
-
-                // Export options (e.g., PDF or Word export)
-                export_formats: [
-                    { title: 'HTML Document', format: 'html' },
-                    { title: 'Word Document', format: 'docx' },
-                    { title: 'PDF Document', format: 'pdf' }
-                ],
 
                 // File and image upload settings (Optional)
                 images_upload_url: '/uploadImage', // Custom upload endpoint
@@ -298,10 +274,6 @@
                 toolbar_sticky: true, // Sticky toolbar
                 paste_as_text: true, // Paste content as plain text by default
 
-                // Advanced Table features (premium)
-                advtable_sorting: true, // Enable table sorting
-                advtable_sort_by: 'alpha', // Set default table sorting
-
                 // Callbacks for saving content
                 setup: function (editor) {
                     editor.on('change', function () {
@@ -309,6 +281,7 @@
                     });
                 },
             });
+
 
            
             // Khai báo mảng để lưu trữ các Koi đã thêm
