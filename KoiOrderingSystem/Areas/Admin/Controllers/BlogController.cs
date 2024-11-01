@@ -21,6 +21,12 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
         // GET: /Admin/Blog/BlogList
         public async Task<IActionResult> BlogList(string query, int? position, int page = 1)
         {
+            var adminRoleId = HttpContext.Session.GetInt32("AdminRoleId");
+
+            if (adminRoleId != 2)
+            {
+                return RedirectToAction("Unauthorized", "Home");
+            }
             ViewBag.CurrentPage = page;
             int pageSize = 8; // Number of blogs per page
             var blogs = _db.Blogs.AsQueryable();
@@ -44,6 +50,12 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
         // GET: /Admin/Blog/CreateBlog
         public IActionResult CreateBlog()
         {
+            var adminRoleId = HttpContext.Session.GetInt32("AdminRoleId");
+
+            if (adminRoleId != 2)
+            {
+                return RedirectToAction("Unauthorized", "Home");
+            }
             return View();
         }
 
@@ -154,6 +166,12 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
 
         public async Task<IActionResult> UpdateBlog(int id)
         {
+            var adminRoleId = HttpContext.Session.GetInt32("AdminRoleId");
+
+            if (adminRoleId != 2)
+            {
+                return RedirectToAction("Unauthorized", "Home");
+            }
             var blog = await _db.Blogs.FindAsync(id);
             if (blog == null)
             {

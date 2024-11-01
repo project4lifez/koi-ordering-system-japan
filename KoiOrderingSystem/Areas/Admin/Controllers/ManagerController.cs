@@ -426,6 +426,12 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
 
         public IActionResult KoiVarietyList(string query, int page = 1, int pageSize = 8)
         {
+            var adminRoleId = HttpContext.Session.GetInt32("AdminRoleId");
+
+            if (adminRoleId != 2)
+            {
+                return RedirectToAction("Unauthorized", "Home");
+            }
             // Start by fetching all varieties
             var varieties = _db.Varieties.AsQueryable();
 
@@ -465,6 +471,12 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
 
         public IActionResult CreateVariety()
         {
+            var adminRoleId = HttpContext.Session.GetInt32("AdminRoleId");
+
+            if (adminRoleId != 2)
+            {
+                return RedirectToAction("Unauthorized", "Home");
+            }
             return View();
         }
 
@@ -530,6 +542,12 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult UpdateVariety(int id)
         {
+            var adminRoleId = HttpContext.Session.GetInt32("AdminRoleId");
+
+            if (adminRoleId != 2)
+            {
+                return RedirectToAction("Unauthorized", "Home");
+            }
             var variety = _db.Varieties.Find(id);
             if (variety == null)
             {
@@ -598,6 +616,12 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
 
         public IActionResult KoiFishList(string query, int page = 1, int pageSize = 8)
         {
+            var adminRoleId = HttpContext.Session.GetInt32("AdminRoleId");
+
+            if (adminRoleId != 2)
+            {
+                return RedirectToAction("Unauthorized", "Home");
+            }
             // Start by fetching all koi fishes, including their Variety
             var koiFishes = _db.KoiFishes
                                .Include(k => k.Variety) // Include related Variety
@@ -637,6 +661,12 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult CreateKoiFish()
         {
+            var adminRoleId = HttpContext.Session.GetInt32("AdminRoleId");
+
+            if (adminRoleId != 2)
+            {
+                return RedirectToAction("Unauthorized", "Home");
+            }
             // Fetch the list of varieties from the database
             var varieties = _db.Varieties.ToList();
 
@@ -703,6 +733,12 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
 
         public IActionResult UpdateKoiFish(int id)
         {
+            var adminRoleId = HttpContext.Session.GetInt32("AdminRoleId");
+
+            if (adminRoleId != 2)
+            {
+                return RedirectToAction("Unauthorized", "Home");
+            }
             var koiFish = _db.KoiFishes.Find(id);
             if (koiFish == null)
             {
@@ -799,6 +835,12 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
 
         public IActionResult KoiFarmList(string query, int page = 1, int pageSize = 5)
         {
+            var adminRoleId = HttpContext.Session.GetInt32("AdminRoleId");
+
+            if (adminRoleId != 2)
+            {
+                return RedirectToAction("Unauthorized", "Home");
+            }
             // Bắt đầu với danh sách tất cả các farm
             var koiFarms = _db.KoiFarms
                 .Include(farm => farm.SpecialVarieties)
@@ -838,6 +880,12 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult CreateFarm()
         {
+            var adminRoleId = HttpContext.Session.GetInt32("AdminRoleId");
+
+            if (adminRoleId != 2)
+            {
+                return RedirectToAction("Unauthorized", "Home");
+            }
 
             var varieties = _db.Varieties.ToList();
 
@@ -928,6 +976,12 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult UpdateFarm(int id)
         {
+            var adminRoleId = HttpContext.Session.GetInt32("AdminRoleId");
+
+            if (adminRoleId != 2)
+            {
+                return RedirectToAction("Unauthorized", "Home");
+            }
             // Fetch the KoiFarm with its associated SpecialVarieties
             var model = _db.KoiFarms
                 .Include(farm => farm.SpecialVarieties)
@@ -1034,6 +1088,12 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
 
         public async Task<IActionResult> Feedback(int page = 1, int pageSize = 8)
         {
+            var adminRoleId = HttpContext.Session.GetInt32("AdminRoleId");
+
+            if (adminRoleId != 2)
+            {
+                return RedirectToAction("Unauthorized", "Home");
+            }
             // Query the feedbacks with related customer and trip information
             var feedbacks = await _db.Feedbacks
                                      .Include(f => f.Customer)
@@ -1057,6 +1117,12 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
 
         public IActionResult FeedbackDetail(int feedbackId)
         {
+            var adminRoleId = HttpContext.Session.GetInt32("AdminRoleId");
+
+            if (adminRoleId != 2)
+            {
+                return RedirectToAction("Unauthorized", "Home");
+            }
             var feedback = _db.Feedbacks
                 .Include(f => f.Bookings)
                 .ThenInclude(b => b.Trip)
