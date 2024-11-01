@@ -923,7 +923,7 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
                     model.ImageUrl = Url.Content("~/images/KoiFarm/" + fileName); // Use Url.Content to handle URL properly
                 }
 
-                
+               
                 _db.KoiFarms.Add(model);
                 _db.SaveChanges(); 
 
@@ -939,7 +939,8 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
                         };
                         _db.SpecialVarieties.Add(specialVariety);
                     }
-                    _db.SaveChanges();
+                    _db.SaveChanges(); 
+                }
 
                 return Redirect("/Admin/Manager/KoiFarmList");
             }
@@ -992,7 +993,7 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            // Get the list of varieties for the checkbox list
+            
             var varieties = _db.Varieties.ToList();
             ViewBag.Varieties = varieties;
 
