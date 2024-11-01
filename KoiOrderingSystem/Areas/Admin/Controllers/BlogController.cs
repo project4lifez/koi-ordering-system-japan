@@ -50,29 +50,33 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateBlog(Blog model, IFormFile Image, string Status)
         {
-            // Convert the string Status value to boolean
             model.Status = Status == "1";
-
-            // Create a new Blog instance
             var newBlog = new Blog
             {
                 Heading = model.Heading,
                 Link = model.Link,
-                Status = model.Status, // Set with the converted boolean value
+                Status = model.Status,
                 Position = model.Position,
-                CreateAt = DateTime.UtcNow // Set the creation date to now
+                CreateAt = DateTime.UtcNow
             };
 
-            // Check if the selected position is already taken
-            // Allow multiple entries for Position = 0
-            if (newBlog.Position != 0)
+            // Check if selected position is already taken (positions 1-4 must be unique)
+            // Check if selected position is already taken (positions 1-4 must be unique)
+            if (newBlog.Position >= 1 && newBlog.Position <= 4)
             {
-                var existingBlog = _db.Blogs.FirstOrDefault(b => b.Position == newBlog.Position);
+                var existingBlog = await _db.Blogs.FirstOrDefaultAsync(b => b.Position == newBlog.Position);
                 if (existingBlog != null)
                 {
-                    // Handle confirmation logic for position conflict
-                    ViewBag.ExistingBlog = existingBlog;
-                    return View("ConfirmPositionChange", newBlog); // Redirect to confirmation view
+                    ViewBag.ConflictMessage = $"Position {newBlog.Position} is already occupied by Blog ID {existingBlog.BlogId}. Do you want to override this position?";
+
+                    // Store only the necessary fields in TempData
+                    TempData["ExistingBlogId"] = existingBlog.BlogId;
+                    TempData["NewBlog_Heading"] = newBlog.Heading;
+                    TempData["NewBlog_Link"] = newBlog.Link;
+                    TempData["NewBlog_Status"] = newBlog.Status;
+                    TempData["NewBlog_Position"] = newBlog.Position;
+
+                    return View("CreateBlog"); // Return to CreateBlog view with the modal prompt
                 }
             }
 
@@ -83,7 +87,6 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
                 var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/Blog");
                 var filePath = Path.Combine(directoryPath, fileName);
 
-                // Ensure the directory exists
                 if (!Directory.Exists(directoryPath))
                 {
                     Directory.CreateDirectory(directoryPath);
@@ -94,12 +97,53 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
                     await Image.CopyToAsync(stream);
                 }
 
-                newBlog.Image = "/images/Blog/" + fileName; // Set image URL
+                newBlog.Image = "/images/Blog/" + fileName;
             }
 
-            // Add new blog to the database
+            // Add new blog to the database if no conflict or after confirmation
             _db.Blogs.Add(newBlog);
-            await _db.SaveChangesAsync(); // This will generate BlogId
+            await _db.SaveChangesAsync();
+
+            return Redirect("/Admin/Blog/BlogList");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ConfirmOverride(int existingBlogId, Blog newBlog, IFormFile Image, string Status)
+        {
+            // Set the status of the new blog
+            newBlog.Status = Status == "1";
+
+            // Update the existing blog to Position = 0 if it has the same position
+            var conflictingBlog = await _db.Blogs.FirstOrDefaultAsync(b => b.Position == newBlog.Position && b.BlogId != newBlog.BlogId);
+            if (conflictingBlog != null)
+            {
+                conflictingBlog.Position = 0;
+                _db.Blogs.Update(conflictingBlog);
+            }
+
+            // Process image upload if provided
+            if (Image != null && Image.Length > 0)
+            {
+                var fileName = Path.GetFileNameWithoutExtension(Image.FileName) + "_" + Guid.NewGuid() + Path.GetExtension(Image.FileName);
+                var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/Blog");
+                var filePath = Path.Combine(directoryPath, fileName);
+
+                if (!Directory.Exists(directoryPath))
+                {
+                    Directory.CreateDirectory(directoryPath);
+                }
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await Image.CopyToAsync(stream);
+                }
+
+                newBlog.Image = "/images/Blog/" + fileName;
+            }
+
+            // Save the new blog with the desired position and updated status
+            _db.Blogs.Add(newBlog);
+            await _db.SaveChangesAsync();
 
             return Redirect("/Admin/Blog/BlogList");
         }
@@ -107,19 +151,6 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
 
 
 
-
-
-
-
-
-
-        private async Task<bool> ConfirmPositionChange(int blogId)
-        {
-            // Logic xác nhận sẽ ở đây
-            // Thực hiện hiển thị modal xác nhận cho người dùng và trả về true hoặc false
-            // Ví dụ: dùng SignalR để gửi thông báo tới người dùng, hoặc hiển thị alert trên client-side.
-            return true; // Đây là một giá trị giả định, hãy thay thế bằng logic thực tế của bạn.
-        }
 
         public async Task<IActionResult> UpdateBlog(int id)
         {

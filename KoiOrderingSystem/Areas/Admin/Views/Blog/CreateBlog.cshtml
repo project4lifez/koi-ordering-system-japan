@@ -55,17 +55,14 @@
 <body>
     <div class="form-container">
         <form method="post" action="/Admin/Blog/CreateBlog" enctype="multipart/form-data" id="createBlogForm">
-
             <div class="form-group">
                 <label for="Heading" class="form-label">Heading:</label>
                 <input type="text" class="form-control" id="Heading" name="Heading" required>
             </div>
-
             <div class="form-group">
                 <label for="Link" class="form-label">Content:</label>
                 <textarea class="form-control" id="Link" name="Link" required></textarea>
             </div>
-
             <div class="form-group">
                 <label for="Position" class="form-label">Position:</label>
                 <select class="form-select" id="Position" name="Position" required>
@@ -77,7 +74,6 @@
                     <option value="4">4</option>
                 </select>
             </div>
-
             <div class="form-group">
                 <label for="Status" class="form-label">Status:</label>
                 <select class="form-select" id="Status" name="Status" required>
@@ -85,23 +81,46 @@
                     <option value="0">Inactive</option>
                 </select>
             </div>
-
             <div class="form-group">
                 <label for="Image" class="form-label">Upload Blog Image:</label>
                 <input type="file" class="form-control" id="Image" name="Image" accept="image/*" required>
             </div>
             <img id="previewImage" src="" alt="Blog Image Preview">
 
+            <!-- Hidden field for existing blog ID to use on override -->
+            <input type="hidden" id="existingBlogId" name="existingBlogId" />
+
             <button type="submit" class="btn btn-next">Create Blog</button>
         </form>
+    </div>
+
+    <!-- Modal for Position Conflict Confirmation -->
+    <div class="modal fade" id="positionConflictModal" tabindex="-1" role="dialog" aria-labelledby="positionConflictLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="positionConflictLabel">Position Conflict</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="conflictMessage">Position is already occupied. Do you want to override this position?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirmOverride">Override Position</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
         $(document).ready(function () {
             // Initialize TinyMCE editor
             tinymce.init({
-                selector: '#Link', // Selector for the textarea
-                height: 700, // Set the editor height
+                selector: '#Link',
+                height: 700,
                 plugins: [
                     'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'image', 'link', 'lists', 'media',
                     'searchreplace', 'table', 'visualblocks', 'wordcount', 'fullscreen', 'code', 'help'
@@ -110,52 +129,19 @@
                     'link image media codesample | alignleft aligncenter alignright alignjustify | ' +
                     'bullist numlist outdent indent | emoticons charmap | table | ' +
                     'fullscreen preview code print | removeformat',
-
-                tinycomments_mode: 'embedded', // Commenting system mode
-                tinycomments_author: 'Author name', // Name displayed for comments
-
-                // Fullscreen and preview options
-                toolbar_mode: 'floating', // Allows the toolbar to be floating
-                branding: false, // Removes TinyMCE branding
-                image_advtab: true, // Adds advanced tab for image editing
-                content_style: "body { font-family: Roboto, sans-serif; font-size: 14px; }",
-
-                // Spellcheck settings
-                spellchecker_dialog: true, // Enable the spellcheck dialog
-                spellchecker_language: 'en', // Set the spellcheck language
-                spellchecker_active: true, // Turn on spellchecker
-
-                // File and image upload settings (Optional)
-                images_upload_url: '/uploadImage', // Custom upload endpoint
-                automatic_uploads: true, // Automatically upload images
-                file_picker_types: 'file image media', // Types of files to allow
-                file_picker_callback: function (callback, value, meta) {
-                    // Provide custom file picking logic here
-                },
-
-                // Set up content-specific options
-                content_css: '/css/content-style.css', // Link to your content's CSS
-                content_style: 'body { font-family: Roboto; font-size: 14px; }', // Additional inline styling for the editor
-
-                // Other useful configurations
-                menubar: 'file edit view insert format tools table help', // Menubar customization
-                statusbar: true, // Show status bar
-                toolbar_sticky: true, // Sticky toolbar
-                paste_as_text: true, // Paste content as plain text by default
-
-                // Callbacks for saving content
+                branding: false,
+                menubar: 'file edit view insert format tools table help',
                 setup: function (editor) {
                     editor.on('change', function () {
-                        editor.save(); // Automatically save content as it's changed
+                        editor.save();
                     });
                 },
             });
 
-
             // Image preview functionality
-            document.getElementById('Image').addEventListener('change', function (event) {
+            $('#Image').on('change', function () {
                 const previewImage = document.getElementById('previewImage');
-                const file = event.target.files[0];
+                const file = this.files[0];
                 const reader = new FileReader();
 
                 reader.onload = function (e) {
@@ -169,6 +155,28 @@
                     previewImage.src = '';
                     previewImage.style.display = 'none';
                 }
+            });
+
+            // Handle form submission with position conflict check
+            $('#createBlogForm').on('submit', function (e) {
+                e.preventDefault(); // Prevent actual form submission
+                let position = $('#Position').val();
+
+                // Simulate conflict check for positions 1-4
+                if (position >= 1 && position <= 4) {
+                    $('#existingBlogId').val("123"); // Set example existing blog ID
+                    $('#conflictMessage').text(`Position ${position} is already occupied. Do you want to override this position?`);
+                    $('#positionConflictModal').modal('show');
+                } else {
+                    this.submit(); // Submit the form if no conflict
+                }
+            });
+
+            // Handle override confirmation
+            $('#confirmOverride').on('click', function () {
+                $('#positionConflictModal').modal('hide');
+                $('#createBlogForm').attr('action', '/Admin/Blog/ConfirmOverride'); // Change form action
+                $('#createBlogForm').off('submit').submit(); // Submit form after changing action
             });
         });
     </script>
