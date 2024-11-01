@@ -6,6 +6,8 @@
     var currentPage = ViewBag.CurrentPage;
     var totalPages = ViewBag.TotalPages;
     var rowNumber = (currentPage - 1) * 8 + 1; // Tính toán số thứ tự bắt đầu dựa trên trang hiện tại
+    var query = ViewBag.Query ?? ""; // Use an empty string if there's no search query
+
 }
 
 <head>
@@ -126,6 +128,54 @@
         .pagination {
             margin-top: 20px;
         }
+
+        .search-container {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 10px; /* Create space between input and search button */
+            margin-bottom: 20px;
+        }
+
+            .search-container .form-control {
+                padding: 10px 20px; /* Increase padding inside the search input */
+                font-size: 1rem; /* Font size */
+                width: 300px; /* Limit the width */
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add shadow to highlight the search bar */
+            }
+
+            .search-container .btn-primary {
+                border-radius: 30px; /* Round the button */
+                padding: 10px 20px; /* Increase button size */
+                display: flex;
+                align-items: center;
+                font-size: 1rem; /* Font size */
+            }
+
+                .search-container .btn-primary i {
+                    margin-right: 5px; /* Space between the icon and text */
+                }
+
+            .search-container .form-control:focus {
+                box-shadow: 0 4px 6px rgba(0, 123, 255, 0.2); /* Highlight when focused */
+                outline: none; /* Remove default focus border */
+            }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .status-active {
+            background-color: #28a745; /* Green for active status */
+        }
+
+        .status-inactive {
+            background-color: #6c757d; /* Gray for inactive status */
+        }
     </style>
 </head>
 
@@ -135,55 +185,72 @@
 
         <!-- Create button aligned to the right -->
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <div></div>
+            <!-- Search bar -->
+            <form method="get" action="/Admin/Blog/BlogList" class="search-container">
+                <input type="text" class="form-control" placeholder="Search blog heading or content" name="query" value="@query">
+                <!-- Dropdown for selecting position -->
+                <select class="form-select" name="position">
+                    <option value="">All Positions</option>
+                    <option value="0">Position 0</option>
+                    <option value="1">Position 1</option>
+                    <option value="2">Position 2</option>
+                    <option value="3">Position 3</option>
+                    <option value="4">Position 4</option>
+                </select>
+                <button class="btn btn-primary" type="submit">
+                    <i class="fas fa-search"></i> Search
+                </button>
+            </form>            
             <a href="/Admin/Blog/CreateBlog" class="btn btn-create-blog">Create New Blog</a>
         </div>
 
-        <!-- Blogs List -->
-        <div class="card mb-4">
-            <div class="card-body">
-                <table class="blog-table-custom table">
-                    <thead>
-                        <tr>
-                            <th>No</th> <!-- Number Column -->
-                            <th>Image</th>
-                            <th>Blog Name</th> <!-- Blog column -->
-                            <th>Status</th> <!-- Status column -->
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var blog in Model)
-                        {
-                            <tr>
-                                <td>@rowNumber</td>
-                                <td>
-                                    <img src="@blog.Image" alt="@blog.Heading Image" />
-                                </td>
-                                <td>@blog.Heading</td>
-                                <td>@(blog.Status ? "Active" : "Inactive")</td>
+      <!-- Blogs List -->
+<div class="card mb-4">
+    <div class="card-body">
+        <table class="blog-table-custom table">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Image</th>
+                    <th>Heading</th>
+                    <th>Status</th> <!-- Status column -->
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var blog in Model)
+                {
+                    <tr>
+                        <td>@rowNumber</td>
+                        <td>
+                            <img src="@blog.Image" alt="@blog.Heading Image" />
+                        </td>
+                        <td>@blog.Heading</td>
+                        <td>
+                            <span class="status-dot @(blog.Status ? "status-active" : "status-inactive")"></span>
+                        </td>
 
-                                <!-- Actions (Edit/Delete) -->
-                                <td>
-                                    <a href="/Admin/Blog/UpdateBlog/@blog.BlogId" class="btn btn-blog btn-outline-success-blog">
-                                        <i class="fas fa-edit"></i> Edit
-                                    </a>
-                                    <form id="deleteBlogForm_@blog.BlogId" method="post" action="/Admin/Blog/DeleteBlog" style="display:inline;">
-                                        <input type="hidden" name="id" value="@blog.BlogId" />
-                                        <a href="#" class="btn btn-blog btn-outline-danger-blog"
-                                           onclick="if (confirm('Do you want to delete Blog ID = @blog.BlogId?')) { document.getElementById('deleteBlogForm_@blog.BlogId').submit(); } return false;"
-                                           title="Delete Blog">
-                                            <i class="fas fa-trash-alt"></i> Delete
-                                        </a>
-                                    </form>
-                                </td>
-                            </tr>
-                            rowNumber++;
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
+                        <!-- Actions (Edit/Delete) -->
+                        <td>
+                            <a href="/Admin/Blog/UpdateBlog/@blog.BlogId" class="btn btn-blog btn-outline-success-blog">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <form id="deleteBlogForm_@blog.BlogId" method="post" action="/Admin/Blog/DeleteBlog" style="display:inline;">
+                                <input type="hidden" name="id" value="@blog.BlogId" />
+                                <a href="#" class="btn btn-blog btn-outline-danger-blog"
+                                   onclick="if (confirm('Do you want to delete Blog ID = @blog.BlogId?')) { document.getElementById('deleteBlogForm_@blog.BlogId').submit(); } return false;"
+                                   title="Delete Blog">
+                                    <i class="fas fa-trash-alt"></i> Delete
+                                </a>
+                            </form>
+                        </td>
+                    </tr>
+                    rowNumber++;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
 
         <!-- Pagination Controls -->
         <nav aria-label="Page navigation">

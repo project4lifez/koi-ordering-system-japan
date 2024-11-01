@@ -19,10 +19,10 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
         }
 
         // GET: /Admin/Blog/BlogList
-        public async Task<IActionResult> BlogList(string query, int page = 1)
+        public async Task<IActionResult> BlogList(string query, int? position, int page = 1)
         {
             ViewBag.CurrentPage = page;
-            int pageSize = 8; // Số lượng blog trên mỗi trang
+            int pageSize = 8; // Number of blogs per page
             var blogs = _db.Blogs.AsQueryable();
 
             if (!string.IsNullOrEmpty(query))
@@ -30,10 +30,16 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
                 blogs = blogs.Where(b => b.Heading.Contains(query) || b.Link.Contains(query));
             }
 
+            if (position.HasValue)
+            {
+                blogs = blogs.Where(b => b.Position == position.Value); // Assuming `Position` is a property in the Blog model
+            }
+
             ViewBag.TotalPages = (int)System.Math.Ceiling(await blogs.CountAsync() / (double)pageSize);
             var blogList = await blogs.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
             return View(blogList);
         }
+
 
         // GET: /Admin/Blog/CreateBlog
         public IActionResult CreateBlog()
