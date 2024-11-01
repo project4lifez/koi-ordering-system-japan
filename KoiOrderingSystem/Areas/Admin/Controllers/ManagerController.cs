@@ -923,9 +923,9 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
                     model.ImageUrl = Url.Content("~/images/KoiFarm/" + fileName); // Use Url.Content to handle URL properly
                 }
 
-                // Add the KoiFarm to the database
+                
                 _db.KoiFarms.Add(model);
-                _db.SaveChanges(); // Save to generate FarmId
+                _db.SaveChanges(); 
 
                 // Create SpecialVarieties based on selected varieties
                 if (selectedVarietyIds != null && selectedVarietyIds.Count > 0)
@@ -939,8 +939,7 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
                         };
                         _db.SpecialVarieties.Add(specialVariety);
                     }
-                    _db.SaveChanges(); // Save the SpecialVarieties to the database
-                }
+                    _db.SaveChanges();
 
                 return Redirect("/Admin/Manager/KoiFarmList");
             }
@@ -964,7 +963,7 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
             // Remove associated SpecialVariety records first
             _db.SpecialVarieties.RemoveRange(farmToDelete.SpecialVarieties);
 
-            // Then remove the KoiFarm
+       
             _db.KoiFarms.Remove(farmToDelete);
 
             _db.SaveChanges();
@@ -1079,10 +1078,10 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
                 existingKoiFarm.ImageUrl = "/images/KoiFarm/" + fileName;
             }
 
-            // Save changes to the database
+         
             _db.SaveChanges();
 
-            // Redirect to the appropriate page
+          
             return Redirect($"/Admin/Manager/UpdateFarm?id={id}");
         }
 
@@ -1133,7 +1132,7 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            return View(feedback); // Pass the feedback object to the view
+            return View(feedback); 
         }
 
 
