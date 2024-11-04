@@ -28246,13 +28246,7 @@ input.error {
         color: #fff !important;
     }
 
-    .navbar-danger-transparent .nav-link:hover {
-        color: var(--default-text-color);
-    }
-
-    .navbar-danger-transparent .form-control:focus {
-        border-color: rgb(var(--danger-rgb));
-    }
+   
 
 
 /* End:: navbar transparent color schemes */
