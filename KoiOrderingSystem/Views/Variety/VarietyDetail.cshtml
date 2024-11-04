@@ -5,17 +5,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <h1>@Model.VarietyName</h1>
     <style>
         body {
             font-family: "Arial", sans-serif;
-            background-color: #f4f4f9; /* Sử dụng màu nền nhẹ nhàng */
-            color: #444; /* Màu chữ giảm độ tương phản để dễ đọc hơn */
+            background-color: #f4f4f9;
+            color: #444;
             margin: 0;
             padding: 0;
+            margin-top: 10px;
         }
 
         .container-s {
@@ -25,6 +26,8 @@
             display: flex;
             flex-wrap: wrap;
             align-items: flex-start;
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
         .text-content-s {
@@ -37,6 +40,7 @@
             font-size: 36px;
             font-weight: bold;
             color: #333;
+            margin-top: 20px;
         }
 
         p {
@@ -61,7 +65,6 @@
             .fish-image-s img {
                 max-width: 100%;
                 height: 264px;
-                margin-top: 55px;
                 border-radius: 10px;
             }
 
@@ -87,46 +90,6 @@
             margin-top: 20px;
         }
 
-        }
-
-        /* Search Section Styling */
-        .search-section {
-            background-color: #eef1f5;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            margin-bottom: 30px;
-        }
-
-            .search-section h4 {
-                font-size: 22px;
-                font-weight: bold;
-                color: #dc3545;
-            }
-
-            .search-section .form-control,
-            .search-section .form-select {
-                border: 2px solid #d3d6da;
-                border-radius: 5px;
-                padding: 10px;
-                font-size: 14px;
-            }
-
-            .search-section .btn-primary {
-                background-color: #5BB2F1;
-                border: none;
-                transition: background-color 0.3s ease;
-            }
-
-                .search-section .btn-primary:hover {
-                    background-color: #4A9ED4;
-                }
-
-        .koi-fish-breeds-section h2 {
-            text-align: center;
-            font-size: 32px;
-            margin-bottom: 20px;
-            color: #333;
         }
 
         /* Card Styling */
@@ -179,21 +142,13 @@
             margin: 0 5px;
         }
 
-        h3 {
-            font-size: 28px;
-            color: #dc3545;
-            margin-top: 20px;
-            font-weight: bold;
-            border-bottom: 2px solid #f8f9fa;
-            padding-bottom: 10px;
-        }
-
         .breadcrumb {
             background-color: transparent;
             margin-bottom: 15px;
             padding: 0;
             list-style: none;
             font-size: 14px;
+            margin-top: 20px;
         }
 
         .breadcrumb-item {
@@ -227,23 +182,77 @@
             .footer-text-s p {
                 font-size: 18px;
                 font-weight: bold;
-                color: #555;
-                background-color: #e9ecef;
+                color: #0b51a6;
+                background-color: #E9F3FD;
                 padding: 15px;
                 border: none;
                 border-radius: 10px;
                 box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
                 margin-bottom: 20px;
+                max-width: 1000px;
+                margin: 0 auto;
             }
 
-        .card-body {
-            margin-top: -17px!important;
+        .accordion-section {
+            background-color: #E9F3FD;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            color: #0b51a6;
+            font-weight: bold;
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+            .accordion-section:hover {
+                background-color: #d1e8ff; /* Slightly darker shade on hover */
+                box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Light shadow effect */
+                cursor: pointer;
+                transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            }
+
+            .accordion-section .icon {
+                margin-left: auto;
+                font-weight: bold;
+                font-size: 20px;
+            }
+
+                .accordion-section .icon:hover {
+                    color: #dc3545; /* Changes the color of "+" icon on hover */
+                }
+
+        .accordion-content {
+            display: none;
+            padding: 15px;
+            border-top: 0;
+            background-color: #f9f9f9; /* Change background for visibility */
+            color: #333333;
+            font-size: 16px;
+            max-width: 800px;
+            margin: 0 auto;
+            border-radius: 10px;
+            white-space: pre-line; /* Preserve line breaks */
+            margin-top: -10px;
+            margin-bottom: 10px;
+        }
+
+        .nav-container {
+            margin: -10px auto !important;
+        }
+
+        .navigation-menu {
+            margin-top: 16px !important;
         }
     </style>
 </head>
 <body>
-    <div class="container-s" style="margin: 0 0 0 0 ">
-        <div class="breadcrumb-container" style="margin-top: 20px;width: 100%;">
+    <div class="container-s">
+        <div class="breadcrumb-container" style="width: 100%">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/">Home</a></li>
                 <li class="breadcrumb-item"><a href="#">Service</a></li>
@@ -252,28 +261,47 @@
             </ol>
         </div>
     </div>
-    <div class="container-s" style="margin-top:-50px">
-        <div class="container-s">
-            <div class="text-content-s">
-                <h3>@Model.VarietyName</h3>
-                <p>@Model.Description</p>
-            </div>
+    <div class="container-s">
+        <div class="text-content-s">
+            <h3 style="font-size: 28px; color: #dc3545;">@Model.VarietyName</h3>
+            <p>@Model.Description</p>
+        </div>
 
-            <div class="fish-image-s">
-                <img src="@Model.ImageUrl" alt="@Model.VarietyName" class="img-fluid" style="border-radius: 10px;">
-            </div>
+        <div class="fish-image-s">
+            <img src="@Model.ImageUrl" alt="@Model.VarietyName" class="img-fluid" style="border-radius: 10px;">
         </div>
     </div>
+
+    <!-- Dynamic Accordion Sections for MainTopics and SubTopics -->
+    @{
+        var mainTopics = Model.MainTopics?.Split('|') ?? new string[0];
+        var subTopicsGroups = Model.SubTopics?.Split('|') ?? new string[0];
+    }
+
+   
+
+    @for (int i = 0; i < mainTopics.Length; i++)
+    {
+        var mainTopic = mainTopics[i];
+        var subTopics = i < subTopicsGroups.Length ? subTopicsGroups[i].Replace(",", " ") : string.Empty; // Replace commas with spaces for a single paragraph
+
+        <div class="accordion-section">
+            @Html.Raw($"{i + 1}. {mainTopic}")
+            <span class="icon">+</span>
+        </div>
+        <div class="accordion-content">
+            <p>@subTopics</p>
+        </div>
+    }
+
     <div class="footer-text-s">
-        <p>
-            Browse our available Koi below. Contact us for personalized advice.
-        </p>
+        <p>Browse our available Koi below. Contact us for personalized advice.</p>
     </div>
 
     <!-- Koi Fish Breeds Section -->
     <section class="koi-fish-breeds-section my-5">
         <div class="container">
-            <h2 class="text-center mb-4">Available @Model.VarietyName Koi</h2>
+            <h2 class="text-center mb-4" style="color: red">Available @Model.VarietyName Koi</h2>
             <div class="row g-4" id="koiContainer">
                 @foreach (var koi in Model.KoiFishes)
                 {
@@ -290,8 +318,26 @@
                     </div>
                 }
             </div>
-            
         </div>
     </section>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll(".accordion-section").forEach(section => {
+                section.addEventListener("click", function () {
+                    const content = this.nextElementSibling;
+                    const icon = this.querySelector(".icon");
+                    const isOpen = content.style.display === "block";
+
+                    // Toggle visibility of content
+                    content.style.display = isOpen ? "none" : "block";
+
+                    // Toggle icon and active state
+                    icon.textContent = isOpen ? "+" : "-";
+                    this.classList.toggle("active", !isOpen);
+                });
+            });
+        });
+    </script>
 </body>
 </html>

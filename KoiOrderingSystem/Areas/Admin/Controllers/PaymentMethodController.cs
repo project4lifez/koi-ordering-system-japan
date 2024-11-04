@@ -17,6 +17,12 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
         }
         public IActionResult PaymentMethod()
         {
+            var adminRoleId = HttpContext.Session.GetInt32("AdminRoleId");
+
+            if (adminRoleId != 2)
+            {
+                return RedirectToAction("Unauthorized", "Home");
+            }
             var payments = _db.PaymentMethods.ToList();
             return View(payments);
         }
@@ -24,6 +30,12 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult CreatePayment()
         {
+            var adminRoleId = HttpContext.Session.GetInt32("AdminRoleId");
+
+            if (adminRoleId != 2)
+            {
+                return RedirectToAction("Unauthorized", "Home");
+            }
             return View();
         }
 
@@ -68,6 +80,12 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult UpdatePayment(int id)
         {
+            var adminRoleId = HttpContext.Session.GetInt32("AdminRoleId");
+
+            if (adminRoleId != 2)
+            {
+                return RedirectToAction("Unauthorized", "Home");
+            }
             var role = _db.PaymentMethods.Find(id);
             if (role == null)
             {

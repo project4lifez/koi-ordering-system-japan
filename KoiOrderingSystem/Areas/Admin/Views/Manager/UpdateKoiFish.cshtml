@@ -182,11 +182,27 @@
                         </div>
                         <div class="form-group">
                             <label for="name" class="form-label">Name Koi:</label>
-                            <input type="text" class="form-control" id="name" name="KoiName" value="@Model.KoiName" required>
+                            <input type="text" class="form-control" id="name" name="KoiName" value="@Model?.KoiName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="name" class="form-label">Koi Name JP:</label>
+                            <input type="text" class="form-control" id="name" name="Koinamejp" value="@Model?.Koinamejp" required>
                         </div>
                         <div class="form-group">
                             <label for="description" class="form-label">Description:</label>
-                            <input type="text" class="form-control" id="description" name="Description" value="@Model.Description" required>
+                            <input type="text" class="form-control" id="description" name="Description" value="@Model?.Description" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="description" class="form-label">Size:</label>
+                            <input type="text" class="form-control" id="description" name="Size" value="@Model?.Size" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="description" class="form-label">Age:</label>
+                            <input type="text" class="form-control" id="description" name="Age" value="@Model?.Age" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="description" class="form-label">Price:</label>
+                            <input type="text" class="form-control" id="description" name="Price" value="@Model?.Price" required>
                         </div>
                     </div>
                     <div id="more-info" class="form-sections">

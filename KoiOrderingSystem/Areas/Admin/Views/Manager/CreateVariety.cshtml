@@ -21,18 +21,6 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        h2 {
-            font-size: 22px;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-
-        .form-section-title {
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-
         .btn-next {
             background-color: #007bff;
             border-color: #007bff;
@@ -55,45 +43,47 @@
             margin-bottom: 10px;
         }
 
-        .form-control {
-            height: calc(2.25rem + 2px);
-        }
-
-        textarea.form-control {
-            height: auto;
-        }
-
-        .form-layout {
-            display: flex;
-        }
-
-        .sidebar {
-            width: 25%;
-            padding-right: 15px;
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        .form-content {
-            width: 75%;
-        }
-
         #previewImage {
             margin-top: 10px;
-            max-width: 300px; /* Set maximum width for the image preview */
+            max-width: 300px;
             height: auto;
+            display: none;
+        }
+
+        .topic-container {
+            margin-top: 15px;
+        }
+
+        .btn-add {
+            font-size: 12px;
+            margin-left: 10px;
+            cursor: pointer;
+            color: #007bff;
+        }
+
+        .btn-remove {
+            font-size: 12px;
+            margin-left: 10px;
+            cursor: pointer;
+            color: #dc3545;
+        }
+
+        .topic-block {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
         }
     </style>
 </head>
 <body>
     <div class="form-container">
         <div class="form-layout">
-            <!-- Left Side Panel -->
             <div class="sidebar">
                 <p>Create New Variety</p>
             </div>
 
-            <!-- Right Form Section -->
             <div class="form-content">
                 <form method="post" action="/Admin/Manager/AddVariety" enctype="multipart/form-data" onsubmit="return validateForm()">
                     <div class="form-group">
@@ -107,9 +97,22 @@
                     <div class="form-group">
                         <label for="varietyImage" class="form-label">Image URL</label>
                         <input type="file" class="form-control" id="varietyImage" name="ImageUrl" accept="image/*" required>
+                        <img id="previewImage" src="" alt="Image Preview">
                     </div>
-                    <!-- Image Preview -->
-                    <img id="previewImage" src="" alt="Image Preview" style="display:none;">
+
+                    <!-- Main Topic and Sub Topic Section -->
+                    <div class="form-group topic-container" id="topicContainer">
+                        <div class="topic-block">
+                            <label class="form-label">Main Topic 1</label>
+                            <input type="text" class="form-control mb-3" name="mainTopics[]" placeholder="Main Topic Content" required>
+
+                            <label class="form-label">Sub Topic for Main Topic 1</label>
+                            <input type="text" class="form-control mb-2" name="subTopics[0]" placeholder="Sub Topic Content" required>
+                            <span class="btn-remove" onclick="removeMainTopic(this)">- Remove Main Topic</span>
+                        </div>
+                    </div>
+                    <span class="btn-add" onclick="addTopic()">+ Add Main Topic</span>
+
                     <button type="submit" class="btn btn-next">Create</button>
                 </form>
             </div>
@@ -117,6 +120,8 @@
     </div>
 
     <script>
+        let topicCounter = 1;
+
         // JavaScript to preview the selected image
         document.getElementById('varietyImage').addEventListener('change', function (event) {
             const file = event.target.files[0];
@@ -124,17 +129,66 @@
                 const reader = new FileReader();
                 reader.onload = function (e) {
                     const img = document.getElementById('previewImage');
-                    img.src = e.target.result; // Set the source of the image
-                    img.style.display = 'block'; // Show the image
+                    img.src = e.target.result;
+                    img.style.display = 'block';
                 };
-                reader.readAsDataURL(file); // Convert the file to a data URL
+                reader.readAsDataURL(file);
             }
         });
 
         function validateForm() {
-            // If everything is valid, show the success message
             alert("Create New Variety Successfully!!!");
             return true;
+        }
+
+        // Function to add a new Main Topic with a single Sub Topic field
+        function addTopic() {
+            topicCounter++;
+            const topicContainer = document.getElementById("topicContainer");
+
+            const topicBlock = document.createElement("div");
+            topicBlock.className = "topic-block";
+
+            const mainLabel = document.createElement("label");
+            mainLabel.className = "form-label";
+            mainLabel.innerText = `Main Topic ${topicCounter}`;
+            topicBlock.appendChild(mainLabel);
+
+            const mainInput = document.createElement("input");
+            mainInput.type = "text";
+            mainInput.className = "form-control mb-3";
+            mainInput.name = "mainTopics[]";
+            mainInput.placeholder = "Main Topic Content";
+            mainInput.required = true;
+            topicBlock.appendChild(mainInput);
+
+            const subLabel = document.createElement("label");
+            subLabel.className = "form-label";
+            subLabel.innerText = `Sub Topic for Main Topic ${topicCounter}`;
+            topicBlock.appendChild(subLabel);
+
+            const subInput = document.createElement("input");
+            subInput.type = "text";
+            subInput.className = "form-control mb-2";
+            subInput.name = `subTopics[${topicCounter - 1}]`;
+            subInput.placeholder = "Sub Topic Content";
+            subInput.required = true;
+            topicBlock.appendChild(subInput);
+
+            // Add button to remove the entire main topic section
+            const removeMainTopicBtn = document.createElement("span");
+            removeMainTopicBtn.className = "btn-remove";
+            removeMainTopicBtn.innerText = "- Remove Main Topic";
+            removeMainTopicBtn.onclick = function () { removeMainTopic(removeMainTopicBtn); };
+            topicBlock.appendChild(removeMainTopicBtn);
+
+            topicContainer.appendChild(topicBlock);
+        }
+
+        // Function to remove a specific Main Topic section
+        function removeMainTopic(button) {
+            const topicBlock = button.parentElement;
+            topicBlock.remove();
         }
     </script>
 </body>
