@@ -47614,14 +47614,7 @@ if (filterBtns.length && varietyCards.length) {
     });
 }
 
-// Function to truncate text to two lines
-function truncateText() {
-    const descriptions = document.querySelectorAll('.farm-description');
-    descriptions.forEach(description => {
-        const fullText = description.getAttribute('data-full-text');
-        description.innerText = truncateToTwoLines(fullText);
-    });
-}
+
 
 
 
