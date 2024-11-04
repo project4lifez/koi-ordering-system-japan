@@ -47598,21 +47598,7 @@ window.addEventListener('scroll', () => {
 });
 
 
-// Variety Filter
-const filterBtns = document.querySelectorAll('.filter-btn');
-const varietyCards = document.querySelectorAll('.variety-card');
-if (filterBtns.length && varietyCards.length) {
-    filterBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            filterBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            const filterValue = btn.getAttribute('data-filter');
-            varietyCards.forEach(card => {
-                card.style.display = (filterValue === 'all' || card.getAttribute('data-category') === filterValue) ? 'block' : 'none';
-            });
-        });
-    });
-}
+
 
 
 
