@@ -28726,43 +28726,6 @@ input.error {
                 display: block;
             }
 
-    .wizard-tab .wizard-buttons {
-        transition: all 0.3s ease-in;
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-    }
-
-        .wizard-tab .wizard-buttons .wizard-btn {
-            display: inline-block;
-            font-weight: 400;
-            line-height: 1.5;
-            text-align: center;
-            text-decoration: none;
-            vertical-align: middle;
-            cursor: pointer;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            user-select: none;
-            border: 1px solid transparent;
-            padding: 0.375rem 0.75rem;
-            border-radius: 0.15rem;
-            transition: all 0.3s ease-in;
-            margin: 0 10px;
-            background-color: var(--primary-color);
-            color: #fff;
-        }
-
-            .wizard-tab .wizard-buttons .wizard-btn:hover {
-                background-color: rgba(25, 143, 209, 0.8);
-            }
-
-            .wizard-tab .wizard-buttons .wizard-btn:disabled {
-                cursor: not-allowed !important;
-                pointer-events: none;
-                opacity: 0.65;
-            }
-
 
 
 
