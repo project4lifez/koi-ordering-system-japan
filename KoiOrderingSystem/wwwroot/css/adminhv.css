@@ -29558,65 +29558,6 @@ input.error {
             color: #fff;
         }
 
-.navbar-secondary {
-    background-color: rgb(var(--secondary-rgb));
-    color: #fff;
-}
-
-    .navbar-secondary .nav-link {
-        color: #fff !important;
-    }
-
-        .navbar-secondary .nav-link.active {
-            background-color: var(--white-2);
-            color: #fff !important;
-        }
-
-        .navbar-secondary .nav-link:hover {
-            color: #fff !important;
-        }
-
-    .navbar-secondary .form-control:focus {
-        border-color: var(--white-2);
-    }
-
-    .navbar-secondary .navbar-toggler {
-        border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-        .navbar-secondary .navbar-toggler .navbar-toggler-icon:before {
-            color: #fff;
-        }
-
-.navbar-warning {
-    background-color: rgb(var(--warning-rgb));
-    color: #fff;
-}
-
-    .navbar-warning .nav-link {
-        color: #fff !important;
-    }
-
-        .navbar-warning .nav-link.active {
-            background-color: var(--white-2);
-            color: #fff !important;
-        }
-
-        .navbar-warning .nav-link:hover {
-            color: #fff !important;
-        }
-
-    .navbar-warning .form-control:focus {
-        border-color: var(--white-2);
-    }
-
-    .navbar-warning .navbar-toggler {
-        border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-        .navbar-warning .navbar-toggler .navbar-toggler-icon:before {
-            color: #fff;
-        }
 
        
 
