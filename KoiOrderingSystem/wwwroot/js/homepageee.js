@@ -8618,8 +8618,8 @@ function truncateToTwoLines(text) {
 
 // Function to show the full text when "Detail" is clicked
 function showFullText(button) {
-    const description = button.previousElementSibling; // Get the description element
-    const fullText = description.getAttribute('data-full-text'); // Get the full text
+    const description = button.previousElementSibling; 
+    const fullText = description.getAttribute('data-full-text'); 
     description.innerText = fullText; // Display the full text
 
     // Retrieve the FarmId from the button's data attribute
