@@ -8556,7 +8556,7 @@ function showFullText(button) {
     // Redirect to the FarmDetail page
     window.location.href = `/Farm/FarmDetail?id=${FarmId}`;
 
-    button.style.display = 'none'; // Hide the "Detail" button after expanding
+    button.style.display = 'none'; 
 }
 
 // Initialize text truncation on page load
