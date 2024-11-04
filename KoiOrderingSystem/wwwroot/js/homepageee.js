@@ -9979,7 +9979,7 @@ function truncateText() {
 
 // Helper function to truncate text to two lines (adjust line length as needed)
 function truncateToTwoLines(text) {
-    const maxLength = 100; // Adjust based on character count per line for your design
+    const maxLength = 100; 
     return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
 }
 
