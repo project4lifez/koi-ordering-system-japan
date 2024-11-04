@@ -1,6 +1,6 @@
 # 🎏 Koi Ordering System in Japan
 
-Welcome to the **Koi Ordering System**, a seamless solution for Koi enthusiasts to explore, order, and manage purchases of Nishikigoi (Japanese Koi fish) directly from Japan. This system is built using modern web development tools like **ASP.NET MVC**, **C#**, **Razor Pages**, **HTML**, **CSS**, **JavaScript** and **Bootstrap**, offering a clean, responsive, and user-friendly interface designed to meet the needs of Koi businesses and buyers alike
+Welcome to the **Koi Ordering System**, a seamless solution for Koi enthusiasts to explore, order, and manage purchases of Nishikigoi (Japanese Koi fish) directly from Japan. This system is built using modern web development tools like **ASP.NET MVC**, **C#**, **Razor Pages**, **HTML**, **CSS**, **JavaScript** and **Bootstrap**, offering a clean, responsive, and user-friendly interface designed to meet the needs of Koi businesses and buyers alike.
 
 # 🌟 Introduction to C#
 
