@@ -28241,10 +28241,6 @@ input.error {
     color: var(--default-text-color);
 }
 
-    .navbar-danger-transparent .nav-link.active {
-        background-color: rgb(var(--danger-rgb));
-        color: #fff !important;
-    }
 
    
 
