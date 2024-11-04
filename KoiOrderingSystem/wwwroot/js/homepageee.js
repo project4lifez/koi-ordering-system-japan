@@ -8546,7 +8546,7 @@ function truncateToTwoLines(text) {
 
 // Function to show the full text when "Detail" is clicked
 function showFullText(button) {
-    const description = button.previousElementSibling; // Get the description element
+    const description = button.previousElementSibling; 
     const fullText = description.getAttribute('data-full-text'); 
     description.innerText = fullText; 
 
