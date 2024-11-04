@@ -9987,7 +9987,7 @@ function truncateToTwoLines(text) {
 function showFullText(button) {
     const description = button.previousElementSibling; // Get the description element
     const fullText = description.getAttribute('data-full-text'); // Get the full text
-    description.innerText = fullText; // Display the full text
+    description.innerText = fullText; 
 
     // Retrieve the FarmId from the button's data attribute
     const farmId = button.getAttribute('data-farm-id');
@@ -9995,7 +9995,7 @@ function showFullText(button) {
     // Redirect to the FarmDetail page
     window.location.href = `/Farm/FarmDetail?id=${FarmId}`;
 
-    button.style.display = 'none'; // Hide the "Detail" button after expanding
+    button.style.display = 'none'; 
 }
 
 // Initialize text truncation on page load
