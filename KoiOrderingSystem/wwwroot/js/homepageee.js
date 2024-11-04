@@ -8756,7 +8756,7 @@ function truncateText() {
 
 // Helper function to truncate text to two lines (adjust line length as needed)
 function truncateToTwoLines(text) {
-    const maxLength = 100; // Adjust based on character count per line for your design
+    const maxLength = 100; 
     return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
 }
 
@@ -8772,7 +8772,7 @@ function showFullText(button) {
     // Redirect to the FarmDetail page
     window.location.href = `/Farm/FarmDetail?id=${FarmId}`;
 
-    button.style.display = 'none'; // Hide the "Detail" button after expanding
+    button.style.display = 'none'; 
 }
 
 // Initialize text truncation on page load
