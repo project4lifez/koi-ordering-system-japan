@@ -1,0 +1,170 @@
+﻿@model KoiOrderingSystem.Models.Blog
+@{
+    ViewData["Title"] = "Update Blog";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Blog</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.tiny.cloud/1/kw6x5fktq4eib9zz0o7c5byyhnbdy7674vr2wkm1v6cbvf3d/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+
+    <style>
+        body {
+            padding: 20px;
+        }
+
+        .form-container {
+            width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-label {
+            font-weight: bold;
+        }
+
+        .btn-update {
+            background-color: #007bff;
+            border-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <form method="post" action="/Admin/Blog/UpdateBlog" enctype="multipart/form-data" id="updateBlogForm">
+            <div class="form-group mb-3">
+                <label for="BlogId" class="form-label">Blog ID</label>
+                <input type="text" class="form-control" id="BlogId" name="BlogId" value="@Model.BlogId" readonly style="background-color: #e9ecef;" />
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="Heading" class="form-label">Heading</label>
+                <input type="text" class="form-control" id="Heading" name="Heading" value="@Model.Heading" required />
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="Link" class="form-label">Content</label>
+                <textarea class="form-control" id="Link" name="Link" required>@Model.Link</textarea>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="Status" class="form-label">Status</label>
+                <select class="form-select" id="Status" name="Status" required>
+                    <option value="1" @(Model.Status ? "selected" : "")>Active</option>
+                    <option value="0" @(!Model.Status ? "selected" : "")>Inactive</option>
+                </select>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="Position" class="form-label">Position</label>
+                <select class="form-select" id="Position" name="Position" required>
+                    <option value="0" @(Model.Position == 0 ? "selected" : "")>0</option>
+                    <option value="1" @(Model.Position == 1 ? "selected" : "")>1</option>
+                    <option value="2" @(Model.Position == 2 ? "selected" : "")>2</option>
+                    <option value="3" @(Model.Position == 3 ? "selected" : "")>3</option>
+                    <option value="4" @(Model.Position == 4 ? "selected" : "")>4</option>
+                </select>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="Image" class="form-label">Upload Blog Image</label>
+                <input type="file" class="form-control" id="Image" name="Image" accept="image/*" />
+            </div>
+
+            <img id="previewImage" src="@Model.Image" alt="Blog Image Preview" style="max-width: 300px; display: @(string.IsNullOrEmpty(Model.Image) ? "none" : "block")" />
+
+            <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-update">Update Blog</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            // Initialize TinyMCE editor
+            tinymce.init({
+                selector: '#Link', // Selector for the textarea
+                height: 700, // Set the editor height
+                plugins: [
+                    'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'image', 'link', 'lists', 'media',
+                    'searchreplace', 'table', 'visualblocks', 'wordcount', 'fullscreen', 'code', 'help'
+                ],
+                toolbar: 'undo redo | styleselect | bold italic underline strikethrough | fontfamily fontsize blocks | ' +
+                    'link image media codesample | alignleft aligncenter alignright alignjustify | ' +
+                    'bullist numlist outdent indent | emoticons charmap | table | ' +
+                    'fullscreen preview code print | removeformat',
+
+                tinycomments_mode: 'embedded', // Commenting system mode
+                tinycomments_author: 'Author name', // Name displayed for comments
+
+                // Fullscreen and preview options
+                toolbar_mode: 'floating', // Allows the toolbar to be floating
+                branding: false, // Removes TinyMCE branding
+                image_advtab: true, // Adds advanced tab for image editing
+                content_style: "body { font-family: Roboto, sans-serif; font-size: 14px; }",
+
+                // Spellcheck settings
+                spellchecker_dialog: true, // Enable the spellcheck dialog
+                spellchecker_language: 'en', // Set the spellcheck language
+                spellchecker_active: true, // Turn on spellchecker
+
+                // File and image upload settings (Optional)
+                images_upload_url: '/uploadImage', // Custom upload endpoint
+                automatic_uploads: true, // Automatically upload images
+                file_picker_types: 'file image media', // Types of files to allow
+                file_picker_callback: function (callback, value, meta) {
+                    // Provide custom file picking logic here
+                },
+
+                // Set up content-specific options
+                content_css: '/css/content-style.css', // Link to your content's CSS
+                content_style: 'body { font-family: Roboto; font-size: 14px; }', // Additional inline styling for the editor
+
+                // Other useful configurations
+                menubar: 'file edit view insert format tools table help', // Menubar customization
+                statusbar: true, // Show status bar
+                toolbar_sticky: true, // Sticky toolbar
+                paste_as_text: true, // Paste content as plain text by default
+
+                // Callbacks for saving content
+                setup: function (editor) {
+                    editor.on('change', function () {
+                        editor.save(); // Automatically save content as it's changed
+                    });
+                },
+            });
+
+
+            // Image preview logic
+            $('#Image').change(function (event) {
+                const previewImage = document.getElementById('previewImage');
+                const file = event.target.files[0];
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    previewImage.src = e.target.result;
+                    previewImage.style.display = 'block';
+                };
+
+                if (file) {
+                    reader.readAsDataURL(file);
+                } else {
+                    previewImage.src = '';
+                    previewImage.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

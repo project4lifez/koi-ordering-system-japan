@@ -158,7 +158,7 @@
                 <h1 class="hero-title">Experience the Art of Koi</h1>
                 <p class="hero-subtitle">Discover world-class Japanese Koi in our premium breeding facility</p>
                 <div class="hero-buttons">
-                    <a href="#booking" class="btn btn-primary" style="background-color:#5BB2F1!important;">
+                    <a href="Home/BookingForm" class="btn btn-primary" style="background-color:#5BB2F1!important;">
                         Booking Now <i class="fas fa-arrow-right"></i>
                     </a>
                     <a href="#varieties" class="btn btn-outline">
@@ -293,7 +293,7 @@
                                 </div>
                             </div>
                             <div class="variety-price">Starting from: @koi.Price</div>
-                            <button class="btn btn-primary">View Details</button>
+                            <a href="/Variety/VarietyDetail?id=@koi.Variety.VarietyId" class="btn btn-primary">View Details</a>
                         </div>
                     </div>
                 }
@@ -461,7 +461,8 @@
  
     <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-    <script>   
+    <script>
+
 
         // Khởi tạo hiệu ứng AOS
         AOS.init({ duration: 800, once: true });
@@ -470,6 +471,9 @@
         window.addEventListener('load', () => {
             document.getElementById('loader').style.display = 'none';
         });
+       
+        
+       
 
        
         // Header Scroll Effect
@@ -516,14 +520,22 @@
 
         // Function to show the full text when "Detail" is clicked
         function showFullText(button) {
-            const description = button.previousElementSibling;
-            const fullText = description.getAttribute('data-full-text');
-            description.innerText = fullText;
+            const description = button.previousElementSibling; // Get the description element
+            const fullText = description.getAttribute('data-full-text'); // Get the full text
+            description.innerText = fullText; // Display the full text
+
+            // Retrieve the FarmId from the button's data attribute
+            const farmId = button.getAttribute('data-farm-id');
+
+            // Redirect to the FarmDetail page
+            window.location.href = `/Farm/FarmDetail?id=${FarmId}`;
+
             button.style.display = 'none'; // Hide the "Detail" button after expanding
         }
 
         // Initialize text truncation on page load
         window.onload = truncateText;
+
    
     </script>
 

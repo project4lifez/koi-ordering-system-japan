@@ -11,101 +11,243 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order Management</title>
     <style>
-        /* Table Adjustments */
-        .table td, .table th {
-            vertical-align: middle;
+      :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #f7e6a2;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+            --light-gray: #f8f9fa;
         }
 
-        .table-responsive {
-            overflow-x: auto;
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
         }
 
-        .table td, .table th {
+        .container-fluid {
+            padding: 2rem;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        /* Header Styling */
+        h1 {
+            color: #2c3e50;
+            font-weight: 600;
             text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+            padding-bottom: 0.5rem;
         }
 
-        /* Modal Form Styling */
-        .modal-content {
-            padding: 20px;
-            border-radius: 8px;
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: var(--primary-color);
+            border-radius: 2px;
         }
 
-        .modal-header h5 {
-            font-size: 1.5rem;
-            text-align: center;
-            margin-bottom: 20px;
+        /* Search and Filter Section */
+        .search-filter-section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            transform: translateY(0);
+            transition: transform 0.3s ease;
         }
 
-        /* Action Buttons */
-        .action-btn {
-            font-size: 1.2rem;
-            cursor: pointer;
-            padding: 5px;
-            border-radius: 4px;
+        .search-filter-section:hover {
+            transform: translateY(-5px);
         }
 
-            .action-btn:hover {
-                background-color: #f0f0f0;
-            }
-
-        /* Tooltip */
-        [data-bs-toggle="tooltip"] {
-            cursor: pointer;
+        .form-control, .form-select {
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 0.75rem;
+            transition: all 0.3s ease;
         }
 
-        /* Improve table hover */
-        .table-hover tbody tr:hover {
-            background-color: #f5f5f5;
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.25);
         }
 
-        /* Custom styles for different statuses */
+        /* Table Styling */
+        .table-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            overflow: hidden;
+        }
+
+        .table {
+            margin-bottom: 0;
+        }
+
+        .table thead th {
+            background: var(--primary-color);
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 1rem;
+            border: none;
+        }
+
+        .table tbody tr {
+            transition: all 0.3s ease;
+        }
+
+        .table tbody tr:hover {
+            background-color: rgba(74, 144, 226, 0.1);
+            transform: scale(1.01);
+        }
+
+        /* Status Badges */
+        .badge {
+            margin-top: 6px;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            animation: fadeIn 0.5s ease;
+        }
+
         .badge-pending {
-            background-color: #808080; /* Gray for Pending */
+            background: linear-gradient(45deg, #808080, #a9a9a9);
+            color: white;
         }
 
         .badge-cancel {
-            background-color: #dc3545; /* Red for Cancel */
+            background: linear-gradient(45deg, #dc3545, #ff6b6b);
+            color: white;
         }
 
         .badge-confirm {
-            background-color: #28a745; /* Green for Confirm */
+            background: linear-gradient(45deg, #28a745, #5cb85c);
+            color: white;
         }
+
+        /* Buttons */
+        .btn {
+            border-radius: 50px;
+            padding: 0.5rem 1.5rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: -100%;
+            background: linear-gradient(120deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: 0.5s;
+        }
+
+        .btn:hover::after {
+            left: 100%;
+        }
+
+        /* Modal Styling */
+        .modal-content {
+            border-radius: 15px;
+            border: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .modal-header {
+            background: var(--primary-color);
+            color: white;
+            border-radius: 15px 15px 0 0;
+            padding: 1.5rem;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .modal-footer {
+            border-top: none;
+            padding: 1.5rem;
+        }
+
+        /* Animations */
+        @@keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @@keyframes slideIn {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
+        }
+
+        /* Pagination */
+        .pagination {
+            margin-top: 2rem;
+        }
+
+        .page-link {
+            border-radius: 50%;
+            margin: 0 5px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            color: var(--primary-color);
+            transition: all 0.3s ease;
+        }
+
+        .page-link:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .page-item.active .page-link {
+            background: var(--primary-color);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        /* Nền cho ô Po */
+        .po-cell {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb); /* màu xanh nhạt để dễ nhận diện */
+            padding: 0.75rem;
+            border-radius: 10px;
+            font-weight: 500;
+            color: #1976d2; /* Màu chữ tương phản */
+            transition: all 0.3s ease;
+        }
+
+            .po-cell:hover {
+                background: #bbdefb; /* Tăng màu khi hover */
+                transform: scale(1.02);
+            }
 
         .badge-other {
-            background-color: #ffc107; /* Yellow for other statuses */
+            background: linear-gradient(45deg, #ffd54f, #ffb300); /* Gradient vàng nhạt đến vàng đậm */ 
+            color: white;
         }
-
-        /* Center buttons in modal footer */
-        .modal-footer {
-            justify-content: center;
-        }
-
-        .btn-yellow {
-            background-color: #f7e6a2; /* Màu vàng nhạt */
-            border-color: #f7e6a2; /* Đổi màu viền nếu cần */
-            color: #000; /* Màu chữ đen */
-        }
-
-            .btn-yellow:hover {
-                background-color: #e6d597; /* Màu vàng đậm hơn khi hover */
-                border-color: #e6d597; /* Đổi màu viền khi hover */
-            }
-
-        .pagination {
-            margin-top: 20px; /* Đảm bảo khoảng cách giữa bảng và phân trang */
-            display: flex;
-            justify-content: center;
-        }
-
-            .pagination .page-item.active .page-link {
-                background-color: #007bff;
-                border-color: #007bff;
-                color: white;
-            }
-
-            .pagination .page-item .page-link {
-                color: #007bff;
-            }
     </style>
 </head>
 
@@ -162,7 +304,7 @@
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>BookingID</th>
+                        <th>Booking ID</th>
                         <th>Booking Date</th>
                         <th>Customer</th>
                         <th>Trip Name</th>
@@ -293,7 +435,7 @@
                                     @if (adminRoleId == 2 || adminRoleId == 4)
                                     {
                                         <td>
-                                            <a href="/Admin/PoDetail/PoDetail?bookingId=@booking.BookingId" class="btn btn-yellow btn-sm">Po</a>
+                                            <a href="/Admin/PoDetail/PoDetail?bookingId=@booking.BookingId" class="btn po-cell btn-yellow btn-sm">Po</a>
                                         </td>
                                     }
 
@@ -428,6 +570,7 @@
             </div>
         </div>
     </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
     <script>
         function openFormModal(fullName, phone, email, gender, farm, breed, startDate, endDate, cost, hotel, note) {
@@ -447,51 +590,113 @@
             formModal.show();
         }
 
+        // Enhanced JavaScript functionality
+        $(document).ready(function() {
+            // Animate elements on page load
+            $('.table-container').addClass('animate__animated animate__fadeIn');
+            $('.search-filter-section').addClass('animate__animated animate__slideInDown');
+
+            // Add loading animation when clicking buttons
+            $('.btn').click(function() {
+                $(this).addClass('animate__animated animate__pulse');
+                setTimeout(() => {
+                    $(this).removeClass('animate__animated animate__pulse');
+                }, 1000);
+            });
+
+            // Enhance table row hover effect
+            $('.table tbody tr').hover(
+                function() {
+                    $(this).addClass('animate__animated animate__pulse');
+                },
+                function() {
+                    $(this).removeClass('animate__animated animate__pulse');
+                }
+            );
+
+            // Add smooth scrolling
+            $('a[href^="#"]').on('click', function(e) {
+                e.preventDefault();
+                $('html, body').animate({
+                    scrollTop: $($(this).attr('href')).offset().top
+                }, 500, 'linear');
+            });
+
+            // Enhanced modal animations
+            $('#formModal').on('show.bs.modal', function () {
+                $(this).find('.modal-content')
+                    .addClass('animate__animated animate__zoomIn');
+            });
+
+            $('#formModal').on('hide.bs.modal', function () {
+                $(this).find('.modal-content')
+                    .addClass('animate__animated animate__zoomOut');
+            });
+
+            // Enhanced status badge animations
+            $('.badge').each(function() {
+                $(this).hover(
+                    function() {
+                        $(this).addClass('animate__animated animate__pulse');
+                    },
+                    function() {
+                        $(this).removeClass('animate__animated animate__pulse');
+                    }
+                );
+            });
+
+            // Add loading spinner
+            function showLoading() {
+                const spinner = `
+                    <div class="loading-spinner">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                `;
+                $('body').append(spinner);
+            }
+
+            function hideLoading() {
+                $('.loading-spinner').remove();
+            }
+
+            // Enhanced form submission
+            $('form').on('submit', function() {
+                showLoading();
+                setTimeout(hideLoading, 1000);
+            });
+        });
+
+        // Enhanced print functionality
         function printForm() {
-            const printContent = document.getElementById('formModal').innerHTML;
-            const win = window.open('', '', 'width=800,height=600');
-            win.document.write(printContent);
-            win.document.close();
-            win.print();
-            win.close();
+            const printWindow = window.open('', '', 'width=800,height=600');
+            const content = document.getElementById('formModal').innerHTML;
+            
+            printWindow.document.write(`
+                <html>
+                    <head>
+                        <title>Print Form</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; padding: 20px; }
+                            .form-group { margin-bottom: 15px; }
+                            label { font-weight: bold; }
+                            @@media print {
+                                .no-print { display: none; }
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        ${content}
+                    </body>
+                </html>
+            `);
+            
+            printWindow.document.close();
+            setTimeout(() => {
+                printWindow.print();
+                printWindow.close();
+            }, 500);
         }
-
-        // Search and filter functionality
-        document.getElementById('searchInput').addEventListener('keyup', function () {
-            var filter = this.value.toLowerCase();
-            var rows = document.querySelectorAll('#orderTable tbody tr');
-
-            rows.forEach(function (row) {
-                var bookingId = row.querySelector('.booking-id').textContent.toLowerCase();
-                var tripName = row.querySelector('.trip-name').textContent.toLowerCase();
-
-                if (bookingId.includes(filter) || tripName.includes(filter)) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-        });
-
-        document.getElementById('statusFilter').addEventListener('change', function () {
-            var filter = this.value.toLowerCase();
-            var rows = document.querySelectorAll('#orderTable tbody tr');
-
-            rows.forEach(function (row) {
-                var status = row.querySelector('.booking-status .badge').textContent.toLowerCase();
-
-                if (filter === '' || status === filter) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-        });
-
-        // Initialize Bootstrap tooltips
-        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl)
-        })
     </script>
 </body>

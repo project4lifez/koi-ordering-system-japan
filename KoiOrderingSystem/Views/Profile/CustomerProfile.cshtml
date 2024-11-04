@@ -273,7 +273,7 @@
         }
 
             .password-container input {
-                width: 94%;
+                width: 100%;
                 padding: 12px;
                 padding-top: 16px; /* Extra top padding to ensure label doesn't overlap input text */
                 border: 1px solid #ccc;
@@ -368,9 +368,9 @@
                     }
 
                     <form id="customerUpdate" method="post" action="/Profile/UpdateProfile">
-                        <input type="hidden" name="CustomerId" value="@Model.CustomerId" />
+                        <input type="hidden" name="CustomerId" value="@Model.CustomerId"/>
                         <label for="email">Email</label>
-                        <input type="email" id="email" name="email" value="@Model.Account?.Email">
+                        <input type="email" id="email" name="email" value="@Model.Account?.Email" disabled>
 
                         <label for="first-name">First Name</label>
                         <input type="text" id="first-name" name="firstname" value="@Model.Account?.Firstname" required>

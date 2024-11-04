@@ -1,0 +1,275 @@
+﻿@model IEnumerable<KoiOrderingSystem.Models.Blog>
+
+@{
+    ViewData["Title"] = "List of Blogs";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml"; // Sử dụng layout chia sẻ
+    var currentPage = ViewBag.CurrentPage;
+    var totalPages = ViewBag.TotalPages;
+    var rowNumber = (currentPage - 1) * 8 + 1; // Tính toán số thứ tự bắt đầu dựa trên trang hiện tại
+    var query = ViewBag.Query ?? ""; // Use an empty string if there's no search query
+
+}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Base styles for this view */
+        body.blog-body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa; /* Light background for better contrast */
+        }
+
+        /* Container styles specific to blog list */
+        .blog-container-custom {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Soft shadow */
+            margin-top: -37px;
+        }
+
+        h1.blog-title {
+            font-size: 2rem; /* Larger heading */
+            color: #343a40; /* Darker color for text */
+            margin-bottom: 20px; /* Space below heading */
+        }
+
+        /* Create button styles specific to blog */
+        .btn-create-blog {
+            margin-bottom: 20px;
+            background-color: #007bff; /* Blue color for the Create button */
+            border-color: #007bff;
+            font-weight: bold; /* Make button text bold */
+            padding: 10px 20px; /* Increase padding for better button size */
+            color: white; /* White text */
+            border-radius: 8px;
+            transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s; /* Smooth transition */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for better depth */
+        }
+
+            .btn-create-blog:hover {
+                background: linear-gradient(45deg, #4e54c8, #8f94fb); /* Gradient on hover */
+                color: white; /* Keep text white */
+                transform: scale(1.05); /* Slight scaling effect */
+                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Enhance shadow on hover */
+            }
+
+        /* Styles for the blog table */
+        .blog-table-custom {
+            width: 100%;
+            border-collapse: collapse; /* Ensure no lines between cells */
+        }
+
+            .blog-table-custom th,
+            .blog-table-custom td {
+                text-align: center; /* Center content */
+                vertical-align: middle; /* Center vertically */
+                padding: 15px; /* Increased padding for better spacing */
+                border-bottom: 1px solid #dee2e6; /* Bottom border */
+            }
+
+            .blog-table-custom th {
+                background-color: #f1f1f1; /* Light gray background for header */
+                color: #495057; /* Darker color for header text */
+                font-weight: bold; /* Bold text for header */
+            }
+
+            .blog-table-custom td img {
+                width: 150px; /* Set width for images */
+                height: 80px; /* Set height for images */
+                object-fit: cover;
+                border-radius: 8px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Soft shadow for images */
+            }
+
+        /* Button styles for Edit and Delete */
+        .btn-blog {
+            padding: 5px 10px; /* Decrease padding for smaller buttons */
+            width: 100px; /* Decrease width for smaller buttons */
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 13px; /* Adjust font size */
+            border-radius: 5px;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        .btn-outline-success-blog {
+            color: #007bff;
+            border-color: #007bff;
+        }
+
+            .btn-outline-success-blog:hover {
+                background-color: #007bff;
+                color: white;
+                transition: background-color 0.3s; /* Smooth transition */
+            }
+
+        .btn-outline-danger-blog {
+            color: #dc3545;
+            border-color: #dc3545;
+        }
+
+            .btn-outline-danger-blog:hover {
+                background-color: #dc3545;
+                color: white;
+                transition: background-color 0.3s; /* Smooth transition */
+            }
+
+        /* Pagination styles */
+        .pagination {
+            margin-top: 20px;
+        }
+
+        .search-container {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 10px; /* Create space between input and search button */
+            margin-bottom: 20px;
+        }
+
+            .search-container .form-control {
+                padding: 10px 20px; /* Increase padding inside the search input */
+                font-size: 1rem; /* Font size */
+                width: 300px; /* Limit the width */
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add shadow to highlight the search bar */
+            }
+
+            .search-container .btn-primary {
+                border-radius: 30px; /* Round the button */
+                padding: 10px 20px; /* Increase button size */
+                display: flex;
+                align-items: center;
+                font-size: 1rem; /* Font size */
+            }
+
+                .search-container .btn-primary i {
+                    margin-right: 5px; /* Space between the icon and text */
+                }
+
+            .search-container .form-control:focus {
+                box-shadow: 0 4px 6px rgba(0, 123, 255, 0.2); /* Highlight when focused */
+                outline: none; /* Remove default focus border */
+            }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .status-active {
+            background-color: #28a745; /* Green for active status */
+        }
+
+        .status-inactive {
+            background-color: #6c757d; /* Gray for inactive status */
+        }
+    </style>
+</head>
+
+<body class="blog-body">
+    <main class="container-fluid px-4 blog-container-custom">
+        <h1 class="mt-4 blog-title">Blogs List</h1>
+
+        <!-- Create button aligned to the right -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <!-- Search bar -->
+            <form method="get" action="/Admin/Blog/BlogList" class="search-container">
+                <input type="text" class="form-control" placeholder="Search heading or content" name="query" value="@query">
+                <!-- Dropdown for selecting position -->
+                <select class="form-select" name="position">
+                    <option value="">All Positions</option>
+                    <option value="0">Position 0</option>
+                    <option value="1">Position 1</option>
+                    <option value="2">Position 2</option>
+                    <option value="3">Position 3</option>
+                    <option value="4">Position 4</option>
+                </select>
+                <button class="btn btn-primary" type="submit">
+                    <i class="fas fa-search"></i> Search
+                </button>
+            </form>            
+            <a href="/Admin/Blog/CreateBlog" class="btn btn-create-blog">Create New Blog</a>
+        </div>
+
+      <!-- Blogs List -->
+<div class="card mb-4">
+    <div class="card-body">
+        <table class="blog-table-custom table">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Image</th>
+                    <th>Heading</th>
+                    <th>Status</th> <!-- Status column -->
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var blog in Model)
+                {
+                    <tr>
+                        <td>@rowNumber</td>
+                        <td>
+                            <img src="@blog.Image" alt="@blog.Heading Image" />
+                        </td>
+                        <td>@blog.Heading</td>
+                        <td>
+                            <span class="status-dot @(blog.Status ? "status-active" : "status-inactive")"></span>
+                        </td>
+
+                        <!-- Actions (Edit/Delete) -->
+                        <td>
+                            <a href="/Admin/Blog/UpdateBlog/@blog.BlogId" class="btn btn-blog btn-outline-success-blog">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <form id="deleteBlogForm_@blog.BlogId" method="post" action="/Admin/Blog/DeleteBlog" style="display:inline;">
+                                <input type="hidden" name="id" value="@blog.BlogId" />
+                                <a href="#" class="btn btn-blog btn-outline-danger-blog"
+                                   onclick="if (confirm('Do you want to delete Blog ID = @blog.BlogId?')) { document.getElementById('deleteBlogForm_@blog.BlogId').submit(); } return false;"
+                                   title="Delete Blog">
+                                    <i class="fas fa-trash-alt"></i> Delete
+                                </a>
+                            </form>
+                        </td>
+                    </tr>
+                    rowNumber++;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+        <!-- Pagination Controls -->
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                    <a class="page-link" href="?query=@Context.Request.Query["query"]&page=@(currentPage - 1)">Previous</a>
+                </li>
+
+                @for (var i = 1; i <= totalPages; i++)
+                {
+                    <li class="page-item @(i == currentPage ? "active" : "")">
+                        <a class="page-link" href="?query=@Context.Request.Query["query"]&page=@i">@i</a>
+                    </li>
+                }
+
+                <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                    <a class="page-link" href="?query=@Context.Request.Query["query"]&page=@(currentPage + 1)">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </main>
+</body>

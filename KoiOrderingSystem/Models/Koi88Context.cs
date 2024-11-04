@@ -17,6 +17,8 @@ public partial class Koi88Context : DbContext
 
     public virtual DbSet<Account> Accounts { get; set; }
 
+    public virtual DbSet<Blog> Blogs { get; set; }
+
     public virtual DbSet<Booking> Bookings { get; set; }
 
     public virtual DbSet<BookingPayment> BookingPayments { get; set; }
@@ -49,7 +51,7 @@ public partial class Koi88Context : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=MSI;Initial Catalog=Koi88;User ID=sa;Password=12345;Trust Server Certificate=True;");
+        => optionsBuilder.UseSqlServer("Data Source=LAPTOP-GFKPKMHK\\SQLEXPRESS;Initial Catalog=Koi88;User ID=SA;Password=12345;Trust Server Certificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -90,6 +92,19 @@ public partial class Koi88Context : DbContext
             entity.HasOne(d => d.Role).WithMany(p => p.Accounts)
                 .HasForeignKey(d => d.RoleId)
                 .HasConstraintName("FK__Account__role_id__5441852A");
+        });
+
+        modelBuilder.Entity<Blog>(entity =>
+        {
+            entity.HasKey(e => e.BlogId).HasName("PK__Blog__54379E504CE4630F");
+
+            entity.ToTable("Blog");
+
+            entity.Property(e => e.BlogId).HasColumnName("BlogID");
+            entity.Property(e => e.CreateAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.Heading).HasMaxLength(255);
         });
 
         modelBuilder.Entity<Booking>(entity =>
