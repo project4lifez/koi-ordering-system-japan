@@ -2,17 +2,7 @@
 
        
 
-        .align-content-xl-center {
-            align-content: center !important;
-        }
-
-        .align-content-xl-between {
-            align-content: space-between !important;
-        }
-
-        .align-content-xl-around {
-            align-content: space-around !important;
-        }
+       
 
         .align-content-xl-stretch {
             align-content: stretch !important;
