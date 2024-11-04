@@ -16,7 +16,13 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
         }
         public IActionResult RoleList()
         {
-            
+            var adminRoleId = HttpContext.Session.GetInt32("AdminRoleId");
+
+            if (adminRoleId != 2)
+            {
+                return RedirectToAction("Unauthorized", "Home");
+            }
+
             var roles = _db.Roles.ToList();
             return View(roles); 
         }
@@ -24,6 +30,12 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult CreateRole()
         {
+            var adminRoleId = HttpContext.Session.GetInt32("AdminRoleId");
+
+            if (adminRoleId != 2)
+            {
+                return RedirectToAction("Unauthorized", "Home");
+            }
             return View();
         }
 
@@ -67,6 +79,12 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult UpdateRole(int id)
         {
+            var adminRoleId = HttpContext.Session.GetInt32("AdminRoleId");
+
+            if (adminRoleId != 2)
+            {
+                return RedirectToAction("Unauthorized", "Home");
+            }
             var role = _db.Roles.Find(id);
             if (role == null)
             {
