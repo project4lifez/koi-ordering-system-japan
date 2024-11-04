@@ -1352,7 +1352,6 @@ function showFullText(button) {
     button.style.display = 'none'; // Hide the "Detail" button after expanding
 }
 
-// Initialize text truncation on page load
 window.onload = truncateText;
 
 
