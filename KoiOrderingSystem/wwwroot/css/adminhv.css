@@ -29618,56 +29618,7 @@ input.error {
             color: #fff;
         }
 
-.navbar-info {
-    background-color: rgb(var(--info-rgb));
-    color: #fff;
-}
+       
 
-    .navbar-info .nav-link {
-        color: #fff !important;
-    }
-
-        .navbar-info .nav-link.active {
-            background-color: var(--white-2);
-            color: #fff !important;
-        }
-
-        .navbar-info .nav-link:hover {
-            color: #fff !important;
-        }
-
-    .navbar-info .form-control:focus {
-        border-color: var(--white-2);
-    }
-
-    .navbar-info .navbar-toggler {
-        border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-        .navbar-info .navbar-toggler .navbar-toggler-icon:before {
-            color: #fff;
-        }
-
-.navbar-success {
-    background-color: rgb(var(--success-rgb));
-    color: #fff;
-}
-
-    .navbar-success .nav-link {
-        color: #fff !important;
-    }
-
-        .navbar-success .nav-link.active {
-            background-color: var(--white-2);
-            color: #fff !important;
-        }
-
-        .navbar-success .nav-link:hover {
-            color: #fff !important;
-        }
-
-    .navbar-success .form-control:focus {
-        border-color: var(--white-2);
-    }
 
  
