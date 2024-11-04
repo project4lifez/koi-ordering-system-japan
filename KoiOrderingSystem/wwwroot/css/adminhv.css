@@ -28254,23 +28254,7 @@ input.error {
         border-color: rgb(var(--danger-rgb));
     }
 
-.navbar-dark-transparent {
-    background-color: rgba(var(--dark-rgb), 0.1);
-    color: var(--default-text-color);
-}
 
-    .navbar-dark-transparent .nav-link.active {
-        background-color: var(--custom-black);
-        color: var(--custom-white) !important;
-    }
-
-    .navbar-dark-transparent .nav-link:hover {
-        color: var(--default-text-color);
-    }
-
-    .navbar-dark-transparent .form-control:focus {
-        border-color: rgb(var(--dark-rgb));
-    }
 /* End:: navbar transparent color schemes */
 /* Start:: navbar solid color schemes */
 .navbar-primary {
