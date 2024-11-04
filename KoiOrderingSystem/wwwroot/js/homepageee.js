@@ -47644,30 +47644,6 @@ function showFullText(button) {
     button.style.display = 'none'; // Hide the "Detail" button after expanding
 }
 
-// Initialize text truncation on page load
-window.onload = truncateText;
-
-// Khởi tạo hiệu ứng AOS
-AOS.init({ duration: 800, once: true });
-
-// Loading Screen
-window.addEventListener('load', () => {
-    document.getElementById('loader').style.display = 'none';
-});
-
-
-
-
-
-// Header Scroll Effect
-const header = document.querySelector('.header');
-window.addEventListener('scroll', () => {
-    if (window.scrollY > 100) {
-        header.classList.add('scrolled');
-    } else {
-        header.classList.remove('scrolled');
-    }
-});
 
 
 
