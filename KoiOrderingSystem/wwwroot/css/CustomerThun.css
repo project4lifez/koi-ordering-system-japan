@@ -12315,20 +12315,7 @@ input[type=range]::-webkit-slider-runnable-track {
     padding: 0;
 }
 
-.form-floating > .form-control:not(:-moz-placeholder-shown) ~ label {
-    color: var(--text-muted);
-}
 
-.form-floating > .form-control-plaintext ~ label,
-.form-floating > .form-control:focus ~ label,
-.form-floating > .form-control:not(:placeholder-shown) ~ label,
-.form-floating > .form-select ~ label {
-    color: var(--text-muted);
-}
-
-.form-floating > .form-control:not(:-moz-placeholder-shown) ~ label::after {
-    background-color: transparent;
-}
 
 .form-floating > .form-control:not(:placeholder-shown) ~ label::after {
     background-color: transparent;
@@ -14567,9 +14554,7 @@ input[type=range]::-webkit-slider-runnable-track {
             box-shadow: 0 0 0 1px #F5F5F5, none;
         }
 
-        .custom-range:focus::-moz-range-thumb {
-            box-shadow: 0 0 0 1px #F5F5F5, none;
-        }
+        
 
         .custom-range:focus::-ms-thumb {
             box-shadow: 0 0 0 1px #F5F5F5, none;
