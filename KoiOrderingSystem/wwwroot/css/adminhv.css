@@ -17854,15 +17854,7 @@ input.error {
             margin: auto !important;
         }
 
-        .mt-md-auto,
-        .my-md-auto {
-            margin-top: auto !important;
-        }
-
-        .mr-md-auto,
-        .mx-md-auto {
-            margin-right: auto !important;
-        }
+        
 
         .mb-md-auto,
         .my-md-auto {
