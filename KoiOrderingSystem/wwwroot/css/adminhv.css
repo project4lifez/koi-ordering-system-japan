@@ -29509,54 +29509,7 @@ input.error {
         border-color: rgb(var(--danger-rgb));
     }
 
-.navbar-dark-transparent {
-    background-color: rgba(var(--dark-rgb), 0.1);
-    color: var(--default-text-color);
-}
 
-    .navbar-dark-transparent .nav-link.active {
-        background-color: var(--custom-black);
-        color: var(--custom-white) !important;
-    }
-
-    .navbar-dark-transparent .nav-link:hover {
-        color: var(--default-text-color);
-    }
-
-    .navbar-dark-transparent .form-control:focus {
-        border-color: rgb(var(--dark-rgb));
-    }
-/* End:: navbar transparent color schemes */
-/* Start:: navbar solid color schemes */
-.navbar-primary {
-    background-color: var(--primary-color);
-    color: #fff;
-}
-
-    .navbar-primary .nav-link {
-        color: #fff !important;
-    }
-
-        .navbar-primary .nav-link.active {
-            background-color: var(--white-2);
-            color: #fff !important;
-        }
-
-        .navbar-primary .nav-link:hover {
-            color: #fff !important;
-        }
-
-    .navbar-primary .form-control:focus {
-        border-color: var(--white-2);
-    }
-
-    .navbar-primary .navbar-toggler {
-        border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-        .navbar-primary .navbar-toggler .navbar-toggler-icon:before {
-            color: #fff;
-        }
 
 
        
