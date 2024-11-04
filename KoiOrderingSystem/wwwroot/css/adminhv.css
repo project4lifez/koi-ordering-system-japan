@@ -29314,61 +29314,7 @@ input.error {
         opacity: 1;
     }
 
-.navbar {
-    border-radius: 0.25rem;
-}
 
-    .navbar .navbar-nav .nav-link {
-        line-height: 1;
-        padding: 0.4rem 1rem;
-        font-weight: 500;
-    }
-
-    .navbar .navbar-toggler {
-        padding: 0.4rem;
-        font-size: 1rem;
-        line-height: 1;
-        color: var(--custom-black);
-        border: 1px solid var(--default-border);
-        border-radius: 0.25rem;
-    }
-
-        .navbar .navbar-toggler .navbar-toggler-icon {
-            width: 1rem;
-            height: 1rem;
-            position: relative;
-            background-image: none;
-        }
-
-            .navbar .navbar-toggler .navbar-toggler-icon:before {
-                content: "\f479";
-                font-family: bootstrap-icons !important;
-                position: absolute;
-                font-size: 1rem;
-                color: var(--default-text-color);
-                inset-inline-start: 0;
-            }
-
-        .navbar .navbar-toggler:focus {
-            box-shadow: none;
-        }
-
-.navbar-nav .nav-link.active, .navbar-nav .nav-link.show {
-    color: var(--custom-black);
-}
-
-.navbar-brand {
-    margin-inline-end: 1.5rem;
-}
-
-    .navbar-brand img {
-        height: 1.5rem;
-        line-height: 1.5rem;
-    }
-
-    .navbar-brand:focus, .navbar-brand:hover {
-        color: var(--default-text-color);
-    }
 
 
 
