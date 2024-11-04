@@ -1287,7 +1287,6 @@ function showFullText(button) {
     // Retrieve the FarmId from the button's data attribute
     const farmId = button.getAttribute('data-farm-id');
 
-    // Redirect to the FarmDetail page
     window.location.href = `/Farm/FarmDetail?id=${FarmId}`;
 
     button.style.display = 'none'; // Hide the "Detail" button after expanding
