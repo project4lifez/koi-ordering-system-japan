@@ -1294,8 +1294,7 @@ function showFullText(button) {
 window.onload = truncateText;
 
 
-// Khởi tạo hiệu ứng AOS
-AOS.init({ duration: 800, once: true });
+
 
 
 
