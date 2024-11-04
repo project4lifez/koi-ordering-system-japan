@@ -22,7 +22,7 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
             // Retrieve the RoleId from the session
             var adminRoleId = HttpContext.Session.GetInt32("AdminRoleId");
 
-            // Check if the RoleId is null or not equal to 2 or 3
+            
             if (adminRoleId == null || (adminRoleId != 2 && adminRoleId != 3))
             {
                 return NotFound("You do not have permission to access this page.");
@@ -41,11 +41,11 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
                 return NotFound($"Booking with ID {bookingId} not found.");
             }
 
-            // Retrieve the list of KoiFarms from the database
+           
             var farms = _db.KoiFarms.ToList();
             ViewBag.Farms = farms;
 
-            // Pass booking information, including Koi Farms, to the view for display and editing
+           
             return View(booking);
         }
 
@@ -185,14 +185,14 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
                     TripId = booking.Trip.TripId  // Assign the TripId to the TripDetail
                 };
 
-                // Add the new TripDetail to the list
+            
                 booking.Trip.TripDetails.Add(tripDetail);
             }
 
-            // Step 7: Save changes to the database
+           
             _db.SaveChanges();
 
-            // Step 8: Redirect to the quote view after update
+           
             return Redirect("Quote?Bookingid=" + bookingId);
         }
 
