@@ -9052,7 +9052,7 @@ function truncateToTwoLines(text) {
 function showFullText(button) {
     const description = button.previousElementSibling; // Get the description element
     const fullText = description.getAttribute('data-full-text'); // Get the full text
-    description.innerText = fullText; // Display the full text
+    description.innerText = fullText; 
 
     const farmId = button.getAttribute('data-farm-id');
 
