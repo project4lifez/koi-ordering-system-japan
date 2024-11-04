@@ -47557,31 +47557,7 @@ function truncateToTwoLines(text) {
     return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
 }
 
-// Function to show the full text when "Detail" is clicked
-function showFullText(button) {
-    const description = button.previousElementSibling; // Get the description element
-    const fullText = description.getAttribute('data-full-text'); // Get the full text
-    description.innerText = fullText; // Display the full text
 
-    // Retrieve the FarmId from the button's data attribute
-    const farmId = button.getAttribute('data-farm-id');
-
-    // Redirect to the FarmDetail page
-    window.location.href = `/Farm/FarmDetail?id=${FarmId}`;
-
-    button.style.display = 'none'; // Hide the "Detail" button after expanding
-}
-
-// Initialize text truncation on page load
-window.onload = truncateText;
-
-// Khởi tạo hiệu ứng AOS
-AOS.init({ duration: 800, once: true });
-
-// Loading Screen
-window.addEventListener('load', () => {
-    document.getElementById('loader').style.display = 'none';
-});
 
 
 
