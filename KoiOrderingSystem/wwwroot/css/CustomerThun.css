@@ -14602,24 +14602,7 @@ input[type=range]::-webkit-slider-runnable-track {
     appearance: none;
 }
 
-@media (prefers-reduced-motion: reduce) {
-    .custom-range::-moz-range-thumb {
-        transition: none;
-    }
-}
 
-.custom-range::-moz-range-thumb:active {
-    background-color: #fffae6;
-}
-
-.custom-range::-moz-range-track {
-    width: 100%;
-    height: 0.5rem;
-    color: transparent;
-    cursor: pointer;
-    background-color: #dee2e6;
-    border-color: transparent;
-}
 
 .custom-range::-ms-thumb {
     width: 1rem;
@@ -14670,13 +14653,7 @@ input[type=range]::-webkit-slider-runnable-track {
     cursor: default;
 }
 
-.custom-range:disabled::-moz-range-thumb {
-    background-color: #adb5bd;
-}
 
-.custom-range:disabled::-moz-range-track {
-    cursor: default;
-}
 
 .custom-range:disabled::-ms-thumb {
     background-color: #adb5bd;
