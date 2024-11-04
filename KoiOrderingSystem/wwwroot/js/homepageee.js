@@ -1297,10 +1297,7 @@ window.onload = truncateText;
 // Khởi tạo hiệu ứng AOS
 AOS.init({ duration: 800, once: true });
 
-// Loading Screen
-window.addEventListener('load', () => {
-    document.getElementById('loader').style.display = 'none';
-});
+
 
 
 
