@@ -105,14 +105,6 @@ namespace KoiOrderingSystem.Areas.Admin.Controllers
         }
 
 
-
-
-
-
-
-
-
-
         private async Task<bool> ConfirmPositionChange(int blogId)
         {
             // Logic xác nhận sẽ ở đây
