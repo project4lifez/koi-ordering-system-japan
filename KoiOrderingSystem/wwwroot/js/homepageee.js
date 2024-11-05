@@ -16761,7 +16761,6 @@ function showFullText(button) {
 // Initialize text truncation on page load
 window.onload = truncateText;
 
-// Khởi tạo hiệu ứng AOS
 AOS.init({ duration: 800, once: true });
 
 // Loading Screen
