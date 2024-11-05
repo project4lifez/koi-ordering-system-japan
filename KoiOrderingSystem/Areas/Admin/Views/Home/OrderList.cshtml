@@ -273,7 +273,6 @@
         </style>
     </head>
 
-    <body>
         <main class="container-fluid px-4">
             <h1 class="mt-4">Order List</h1>
 
@@ -338,6 +337,8 @@
                                     <td class="text-success">@booking.Fullname</td>
                                     <td class="trip-name">@(booking.Trip?.TripName ?? "No Trip Name")</td>
                                     <td>@booking.QuotedAmount</td>
+
+                                    <!-- Render Status Column -->
                                     <td class="booking-status">
                                         @{
                                             string statusClass = booking.Status.ToLower() switch
@@ -355,6 +356,7 @@
                                         }
                                         <span class="badge @statusClass">@booking.Status</span>
                                     </td>
+
                                     <td>
                                         <a href="javascript:void(0);" class="btn btn-primary btn-sm"
                                            onclick="openFormModal('@booking.Fullname', '@booking.Phone', '@booking.Email',
@@ -363,9 +365,11 @@
                                        '@booking.EstimatedCost', '@booking.HotelAccommodation',
                                        '@booking.Note')">View Form </a>
                                     </td>
+
                                     <td>
                                         <a href="/Admin/Manager/Manager?id=@booking.BookingId" class="btn btn-warning btn-sm">Edit</a>
                                     </td>
+
                                     <td>
                                         <a href="/Admin/Sale/Quote?bookingId=@booking.BookingId" class="btn btn-info btn-sm">Quote</a>
                                     </td>
@@ -624,14 +628,12 @@
                             </html>
                         `);
 
-                printWindow.document.close();
-                setTimeout(() => {
-                    printWindow.print();
-                    printWindow.close();
-                }, 500);
-            }
+            // Initialize Bootstrap tooltips
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
         </script>
-    </body>
 }
 else
 {
