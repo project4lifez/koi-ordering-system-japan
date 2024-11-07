@@ -38,9 +38,8 @@ namespace KoiOrderingSystem.Controllers
 
             // Check for null and initialize lists if _db is not properly initialized
             var koiVarieties = _db?.Varieties
-                ?.OrderByDescending(v => v.VarietyId)
-                ?.Take(4)
-                ?.ToList() ?? new List<Variety>();
+        ?.Where(v => new[] { 4, 5, 8, 9 }.Contains(v.VarietyId))
+        ?.ToList() ?? new List<Variety>();
 
             var feedbacks = _db?.Feedbacks
                 ?.Where(f => f.Rating == 5)
@@ -56,10 +55,29 @@ namespace KoiOrderingSystem.Controllers
                 ?.ToList() ?? new List<KoiFarm>();
 
             var koiFishes = _db?.KoiFishes
-        .Include(k => k.Variety) // Include the Variety information
-        .OrderByDescending(k => k.KoiId) // Ensure this is a valid property
-        .Take(8)
-        .ToList() ?? new List<KoiFish>();
+       ?.Where(k => k.VarietyId == 4)
+       ?.OrderByDescending(k => k.KoiId)
+       ?.Take(4)
+       ?.ToList() ?? new List<KoiFish>();
+
+            koiFishes.AddRange(_db?.KoiFishes
+                ?.Where(k => k.VarietyId == 5)
+                ?.OrderByDescending(k => k.KoiId)
+                ?.Take(4)
+                ?.ToList() ?? new List<KoiFish>());
+
+            koiFishes.AddRange(_db?.KoiFishes
+                ?.Where(k => k.VarietyId == 8)
+                ?.OrderByDescending(k => k.KoiId)
+                ?.Take(4)
+                ?.ToList() ?? new List<KoiFish>());
+
+            koiFishes.AddRange(_db?.KoiFishes
+                ?.Where(k => k.VarietyId == 9)
+                ?.OrderByDescending(k => k.KoiId)
+                ?.Take(4)
+                ?.ToList() ?? new List<KoiFish>());
+
 
             // Set ViewBag properties, ensuring they are not null
             ViewBag.KoiVarieties = koiVarieties;

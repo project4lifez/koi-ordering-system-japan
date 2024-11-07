@@ -338,6 +338,7 @@
     }
 
     .footer-links a {
+        margin-left: -30px!important;
         color: var(--gray-200);
         text-decoration: none;
         transition: color 0.3s ease;
