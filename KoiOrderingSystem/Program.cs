@@ -51,6 +51,7 @@ namespace KoiOrderingSystem
                 googleOptions.CallbackPath = "/signin-google"; // Path where Google redirects after authentication
             });
 
+            // Register controllers with views
             builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
