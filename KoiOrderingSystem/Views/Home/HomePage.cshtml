@@ -138,6 +138,40 @@
         .navigation-menu {
             margin-top: 16px !important;
         }
+
+        .styled-button {
+            background-color: transparent;
+            color: #007BFF; /* Blue color */
+            border: 1px solid #007BFF;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+            .styled-button i {
+                margin-left: 5px; /* Spacing between text and icon */
+                transition: transform 0.3s;
+            }
+
+            .styled-button:hover {
+                background-color: #E0F0FF; /* Light blue background on hover */
+                color: #0056b3; /* Darker blue text on hover */
+            }
+
+                .styled-button:hover i {
+                    transform: translateY(2px); /* Slight bounce effect on hover */
+                }
+
+        .variety-english {
+            max-width: 75%;
+            height: 70px;
+            color: #c40606;
+        }
     </style>
 </head>
 
@@ -267,14 +301,15 @@
                 }
             </div>
 
-            <div class="varieties-grid">
-                @foreach (var koi in ViewBag.KoiFishes)
+            <div class="varieties-grid" id="koiGrid">
+                @for (int i = 0; i < ViewBag.KoiFishes.Count; i++)
                 {
-                    <div class="variety-card" data-category="@koi.Variety.VarietyName" data-aos="fade-up">
+                    var koi = ViewBag.KoiFishes[i];
+                    <div class="variety-card" data-category="@koi.Variety.VarietyName" data-aos="fade-up" style="display: @(i < 4 ? "block" : "none")">
                         <img src="@koi.ImageUrl" alt="@koi.KoiName" class="variety-image">
                         <div class="variety-content">
                             <div class="variety-title">
-                                <span>@koi.KoiName</span>
+                                <span class="variety-english">@koi.KoiName</span>
                                 <span class="variety-japanese">@koi.Koinamejp</span>
                             </div>
                             
@@ -298,10 +333,20 @@
                         </div>
                     </div>
                 }
-                <!-- Additional Koi varieties can be added here -->
             </div>
+
+            <div class="text-center mt-4">
+                <button id="showMoreBtn" class="styled-button" onclick="showMore()">
+                    Show More <i class="fas fa-chevron-down"></i>
+                </button>
+                <button id="showLessBtn" class="styled-button" onclick="showLess()" style="display: none;">
+                    Show Less <i class="fas fa-chevron-up"></i>
+                </button>
+            </div>
+
         </div>
     </section>
+
 
     <!-- Booking Steps Section -->
 <section id="booking" class="booking">
@@ -537,7 +582,46 @@
         // Initialize text truncation on page load
         window.onload = truncateText;
 
-   
+        let visibleCount = 4;
+        const koiCards = document.querySelectorAll('.variety-card');
+        const showMoreBtn = document.getElementById('showMoreBtn');
+        const showLessBtn = document.getElementById('showLessBtn');
+
+        function showMore() {
+            let newlyVisibleCount = 0;
+            koiCards.forEach((card, index) => {
+                if (index >= visibleCount && newlyVisibleCount < 4) {
+                    card.style.display = 'block';
+                    newlyVisibleCount++;
+                }
+            });
+            visibleCount += newlyVisibleCount;
+
+            // Show "Show Less" button if more koi are displayed
+            if (visibleCount > 4) {
+                showLessBtn.style.display = 'inline-block';
+            }
+
+            // Hide "Show More" button if no more koi to show
+            if (visibleCount >= koiCards.length) {
+                showMoreBtn.style.display = 'none';
+            }
+        }
+
+        function showLess() {
+            visibleCount = 4; // Reset to the initial visible count
+            koiCards.forEach((card, index) => {
+                card.style.display = index < visibleCount ? 'block' : 'none';
+            });
+
+            // Show "Show More" button again and hide "Show Less"
+            showMoreBtn.style.display = 'inline-block';
+            showLessBtn.style.display = 'none';
+
+            // Scroll back to the top of the Koi Varieties section
+            document.getElementById('varieties').scrollIntoView({ behavior: 'smooth' });
+        }
+
     </script>
 
      
