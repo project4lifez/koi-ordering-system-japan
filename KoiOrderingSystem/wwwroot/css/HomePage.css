@@ -387,7 +387,9 @@ h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-japanese);
     font-size: 1rem;
     color: var(--primary);
+    margin-bottom: 33px;
 }
+
 
 .variety-details {
     margin-bottom: 1.5rem;
