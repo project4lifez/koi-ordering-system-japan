@@ -102,5 +102,36 @@ namespace KoiOrderingSystem.Controllers
 
             return View(variety);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetKoiDetail(int id)
+        {
+            var koi = await _db.KoiFishes
+                .Include(k => k.Variety)
+                .ThenInclude(v => v.SpecialVarieties)
+                .ThenInclude(sv => sv.Farm)
+                .FirstOrDefaultAsync(k => k.KoiId == id);
+
+            if (koi == null)
+            {
+                return NotFound();
+            }
+
+            var result = new
+            {
+                ImageUrl = koi.ImageUrl,
+                KoiName = koi.KoiName,
+                Description = koi.Description,
+                Price = koi.Price,
+                KoiNameJp = koi.Koinamejp,
+                Age = koi.Age,
+                Size = koi.Size,
+                Variety = koi.Variety?.VarietyName,
+                Farm = koi.Variety?.SpecialVarieties?.FirstOrDefault()?.Farm?.FarmName
+            };
+
+            return Json(result);
+        }
+
     }
 }
