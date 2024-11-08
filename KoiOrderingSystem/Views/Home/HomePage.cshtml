@@ -328,7 +328,7 @@
                                     <span>Variety: @koi.Variety.VarietyName</span>
                                 </div>
                             </div>
-                            <div class="variety-price">Starting from: @koi.Price</div>
+                            <div class="variety-price">Starting from: @koi.Price?.Substring(0, Math.Min(6, koi.Price.Length))</div>
                             <a href="/Variety/VarietyDetail?id=@koi.Variety.VarietyId" class="btn btn-primary">View Details</a>
                         </div>
                     </div>
