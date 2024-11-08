@@ -28178,19 +28178,7 @@ input.error {
         border-color: rgb(var(--warning-rgb));
     }
 
-.navbar-info-transparent {
-    background-color: rgba(var(--info-rgb), 0.1);
-    color: var(--default-text-color);
-}
 
-    .navbar-info-transparent .nav-link.active {
-        background-color: rgb(var(--info-rgb));
-        color: #fff !important;
-    }
-
-    .navbar-info-transparent .nav-link:hover {
-        color: var(--default-text-color);
-    }
 
     .navbar-info-transparent .form-control:focus {
         border-color: rgb(var(--info-rgb));
