@@ -38,7 +38,7 @@ namespace KoiOrderingSystem.Controllers
 
             // Check for null and initialize lists if _db is not properly initialized
             var koiVarieties = _db?.Varieties
-        ?.Where(v => new[] { 4, 5, 8, 9 }.Contains(v.VarietyId))
+        ?.Where(v => new[] { 4, 5, 8, 6 }.Contains(v.VarietyId))
         ?.ToList() ?? new List<Variety>();
 
             var feedbacks = _db?.Feedbacks
@@ -73,7 +73,7 @@ namespace KoiOrderingSystem.Controllers
                 ?.ToList() ?? new List<KoiFish>());
 
             koiFishes.AddRange(_db?.KoiFishes
-                ?.Where(k => k.VarietyId == 9)
+                ?.Where(k => k.VarietyId == 6)
                 ?.OrderByDescending(k => k.KoiId)
                 ?.Take(4)
                 ?.ToList() ?? new List<KoiFish>());
