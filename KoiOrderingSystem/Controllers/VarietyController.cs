@@ -36,6 +36,12 @@ namespace KoiOrderingSystem.Controllers
 
         public async Task<IActionResult> Variety(int page = 1)
         {
+            var adminRoleId = HttpContext.Session.GetInt32("AdminRoleId");
+
+            if (adminRoleId != null && adminRoleId >= 2 && adminRoleId <= 5)
+            {
+                return RedirectToAction("Home", "Admin");
+            }
             int pageSize = 8;
 
             // Query lấy tất cả các varieties
@@ -90,6 +96,12 @@ namespace KoiOrderingSystem.Controllers
 
         public async Task<IActionResult> VarietyDetail(int id)
         {
+            var adminRoleId = HttpContext.Session.GetInt32("AdminRoleId");
+
+            if (adminRoleId != null && adminRoleId >= 2 && adminRoleId <= 5)
+            {
+                return RedirectToAction("Home", "Admin");
+            }
 
             var variety = await _db.Varieties
                 .Include(v => v.KoiFishes)

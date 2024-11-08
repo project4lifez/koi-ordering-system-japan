@@ -8,22 +8,22 @@
     <h1 class="mt-4">Dashboard (Delivering)</h1>
     @if (TempData["SuccessMessage"] != null)
     {
-        <div class="alert alert-success">
+            <div class="alert alert-success">
             @TempData["SuccessMessage"]
-        </div>
+            </div>
     }
 
     <!-- Display Error Messages -->
     @if (!ViewData.ModelState.IsValid)
     {
-        <div class="alert alert-danger">
-            <ul>
+            <div class="alert alert-danger">
+                <ul>
                 @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
                 {
-                    <li>@error.ErrorMessage</li>
+                            <li>@error.ErrorMessage</li>
                 }
-            </ul>
-        </div>
+                </ul>
+            </div>
     }
 
     <div class="row">
@@ -59,15 +59,15 @@
                                 // Check if there is a Koi associated with the Podetail
                                 if (podetail.Koi != null)
                                 {
-                                    <li>
+                                                <li>
                                         @podetail.Koi.KoiName - Quantity: @podetail.Quantity
-                                    </li>
+                                                </li>
                                 }
                             }
                         }
                         else
                         {
-                            <li>No Koi fish purchased.</li>
+                                <li>No Koi fish purchased.</li>
                         }
                     </ul>
                     <p><strong>Delivery Location:</strong> @Model?.Po?.DeliveryLocation</p>
@@ -76,49 +76,49 @@
                     @* Kiểm tra nếu trạng thái không phải là một trong các trạng thái sau: 'Failed', 'Lost Deposit', 'Refunding', hoặc 'Refunded' *@
                     @if (Model?.Status != "Failed" && Model?.Status != "Lost Deposit" && Model?.Status != "Refunding" && Model?.Status != "Refunded")
                     {
-                        <!-- Display all elements on the same line using Flexbox -->
-                        <form action="/Admin/Delivering/UpdatePaymentMethod" method="post" style="display: flex; align-items: center;">
-                            <label for="paymentMethodId" style="margin-right: 10px;"><strong>Payment Method:</strong></label>
+                            <!-- Display all elements on the same line using Flexbox -->
+                            <form action="/Admin/Delivering/UpdatePaymentMethod" method="post" style="display: flex; align-items: center;">
+                                <label for="paymentMethodId" style="margin-right: 10px;"><strong>Payment Method:</strong></label>
 
-                            <input type="hidden" name="id" value="@Model.BookingId" />
+                                <input type="hidden" name="id" value="@Model.BookingId" />
 
-                            <!-- Dropdown for Payment Methods with fixed width -->
-                            <select class="form-select" name="paymentMethodId" id="paymentMethodId"
-                                    style="margin-right: 10px; width: 220px;"
+                                <!-- Dropdown for Payment Methods with fixed width -->
+                                <select class="form-select" name="paymentMethodId" id="paymentMethodId"
+                                        style="margin-right: 10px; width: 220px;"
                             @(Model?.Po?.Status == "Paid" ? "disabled" : "")>
-                                <!-- First option as "Select Method Payment" -->
-                                <option value="" disabled @(Model?.Po?.Popayments?.FirstOrDefault()?.PaymentMethod == null ? "selected" : "")>Select Method Payment</option>
+                                    <!-- First option as "Select Method Payment" -->
+                                    <option value="" disabled @(Model?.Po?.Popayments?.FirstOrDefault()?.PaymentMethod == null ? "selected" : "")>Select Method Payment</option>
                                 @foreach (var method in ViewBag.PaymentMethods)
                                 {
-                                    <option value="@method.PaymentMethodId"
+                                            <option value="@method.PaymentMethodId"
                                     @(Model?.Po?.Popayments?.FirstOrDefault()?.PaymentMethod?.PaymentMethodId == method.PaymentMethodId ? "selected" : "")>
                                         @method.MethodName
-                                    </option>
+                                            </option>
                                 }
-                            </select>
+                                </select>
 
-                            <!-- Button for updating the payment method -->
+                                <!-- Button for updating the payment method -->
                             @if (Model?.Status == "Delivering" && Model?.Po?.Status != "Paid")
                             {
-                                <button type="submit" class="btn btn-primary" style="background-color: #198754">Update</button>
+                                        <button type="submit" class="btn btn-primary" style="background-color: #198754">Update</button>
                             }
-                        </form>
-
-                        <!-- Po Status and Set to Paid Button -->
-                        <div style="display: flex; align-items: center;">
-                            <strong style="margin-top: 20px;">Po Status: </strong>
-                            <span id="po-status" style="margin-right: 10px; margin-top: 21px; margin-left: 4px;"> @Model?.Po?.Status</span>
-
-                            <!-- Button to set status to 'Paid' -->
-                            <form action="/Admin/Delivering/SetStatusToPaid" method="post" style="display: inline-block;">
-                                <input type="hidden" name="id" value="@Model.BookingId" />
-                                <input type="hidden" name="poId" value="@Model.Po?.PoId" />
-                                <button type="submit" class="btn btn-success btn-sm" style="margin-left: 4px; margin-top: 20px;"
-                                @(Model?.Po?.Popayments?.FirstOrDefault() == null || Model?.Po?.Status == "Paid" ? "disabled" : "")>
-                                    Set to Paid
-                                </button>
                             </form>
-                        </div>
+
+                            <!-- Po Status and Set to Paid Button -->
+                            <div style="display: flex; align-items: center;">
+                                <strong style="margin-top: 20px;">Po Status: </strong>
+                                <span id="po-status" style="margin-right: 10px; margin-top: 21px; margin-left: 4px;"> @Model?.Po?.Status</span>
+
+                                <!-- Button to set status to 'Paid' -->
+                                <form action="/Admin/Delivering/SetStatusToPaid" method="post" style="display: inline-block;">
+                                    <input type="hidden" name="id" value="@Model.BookingId" />
+                                    <input type="hidden" name="poId" value="@Model.Po?.PoId" />
+                                    <button type="submit" class="btn btn-success btn-sm" style="margin-left: 4px; margin-top: 20px;"
+                                @(Model?.Po?.Popayments?.FirstOrDefault() == null || Model?.Po?.Status == "Paid" ? "disabled" : "")>
+                                        Set to Paid
+                                    </button>
+                                </form>
+                            </div>
                     }
 
                     <!-- Status update form -->
@@ -126,37 +126,37 @@
                         <input type="hidden" name="id" value="@Model?.BookingId" />
                         <select class="form-select" name="status" id="status" style="width: 150px; margin-top: 8px"
                         @(string.Equals(Model?.Status, "Delivered", StringComparison.OrdinalIgnoreCase) ||
-                            string.Equals(Model?.Status, "Failed", StringComparison.OrdinalIgnoreCase) ? "disabled" : "")>
+                                string.Equals(Model?.Status, "Failed", StringComparison.OrdinalIgnoreCase) ? "disabled" : "")>
                             <option value="Delivering" @(Model?.Status == "Delivering" ? "selected" : "")>Delivering</option>
                             <option value="Delivered" @(Model?.Status == "Delivered" ? "selected" : "")>Delivered</option>
                             <option value="Failed" @(Model?.Status == "Failed" ? "selected" : "")>Failed</option>
                         </select>
                         <button type="submit" class="btn btn-success ml-2 mt-2"
                         @(Model?.Status != null &&
-                            (string.Equals(Model.Status, "Delivered", StringComparison.OrdinalIgnoreCase) ||
-                            string.Equals(Model.Status, "Checked in", StringComparison.OrdinalIgnoreCase) ||
-                            string.Equals(Model.Status, "Confirmed", StringComparison.OrdinalIgnoreCase) ||
-                            string.Equals(Model.Status, "Accepted", StringComparison.OrdinalIgnoreCase) ||
-                            string.Equals(Model.Status, "Rejected", StringComparison.OrdinalIgnoreCase) ||
-                            string.Equals(Model.Status, "Canceled", StringComparison.OrdinalIgnoreCase) ||
-                            string.Equals(Model.Status, "Processing", StringComparison.OrdinalIgnoreCase) ||
-                            string.Equals(Model.Status, "Failed", StringComparison.OrdinalIgnoreCase) ||
-                            string.Equals(Model.Status, "Requested", StringComparison.OrdinalIgnoreCase)) ? "disabled" : "")>
+                                (string.Equals(Model.Status, "Delivered", StringComparison.OrdinalIgnoreCase) ||
+                                string.Equals(Model.Status, "Checked in", StringComparison.OrdinalIgnoreCase) ||
+                                string.Equals(Model.Status, "Confirmed", StringComparison.OrdinalIgnoreCase) ||
+                                string.Equals(Model.Status, "Accepted", StringComparison.OrdinalIgnoreCase) ||
+                                string.Equals(Model.Status, "Rejected", StringComparison.OrdinalIgnoreCase) ||
+                                string.Equals(Model.Status, "Canceled", StringComparison.OrdinalIgnoreCase) ||
+                                string.Equals(Model.Status, "Processing", StringComparison.OrdinalIgnoreCase) ||
+                                string.Equals(Model.Status, "Failed", StringComparison.OrdinalIgnoreCase) ||
+                                string.Equals(Model.Status, "Requested", StringComparison.OrdinalIgnoreCase)) ? "disabled" : "")>
                             Update
                         </button>
                     </form>
                     <!-- Note update form -->
                     @if (Model?.Status == "Failed" || Model?.Status == "Lost Deposit" || Model?.Status == "Refunding" || Model?.Status == "Refunded")
                     {
-                        <form id="formUpdateNote" action="/Admin/Delivering/UpdateNote" method="post" style="margin-top: 15px;">
-                            <input type="hidden" name="id" value="@Model?.BookingId" />
-                            <label for="note"><strong>Note:</strong></label>
-                            <textarea name="note" id="note" class="form-control" rows="3" placeholder="What happened with the order?" style="width: 100%; margin-top: 8px;">@Model?.Po?.Note</textarea>
+                            <form id="formUpdateNote" action="/Admin/Delivering/UpdateNote" method="post" style="margin-top: 15px;">
+                                <input type="hidden" name="id" value="@Model?.BookingId" />
+                                <label for="note"><strong>Note:</strong></label>
+                                <textarea name="note" id="note" class="form-control" rows="3" placeholder="What happened with the order?" style="width: 100%; margin-top: 8px;">@Model?.Po?.Note</textarea>
                             @if (Model?.Status == "Failed")
                             {
-                                <button type="submit" style="background-color: #198754" class="btn btn-primary mt-2">Update</button>
+                                        <button type="submit" style="background-color: #198754" class="btn btn-primary mt-2">Update</button>
                             }
-                        </form>
+                            </form>
                     }
                 </div>
             </div>
@@ -176,15 +176,15 @@
                         <p style="text-align: right;">
                             <strong>Koi Price:</strong>
                             @(Model.Po?.Podetails
-                                ?.Where(pd => pd.PoId == Model.Po.PoId)
-                                .Sum(pd => pd.TotalKoiPrice) ?? 0) USD
+                                    ?.Where(pd => pd.PoId == Model.Po.PoId)
+                                    .Sum(pd => pd.TotalKoiPrice) ?? 0) USD
                         </p>
                         <p style="text-align: right;">
                             <strong>Total Deposited:</strong>
                             @(Model?.Po?.Podetails
-                                ?.Where(pd => pd.PoId == Model.Po.PoId)
-                                .GroupBy(pd => pd.FarmId) // Group by FarmId
-                                .Sum(group => group.FirstOrDefault()?.Deposit ?? 0) ?? 0) USD
+                                    ?.Where(pd => pd.PoId == Model.Po.PoId)
+                                    .GroupBy(pd => pd.FarmId) // Group by FarmId
+                                    .Sum(group => group.FirstOrDefault()?.Deposit ?? 0) ?? 0) USD
                         </p>
                     </div>
                     <div class="d-flex flex-column">
