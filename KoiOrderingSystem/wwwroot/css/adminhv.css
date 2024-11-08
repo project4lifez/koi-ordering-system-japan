@@ -28163,28 +28163,7 @@ input.error {
         border-color: var(--primary-color);
     }
 
-.navbar-secondary-transparent {
-    background-color: rgba(var(--secondary-rgb), 0.1);
-    color: var(--default-text-color);
-}
 
-    .navbar-secondary-transparent .nav-link.active {
-        background-color: rgb(var(--secondary-rgb));
-        color: #fff !important;
-    }
-
-    .navbar-secondary-transparent .nav-link:hover {
-        color: var(--default-text-color);
-    }
-
-    .navbar-secondary-transparent .form-control:focus {
-        border-color: rgb(var(--secondary-rgb));
-    }
-
-.navbar-warning-transparent {
-    background-color: rgba(var(--warning-rgb), 0.1);
-    color: var(--default-text-color);
-}
 
     .navbar-warning-transparent .nav-link.active {
         background-color: rgb(var(--warning-rgb));
