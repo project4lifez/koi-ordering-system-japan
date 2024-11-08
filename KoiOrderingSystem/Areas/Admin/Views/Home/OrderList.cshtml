@@ -273,7 +273,6 @@
         </style>
     </head>
 
-    <body>
         <main class="container-fluid px-4">
             <h1 class="mt-4">Order List</h1>
 
@@ -631,14 +630,12 @@
                             </html>
                         `);
 
-                printWindow.document.close();
-                setTimeout(() => {
-                    printWindow.print();
-                    printWindow.close();
-                }, 500);
-            }
+            // Initialize Bootstrap tooltips
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
         </script>
-    </body>
 }
 else
 {

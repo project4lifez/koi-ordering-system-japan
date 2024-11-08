@@ -143,6 +143,10 @@
 <body>
     <div class="register-container">
         <h1>Create New Account</h1>
+        <!-- Error summary message area -->
+        <div id="errorSummary" class="error-summary" style="display:none; color: red; margin-bottom: 10px;">
+            Please correct the errors below.
+        </div>
         <form asp-action="Register" method="post">
             @Html.AntiForgeryToken()
             <div class="input-container">
@@ -182,7 +186,9 @@
             </div>
             <input type="submit" value="Register" />
         </form>
-        <div class="success-message" id="successMessage">Registration successful!</div>
+        <div class="success-message" id="successMessage" style="display:none; color: green; margin-top: 10px;">
+            Registration successful!
+        </div>
         <br />
         <a href="/Login">Back to Login</a>
     </div>
@@ -192,20 +198,19 @@
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
     <script>
         $(document).ready(function () {
-            // Hàm xác thực định dạng email
+            // Email validation pattern
             function validateEmail(email) {
-                // Đảm bảo email phải kết thúc bằng @@gmail.com
                 const gmailPattern = /^[a-zA-Z0-9._%+-]+@@gmail\.com$/;
                 return gmailPattern.test(email);
             }
 
-            // Hàm xác thực số điện thoại (Chỉ chấp nhận số và phải có từ 10 đến 11 chữ số)
+            // Phone number validation pattern
             function validatePhone(phone) {
-                const phonePattern = /^\d{10,11}$/; // Chỉ cho phép nhập số và độ dài từ 10 đến 11 ký tự
+                const phonePattern = /^\d{10,11}$/;
                 return phonePattern.test(phone);
             }
 
-            // Kiểm tra email trong thời gian thực
+            // Real-time field validations
             $('input[name="Email"]').on('input', function () {
                 const emailInput = $(this);
                 const emailValue = emailInput.val().trim();
@@ -218,7 +223,6 @@
                 }
             });
 
-            // Real-time phone validation
             $('input[name="Phone"]').on('input', function () {
                 const phoneInput = $(this);
                 const phoneValue = phoneInput.val().trim();
@@ -231,12 +235,10 @@
                 }
             });
 
-            // Real-time password validation
             $('#Password').on('input', function () {
                 const passwordInput = $(this);
                 const password = passwordInput.val().trim();
-                const minLength = 8;
-                if (password.length < minLength) {
+                if (password.length < 8) {
                     passwordInput.css('border', '2px solid red');
                     passwordInput.siblings('.error-message').text('Password must be at least 8 characters long.').css('color', 'red');
                 } else {
@@ -245,7 +247,6 @@
                 }
             });
 
-            // Confirm password validation
             $('#ConfirmPassword').on('input', function () {
                 const confirmPasswordInput = $(this);
                 const password = $('#Password').val().trim();
@@ -258,13 +259,13 @@
                 }
             });
 
-            // Highlight input fields on form submit
+            // Form submit validation
             $('form').on('submit', function (e) {
                 let isValid = true;
+                $('#errorSummary').hide();
                 $('.input-container input').css('border', '');
                 $('.error-message').text('');
 
-                // Kiểm tra các trường bắt buộc
                 $('input[required]').each(function () {
                     if ($(this).val().trim() === '') {
                         $(this).css('border', '2px solid red');
@@ -272,62 +273,35 @@
                     }
                 });
 
-                // Validate email format
-                const emailInput = $('input[name="Email"]');
-                const emailValue = emailInput.val().trim();
-                if (!validateEmail(emailValue)) {
-                    emailInput.css('border', '2px solid red');
-                    emailInput.siblings('.error-message').text('Email must be a valid @@gmail.com address.').css('color', 'red');
+                if (!validateEmail($('input[name="Email"]').val().trim())) {
+                    $('input[name="Email"]').css('border', '2px solid red').siblings('.error-message').text('Invalid email format.');
                     isValid = false;
                 }
 
-                // Validate phone format
-                const phoneInput = $('input[name="Phone"]');
-                const phoneValue = phoneInput.val().trim();
-                if (!validatePhone(phoneValue)) {
-                    phoneInput.css('border', '2px solid red');
-                    phoneInput.siblings('.error-message').text('Phone must be a valid 10-11 digit number.').css('color', 'red');
+                if (!validatePhone($('input[name="Phone"]').val().trim())) {
+                    $('input[name="Phone"]').css('border', '2px solid red').siblings('.error-message').text('Invalid phone format.');
                     isValid = false;
                 }
 
-                // Validate password strength
-                const passwordInput = $('#Password');
-                const passwordValue = passwordInput.val().trim();
-                if (passwordValue.length < 8) {
-                    passwordInput.css('border', '2px solid red');
-                    passwordInput.siblings('.error-message').text('Password must be at least 8 characters long.').css('color', 'red');
+                if ($('#Password').val().trim().length < 8) {
+                    $('#Password').css('border', '2px solid red').siblings('.error-message').text('Password must be at least 8 characters.');
                     isValid = false;
                 }
 
-                // Validate password confirmation
-                const confirmPasswordInput = $('#ConfirmPassword');
-                if (passwordValue !== confirmPasswordInput.val().trim()) {
-                    confirmPasswordInput.css('border', '2px solid red');
-                    confirmPasswordInput.siblings('.error-message').text('Passwords do not match.').css('color', 'red');
+                if ($('#Password').val().trim() !== $('#ConfirmPassword').val().trim()) {
+                    $('#ConfirmPassword').css('border', '2px solid red').siblings('.error-message').text('Passwords do not match.');
                     isValid = false;
                 }
 
                 if (!isValid) {
                     e.preventDefault();
-                    alert("Please correct the errors in the form.");
+                    $('#errorSummary').show();
                 } else {
-                    // Show success message
                     $('#successMessage').show();
-                    alert("Register Successfully!");
                 }
-            });
-
-            // Clear error messages on focus
-            $('.input-container input').on('focus', function () {
-                $(this).css('border', '');
-                $(this).siblings('.error-message').text('');
             });
         });
     </script>
-
-
-
-
-
 </body>
+
 </html>

@@ -37,72 +37,82 @@ namespace KoiOrderingSystem.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Login(Account model)
         {
+            if (string.IsNullOrWhiteSpace(model.Username))
+            {
+                ViewBag.Error = "Username cannot be empty.";
+                return View(model);
+            }
+
+            if (string.IsNullOrWhiteSpace(model.Password))
+            {
+                ViewBag.Error = "Password cannot be empty.";
+                return View(model);
+            }
+
             if (ModelState.IsValid)
             {
-                // Check user in the database
+                // Perform a case-insensitive search for Username
                 var user = _db.Accounts
-                              .FirstOrDefault(u => u.Username == model.Username && u.Password == model.Password);
+                              .FirstOrDefault(u => u.Username.ToLower() == model.Username.ToLower());
 
-                if (user != null)
+                if (user == null)
                 {
-                    // Check if the account is disabled (Status == 0 means disabled)
-                    if (user.Status == false)
+                    ViewBag.Error = "Username does not exist. Please check your username and try again.";
+                    return View(model);
+                }
+
+                // Check if the password is correct (case-sensitive)
+                if (user.Password != model.Password)
+                {
+                    ViewBag.Error = "Invalid password. Please check your password and try again.";
+                    return View(model);
+                }
+
+                // Check if the account is disabled
+                if (user.Status == false)
+                {
+                    ViewBag.Error = "Your account has been disabled. Please contact support.";
+                    return View(model);
+                }
+
+                // Store information in session
+                HttpContext.Session.SetString("Username", user.Username);
+                HttpContext.Session.SetString("Lastname", user.Lastname);
+                HttpContext.Session.SetInt32("Status", user.Status == true ? 1 : 0);  // Store status (1 = active, 0 = disabled)
+                HttpContext.Session.SetInt32("RoleId", user.RoleId ?? 0);
+
+                // Check for specific roles and store admin session if applicable
+                if (user.RoleId >= 2 && user.RoleId <= 5) // Admin/Staff
+                {
+                    HttpContext.Session.SetString("AdminSession", user.Username);
+                    HttpContext.Session.SetInt32("AdminRoleId", user.RoleId ?? 0);
+                    HttpContext.Session.SetString("AdminLastname", user.Lastname);
+                }
+                else if (user.RoleId == 1) // Customer
+                {
+                    // Retrieve CustomerId from the Customers table
+                    var customer = _db.Customers.FirstOrDefault(c => c.AccountId == user.AccountId);
+                    if (customer == null)
                     {
-                        ViewBag.Error = "Your account has been disabled. Please contact support.";
+                        ViewBag.Error = "No associated customer found. Please contact support.";
                         return View(model);
                     }
 
-                    // Store information in session
-                    HttpContext.Session.SetString("Username", user.Username);
-                    HttpContext.Session.SetString("Lastname", user.Lastname);
-                    HttpContext.Session.SetInt32("Status", user.Status == true ? 1 : 0);  // Store status (1 = active, 0 = disabled)
-
-                    HttpContext.Session.SetInt32("RoleId", user.RoleId ?? 0);
-
-                    // Check for specific roles and store admin session if applicable
-                    if (user.RoleId >= 2 && user.RoleId <= 5) // Admin/Staff
-                    {
-                        HttpContext.Session.SetString("AdminSession", user.Username);
-                        
-                        HttpContext.Session.SetInt32("AdminRoleId", user.RoleId ?? 0);
-                        
-                        HttpContext.Session.SetString("AdminLastname", user.Lastname);
-
-
-
-                        // Store AdminRoleId
-                    }
-                    else if (user.RoleId == 1) // Customer
-                    {
-                        // Retrieve CustomerId from the Customers table
-                        var customer = _db.Customers.FirstOrDefault(c => c.AccountId == user.AccountId);
-                        if (customer == null)
-                        {
-                            ViewBag.Error = "No associated customer found. Please contact support.";
-                            return View(model);
-                        }
-
-                        // Store CustomerId and Username in session for customers
-                        HttpContext.Session.SetInt32("CustomerId", customer.CustomerId);
-                        HttpContext.Session.SetString("CustomerLastName", user.Lastname);
-                        HttpContext.Session.SetString("CustomerSession", user.Username);
-                        HttpContext.Session.SetInt32("CustomerRoleId", user.RoleId ?? 0);
-                    }
-
-                    // Redirect based on RoleId
-                    if (user.RoleId == 1) // Customer
-                    {
-                        return RedirectToAction("", "Home"); // Customer Home page
-                    }
-                    else if (user.RoleId >= 2 && user.RoleId <= 5) // Admin/Staff
-                    {
-                        return RedirectToAction("Home", "Admin"); // Admin Dashboard page
-                    }
+                    // Store CustomerId and Username in session for customers
+                    HttpContext.Session.SetInt32("CustomerId", customer.CustomerId);
+                    HttpContext.Session.SetString("CustomerLastName", user.Lastname);
+                    HttpContext.Session.SetString("CustomerSession", user.Username);
+                    HttpContext.Session.SetInt32("CustomerRoleId", user.RoleId ?? 0);
                 }
-                else
+
+                // Redirect based on RoleId
+                if (user.RoleId == 1) // Customer
                 {
-                    ViewBag.Error = "Invalid username or password.";
-                    return View(model);
+                    return RedirectToAction("", "Home"); // Customer Home page
+                }
+                else if (user.RoleId >= 2 && user.RoleId <= 5) // Admin/Staff
+                {
+                    return RedirectToAction("Home", "Admin"); // Admin Dashboard page
                 }
             }
 
@@ -215,38 +225,15 @@ namespace KoiOrderingSystem.Controllers
 
         public IActionResult Logout()
         {
-            // Kiểm tra RoleId trong session để xác định loại người dùng
-            var roleId = HttpContext.Session.GetInt32("RoleId");
+            // Clear all session data
+            HttpContext.Session.Clear();
 
-            if (roleId == 1) // Customer
-            {
-                // Xóa session cho Customer
-                HttpContext.Session.Remove("CustomerSession");
-                HttpContext.Session.Remove("CustomerId");
-                HttpContext.Session.Remove("CustomerRoleId");
-                HttpContext.Session.Remove("Status");
-                HttpContext.Session.Remove("Username");
-                HttpContext.Session.Remove("Lastname");
+            // Sign out of authentication schemes (if using external authentication like Google)
+            HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
-
-
-            }
-            else if (roleId >= 2 && roleId <= 5) // Admin hoặc Staff
-            {
-                // Xóa session cho Admin
-                HttpContext.Session.Remove("AdminSession");
-                HttpContext.Session.Remove("AdminRoleId");
-                HttpContext.Session.Remove("Status");
-                HttpContext.Session.Remove("Username");
-                HttpContext.Session.Remove("Lastname");
-                HttpContext.Session.Remove("AdminLastname");
-
-
-            }
-
-
-            // Redirect đến trang đăng nhập
+            // Redirect to the login page or home page after logging out
             return RedirectToAction("", "Login");
         }
+
     }
 }

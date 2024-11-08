@@ -2,6 +2,8 @@
     var currentYear = DateTime.Now.Year;
     var years = Enumerable.Range(currentYear - 4, 5).ToList(); // Last 5 years including current year
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    var adminRoleId = Context.Session.GetInt32("AdminRoleId");
+
 }
 @{
     // Định dạng tiền tệ với dấu phẩy hàng ngàn và xử lý trường hợp 0 thành "0.0 USD"
@@ -36,6 +38,7 @@
 
     <!-- Custom CSS for Hover Effects -->
     <style>
+
         /* Base card style */
         .card {
             transition: all 0.3s ease-in-out;
@@ -125,12 +128,15 @@
                             </select>
                         </form>
                         <!--excel export-->
-                        <form method="post" action="/Admin/Home/ExportToExcel">
-                            <input type="hidden" name="selectedYear" value="@ViewBag.SelectedYear" />
-                            <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-                                <i class="fas fa-download fa-sm text-white-50"></i> Generate Report
-                            </button>
-                        </form>
+                        @if (adminRoleId == 2)
+                        {
+                            <form method="post" action="/Admin/Home/ExportToExcel">
+                                <input type="hidden" name="selectedYear" value="@ViewBag.SelectedYear" />
+                                <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                                    <i class="fas fa-download fa-sm text-white-50"></i> Generate Report
+                                </button>
+                            </form>
+                        }
                     </div>
 
                     <!-- Content Row -->

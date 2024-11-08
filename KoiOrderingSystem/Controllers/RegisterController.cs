@@ -27,6 +27,27 @@ namespace KoiOrderingSystem.Controllers
         {
             if (ModelState.IsValid)
             {
+                // Check if username already exists
+                if (_db.Accounts.Any(a => a.Username.ToLower() == account.Username.ToLower()))
+                {
+                    ModelState.AddModelError("Username", "This username is already taken.");
+                    return View(account);
+                }
+
+                // Check if email already exists
+                if (_db.Accounts.Any(a => a.Email.ToLower() == account.Email.ToLower()))
+                {
+                    ModelState.AddModelError("Email", "This email is already registered.");
+                    return View(account);
+                }
+
+                // Check if phone number already exists
+                if (_db.Accounts.Any(a => a.Phone == account.Phone))
+                {
+                    ModelState.AddModelError("PhoneNumber", "This phone number is already registered.");
+                    return View(account);
+                }
+
                 using (var transaction = await _db.Database.BeginTransactionAsync())
                 {
                     try
