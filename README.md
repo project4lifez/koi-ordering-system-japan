@@ -28,7 +28,7 @@ Welcome to the **C# Koi Ordering System In Japan**! This project is designed to 
 
 ## 🚀 Getting Started
 
-These instructions will help you set up the project on your local machine for development and testing.
+These instructions will help you set up the project on your local machine for development and testing. 
 
 ### Prerequisites
 
