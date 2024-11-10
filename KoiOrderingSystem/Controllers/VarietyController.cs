@@ -139,14 +139,15 @@ namespace KoiOrderingSystem.Controllers
                 Age = koi.Age,
                 Size = koi.Size,
                 Variety = koi.Variety?.VarietyName,
-                Farm = koi.Variety?.SpecialVarieties
+                Farm = string.Join(", ", koi.Variety?.SpecialVarieties
                     .Select(sv => sv.Farm?.FarmName) // Lấy danh sách các tên farm
                     .Where(farmName => farmName != null) // Loại bỏ các farm null
-                    .ToList()
+                    .ToList() ?? new List<string>()) // Xử lý null cho danh sách farm
             };
 
             return Json(result);
         }
+
 
 
     }
