@@ -40,7 +40,6 @@ namespace KoiOrderingSystem
             })
             .AddCookie(options =>
             {
-                // Custom cookie configuration (optional)
                 options.Cookie.HttpOnly = true;
                 options.LoginPath = "/Login"; // Redirect here if unauthorized
             })
