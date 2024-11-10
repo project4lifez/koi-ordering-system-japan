@@ -5,33 +5,7 @@
 
 
 
-@media (min-width: 576px) {
-    .float-sm-left {
-        float: left !important;
-    }
 
-    .float-sm-right {
-        float: right !important;
-    }
-
-    .float-sm-none {
-        float: none !important;
-    }
-}
-
-@media (min-width: 768px) {
-    .float-md-left {
-        float: left !important;
-    }
-
-    .float-md-right {
-        float: right !important;
-    }
-
-    .float-md-none {
-        float: none !important;
-    }
-}
 
 @media (min-width: 992px) {
     .float-lg-left {
