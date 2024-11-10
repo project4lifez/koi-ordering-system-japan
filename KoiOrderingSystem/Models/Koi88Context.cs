@@ -51,7 +51,7 @@ public partial class Koi88Context : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 
-       => optionsBuilder.UseSqlServer("Data Source=tcp:datakoi888.database.windows.net,1433;Initial Catalog=Koi88;User ID=koi88;Password=Trung123");
+       => optionsBuilder.UseSqlServer("Data Source=MSI;Initial Catalog=Koi88;Persist Security Info=True;User ID=sa;Password=12345;Trust Server Certificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

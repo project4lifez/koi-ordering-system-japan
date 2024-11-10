@@ -10,6 +10,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Booking Form</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
     <style>
         * {
             box-sizing: border-box;
@@ -172,9 +174,31 @@
             .dropdown-content::-webkit-scrollbar-thumb:hover {
                 background: #a0aec0;
             }
+
+        .back-link {
+            display: flex;
+            align-items: center;
+            color: #667eea;
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 20px;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+            .back-link:hover {
+                color: #764ba2;
+            }
+
+            .back-link i {
+                margin-right: 8px;
     </style>
 </head>
 <body>
+    <div class="container">
+        <a href="/Admin/Home/OrderManagement" class="back-link">
+            <i class="fas fa-arrow-left"></i> Back to Order Management
+        </a>
     <div class="container">
         <form action="/Admin/CreateBooking/Create" method="post" id="bookingForm">
             <div class="form-group">
