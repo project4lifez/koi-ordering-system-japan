@@ -316,10 +316,10 @@
                         }
                         @if (adminRoleId >= 2 && adminRoleId <= 5)
                         {
-                            <th>Edit</th> <!-- Edit column for all roles -->
+                            <th>Edit</th> 
                             @if (adminRoleId == 2 || adminRoleId == 3)
                             {
-                                <th>Quote</th> <!-- Detail column only for role 2 and 3 -->
+                                <th>Quote</th> 
                             }
                         }
                         @if (adminRoleId == 2 || adminRoleId == 4)
@@ -331,7 +331,6 @@
 
                 @if (Model != null && Model.Any())
                 {
-                    // Calculate the starting index based on the current page and page size
                     int index = (ViewBag.Page1 - 1) * ViewBag.PageSize + 1;
 
                     <tbody>
