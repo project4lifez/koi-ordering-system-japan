@@ -2,6 +2,26 @@
     Layout = null;
     var adminRoleId = Context.Session.GetInt32("AdminRoleId");
     var adminLastName = Context.Session.GetString("AdminLastname");
+    string pageTitle = "Dashboard";
+
+    switch (adminRoleId)
+    {
+        case 2:
+            pageTitle = "Dashboard - Manager";
+            break;
+        case 3:
+            pageTitle = "Dashboard - SaleStaff";
+            break;
+        case 4:
+            pageTitle = "Dashboard - Consulting";
+            break;
+        case 5:
+            pageTitle = "Dashboard - Delivering";
+            break;
+        default:
+            pageTitle = "Dashboard - Admin";
+            break;
+    }
 }
 
 
@@ -14,7 +34,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="Admin Dashboard" />
     <meta name="author" content="Koi88" />
-    <title>Dashboard - Admin</title>
+    <title>@pageTitle</title>
 X    <link href="/Assets/admin/css/styles.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     <style>

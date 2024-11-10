@@ -157,6 +157,10 @@ namespace KoiOrderingSystem
                pattern: "{area:exists}/{controller=CreateAccount}/{action=CreateAccount}/{id?}");
 
             app.MapControllerRoute(
+              name: "CreateBooking_area",
+              pattern: "{area:exists}/{controller=CreateBooking}/{action=Create}/{id?}");
+
+            app.MapControllerRoute(
               name: "ProfileDetail_default",
               pattern: "{area:exists}/{controller=ProfileDetail}/{action=ProfileDetail}/{id?}");
 
