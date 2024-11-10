@@ -50,6 +50,13 @@ namespace KoiOrderingSystem.Controllers
                 return RedirectToAction("", "Login");
             }
 
+            var adminRoleId = HttpContext.Session.GetInt32("AdminRoleId");
+
+            if (adminRoleId != null && adminRoleId >= 2 && adminRoleId <= 5)
+            {
+                return RedirectToAction("Home", "Admin");
+            }
+
             return View();
         }
 

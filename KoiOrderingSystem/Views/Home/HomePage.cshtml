@@ -154,17 +154,17 @@
         }
 
             .styled-button i {
-                margin-left: 5px; /* Spacing between text and icon */
+                margin-left: 5px; 
                 transition: transform 0.3s;
             }
 
             .styled-button:hover {
-                background-color: #E0F0FF; /* Light blue background on hover */
-                color: #0056b3; /* Darker blue text on hover */
+                background-color: #E0F0FF; 
+                color: #0056b3; 
             }
 
                 .styled-button:hover i {
-                    transform: translateY(2px); /* Slight bounce effect on hover */
+                    transform: translateY(2px);
                 }
 
         .variety-english {
@@ -172,6 +172,47 @@
             height: 70px;
             color: #c40606;
         }
+
+        .about-image {
+            position: relative;
+        }
+
+            .about-image img {
+                transition: transform 0.3s ease, box-shadow 0.3s ease; /* Thêm hiệu ứng chuyển đổi khi chuột rời đi */
+
+            }
+
+            .about-image:hover img {
+                transform: translateY(-10px);
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+                transition: transform 0.3s ease, box-shadow 0.3s ease; /* Áp dụng hiệu ứng mượt mà khi hover */
+            }
+
+        .step{
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .step:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .variety-card{
+            transition: transform 0.3s ease, box-shadow 0.3s ease!important;
+        }
+        .variety-card:hover {
+              transform: translateY(-10px)!important;
+              box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            }
+        
+        .feedback-card{
+            transition: transform 0.3s ease, box-shadow 0.3s ease!important;
+        }
+        .feedback-card:hover {
+            transform: translateY(-10px)!important;
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); /* Thêm bóng đổ */
+            }
+
     </style>
 </head>
 

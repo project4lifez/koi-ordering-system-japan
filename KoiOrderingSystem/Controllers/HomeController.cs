@@ -99,6 +99,14 @@ namespace KoiOrderingSystem.Controllers
             {
                 return RedirectToAction("", "Login");
             }
+
+            var adminRoleId = HttpContext.Session.GetInt32("AdminRoleId");
+
+            if (adminRoleId != null && adminRoleId >= 2 && adminRoleId <= 5)
+            {
+                return RedirectToAction("Home", "Admin");
+            }
+
             return View();
         }
         public ActionResult Create()
@@ -108,7 +116,15 @@ namespace KoiOrderingSystem.Controllers
         }
 
         public ActionResult Blog()
+
         {
+
+            var adminRoleId = HttpContext.Session.GetInt32("AdminRoleId");
+
+            if (adminRoleId != null && adminRoleId >= 2 && adminRoleId <= 5)
+            {
+                return RedirectToAction("Home", "Admin");
+            }
             // Fetch blogs based on their Position and Status from the database
             var mainFeaturedBlog = _db.Blogs.FirstOrDefault(b => b.Position == 1 && b.Status == true);
             var sideBlogs = _db.Blogs.Where(b => b.Position >= 2 && b.Position <= 4 && b.Status == true).ToList();
@@ -128,6 +144,12 @@ namespace KoiOrderingSystem.Controllers
         // GET: /Home/BlogDetail/{id}
         public async Task<IActionResult> BlogDetail(int id)
         {
+            var adminRoleId = HttpContext.Session.GetInt32("AdminRoleId");
+
+            if (adminRoleId != null && adminRoleId >= 2 && adminRoleId <= 5)
+            {
+                return RedirectToAction("Home", "Admin");
+            }
             // Fetch the blog using the provided id with Status = true
             var blog = await _db.Blogs.FirstOrDefaultAsync(b => b.BlogId == id && b.Status == true);
             if (blog == null)
